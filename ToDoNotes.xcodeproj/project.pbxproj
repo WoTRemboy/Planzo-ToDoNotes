@@ -11,6 +11,10 @@
 		635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF6A2D24B71C007FFBBA /* ToDoNotesApp.swift */; };
 		635FEF6E2D24B71C007FFBBA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 635FEF662D24B71C007FFBBA /* Preview Assets.xcassets */; };
 		635FEF6F2D24B71C007FFBBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 635FEF682D24B71C007FFBBA /* Assets.xcassets */; };
+		635FEF7D2D24BB70007FFBBA /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF7C2D24BB65007FFBBA /* SplashScreenView.swift */; };
+		635FEF802D24BCEF007FFBBA /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF7F2D24BCEB007FFBBA /* ColorExtension.swift */; };
+		635FEF822D24BEA6007FFBBA /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF812D24BEA2007FFBBA /* ImageExtension.swift */; };
+		635FEF842D24C17B007FFBBA /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF832D24C172007FFBBA /* Labels.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +23,10 @@
 		635FEF682D24B71C007FFBBA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		635FEF692D24B71C007FFBBA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		635FEF6A2D24B71C007FFBBA /* ToDoNotesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoNotesApp.swift; sourceTree = "<group>"; };
+		635FEF7C2D24BB65007FFBBA /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
+		635FEF7F2D24BCEB007FFBBA /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		635FEF812D24BEA2007FFBBA /* ImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExtension.swift; sourceTree = "<group>"; };
+		635FEF832D24C172007FFBBA /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,9 +68,11 @@
 			isa = PBXGroup;
 			children = (
 				635FEF712D24B72E007FFBBA /* Application */,
+				635FEF732D24BAA1007FFBBA /* OpeningModule */,
+				635FEF742D24BAC2007FFBBA /* MainModule */,
+				635FEF7E2D24BCDE007FFBBA /* Extensions */,
+				635FEF752D24BAD1007FFBBA /* SupportFiles */,
 				635FEF672D24B71C007FFBBA /* Preview Content */,
-				635FEF682D24B71C007FFBBA /* Assets.xcassets */,
-				635FEF692D24B71C007FFBBA /* ContentView.swift */,
 			);
 			path = ToDoNotes;
 			sourceTree = "<group>";
@@ -73,6 +83,80 @@
 				635FEF6A2D24B71C007FFBBA /* ToDoNotesApp.swift */,
 			);
 			path = Application;
+			sourceTree = "<group>";
+		};
+		635FEF732D24BAA1007FFBBA /* OpeningModule */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF7A2D24BB3E007FFBBA /* SplashSection */,
+				635FEF7B2D24BB51007FFBBA /* OnboardingSection */,
+			);
+			path = OpeningModule;
+			sourceTree = "<group>";
+		};
+		635FEF742D24BAC2007FFBBA /* MainModule */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF692D24B71C007FFBBA /* ContentView.swift */,
+			);
+			path = MainModule;
+			sourceTree = "<group>";
+		};
+		635FEF752D24BAD1007FFBBA /* SupportFiles */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF682D24B71C007FFBBA /* Assets.xcassets */,
+			);
+			path = SupportFiles;
+			sourceTree = "<group>";
+		};
+		635FEF772D24BB14007FFBBA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		635FEF782D24BB18007FFBBA /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		635FEF792D24BB1C007FFBBA /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		635FEF7A2D24BB3E007FFBBA /* SplashSection */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF7C2D24BB65007FFBBA /* SplashScreenView.swift */,
+			);
+			path = SplashSection;
+			sourceTree = "<group>";
+		};
+		635FEF7B2D24BB51007FFBBA /* OnboardingSection */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF772D24BB14007FFBBA /* Model */,
+				635FEF782D24BB18007FFBBA /* View */,
+				635FEF792D24BB1C007FFBBA /* ViewModel */,
+			);
+			path = OnboardingSection;
+			sourceTree = "<group>";
+		};
+		635FEF7E2D24BCDE007FFBBA /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF7F2D24BCEB007FFBBA /* ColorExtension.swift */,
+				635FEF812D24BEA2007FFBBA /* ImageExtension.swift */,
+				635FEF832D24C172007FFBBA /* Labels.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,6 +234,10 @@
 			files = (
 				635FEF6C2D24B71C007FFBBA /* ContentView.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
+				635FEF842D24C17B007FFBBA /* Labels.swift in Sources */,
+				635FEF7D2D24BB70007FFBBA /* SplashScreenView.swift in Sources */,
+				635FEF822D24BEA6007FFBBA /* ImageExtension.swift in Sources */,
+				635FEF802D24BCEF007FFBBA /* ColorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
