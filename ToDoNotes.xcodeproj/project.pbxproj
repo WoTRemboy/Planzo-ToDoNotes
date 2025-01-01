@@ -35,6 +35,7 @@
 		635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenViewModel.swift; sourceTree = "<group>"; };
 		63DA81012D24C822005CEECB /* OnboardingScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenView.swift; sourceTree = "<group>"; };
 		63DA81032D24CE44005CEECB /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
+		63DA81382D24D170005CEECB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +82,7 @@
 				635FEF7E2D24BCDE007FFBBA /* Extensions */,
 				635FEF752D24BAD1007FFBBA /* SupportFiles */,
 				635FEF672D24B71C007FFBBA /* Preview Content */,
+				63DA81382D24D170005CEECB /* Info.plist */,
 			);
 			path = ToDoNotes;
 			sourceTree = "<group>";
@@ -390,6 +392,7 @@
 				DEVELOPMENT_TEAM = NAJAJ652LV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ToDoNotes/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ToDoNotes;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -425,6 +428,7 @@
 				DEVELOPMENT_TEAM = NAJAJ652LV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ToDoNotes/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ToDoNotes;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
