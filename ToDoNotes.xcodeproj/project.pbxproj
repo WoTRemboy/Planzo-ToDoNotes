@@ -15,6 +15,10 @@
 		635FEF802D24BCEF007FFBBA /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF7F2D24BCEB007FFBBA /* ColorExtension.swift */; };
 		635FEF822D24BEA6007FFBBA /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF812D24BEA2007FFBBA /* ImageExtension.swift */; };
 		635FEF842D24C17B007FFBBA /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF832D24C172007FFBBA /* Labels.swift */; };
+		635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF852D24C255007FFBBA /* OnboardingScreenModel.swift */; };
+		635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */; };
+		63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA81012D24C822005CEECB /* OnboardingScreenView.swift */; };
+		63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA81032D24CE44005CEECB /* ViewExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +31,10 @@
 		635FEF7F2D24BCEB007FFBBA /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		635FEF812D24BEA2007FFBBA /* ImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExtension.swift; sourceTree = "<group>"; };
 		635FEF832D24C172007FFBBA /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
+		635FEF852D24C255007FFBBA /* OnboardingScreenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenModel.swift; sourceTree = "<group>"; };
+		635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenViewModel.swift; sourceTree = "<group>"; };
+		63DA81012D24C822005CEECB /* OnboardingScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenView.swift; sourceTree = "<group>"; };
+		63DA81032D24CE44005CEECB /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +121,7 @@
 		635FEF772D24BB14007FFBBA /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				635FEF852D24C255007FFBBA /* OnboardingScreenModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -120,6 +129,7 @@
 		635FEF782D24BB18007FFBBA /* View */ = {
 			isa = PBXGroup;
 			children = (
+				63DA81012D24C822005CEECB /* OnboardingScreenView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -127,6 +137,7 @@
 		635FEF792D24BB1C007FFBBA /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -155,6 +166,7 @@
 				635FEF7F2D24BCEB007FFBBA /* ColorExtension.swift */,
 				635FEF812D24BEA2007FFBBA /* ImageExtension.swift */,
 				635FEF832D24C172007FFBBA /* Labels.swift */,
+				63DA81032D24CE44005CEECB /* ViewExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -232,10 +244,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */,
+				63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */,
 				635FEF6C2D24B71C007FFBBA /* ContentView.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
+				63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */,
 				635FEF842D24C17B007FFBBA /* Labels.swift in Sources */,
 				635FEF7D2D24BB70007FFBBA /* SplashScreenView.swift in Sources */,
+				635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */,
 				635FEF822D24BEA6007FFBBA /* ImageExtension.swift in Sources */,
 				635FEF802D24BCEF007FFBBA /* ColorExtension.swift in Sources */,
 			);

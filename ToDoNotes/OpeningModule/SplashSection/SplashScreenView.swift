@@ -20,7 +20,8 @@ struct SplashScreenView: View {
     internal var body: some View {
         if isActive {
             // Step to the main view
-            ContentView()
+            OnboardingScreenView()
+                .environmentObject(OnboardingViewModel())
         } else {
             // Shows splash screnn
             content

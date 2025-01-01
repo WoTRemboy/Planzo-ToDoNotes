@@ -18,6 +18,10 @@ extension Color {
         static let backDefault = Color("BackDefault")
     }
     
+    enum ButtonColors {
+        static let onboarding = Color("OnboardingButton")
+    }
+    
     enum LabelColors {
         static let labelDisable = Color("LabelDisable")
         static let labelDetails = Color("LabelDetails")
