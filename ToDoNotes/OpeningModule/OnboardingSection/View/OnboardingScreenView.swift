@@ -17,16 +17,16 @@ struct OnboardingScreenView: View {
     // MARK: - Body
     
     internal var body: some View {
-//        if viewModel.skipOnboarding {
-//            ContentView()
-//        } else {
+        if viewModel.skipOnboarding {
+            ContentView()
+        } else {
             VStack(spacing: 0) {
                 content
                 progressCircles
                 actionButton
                 skipButton
             }
-//        }
+        }
     }
     
     // MARK: - Content
@@ -111,7 +111,7 @@ struct OnboardingScreenView: View {
         .minimumScaleFactor(0.4)
         
         .foregroundStyle(Color.white)
-        .tint(Color.black)
+        .tint(Color.LabelColors.labelPrimary)
         .buttonStyle(.bordered)
         
         .padding(.horizontal)
