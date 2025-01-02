@@ -11,6 +11,14 @@
 		635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF6A2D24B71C007FFBBA /* ToDoNotesApp.swift */; };
 		635FEF6E2D24B71C007FFBBA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 635FEF662D24B71C007FFBBA /* Preview Assets.xcassets */; };
 		635FEF6F2D24B71C007FFBBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 635FEF682D24B71C007FFBBA /* Assets.xcassets */; };
+		635FEF7D2D24BB70007FFBBA /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF7C2D24BB65007FFBBA /* SplashScreenView.swift */; };
+		635FEF802D24BCEF007FFBBA /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF7F2D24BCEB007FFBBA /* ColorExtension.swift */; };
+		635FEF822D24BEA6007FFBBA /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF812D24BEA2007FFBBA /* ImageExtension.swift */; };
+		635FEF842D24C17B007FFBBA /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF832D24C172007FFBBA /* Labels.swift */; };
+		635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF852D24C255007FFBBA /* OnboardingScreenModel.swift */; };
+		635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */; };
+		63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA81012D24C822005CEECB /* OnboardingScreenView.swift */; };
+		63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA81032D24CE44005CEECB /* ViewExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +27,15 @@
 		635FEF682D24B71C007FFBBA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		635FEF692D24B71C007FFBBA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		635FEF6A2D24B71C007FFBBA /* ToDoNotesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoNotesApp.swift; sourceTree = "<group>"; };
+		635FEF7C2D24BB65007FFBBA /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
+		635FEF7F2D24BCEB007FFBBA /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		635FEF812D24BEA2007FFBBA /* ImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExtension.swift; sourceTree = "<group>"; };
+		635FEF832D24C172007FFBBA /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
+		635FEF852D24C255007FFBBA /* OnboardingScreenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenModel.swift; sourceTree = "<group>"; };
+		635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenViewModel.swift; sourceTree = "<group>"; };
+		63DA81012D24C822005CEECB /* OnboardingScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenView.swift; sourceTree = "<group>"; };
+		63DA81032D24CE44005CEECB /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
+		63DA81382D24D170005CEECB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,9 +77,12 @@
 			isa = PBXGroup;
 			children = (
 				635FEF712D24B72E007FFBBA /* Application */,
+				635FEF732D24BAA1007FFBBA /* OpeningModule */,
+				635FEF742D24BAC2007FFBBA /* MainModule */,
+				635FEF7E2D24BCDE007FFBBA /* Extensions */,
+				635FEF752D24BAD1007FFBBA /* SupportFiles */,
 				635FEF672D24B71C007FFBBA /* Preview Content */,
-				635FEF682D24B71C007FFBBA /* Assets.xcassets */,
-				635FEF692D24B71C007FFBBA /* ContentView.swift */,
+				63DA81382D24D170005CEECB /* Info.plist */,
 			);
 			path = ToDoNotes;
 			sourceTree = "<group>";
@@ -73,6 +93,84 @@
 				635FEF6A2D24B71C007FFBBA /* ToDoNotesApp.swift */,
 			);
 			path = Application;
+			sourceTree = "<group>";
+		};
+		635FEF732D24BAA1007FFBBA /* OpeningModule */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF7A2D24BB3E007FFBBA /* SplashSection */,
+				635FEF7B2D24BB51007FFBBA /* OnboardingSection */,
+			);
+			path = OpeningModule;
+			sourceTree = "<group>";
+		};
+		635FEF742D24BAC2007FFBBA /* MainModule */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF692D24B71C007FFBBA /* ContentView.swift */,
+			);
+			path = MainModule;
+			sourceTree = "<group>";
+		};
+		635FEF752D24BAD1007FFBBA /* SupportFiles */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF682D24B71C007FFBBA /* Assets.xcassets */,
+			);
+			path = SupportFiles;
+			sourceTree = "<group>";
+		};
+		635FEF772D24BB14007FFBBA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF852D24C255007FFBBA /* OnboardingScreenModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		635FEF782D24BB18007FFBBA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				63DA81012D24C822005CEECB /* OnboardingScreenView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		635FEF792D24BB1C007FFBBA /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		635FEF7A2D24BB3E007FFBBA /* SplashSection */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF7C2D24BB65007FFBBA /* SplashScreenView.swift */,
+			);
+			path = SplashSection;
+			sourceTree = "<group>";
+		};
+		635FEF7B2D24BB51007FFBBA /* OnboardingSection */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF772D24BB14007FFBBA /* Model */,
+				635FEF782D24BB18007FFBBA /* View */,
+				635FEF792D24BB1C007FFBBA /* ViewModel */,
+			);
+			path = OnboardingSection;
+			sourceTree = "<group>";
+		};
+		635FEF7E2D24BCDE007FFBBA /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF7F2D24BCEB007FFBBA /* ColorExtension.swift */,
+				635FEF812D24BEA2007FFBBA /* ImageExtension.swift */,
+				635FEF832D24C172007FFBBA /* Labels.swift */,
+				63DA81032D24CE44005CEECB /* ViewExtension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -148,8 +246,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */,
+				63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */,
 				635FEF6C2D24B71C007FFBBA /* ContentView.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
+				63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */,
+				635FEF842D24C17B007FFBBA /* Labels.swift in Sources */,
+				635FEF7D2D24BB70007FFBBA /* SplashScreenView.swift in Sources */,
+				635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */,
+				635FEF822D24BEA6007FFBBA /* ImageExtension.swift in Sources */,
+				635FEF802D24BCEF007FFBBA /* ColorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,6 +392,7 @@
 				DEVELOPMENT_TEAM = NAJAJ652LV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ToDoNotes/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ToDoNotes;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -321,6 +428,7 @@
 				DEVELOPMENT_TEAM = NAJAJ652LV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ToDoNotes/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ToDoNotes;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
