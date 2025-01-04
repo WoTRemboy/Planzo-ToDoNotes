@@ -24,6 +24,9 @@
 		637B9F582D2969940010F13B /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F572D2969940010F13B /* TodayView.swift */; };
 		637B9F5A2D2969AC0010F13B /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F592D2969AC0010F13B /* CalendarView.swift */; };
 		637B9F5C2D2969C30010F13B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F5B2D2969C30010F13B /* SettingsView.swift */; };
+		637B9F5F2D296F3D0010F13B /* TabRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F5E2D296F3A0010F13B /* TabRouter.swift */; };
+		637B9F612D296FA90010F13B /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F602D296FA90010F13B /* RootView.swift */; };
+		637B9F632D29702E0010F13B /* TabItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F622D29702B0010F13B /* TabItems.swift */; };
 		63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA81012D24C822005CEECB /* OnboardingScreenView.swift */; };
 		63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA81032D24CE44005CEECB /* ViewExtension.swift */; };
 /* End PBXBuildFile section */
@@ -47,6 +50,9 @@
 		637B9F572D2969940010F13B /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		637B9F592D2969AC0010F13B /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		637B9F5B2D2969C30010F13B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		637B9F5E2D296F3A0010F13B /* TabRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabRouter.swift; sourceTree = "<group>"; };
+		637B9F602D296FA90010F13B /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		637B9F622D29702B0010F13B /* TabItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItems.swift; sourceTree = "<group>"; };
 		63DA81012D24C822005CEECB /* OnboardingScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenView.swift; sourceTree = "<group>"; };
 		63DA81032D24CE44005CEECB /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		63DA81382D24D170005CEECB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -91,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				635FEF712D24B72E007FFBBA /* Application */,
+				637B9F5D2D296F290010F13B /* Router */,
 				635FEF732D24BAA1007FFBBA /* OpeningModule */,
 				635FEF742D24BAC2007FFBBA /* MainModule */,
 				637B9F522D29695D0010F13B /* TodayModule */,
@@ -250,6 +257,16 @@
 			path = SettingsModule;
 			sourceTree = "<group>";
 		};
+		637B9F5D2D296F290010F13B /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				637B9F622D29702B0010F13B /* TabItems.swift */,
+				637B9F5E2D296F3A0010F13B /* TabRouter.swift */,
+				637B9F602D296FA90010F13B /* RootView.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -325,6 +342,8 @@
 			files = (
 				635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */,
 				637B9F4C2D295B290010F13B /* MainView.swift in Sources */,
+				637B9F5F2D296F3D0010F13B /* TabRouter.swift in Sources */,
+				637B9F612D296FA90010F13B /* RootView.swift in Sources */,
 				637B9F5A2D2969AC0010F13B /* CalendarView.swift in Sources */,
 				637B9F482D295A510010F13B /* FolderModel.swift in Sources */,
 				637B9F462D29599B0010F13B /* FilterModel.swift in Sources */,
@@ -339,6 +358,7 @@
 				637B9F512D295B7F0010F13B /* NavigationBar.swift in Sources */,
 				635FEF822D24BEA6007FFBBA /* ImageExtension.swift in Sources */,
 				637B9F582D2969940010F13B /* TodayView.swift in Sources */,
+				637B9F632D29702E0010F13B /* TabItems.swift in Sources */,
 				635FEF802D24BCEF007FFBBA /* ColorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
