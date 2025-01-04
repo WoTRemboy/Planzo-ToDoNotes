@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		635FEF6C2D24B71C007FFBBA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF692D24B71C007FFBBA /* ContentView.swift */; };
 		635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF6A2D24B71C007FFBBA /* ToDoNotesApp.swift */; };
 		635FEF6E2D24B71C007FFBBA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 635FEF662D24B71C007FFBBA /* Preview Assets.xcassets */; };
 		635FEF6F2D24B71C007FFBBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 635FEF682D24B71C007FFBBA /* Assets.xcassets */; };
@@ -17,6 +16,11 @@
 		635FEF842D24C17B007FFBBA /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF832D24C172007FFBBA /* Labels.swift */; };
 		635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF852D24C255007FFBBA /* OnboardingScreenModel.swift */; };
 		635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */; };
+		637B9F462D29599B0010F13B /* FilterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F452D2959960010F13B /* FilterModel.swift */; };
+		637B9F482D295A510010F13B /* FolderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F472D295A4D0010F13B /* FolderModel.swift */; };
+		637B9F4C2D295B290010F13B /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F4B2D295B270010F13B /* MainView.swift */; };
+		637B9F4E2D295B490010F13B /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F4D2D295B440010F13B /* MainViewModel.swift */; };
+		637B9F512D295B7F0010F13B /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F502D295B7F0010F13B /* NavigationBar.swift */; };
 		63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA81012D24C822005CEECB /* OnboardingScreenView.swift */; };
 		63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA81032D24CE44005CEECB /* ViewExtension.swift */; };
 /* End PBXBuildFile section */
@@ -25,7 +29,6 @@
 		635FEF552D24B715007FFBBA /* ToDoNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		635FEF662D24B71C007FFBBA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		635FEF682D24B71C007FFBBA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		635FEF692D24B71C007FFBBA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		635FEF6A2D24B71C007FFBBA /* ToDoNotesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoNotesApp.swift; sourceTree = "<group>"; };
 		635FEF7C2D24BB65007FFBBA /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		635FEF7F2D24BCEB007FFBBA /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
@@ -33,6 +36,11 @@
 		635FEF832D24C172007FFBBA /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
 		635FEF852D24C255007FFBBA /* OnboardingScreenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenModel.swift; sourceTree = "<group>"; };
 		635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenViewModel.swift; sourceTree = "<group>"; };
+		637B9F452D2959960010F13B /* FilterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterModel.swift; sourceTree = "<group>"; };
+		637B9F472D295A4D0010F13B /* FolderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderModel.swift; sourceTree = "<group>"; };
+		637B9F4B2D295B270010F13B /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		637B9F4D2D295B440010F13B /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		637B9F502D295B7F0010F13B /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		63DA81012D24C822005CEECB /* OnboardingScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenView.swift; sourceTree = "<group>"; };
 		63DA81032D24CE44005CEECB /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		63DA81382D24D170005CEECB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -107,7 +115,9 @@
 		635FEF742D24BAC2007FFBBA /* MainModule */ = {
 			isa = PBXGroup;
 			children = (
-				635FEF692D24B71C007FFBBA /* ContentView.swift */,
+				637B9F442D29598F0010F13B /* Model */,
+				637B9F492D295B110010F13B /* View */,
+				637B9F4A2D295B180010F13B /* ViewModel */,
 			);
 			path = MainModule;
 			sourceTree = "<group>";
@@ -171,6 +181,40 @@
 				63DA81032D24CE44005CEECB /* ViewExtension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		637B9F442D29598F0010F13B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				637B9F452D2959960010F13B /* FilterModel.swift */,
+				637B9F472D295A4D0010F13B /* FolderModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		637B9F492D295B110010F13B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				637B9F4B2D295B270010F13B /* MainView.swift */,
+				637B9F4F2D295B610010F13B /* Subviews */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		637B9F4A2D295B180010F13B /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				637B9F4D2D295B440010F13B /* MainViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		637B9F4F2D295B610010F13B /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				637B9F502D295B7F0010F13B /* NavigationBar.swift */,
+			);
+			path = Subviews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -247,13 +291,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */,
+				637B9F4C2D295B290010F13B /* MainView.swift in Sources */,
+				637B9F482D295A510010F13B /* FolderModel.swift in Sources */,
+				637B9F462D29599B0010F13B /* FilterModel.swift in Sources */,
 				63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */,
-				635FEF6C2D24B71C007FFBBA /* ContentView.swift in Sources */,
+				637B9F4E2D295B490010F13B /* MainViewModel.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
 				63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */,
 				635FEF842D24C17B007FFBBA /* Labels.swift in Sources */,
 				635FEF7D2D24BB70007FFBBA /* SplashScreenView.swift in Sources */,
 				635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */,
+				637B9F512D295B7F0010F13B /* NavigationBar.swift in Sources */,
 				635FEF822D24BEA6007FFBBA /* ImageExtension.swift in Sources */,
 				635FEF802D24BCEF007FFBBA /* ColorExtension.swift in Sources */,
 			);
@@ -404,7 +452,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.1;
+				MARKETING_VERSION = 0.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -440,7 +488,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.1;
+				MARKETING_VERSION = 0.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

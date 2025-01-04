@@ -11,4 +11,9 @@ extension Image {
     enum Placeholder {
         static let image = Image("PlaceholderImage")
     }
+    
+    enum NavigationBar {
+        static let search = Image("SearchNavIcon")
+        static let favorites = Image("FavoritesNavIcon")
+    }
 }
