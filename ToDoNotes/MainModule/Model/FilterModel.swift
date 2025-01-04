@@ -5,7 +5,7 @@
 //  Created by Roman Tverdokhleb on 1/4/25.
 //
 
-enum Filter {
+enum Filter: CaseIterable {
     case active
     case outdated
     case unsorted

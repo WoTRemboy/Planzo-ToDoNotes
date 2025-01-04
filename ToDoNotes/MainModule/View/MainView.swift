@@ -12,10 +12,10 @@ struct MainView: View {
     @EnvironmentObject private var viewModel: MainViewModel
     
     internal var body: some View {
-        ScrollView {
+        ZStack {
             content
         }
-        .disabled(true)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay {
             CustomNavBar(title: Texts.MainPage.title)
         }
@@ -26,7 +26,6 @@ struct MainView: View {
         Text(Texts.MainPage.placeholder)
             .foregroundStyle(Color.LabelColors.labelSecondary)
             .frame(maxWidth: .infinity)
-            .padding(.top, 200)
     }
 }
 

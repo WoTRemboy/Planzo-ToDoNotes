@@ -28,7 +28,7 @@ final class Texts {
         enum Filter {
             static let active = "Активные"
             static let outdate = "Просроченные"
-            static let unsorted = "Неотсортированные"
+            static let unsorted = "Несортированные"
             static let completed = "Выполненные"
         }
         

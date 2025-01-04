@@ -20,14 +20,21 @@ struct CustomNavBar: View {
                 .background(.ultraThinMaterial)
                 .blur(radius: 10)
             
+            content
+                .padding(.bottom)
+        }
+        .frame(height: 100)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
+    
+    private var content: some View {
+        VStack(spacing: 16) {
             HStack {
                 titleLabel
                 buttons
             }
-            .padding(.bottom)
+            FilterScrollView()
         }
-        .frame(height: 50)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
     
     private var titleLabel: some View {
