@@ -33,6 +33,7 @@ final class Texts {
         }
         
         enum Folders {
+            static let title = "Папки"
             static let all = "Все"
             static let noDate = "Без дат"
             static let purchases = "Покупки"

@@ -5,7 +5,7 @@
 //  Created by Roman Tverdokhleb on 1/4/25.
 //
 
-enum Folder {
+enum Folder: CaseIterable {
     case all
     case noDate
     case purchases

@@ -17,4 +17,14 @@ extension Image {
         static let search = Image("SearchNavIcon")
         static let favorites = Image("FavoritesNavIcon")
     }
+    
+    enum Folder {
+        static let navBar = Image("FoldersNavIcon")
+        static let locked = Image("FolderLockIcon")
+        static let unlocked = Image("FolderUnlockIcon")
+    }
+    
+    enum TasksManagement {
+        static let plus = Image("AddPlusIcon")
+    }
 }

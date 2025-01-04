@@ -19,10 +19,10 @@ struct FilterScrollView: View {
     }
     
     private var content: some View {
-        HStack {
+        HStack(spacing: 8) {
             ForEach(Filter.allCases, id: \.self) { filter in
                 FilterCell(name: filter.name,
-                           selected: viewModel.compareFilters(from: filter))
+                           selected: viewModel.compareFilters(with: filter))
                 .onTapGesture {
                     viewModel.setFilter(to: filter)
                 }

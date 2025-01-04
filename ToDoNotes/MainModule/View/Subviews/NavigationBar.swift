@@ -23,17 +23,20 @@ struct CustomNavBar: View {
             content
                 .padding(.bottom)
         }
-        .frame(height: 100)
+        .frame(height: 140)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
     
     private var content: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 0) {
             HStack {
                 titleLabel
                 buttons
             }
             FilterScrollView()
+                .padding(.top, 16)
+            FoldersScrollView()
+                .padding(.top, 12)
         }
     }
     
@@ -67,4 +70,5 @@ struct CustomNavBar: View {
 
 #Preview {
     CustomNavBar(title: Texts.MainPage.title)
+        .environmentObject(MainViewModel())
 }
