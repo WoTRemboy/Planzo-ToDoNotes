@@ -24,7 +24,7 @@ extension Image {
         static let unlocked = Image("FolderUnlockIcon")
     }
     
-    enum TasksManagement {
+    enum TaskManagement {
         static let plus = Image("AddPlusIcon")
     }
 }

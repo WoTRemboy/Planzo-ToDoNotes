@@ -37,7 +37,9 @@ struct FoldersScrollView: View {
     }
     
     private var folderPicker: some View {
-        Picker(Texts.MainPage.Folders.title, selection: $viewModel.selectedFolder.animation()) {
+        Picker(Texts.MainPage.Folders.title,
+               selection: $viewModel.selectedFolder.animation(.easeInOut(duration: 0.2))) {
+            
             ForEach(Folder.allCases.dropLast(), id: \.self) { folder in
                 Label {
                     Text(folder.name)
