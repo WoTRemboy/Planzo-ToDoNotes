@@ -21,6 +21,9 @@
 		637B9F4C2D295B290010F13B /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F4B2D295B270010F13B /* MainView.swift */; };
 		637B9F4E2D295B490010F13B /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F4D2D295B440010F13B /* MainViewModel.swift */; };
 		637B9F512D295B7F0010F13B /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F502D295B7F0010F13B /* NavigationBar.swift */; };
+		637B9F582D2969940010F13B /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F572D2969940010F13B /* TodayView.swift */; };
+		637B9F5A2D2969AC0010F13B /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F592D2969AC0010F13B /* CalendarView.swift */; };
+		637B9F5C2D2969C30010F13B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F5B2D2969C30010F13B /* SettingsView.swift */; };
 		63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA81012D24C822005CEECB /* OnboardingScreenView.swift */; };
 		63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA81032D24CE44005CEECB /* ViewExtension.swift */; };
 /* End PBXBuildFile section */
@@ -41,6 +44,9 @@
 		637B9F4B2D295B270010F13B /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		637B9F4D2D295B440010F13B /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		637B9F502D295B7F0010F13B /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
+		637B9F572D2969940010F13B /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		637B9F592D2969AC0010F13B /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		637B9F5B2D2969C30010F13B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		63DA81012D24C822005CEECB /* OnboardingScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenView.swift; sourceTree = "<group>"; };
 		63DA81032D24CE44005CEECB /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		63DA81382D24D170005CEECB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -87,6 +93,9 @@
 				635FEF712D24B72E007FFBBA /* Application */,
 				635FEF732D24BAA1007FFBBA /* OpeningModule */,
 				635FEF742D24BAC2007FFBBA /* MainModule */,
+				637B9F522D29695D0010F13B /* TodayModule */,
+				637B9F532D29696B0010F13B /* CalendarModule */,
+				637B9F542D2969750010F13B /* SettingsModule */,
 				635FEF7E2D24BCDE007FFBBA /* Extensions */,
 				635FEF752D24BAD1007FFBBA /* SupportFiles */,
 				635FEF672D24B71C007FFBBA /* Preview Content */,
@@ -217,6 +226,30 @@
 			path = Subviews;
 			sourceTree = "<group>";
 		};
+		637B9F522D29695D0010F13B /* TodayModule */ = {
+			isa = PBXGroup;
+			children = (
+				637B9F572D2969940010F13B /* TodayView.swift */,
+			);
+			path = TodayModule;
+			sourceTree = "<group>";
+		};
+		637B9F532D29696B0010F13B /* CalendarModule */ = {
+			isa = PBXGroup;
+			children = (
+				637B9F592D2969AC0010F13B /* CalendarView.swift */,
+			);
+			path = CalendarModule;
+			sourceTree = "<group>";
+		};
+		637B9F542D2969750010F13B /* SettingsModule */ = {
+			isa = PBXGroup;
+			children = (
+				637B9F5B2D2969C30010F13B /* SettingsView.swift */,
+			);
+			path = SettingsModule;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -292,8 +325,10 @@
 			files = (
 				635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */,
 				637B9F4C2D295B290010F13B /* MainView.swift in Sources */,
+				637B9F5A2D2969AC0010F13B /* CalendarView.swift in Sources */,
 				637B9F482D295A510010F13B /* FolderModel.swift in Sources */,
 				637B9F462D29599B0010F13B /* FilterModel.swift in Sources */,
+				637B9F5C2D2969C30010F13B /* SettingsView.swift in Sources */,
 				63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */,
 				637B9F4E2D295B490010F13B /* MainViewModel.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
@@ -303,6 +338,7 @@
 				635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */,
 				637B9F512D295B7F0010F13B /* NavigationBar.swift in Sources */,
 				635FEF822D24BEA6007FFBBA /* ImageExtension.swift in Sources */,
+				637B9F582D2969940010F13B /* TodayView.swift in Sources */,
 				635FEF802D24BCEF007FFBBA /* ColorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

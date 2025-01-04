@@ -8,14 +8,51 @@
 import SwiftUI
 
 struct MainView: View {
+    
+    @EnvironmentObject private var viewModel: MainViewModel
+    
     internal var body: some View {
-        ScrollView {
-            content
+        TabView(selection: $viewModel.selectedTab) {
+            ScrollView {
+                content
+            }
+            .disabled(true)
+            .overlay {
+                CustomNavBar(title: Texts.MainPage.title)
+            }
+            
+            .tabItem {
+                Image.Placeholder.tabbarIcon
+                    .renderingMode(.template)
+                Text(Texts.Tabbar.main)
+            }
+            .tag(0)
+            
+            TodayView()
+                .tabItem {
+                    Image.Placeholder.tabbarIcon
+                        .renderingMode(.template)
+                    Text(Texts.Tabbar.today)
+                }
+                .tag(1)
+            
+            CalendarView()
+                .tabItem {
+                    Image.Placeholder.tabbarIcon
+                        .renderingMode(.template)
+                    Text(Texts.Tabbar.calendar)
+                }
+                .tag(2)
+            
+            SettingsView()
+                .tabItem {
+                    Image.Placeholder.tabbarIcon
+                        .renderingMode(.template)
+                    Text(Texts.Tabbar.settings)
+                }
+                .tag(3)
         }
-        .disabled(true)
-        .overlay {
-            CustomNavBar(title: Texts.MainPage.title)
-        }
+        .accentColor(.LabelColors.labelSecondary)
     }
     
     private var content: some View {
@@ -28,4 +65,5 @@ struct MainView: View {
 
 #Preview {
     MainView()
+        .environmentObject(MainViewModel())
 }

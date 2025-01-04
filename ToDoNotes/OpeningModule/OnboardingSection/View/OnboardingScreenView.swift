@@ -19,6 +19,7 @@ struct OnboardingScreenView: View {
     internal var body: some View {
         if viewModel.skipOnboarding {
             MainView()
+                .environmentObject(MainViewModel())
         } else {
             VStack(spacing: 0) {
                 content

@@ -9,7 +9,8 @@ import SwiftUI
 
 extension Image {
     enum Placeholder {
-        static let image = Image("PlaceholderImage")
+        static let previewIcon = Image("PlaceholderPreviewIcon")
+        static let tabbarIcon = Image("PlaceholderTabbarIcon")
     }
     
     enum NavigationBar {
