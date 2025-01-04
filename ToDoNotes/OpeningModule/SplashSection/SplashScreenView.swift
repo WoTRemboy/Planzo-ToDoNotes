@@ -46,7 +46,7 @@ struct SplashScreenView: View {
             
             VStack(spacing: 16) {
                 // Logo image
-                Image.Placeholder.image
+                Image.Placeholder.previewIcon
                     .resizable()
                     .scaledToFit()
                     .frame(height: 300)
