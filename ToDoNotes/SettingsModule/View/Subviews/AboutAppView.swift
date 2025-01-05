@@ -26,11 +26,11 @@ struct AboutAppView: View {
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(name)
-                    .font(.title)
+                    .font(.system(size: 20, weight: .medium))
                     .foregroundStyle(Color.LabelColors.labelPrimary)
                 
                 Text(version)
-                    .font(.subheadline)
+                    .font(.system(size: 15, weight: .light))
                     .foregroundStyle(Color.LabelColors.labelSecondary)
             }
             Spacer()
