@@ -1,5 +1,5 @@
 //
-//  MainView.swift
+//  TodayView.swift
 //  ToDoNotes
 //
 //  Created by Roman Tverdokhleb on 1/4/25.
@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct MainView: View {
+struct TodayView: View {
     
-    @EnvironmentObject private var viewModel: MainViewModel
-    
+    @EnvironmentObject private var viewModel: TodayViewModel
+        
     internal var body: some View {
         ZStack {
             content
@@ -18,13 +18,13 @@ struct MainView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay {
-            CustomNavBar(title: Texts.MainPage.title)
+            TodayNavBar(date: viewModel.todayDate.shortDate,
+                        day: viewModel.todayDate.shortWeekday)
         }
     }
-        
     
     private var content: some View {
-        Text(Texts.MainPage.placeholder)
+        Text(Texts.TodayPage.placeholder)
             .foregroundStyle(Color.LabelColors.labelSecondary)
             .frame(maxWidth: .infinity)
     }
@@ -49,6 +49,6 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
-        .environmentObject(MainViewModel())
+    TodayView()
+        .environmentObject(TodayViewModel())
 }

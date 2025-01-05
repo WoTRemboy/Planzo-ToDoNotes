@@ -20,6 +20,7 @@ struct TabItems {
     
     static func todayTab() -> some View {
         TodayView()
+            .environmentObject(TodayViewModel())
             .tabItem {
                 Image.Placeholder.tabbarIcon
                     .renderingMode(.template)
@@ -29,6 +30,7 @@ struct TabItems {
     
     static func calendarTab() -> some View {
         CalendarView()
+            .environmentObject(CalendarViewModel())
             .tabItem {
                 Image.Placeholder.tabbarIcon
                     .renderingMode(.template)
