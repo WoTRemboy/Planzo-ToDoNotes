@@ -9,6 +9,15 @@ import SwiftUI
 
 final class CalendarViewModel: ObservableObject {
     
-    private(set) var todayDate: Date = Date()
+    internal let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
+    private(set) var todayDate: Date = Date.now
+    private(set) var days: [Date] = []
     
+    init() {
+        updateDays()
+    }
+    
+    internal func updateDays() {
+        days = todayDate.calendarDisplayDays
+    }
 }

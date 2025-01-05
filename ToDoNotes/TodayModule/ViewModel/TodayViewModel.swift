@@ -9,6 +9,6 @@ import SwiftUI
 
 final class TodayViewModel: ObservableObject {
     
-    private(set) var todayDate: Date = Date()
+    private(set) var todayDate: Date = Date.now
     
 }

@@ -24,9 +24,9 @@ struct CalendarView: View {
     }
     
     private var content: some View {
-        Text(Texts.TodayPage.placeholder)
-            .foregroundStyle(Color.LabelColors.labelSecondary)
-            .frame(maxWidth: .infinity)
+        CustomCalendarView()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .padding(.top, 60)
     }
     
     private var plusButton: some View {

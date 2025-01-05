@@ -30,6 +30,7 @@ struct TabItems {
     
     static func calendarTab() -> some View {
         CalendarView()
+            .environmentObject(CalendarViewModel())
             .tabItem {
                 Image.Placeholder.tabbarIcon
                     .renderingMode(.template)
