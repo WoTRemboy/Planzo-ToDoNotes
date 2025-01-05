@@ -1,5 +1,5 @@
 //
-//  TodayView.swift
+//  CalendarView.swift
 //  ToDoNotes
 //
 //  Created by Roman Tverdokhleb on 1/4/25.
@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct TodayView: View {
+struct CalendarView: View {
     
-    @EnvironmentObject private var viewModel: TodayViewModel
-        
+    @EnvironmentObject private var viewModel: CalendarViewModel
+    
     internal var body: some View {
         ZStack {
             content
@@ -18,8 +18,8 @@ struct TodayView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay {
-            TodayNavBar(date: viewModel.todayDate.shortDate,
-                        day: viewModel.todayDate.shortWeekday)
+            CalendarNavBar(date: Texts.CalendarPage.today,
+                           monthYear: viewModel.todayDate.longMonthYear)
         }
     }
     
@@ -49,6 +49,6 @@ struct TodayView: View {
 }
 
 #Preview {
-    TodayView()
-        .environmentObject(TodayViewModel())
+    CalendarView()
+        .environmentObject(CalendarViewModel())
 }

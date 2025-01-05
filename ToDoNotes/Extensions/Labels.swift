@@ -46,6 +46,12 @@ final class Texts {
         static let placeholder = "У вас пока нет заметок"
     }
     
+    enum CalendarPage {
+        static let title = "Календарь"
+        static let today = "Сегодня"
+        static let placeholder = "Свободный день"
+    }
+    
     enum Settings {
         static let title = "Настройки"
         
