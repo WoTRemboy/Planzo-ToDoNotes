@@ -20,6 +20,7 @@ struct TabItems {
     
     static func todayTab() -> some View {
         TodayView()
+            .environmentObject(TodayViewModel())
             .tabItem {
                 Image.Placeholder.tabbarIcon
                     .renderingMode(.template)

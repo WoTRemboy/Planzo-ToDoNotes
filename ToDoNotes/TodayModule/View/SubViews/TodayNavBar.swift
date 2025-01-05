@@ -1,17 +1,19 @@
 //
-//  NavigationBar.swift
+//  TodayNavBar.swift
 //  ToDoNotes
 //
-//  Created by Roman Tverdokhleb on 1/4/25.
+//  Created by Roman Tverdokhleb on 1/5/25.
 //
 
 import SwiftUI
 
-struct CustomNavBar: View {
-    private let title: String
+struct TodayNavBar: View {
+    private let date: String
+    private let day: String
     
-    init(title: String) {
-        self.title = title
+    init(date: String, day: String) {
+        self.date = date
+        self.day = day
     }
     
     internal var body: some View {
@@ -23,7 +25,7 @@ struct CustomNavBar: View {
             content
                 .padding(.bottom)
         }
-        .frame(height: 140)
+        .frame(height: 46.5)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
     
@@ -33,18 +35,20 @@ struct CustomNavBar: View {
                 titleLabel
                 buttons
             }
-            FilterScrollView()
-                .padding(.top, 16)
-            FoldersScrollView()
-                .padding(.top, 12)
         }
     }
     
     private var titleLabel: some View {
-        Text(title)
-            .font(.system(size: 20, weight: .regular))
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.leading, 16)
+        HStack(spacing: 8) {
+            Text(date)
+                .font(.system(size: 20, weight: .regular))
+            
+            Text(day)
+                .font(.system(size: 20, weight: .regular))
+                .foregroundStyle(Color.LabelColors.labelSecondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.leading, 16)
     }
     
     private var buttons: some View {
@@ -65,10 +69,9 @@ struct CustomNavBar: View {
         }
         .padding(.horizontal, 16)
     }
-    
 }
 
 #Preview {
-    CustomNavBar(title: Texts.MainPage.title)
-        .environmentObject(MainViewModel())
+    TodayNavBar(date: "18 January", day: "Sun")
+        .environmentObject(TodayViewModel())
 }
