@@ -16,6 +16,8 @@ extension Image {
     enum NavigationBar {
         static let search = Image("SearchNavIcon")
         static let favorites = Image("FavoritesNavIcon")
+        static let calendar = Image("CalendarNavIcon")
+        static let more = Image("MoreNavIcon")
     }
     
     enum Folder {
@@ -24,7 +26,12 @@ extension Image {
         static let unlocked = Image("FolderUnlockIcon")
     }
     
+    enum Settings {
+        static let about = Image("SettingsAboutApp")
+    }
+    
     enum TaskManagement {
         static let plus = Image("AddPlusIcon")
+        static let emptyList = Image("EmptyTaskList")
     }
 }

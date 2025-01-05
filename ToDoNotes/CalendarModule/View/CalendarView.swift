@@ -1,5 +1,5 @@
 //
-//  MainView.swift
+//  CalendarView.swift
 //  ToDoNotes
 //
 //  Created by Roman Tverdokhleb on 1/4/25.
@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct MainView: View {
+struct CalendarView: View {
     
-    @EnvironmentObject private var viewModel: MainViewModel
+    @EnvironmentObject private var viewModel: CalendarViewModel
     
     internal var body: some View {
         ZStack {
@@ -18,15 +18,26 @@ struct MainView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay {
-            CustomNavBar(title: Texts.MainPage.title)
+            CalendarNavBar(date: Texts.CalendarPage.today,
+                           monthYear: viewModel.todayDate.longMonthYear)
         }
     }
-        
     
     private var content: some View {
-        Text(Texts.MainPage.placeholder)
-            .foregroundStyle(Color.LabelColors.labelSecondary)
-            .frame(maxWidth: .infinity)
+        VStack {
+            CustomCalendarView()
+            separator
+            CalendarTaskList(date: viewModel.todayDate.longDayMonthWeekday)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .padding(.top, 60)
+    }
+    
+    private var separator: some View {
+        Divider()
+            .background(Color.LabelColors.labelTertiary)
+            .frame(height: 0.36)
+            .padding()
     }
     
     private var plusButton: some View {
@@ -49,6 +60,6 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
-        .environmentObject(MainViewModel())
+    CalendarView()
+        .environmentObject(CalendarViewModel())
 }

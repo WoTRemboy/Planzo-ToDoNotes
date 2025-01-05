@@ -41,11 +41,42 @@ final class Texts {
         }
     }
     
+    enum TodayPage {
+        static let title = "Сегодня"
+        static let placeholder = "У вас пока нет заметок"
+    }
+    
+    enum CalendarPage {
+        static let title = "Календарь"
+        static let today = "Сегодня"
+        static let emptyList = "Свободный день"
+    }
+    
+    enum Settings {
+        static let title = "Настройки"
+        
+        enum About {
+            static let title = "О приложении"
+            static let release = "release"
+        }
+        
+        enum Appearance {
+            static let title = "Оформление"
+            static let system = "Системное"
+            static let light = "Светлое"
+            static let dark = "Тёмное"
+        }
+    }
+    
     enum Tabbar {
         static let main = "Главная"
         static let today = "Сегодня"
         static let calendar = "Календарь"
         static let settings = "Настройки"
+    }
+    
+    enum DateParameters {
+        static let locale = "ru_RU"
     }
     
     enum UserDefaults {
