@@ -40,4 +40,15 @@ extension Date {
     internal var longMonthYear: String {
         return Date.longMonthYearFormatter.string(from: self).lowercased()
     }
+    
+    private static let longDayMonthWeekdayFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMMM, E"
+        formatter.locale = Locale(identifier: Texts.DateParameters.locale)
+        return formatter
+    }()
+    
+    internal var longDayMonthWeekday: String {
+        return Date.longDayMonthWeekdayFormatter.string(from: self).lowercased()
+    }
 }

@@ -49,7 +49,7 @@ final class Texts {
     enum CalendarPage {
         static let title = "Календарь"
         static let today = "Сегодня"
-        static let placeholder = "Свободный день"
+        static let emptyList = "Свободный день"
     }
     
     enum Settings {

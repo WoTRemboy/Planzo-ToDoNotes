@@ -32,5 +32,6 @@ extension Image {
     
     enum TaskManagement {
         static let plus = Image("AddPlusIcon")
+        static let emptyList = Image("EmptyTaskList")
     }
 }

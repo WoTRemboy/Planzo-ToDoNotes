@@ -24,9 +24,20 @@ struct CalendarView: View {
     }
     
     private var content: some View {
-        CustomCalendarView()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .padding(.top, 60)
+        VStack {
+            CustomCalendarView()
+            separator
+            CalendarTaskList(date: viewModel.todayDate.longDayMonthWeekday)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .padding(.top, 60)
+    }
+    
+    private var separator: some View {
+        Divider()
+            .background(Color.LabelColors.labelTertiary)
+            .frame(height: 0.36)
+            .padding()
     }
     
     private var plusButton: some View {
