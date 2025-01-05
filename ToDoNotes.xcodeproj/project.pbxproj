@@ -36,6 +36,10 @@
 		63F6C6FE2D2A9FF500716AB0 /* TodayNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C6FD2D2A9FF500716AB0 /* TodayNavBar.swift */; };
 		63F6C7002D2AA01700716AB0 /* TodayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C6FF2D2AA01300716AB0 /* TodayViewModel.swift */; };
 		63F6C7022D2AA38C00716AB0 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C7012D2AA37F00716AB0 /* DateFormatter.swift */; };
+		63F6C7052D2AA94F00716AB0 /* ThemeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C7042D2AA94B00716AB0 /* ThemeModel.swift */; };
+		63F6C7082D2AAA0900716AB0 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C7072D2AAA0500716AB0 /* SettingsViewModel.swift */; };
+		63F6C70C2D2AAAA000716AB0 /* AboutAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C70B2D2AAAA000716AB0 /* AboutAppView.swift */; };
+		63F6C70E2D2AAD0100716AB0 /* SettingsNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C70D2D2AAD0100716AB0 /* SettingsNavBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +74,10 @@
 		63F6C6FD2D2A9FF500716AB0 /* TodayNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayNavBar.swift; sourceTree = "<group>"; };
 		63F6C6FF2D2AA01300716AB0 /* TodayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewModel.swift; sourceTree = "<group>"; };
 		63F6C7012D2AA37F00716AB0 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		63F6C7042D2AA94B00716AB0 /* ThemeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeModel.swift; sourceTree = "<group>"; };
+		63F6C7072D2AAA0500716AB0 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		63F6C70B2D2AAAA000716AB0 /* AboutAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutAppView.swift; sourceTree = "<group>"; };
+		63F6C70D2D2AAD0100716AB0 /* SettingsNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNavBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -270,7 +278,9 @@
 		637B9F542D2969750010F13B /* SettingsModule */ = {
 			isa = PBXGroup;
 			children = (
-				637B9F5B2D2969C30010F13B /* SettingsView.swift */,
+				63F6C7032D2AA94500716AB0 /* Model */,
+				63F6C7092D2AAA7C00716AB0 /* View */,
+				63F6C7062D2AA9FA00716AB0 /* ViewModel */,
 			);
 			path = SettingsModule;
 			sourceTree = "<group>";
@@ -326,6 +336,40 @@
 				63F6C6FD2D2A9FF500716AB0 /* TodayNavBar.swift */,
 			);
 			path = SubViews;
+			sourceTree = "<group>";
+		};
+		63F6C7032D2AA94500716AB0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				63F6C7042D2AA94B00716AB0 /* ThemeModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		63F6C7062D2AA9FA00716AB0 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				63F6C7072D2AAA0500716AB0 /* SettingsViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		63F6C7092D2AAA7C00716AB0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				637B9F5B2D2969C30010F13B /* SettingsView.swift */,
+				63F6C70A2D2AAA8500716AB0 /* Subviews */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		63F6C70A2D2AAA8500716AB0 /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				63F6C70B2D2AAAA000716AB0 /* AboutAppView.swift */,
+				63F6C70D2D2AAD0100716AB0 /* SettingsNavBar.swift */,
+			);
+			path = Subviews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -408,6 +452,7 @@
 				637B9F5F2D296F3D0010F13B /* TabRouter.swift in Sources */,
 				637B9F612D296FA90010F13B /* RootView.swift in Sources */,
 				637B9F5A2D2969AC0010F13B /* CalendarView.swift in Sources */,
+				63F6C7052D2AA94F00716AB0 /* ThemeModel.swift in Sources */,
 				637B9F482D295A510010F13B /* FolderModel.swift in Sources */,
 				637B9F462D29599B0010F13B /* FilterModel.swift in Sources */,
 				637B9F5C2D2969C30010F13B /* SettingsView.swift in Sources */,
@@ -416,6 +461,7 @@
 				63F6C6F92D29B78400716AB0 /* FoldersScrollView.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
 				637B9F662D2974E40010F13B /* FilterScrollView.swift in Sources */,
+				63F6C7082D2AAA0900716AB0 /* SettingsViewModel.swift in Sources */,
 				63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */,
 				637B9F692D29754F0010F13B /* FilterCell.swift in Sources */,
 				63F6C7002D2AA01700716AB0 /* TodayViewModel.swift in Sources */,
@@ -425,8 +471,10 @@
 				635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */,
 				637B9F512D295B7F0010F13B /* NavigationBar.swift in Sources */,
 				635FEF822D24BEA6007FFBBA /* ImageExtension.swift in Sources */,
+				63F6C70C2D2AAAA000716AB0 /* AboutAppView.swift in Sources */,
 				637B9F582D2969940010F13B /* TodayView.swift in Sources */,
 				637B9F632D29702E0010F13B /* TabItems.swift in Sources */,
+				63F6C70E2D2AAD0100716AB0 /* SettingsNavBar.swift in Sources */,
 				635FEF802D24BCEF007FFBBA /* ColorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

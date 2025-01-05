@@ -46,6 +46,22 @@ final class Texts {
         static let placeholder = "У вас пока нет заметок"
     }
     
+    enum Settings {
+        static let title = "Настройки"
+        
+        enum About {
+            static let title = "О приложении"
+            static let release = "release"
+        }
+        
+        enum Appearance {
+            static let title = "Оформление"
+            static let system = "Системное"
+            static let light = "Светлое"
+            static let dark = "Тёмное"
+        }
+    }
+    
     enum Tabbar {
         static let main = "Главная"
         static let today = "Сегодня"
