@@ -68,6 +68,11 @@ final class Texts {
         }
     }
     
+    enum TaskManagement {
+        static let titlePlaceholder = "Что бы вы хотели сделать?"
+        static let descriprionPlaceholder = "Описание"
+    }
+    
     enum Tabbar {
         static let main = "Главная"
         static let today = "Сегодня"
