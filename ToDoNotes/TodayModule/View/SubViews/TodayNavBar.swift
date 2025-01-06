@@ -20,7 +20,6 @@ struct TodayNavBar: View {
         ZStack(alignment: .bottom) {
             Color.clear
                 .background(.ultraThinMaterial)
-                .blur(radius: 10)
             
             content
                 .padding(.bottom)
