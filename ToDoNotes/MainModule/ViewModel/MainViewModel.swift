@@ -12,6 +12,8 @@ final class MainViewModel: ObservableObject {
     @Published private(set) var selectedFilter: Filter = .active
     @Published internal var selectedFolder: Folder = .all
     
+    @Published internal var showingTaskEditView: Bool = false
+    
     internal func setFilter(to new: Filter) {
         withAnimation(.easeInOut(duration: 0.2)) {
             selectedFilter = new

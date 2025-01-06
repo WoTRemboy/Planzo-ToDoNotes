@@ -20,6 +20,11 @@ struct MainView: View {
         .overlay {
             CustomNavBar(title: Texts.MainPage.title)
         }
+        .sheet(isPresented: $viewModel.showingTaskEditView) {
+            TaskManagementView()
+                .presentationDetents([.height(130)])
+                .ignoresSafeArea()
+        }
     }
         
     
@@ -35,7 +40,7 @@ struct MainView: View {
             HStack {
                 Spacer()
                 Button {
-                    // Action for plus button
+                    viewModel.showingTaskEditView.toggle()
                 } label: {
                     Image.TaskManagement.plus
                         .resizable()
