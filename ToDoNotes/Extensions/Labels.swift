@@ -16,6 +16,7 @@ final class Texts {
         static let skip = "Пропустить"
         static let next = "Продолжить"
         static let start = "Начать"
+        static let withoutAuth = "Без авторизации"
         
         static let placeholderTitle = "Добро пожаловать\nв Список дел"
         static let placeholderContent = "Вот небольшое руководство, чтобы помочь вам начать."

@@ -5,11 +5,14 @@
 //  Created by Roman Tverdokhleb on 1/1/25.
 //
 
+import AuthenticationServices
 import Foundation
 import SwiftUI
 
 /// View displaying the onboarding process or the main `EditorView` if onboarding is complete.
 struct OnboardingScreenView: View {
+    
+    @Environment(\.colorScheme) var colorScheme
     
     /// View model controlling the onboarding state.
     @EnvironmentObject private var viewModel: OnboardingViewModel
@@ -24,7 +27,7 @@ struct OnboardingScreenView: View {
             VStack(spacing: 0) {
                 content
                 progressCircles
-                actionButton
+                selectPageButtons
                 skipButton
             }
         }
@@ -73,14 +76,25 @@ struct OnboardingScreenView: View {
                         .frame(width: 15, height: 15)
                         .foregroundStyle(Color.gray)
                         .transition(.scale)
-                        .animation(.easeInOut(duration: 0.3), value: viewModel.currentStep)
                 } else {
                     Circle()
                         .frame(width: 10, height: 10)
                         .foregroundStyle(Color.labelDisable)
                         .transition(.scale)
-                        .animation(.easeInOut(duration: 0.3), value: viewModel.currentStep)
                 }
+            }
+        }
+        .animation(.easeInOut, value: viewModel.currentStep)
+    }
+    
+    // MARK: - Page Button
+    
+    private var selectPageButtons: some View {
+        ZStack {
+            if viewModel.buttonType == .nextPage {
+                nextPageButton
+            } else {
+                signWithAppleButton
             }
         }
         .animation(.easeInOut, value: viewModel.currentStep)
@@ -89,14 +103,9 @@ struct OnboardingScreenView: View {
     // MARK: - Action Button
     
     /// Button for advancing to the next step or completing onboarding.
-    private var actionButton: some View {
+    private var nextPageButton: some View {
         Button {
-            switch viewModel.buttonType {
-            case .nextPage:
-                viewModel.nextStep()
-            case .getStarted:
-                viewModel.getStarted()
-            }
+            viewModel.nextStep()
         } label: {
             switch viewModel.buttonType {
             case .nextPage:
@@ -121,14 +130,33 @@ struct OnboardingScreenView: View {
         .animation(.easeInOut, value: viewModel.buttonType)
     }
     
+    // MARK: - Sign with Apple Button
+    
+    private var signWithAppleButton: some View {
+        SignInWithAppleButton(.continue) { request in
+            request.requestedScopes = [.fullName, .email]
+        } onCompletion: { result in
+            viewModel.authorization(result: result)
+        }
+        .signInWithAppleButtonStyle(
+            colorScheme == .light ? .black : .white
+        )
+        .clipShape(.rect(cornerRadius: 10))
+        .frame(height: 50)
+        .frame(maxWidth: .infinity)
+        
+        .padding(.horizontal)
+        .padding(.top, 30)
+    }
+    
     // MARK: - Skip Button
     
     /// Button allowing users to skip to the last onboarding step.
     private var skipButton: some View {
-        Text(Texts.OnboardingPage.skip)
+        Text(viewModel.buttonType == .nextPage ? Texts.OnboardingPage.skip : Texts.OnboardingPage.withoutAuth)
             .font(.system(size: 14))
             .fontWeight(.light)
-            .foregroundStyle(viewModel.buttonType == .nextPage ? Color.labelSecondary : Color.clear)
+            .foregroundStyle(Color.labelSecondary)
         
             .padding(.top)
             .padding(.bottom, hasNotch() ? 20 : 16)
@@ -136,7 +164,6 @@ struct OnboardingScreenView: View {
             .onTapGesture {
                 viewModel.skipSteps()
             }
-            .disabled(viewModel.buttonType == .getStarted)
             .animation(.easeInOut, value: viewModel.buttonType)
     }
 }

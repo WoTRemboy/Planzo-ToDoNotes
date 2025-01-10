@@ -10,6 +10,7 @@ import SwiftUI
 struct MainView: View {
     
     @EnvironmentObject private var viewModel: MainViewModel
+    @State private var taskManagementHeight: CGFloat = 15
     
     internal var body: some View {
         ZStack {
@@ -21,13 +22,12 @@ struct MainView: View {
             CustomNavBar(title: Texts.MainPage.title)
         }
         .sheet(isPresented: $viewModel.showingTaskEditView) {
-            TaskManagementView()
-                .presentationDetents([.height(130)])
-                .ignoresSafeArea()
+            TaskManagementView(taskManagementHeight: $taskManagementHeight)
+                .presentationDetents([.height(80 + taskManagementHeight)])
+                .presentationDragIndicator(.visible)
         }
     }
         
-    
     private var content: some View {
         Text(Texts.MainPage.placeholder)
             .foregroundStyle(Color.LabelColors.labelSecondary)
