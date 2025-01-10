@@ -13,17 +13,21 @@ struct TaskManagementView: View {
     
     @State private var titleText: String = String()
     @State private var discriptionText: String = String()
+    @Binding private var taskManagementHeight: CGFloat
+    
+    init(taskManagementHeight: Binding<CGFloat>) {
+        self._taskManagementHeight = taskManagementHeight
+    }
     
     internal var body: some View {
         VStack(spacing: 0) {
-            sliderLine
             titleInput
             descriptionInput
+                .background(HeightReader(height: $taskManagementHeight))
             
             Spacer()
             buttons
         }
-        .frame(height: 122)
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
     }
@@ -42,9 +46,7 @@ struct TaskManagementView: View {
         
             .focused($titleFocused)
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    titleFocused = true
-                }
+                titleFocused = true
             }
     }
     
@@ -67,6 +69,7 @@ struct TaskManagementView: View {
             Spacer()
             acceptButton
         }
+        .padding(.top, 16)
     }
     
     private var calendarButton: some View {
@@ -110,6 +113,38 @@ struct TaskManagementView: View {
     }
 }
 
-#Preview {
-    TaskManagementView()
+struct HeightReader: View {
+    @Binding private var height: CGFloat
+    
+    init(height: Binding<CGFloat>) {
+        self._height = height
+    }
+    
+    var body: some View {
+        GeometryReader { geometry in
+            Color.clear
+                .onAppear {
+                    height = geometry.size.height
+                }
+                .onChange(of: geometry.size.height) { newValue in
+                    withAnimation {
+                        height = newValue
+                    }
+                }
+        }
+    }
+}
+
+struct TaskManagementView_Previews: PreviewProvider {
+    static var previews: some View {
+        PreviewWrapper()
+    }
+    
+    struct PreviewWrapper: View {
+        @State private var taskManagementHeight: CGFloat = 130
+        
+        var body: some View {
+            TaskManagementView(taskManagementHeight: $taskManagementHeight)
+        }
+    }
 }
