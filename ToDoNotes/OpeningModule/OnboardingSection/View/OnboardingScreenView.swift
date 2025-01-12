@@ -17,21 +17,12 @@ struct OnboardingScreenView: View {
     /// View model controlling the onboarding state.
     @EnvironmentObject private var viewModel: OnboardingViewModel
     
-    /// Pages for the onboarding process.
-    private let pages: [Int]
-    
     /// Current page tracker for the pager.
     @StateObject private var page: Page = .first()
     
-    // MARK: - Initializer
-    
-    init() {
-        pages = Array(0..<OnboardingViewModel().stepsCount)
-    }
-    
     // MARK: - Body
     
-    var body: some View {
+    internal var body: some View {
         if viewModel.skipOnboarding {
             RootView()
                 .environmentObject(TabRouter())
@@ -51,7 +42,7 @@ struct OnboardingScreenView: View {
     /// Displays the onboarding steps using a Pager.
     private var content: some View {
         Pager(page: page,
-              data: pages,
+              data: viewModel.pages,
               id: \.self) { index in
                 VStack(spacing: 0) {
                     viewModel.steps[index].image
@@ -90,7 +81,7 @@ struct OnboardingScreenView: View {
     /// Displays the progress indicator for the onboarding steps.
     private var progressCircles: some View {
         HStack {
-            ForEach(pages, id: \.self) { step in
+            ForEach(viewModel.pages, id: \.self) { step in
                 if step == page.index {
                     Circle()
                         .frame(width: 15, height: 15)
@@ -110,7 +101,7 @@ struct OnboardingScreenView: View {
     
     private var selectPageButtons: some View {
         VStack(spacing: 16) {
-            if page.index < viewModel.steps.count - 1 {
+            if !viewModel.isLastPage(current: page.index) {
                 nextPageButton
                     .transition(.move(edge: .leading).combined(with: .opacity))
             } else {
@@ -167,7 +158,7 @@ struct OnboardingScreenView: View {
     
     /// Button allowing users to skip to the last onboarding step.
     private var skipButton: some View {
-        Text(page.index != (viewModel.stepsCount - 1) ? Texts.OnboardingPage.skip : Texts.OnboardingPage.withoutAuth)
+        Text(!viewModel.isLastPage(current: page.index) ? Texts.OnboardingPage.skip : Texts.OnboardingPage.withoutAuth)
             .font(.system(size: 14))
             .fontWeight(.light)
             .foregroundStyle(Color.labelSecondary)
@@ -176,7 +167,7 @@ struct OnboardingScreenView: View {
             .padding(.bottom, hasNotch() ? 20 : 16)
         
             .onTapGesture {
-                if page.index < viewModel.stepsCount - 1 {
+                if !viewModel.isLastPage(current: page.index) {
                     withAnimation {
                         page.update(.moveToLast)
                     }
