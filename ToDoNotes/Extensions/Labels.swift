@@ -88,6 +88,11 @@ final class Texts {
         static let locale = "ru_RU"
     }
     
+    enum CoreData {
+        static let container = "TaskModel"
+        static let entity = "TaskEntity"
+    }
+    
     enum UserDefaults {
         static let skipOnboarding = "skipOnboarding"
         static let notifications = "notificationsEnabled"

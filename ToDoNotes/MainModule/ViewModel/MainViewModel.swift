@@ -14,6 +14,10 @@ final class MainViewModel: ObservableObject {
     
     @Published internal var showingTaskEditView: Bool = false
     
+    internal func toggleShowingTaskEditView() {
+        showingTaskEditView.toggle()
+    }
+    
     internal func setFilter(to new: Filter) {
         withAnimation(.easeInOut(duration: 0.2)) {
             selectedFilter = new

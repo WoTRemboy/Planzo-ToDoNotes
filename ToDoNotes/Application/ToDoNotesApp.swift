@@ -13,6 +13,7 @@ struct ToDoNotesApp: App {
     var body: some Scene {
         WindowGroup {
             SplashScreenView()
+                .environmentObject(CoreDataViewModel())
                 .onOpenURL { url in
                     GIDSignIn.sharedInstance.handle(url)
                 }

@@ -10,18 +10,23 @@ import SwiftUI
 struct TaskManagementView: View {
     
     @FocusState private var titleFocused
+    @EnvironmentObject private var coreDataManager: CoreDataViewModel
     
-    @State private var titleText: String = String()
-    @State private var discriptionText: String = String()
+    @State private var nameText: String = String()
+    @State private var descriptionText: String = String()
     @Binding private var taskManagementHeight: CGFloat
     
-    init(taskManagementHeight: Binding<CGFloat>) {
+    private var onDismiss: () -> Void
+    
+    init(taskManagementHeight: Binding<CGFloat>,
+         onDismiss: @escaping () -> Void) {
         self._taskManagementHeight = taskManagementHeight
+        self.onDismiss = onDismiss
     }
     
     internal var body: some View {
         VStack(spacing: 0) {
-            titleInput
+            nameInput
             descriptionInput
                 .background(HeightReader(height: $taskManagementHeight))
             
@@ -38,8 +43,8 @@ struct TaskManagementView: View {
             .frame(width: 36, height: 5)
     }
     
-    private var titleInput: some View {
-        TextField(Texts.TaskManagement.titlePlaceholder, text: $titleText)
+    private var nameInput: some View {
+        TextField(Texts.TaskManagement.titlePlaceholder, text: $nameText)
             .font(.system(size: 18, weight: .regular))
             .lineLimit(1)
             .padding(.top, 20)
@@ -52,7 +57,7 @@ struct TaskManagementView: View {
     
     private var descriptionInput: some View {
         TextField(Texts.TaskManagement.descriprionPlaceholder,
-                  text: $discriptionText,
+                  text: $descriptionText,
                   axis: .vertical)
         .lineLimit(1...5)
         
@@ -103,7 +108,12 @@ struct TaskManagementView: View {
     
     private var acceptButton: some View {
         Button {
-            // Action for accept button
+            withAnimation {
+                coreDataManager.addTask(
+                    name: nameText,
+                    description: descriptionText)
+            }
+            onDismiss()
         } label: {
             Image.TaskManagement.EditTask.accept
                 .resizable()
@@ -143,7 +153,7 @@ struct TaskManagementView_Previews: PreviewProvider {
         @State private var taskManagementHeight: CGFloat = 130
         
         var body: some View {
-            TaskManagementView(taskManagementHeight: $taskManagementHeight)
+            TaskManagementView(taskManagementHeight: $taskManagementHeight) { }
         }
     }
 }

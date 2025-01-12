@@ -16,14 +16,10 @@ struct CustomNavBar: View {
     
     internal var body: some View {
         ZStack(alignment: .bottom) {
-            Color.clear
-                .background(.ultraThinMaterial)
-            
             content
                 .padding(.bottom)
         }
         .frame(height: 140)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
     
     private var content: some View {
