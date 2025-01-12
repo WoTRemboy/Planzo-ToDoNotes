@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6303E2C02D33FF870096DB64 /* RootViewControllerMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */; };
+		6303E2C22D3405040096DB64 /* AuthorizationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2C12D3404FD0096DB64 /* AuthorizationViewModel.swift */; };
 		635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF6A2D24B71C007FFBBA /* ToDoNotesApp.swift */; };
 		635FEF6E2D24B71C007FFBBA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 635FEF662D24B71C007FFBBA /* Preview Assets.xcassets */; };
 		635FEF6F2D24B71C007FFBBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 635FEF682D24B71C007FFBBA /* Assets.xcassets */; };
@@ -53,6 +55,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewControllerMethods.swift; sourceTree = "<group>"; };
+		6303E2C12D3404FD0096DB64 /* AuthorizationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationViewModel.swift; sourceTree = "<group>"; };
 		635FEF552D24B715007FFBBA /* ToDoNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		635FEF662D24B71C007FFBBA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		635FEF682D24B71C007FFBBA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -211,6 +215,7 @@
 			isa = PBXGroup;
 			children = (
 				635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */,
+				6303E2C12D3404FD0096DB64 /* AuthorizationViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -241,6 +246,7 @@
 				635FEF832D24C172007FFBBA /* Labels.swift */,
 				63F6C7012D2AA37F00716AB0 /* DateFormatter.swift */,
 				63DA81032D24CE44005CEECB /* ViewExtension.swift */,
+				6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -541,7 +547,9 @@
 				635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */,
 				637B9F4C2D295B290010F13B /* MainView.swift in Sources */,
 				63F6C7122D2AB71900716AB0 /* CalendarNavBar.swift in Sources */,
+				6303E2C22D3405040096DB64 /* AuthorizationViewModel.swift in Sources */,
 				63F6C6F72D29B41E00716AB0 /* FolderCell.swift in Sources */,
+				6303E2C02D33FF870096DB64 /* RootViewControllerMethods.swift in Sources */,
 				637B9F5F2D296F3D0010F13B /* TabRouter.swift in Sources */,
 				637B9F612D296FA90010F13B /* RootView.swift in Sources */,
 				637B9F5A2D2969AC0010F13B /* CalendarView.swift in Sources */,

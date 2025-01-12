@@ -41,4 +41,9 @@ extension Image {
             static let accept = Image("EditTaskAccept")
         }
     }
+    
+    enum LoginPage {
+        static let appleLogo = Image("AppleLogo")
+        static let googleLogo = Image("GoogleLogo")
+    }
 }

@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftUIPager
-import AuthenticationServices
 
 /// View displaying the onboarding process or the main `RootView` if onboarding is complete.
 struct OnboardingScreenView: View {
@@ -107,8 +106,7 @@ struct OnboardingScreenView: View {
             } else {
                 signWithAppleButton
                     .transition(.move(edge: .trailing).combined(with: .opacity))
-                    .padding(.top, 30)
-                signWithAppleButton
+                signWithGoogleButton
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             }
         }
@@ -141,15 +139,54 @@ struct OnboardingScreenView: View {
     // MARK: - Sign with Apple Button
     
     private var signWithAppleButton: some View {
-        SignInWithAppleButton(.continue) { request in
-            request.requestedScopes = [.fullName, .email]
-        } onCompletion: { result in
-            viewModel.authorization(result: result)
+        Button {
+            viewModel.startAppleSignIn()
+        } label: {
+            HStack {
+                Image.LoginPage.appleLogo
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                Text(Texts.OnboardingPage.appleLogin)
+                    .font(.system(size: 17, weight: .regular))
+                    .foregroundStyle(Color.LabelColors.labelReversed)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .background(Color.ButtonColors.appleLogin)
         }
-        .signInWithAppleButtonStyle(
-            colorScheme == .light ? .black : .white
-        )
+        .frame(height: 50)
+        .frame(maxWidth: .infinity)
+        .minimumScaleFactor(0.4)
+        
         .clipShape(.rect(cornerRadius: 10))
+        .shadow(radius: 2)
+        .frame(height: 50)
+        .padding(.horizontal)
+        .padding(.top, 30)
+    }
+    
+    // MARK: - Sign with Google Button
+    
+    private var signWithGoogleButton: some View {
+        Button {
+            viewModel.googleAuthorization()
+        } label: {
+            HStack {
+                Image.LoginPage.googleLogo
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                Text(Texts.OnboardingPage.googleLogin)
+                    .font(.system(size: 17, weight: .regular))
+                    .foregroundStyle(Color.black)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .background(Color.white)
+        }
+        .frame(height: 50)
+        .frame(maxWidth: .infinity)
+        .minimumScaleFactor(0.4)
+        
+        .clipShape(.rect(cornerRadius: 10))
+        .shadow(radius: 2)
         .frame(height: 50)
         .padding(.horizontal)
     }
@@ -172,7 +209,7 @@ struct OnboardingScreenView: View {
                         page.update(.moveToLast)
                     }
                 } else {
-                    viewModel.skipSteps()
+                    viewModel.transferToMainPage()
                 }
             }
             .animation(.easeInOut, value: page.index)

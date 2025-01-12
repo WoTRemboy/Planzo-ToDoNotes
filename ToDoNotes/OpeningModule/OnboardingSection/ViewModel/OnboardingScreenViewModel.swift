@@ -7,10 +7,9 @@
 
 import Foundation
 import SwiftUI
-import AuthenticationServices
 
 /// ViewModel responsible for managing the state and actions in the onboarding process.
-final class OnboardingViewModel: ObservableObject {
+final class OnboardingViewModel: NSObject, ObservableObject {
     
     // MARK: - Properties
     
@@ -34,26 +33,9 @@ final class OnboardingViewModel: ObservableObject {
     }
     
     /// Skips directly to the final onboarding step with a smooth animation.
-    internal func skipSteps() {
+    internal func transferToMainPage() {
         withAnimation(.easeInOut) {
             skipOnboarding.toggle()
-        }
-    }
-    
-    internal func authorization(result: Result<ASAuthorization, any Error>) {
-        switch result {
-        case .success(let auth):
-            switch auth.credential {
-            case let credential as ASAuthorizationAppleIDCredential:
-                let token = credential.authorizationCode
-                skipOnboarding.toggle()
-                print(token ?? String())
-                break
-            default:
-                break
-            }
-        case .failure(let error):
-            print(error.localizedDescription)
         }
     }
 }
