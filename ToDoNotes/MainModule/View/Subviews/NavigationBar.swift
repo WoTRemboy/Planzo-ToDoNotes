@@ -15,14 +15,6 @@ struct CustomNavBar: View {
     }
     
     internal var body: some View {
-        ZStack(alignment: .bottom) {
-            content
-                .padding(.bottom)
-        }
-        .frame(height: 140)
-    }
-    
-    private var content: some View {
         VStack(spacing: 0) {
             HStack {
                 titleLabel
@@ -33,6 +25,7 @@ struct CustomNavBar: View {
             FoldersScrollView()
                 .padding(.top, 12)
         }
+        .frame(height: 140)
     }
     
     private var titleLabel: some View {

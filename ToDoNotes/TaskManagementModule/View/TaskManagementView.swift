@@ -108,6 +108,7 @@ struct TaskManagementView: View {
     
     private var acceptButton: some View {
         Button {
+            guard !nameText.isEmpty else { return }
             withAnimation {
                 coreDataManager.addTask(
                     name: nameText,

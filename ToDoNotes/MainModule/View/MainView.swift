@@ -65,7 +65,7 @@ struct MainView: View {
             HStack {
                 Spacer()
                 Button {
-                    viewModel.showingTaskEditView.toggle()
+                    viewModel.toggleShowingTaskEditView()
                 } label: {
                     Image.TaskManagement.plus
                         .resizable()
