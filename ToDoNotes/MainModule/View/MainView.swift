@@ -10,6 +10,7 @@ import SwiftUI
 struct MainView: View {
     
     @EnvironmentObject private var viewModel: MainViewModel
+    @EnvironmentObject private var coreDataManager: CoreDataViewModel
     @State private var taskManagementHeight: CGFloat = 15
     
     internal var body: some View {
@@ -18,20 +19,44 @@ struct MainView: View {
             plusButton
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .overlay {
-            CustomNavBar(title: Texts.MainPage.title)
-        }
         .sheet(isPresented: $viewModel.showingTaskEditView) {
-            TaskManagementView(taskManagementHeight: $taskManagementHeight)
+            TaskManagementView(taskManagementHeight: $taskManagementHeight) {
+                viewModel.toggleShowingTaskEditView()
+            }
                 .presentationDetents([.height(80 + taskManagementHeight)])
                 .presentationDragIndicator(.visible)
         }
     }
         
     private var content: some View {
+        VStack(spacing: 0) {
+            CustomNavBar(title: Texts.MainPage.title)
+            if coreDataManager.isEmpty {
+                placeholderLabel
+            } else {
+                taskList
+            }
+        }
+    }
+    
+    private var placeholderLabel: some View {
         Text(Texts.MainPage.placeholder)
             .foregroundStyle(Color.LabelColors.labelSecondary)
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+    }
+    
+    private var taskList: some View {
+        List {
+            ForEach(coreDataManager.savedEnities) { entity in
+                Text(entity.name ?? String())
+            }
+            .onDelete { indexSet in
+                coreDataManager.deleteTask(indexSet: indexSet)
+            }
+            .listRowBackground(Color.SupportColors.backListRow)
+        }
+        .background(Color.BackColors.backDefault)
+        .scrollContentBackground(.hidden)
     }
     
     private var plusButton: some View {
@@ -40,7 +65,7 @@ struct MainView: View {
             HStack {
                 Spacer()
                 Button {
-                    viewModel.showingTaskEditView.toggle()
+                    viewModel.toggleShowingTaskEditView()
                 } label: {
                     Image.TaskManagement.plus
                         .resizable()
@@ -56,4 +81,5 @@ struct MainView: View {
 #Preview {
     MainView()
         .environmentObject(MainViewModel())
+        .environmentObject(CoreDataViewModel())
 }

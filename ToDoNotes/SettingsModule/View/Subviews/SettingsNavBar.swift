@@ -9,15 +9,10 @@ import SwiftUI
 
 struct SettingsNavBar: View {
     internal var body: some View {
-        ZStack(alignment: .bottom) {
-            Color.clear
-                .background(.ultraThinMaterial)
-            
-            titleLabel
-                .padding(.bottom)
-        }
-        .frame(height: 46.5)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        titleLabel
+            .padding(.bottom)
+            .frame(height: 46.5)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
     
     private var titleLabel: some View {
