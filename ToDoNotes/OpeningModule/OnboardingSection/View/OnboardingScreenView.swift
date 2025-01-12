@@ -168,7 +168,7 @@ struct OnboardingScreenView: View {
     
     private var signWithGoogleButton: some View {
         Button {
-            viewModel.googleAuthorization()
+            //viewModel.googleAuthorization()
         } label: {
             HStack {
                 Image.LoginPage.googleLogo

@@ -29,26 +29,46 @@ struct FoldersScrollView: View {
     
     private var folderMenu: some View {
         Menu {
-            folderPicker
+            allFoldersPicker
+            unlockedFoldersPicker
+            lockedFoldersPicker
         } label: {
             Image.Folder.navBar
                 .frame(width: 24, height: 24)
         }
     }
     
-    private var folderPicker: some View {
+    private var allFoldersPicker: some View {
         Picker(Texts.MainPage.Folders.title,
                selection: $viewModel.selectedFolder.animation(.easeInOut(duration: 0.2))) {
             
-            ForEach(Folder.allCases.dropLast(), id: \.self) { folder in
+            Label {
+                Text(Folder.all.name)
+            } icon: {
+                Image.Folder.unlocked
+            }
+            .tag(Folder.all)
+        }
+    }
+    
+    private var unlockedFoldersPicker: some View {
+        Picker(Texts.MainPage.Folders.title,
+               selection: $viewModel.selectedFolder.animation(.easeInOut(duration: 0.2))) {
+            
+            ForEach(Folder.allCases.dropFirst().dropLast(), id: \.self) { folder in
                 Label {
                     Text(folder.name)
                 } icon: {
                     Image.Folder.unlocked
                 }
             }
-            Divider()
-
+        }
+    }
+    
+    private var lockedFoldersPicker: some View {
+        Picker(Texts.MainPage.Folders.title,
+               selection: $viewModel.selectedFolder.animation(.easeInOut(duration: 0.2))) {
+            
             Label {
                 Text(Folder.passwords.name)
             } icon: {
