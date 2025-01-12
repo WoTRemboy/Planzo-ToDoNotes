@@ -14,8 +14,8 @@ final class OnboardingViewModel: NSObject, ObservableObject {
     // MARK: - Properties
     
     /// A flag stored in `AppStorage` to track if this is the first launch of the app.
-//    @AppStorage(Texts.UserDefaults.skipOnboarding) var skipOnboarding: Bool = false
-    @Published private(set) var skipOnboarding: Bool = false
+    @AppStorage(Texts.UserDefaults.skipOnboarding) var skipOnboarding: Bool = false
+//    @Published private(set) var skipOnboarding: Bool = false
     /// The list of onboarding steps, initialized using `stepsSetup()`.
     private(set) var steps = OnboardingStep.stepsSetup()
     

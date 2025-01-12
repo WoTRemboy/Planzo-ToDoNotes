@@ -69,7 +69,6 @@ struct TaskManagementView: View {
             Spacer()
             acceptButton
         }
-        .padding(.top, 16)
     }
     
     private var calendarButton: some View {
