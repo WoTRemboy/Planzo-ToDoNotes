@@ -11,7 +11,6 @@ struct MainView: View {
     
     @EnvironmentObject private var viewModel: MainViewModel
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
-    @State private var taskManagementHeight: CGFloat = 15
     
     internal var body: some View {
         ZStack {
@@ -20,11 +19,11 @@ struct MainView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .sheet(isPresented: $viewModel.showingTaskEditView) {
-            TaskManagementView(taskManagementHeight: $taskManagementHeight) {
+            TaskManagementView(taskManagementHeight: $viewModel.taskManagementHeight) {
                 viewModel.toggleShowingTaskEditView()
             }
-                .presentationDetents([.height(80 + taskManagementHeight)])
-                .presentationDragIndicator(.visible)
+            .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
+            .presentationDragIndicator(.visible)
         }
     }
         

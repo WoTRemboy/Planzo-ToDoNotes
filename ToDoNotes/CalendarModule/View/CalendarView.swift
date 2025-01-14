@@ -18,6 +18,13 @@ struct CalendarView: View {
             plusButton
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .sheet(isPresented: $viewModel.showingTaskEditView) {
+            TaskManagementView(taskManagementHeight: $viewModel.taskManagementHeight) {
+                viewModel.toggleShowingTaskEditView()
+            }
+            .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
+            .presentationDragIndicator(.visible)
+        }
     }
     
     private var content: some View {
@@ -77,7 +84,7 @@ struct CalendarView: View {
             HStack {
                 Spacer()
                 Button {
-                    // Action for plus button
+                    viewModel.toggleShowingTaskEditView()
                 } label: {
                     Image.TaskManagement.plus
                         .resizable()

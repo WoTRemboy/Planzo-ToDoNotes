@@ -13,6 +13,7 @@ final class MainViewModel: ObservableObject {
     @Published internal var selectedFolder: Folder = .all
     
     @Published internal var showingTaskEditView: Bool = false
+    @Published internal var taskManagementHeight: CGFloat = 15
     
     internal var todayDateString: String {
         Date.now.longDayMonthWeekday

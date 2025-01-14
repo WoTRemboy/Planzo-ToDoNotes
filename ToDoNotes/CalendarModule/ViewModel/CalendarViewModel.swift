@@ -9,6 +9,9 @@ import SwiftUI
 
 final class CalendarViewModel: ObservableObject {
     
+    @Published internal var showingTaskEditView: Bool = false
+    @Published internal var taskManagementHeight: CGFloat = 15
+    
     internal let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
     private(set) var todayDate: Date = Date.now
     private(set) var days: [Date] = []
@@ -19,6 +22,10 @@ final class CalendarViewModel: ObservableObject {
     
     init() {
         updateDays()
+    }
+    
+    internal func toggleShowingTaskEditView() {
+        showingTaskEditView.toggle()
     }
     
     internal func updateDays() {
