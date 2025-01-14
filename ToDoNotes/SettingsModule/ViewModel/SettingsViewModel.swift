@@ -12,6 +12,9 @@ final class SettingsViewModel: ObservableObject {
     
     @AppStorage(Texts.UserDefaults.theme) var userTheme: Theme = .systemDefault
     
+    @Published internal var showingLanguageAlert: Bool = false
+    @Published internal var showingAppearance: Bool = false
+    
     internal var appName: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "Unknown App"
     }
@@ -24,8 +27,16 @@ final class SettingsViewModel: ObservableObject {
         return String()
     }
     
+    internal func toggleShowingLanguageAlert() {
+        showingLanguageAlert.toggle()
+    }
+    
+    internal func toggleShowingAppearance() {
+        showingAppearance.toggle()
+    }
+    
     internal func changeTheme(theme: Theme) {
-        self.userTheme = theme
+        userTheme = theme
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
                 if let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
@@ -35,9 +46,5 @@ final class SettingsViewModel: ObservableObject {
                 }
             }
         }
-    }
-    
-    private func versionDetect() {
-        
     }
 }

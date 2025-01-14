@@ -18,6 +18,8 @@ extension Image {
         static let favorites = Image("FavoritesNavIcon")
         static let calendar = Image("CalendarNavIcon")
         static let more = Image("MoreNavIcon")
+        static let back = Image("BackNavIcon")
+        static let share = Image("ShareNavIcon")
     }
     
     enum Folder {
@@ -28,6 +30,12 @@ extension Image {
     
     enum Settings {
         static let about = Image("SettingsAboutApp")
+        static let appearance = Image("SettingsAppearance")
+        static let language = Image("SettingsLanguage")
+        static let email = Image("SettingsEmail")
+        
+        static let chevron = Image(systemName: "chevron.right")
+        static let check = Image(systemName: "checkmark")
     }
     
     enum TaskManagement {

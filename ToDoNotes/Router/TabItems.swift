@@ -40,6 +40,7 @@ struct TabItems {
     
     static func settingsTab() -> some View {
         SettingsView()
+            .environmentObject(SettingsViewModel())
             .tabItem {
                 Image.Placeholder.tabbarIcon
                     .renderingMode(.template)
