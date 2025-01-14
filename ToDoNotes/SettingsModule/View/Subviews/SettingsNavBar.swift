@@ -10,9 +10,7 @@ import SwiftUI
 struct SettingsNavBar: View {
     internal var body: some View {
         titleLabel
-            .padding(.bottom)
             .frame(height: 46.5)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
     
     private var titleLabel: some View {

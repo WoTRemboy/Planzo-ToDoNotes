@@ -17,27 +17,24 @@ struct CalendarView: View {
             plusButton
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .overlay {
-            CalendarNavBar(date: Texts.CalendarPage.today,
-                           monthYear: viewModel.todayDate.longMonthYear)
-        }
     }
     
     private var content: some View {
-        VStack {
+        VStack(spacing: 16) {
+            CalendarNavBar(date: Texts.CalendarPage.today,
+                           monthYear: viewModel.todayDate.longMonthYear)
             CustomCalendarView()
             separator
             CalendarTaskList(date: viewModel.todayDate.longDayMonthWeekday)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .padding(.top, 60)
     }
     
     private var separator: some View {
         Divider()
             .background(Color.LabelColors.labelTertiary)
             .frame(height: 0.36)
-            .padding()
+            .padding(.horizontal)
     }
     
     private var plusButton: some View {

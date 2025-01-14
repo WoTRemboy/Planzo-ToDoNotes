@@ -16,13 +16,14 @@ struct SettingsView: View {
             content
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .overlay {
-            SettingsNavBar()
-        }
     }
     
     private var content: some View {
-        Text("Вкладка Настройки")
+        VStack(spacing: 0) {
+            SettingsNavBar()
+            Text("Вкладка Настройки")
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
     
     private var aboutAppSection: some View {
