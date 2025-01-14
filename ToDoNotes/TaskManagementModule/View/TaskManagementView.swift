@@ -28,6 +28,10 @@ struct TaskManagementView: View {
         self.date = date
         self.onDismiss = onDismiss
         self.entity = entity
+        
+        if let entity {
+            self._viewModel = StateObject(wrappedValue: TaskManagementViewModel(entity: entity))
+        }
     }
     
     internal var body: some View {
@@ -38,25 +42,26 @@ struct TaskManagementView: View {
                     dayName: date.shortWeekday,
                     onDismiss: onDismiss)
             }
-            
-            VStack(spacing: 0) {
-                nameInput
-                descriptionInput
-                    .background(HeightReader(height: $taskManagementHeight))
-                
-                Spacer()
-                buttons
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, entity == nil ? 8 : 0)
-            .padding(.bottom, 8)
+            content
         }
     }
     
-    private var sliderLine: some View {
-        RoundedRectangle(cornerRadius: 2.5)
-            .foregroundStyle(Color.LabelColors.labelTertiary)
-            .frame(width: 36, height: 5)
+    private var content: some View {
+        VStack(spacing: 0) {
+            nameInput
+            
+            if entity != nil {
+                descriptionCoverInput
+            } else {
+                descriptionSheetInput
+                    .background(HeightReader(height: $taskManagementHeight))
+            }
+            Spacer()
+            buttons
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, entity == nil ? 8 : 0)
+        .padding(.bottom, 8)
     }
     
     private var nameInput: some View {
@@ -72,12 +77,22 @@ struct TaskManagementView: View {
             }
     }
     
-    private var descriptionInput: some View {
+    private var descriptionSheetInput: some View {
         TextField(Texts.TaskManagement.descriprionPlaceholder,
                   text: $viewModel.descriptionText,
                   axis: .vertical)
-        .lineLimit(1...5)
         
+        .lineLimit(1...5)
+        .font(.system(size: 15, weight: .light))
+        .padding(.top, 10)
+    }
+    
+    private var descriptionCoverInput: some View {
+        TextField(Texts.TaskManagement.descriprionPlaceholder,
+                  text: $viewModel.descriptionText,
+                  axis: .vertical)
+        
+        //.lineLimit(0)
         .font(.system(size: 15, weight: .light))
         .padding(.top, 10)
     }
@@ -131,10 +146,18 @@ struct TaskManagementView: View {
         Button {
             guard !viewModel.nameText.isEmpty else { return }
             withAnimation {
-                coreDataManager.addTask(
-                    name: viewModel.nameText,
-                    description: viewModel.descriptionText,
-                    completeCheck: viewModel.check)
+                if let entity {
+                    coreDataManager.updateTask(
+                        entity: entity,
+                        name: viewModel.nameText,
+                        description: viewModel.descriptionText,
+                        completeCheck: viewModel.check)
+                } else {
+                    coreDataManager.addTask(
+                        name: viewModel.nameText,
+                        description: viewModel.descriptionText,
+                        completeCheck: viewModel.check)
+                }
             }
             onDismiss()
         } label: {

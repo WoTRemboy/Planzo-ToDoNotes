@@ -18,14 +18,22 @@ struct TodayView: View {
             plusButton
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .sheet(isPresented: $viewModel.showingTaskEditView) {
+        .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
                 date: .now) {
-                viewModel.toggleShowingTaskEditView()
+                    viewModel.toggleShowingTaskCreateView()
             }
             .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
             .presentationDragIndicator(.visible)
+        }
+        .fullScreenCover(item: $viewModel.selectedTask) { task in
+            TaskManagementView(
+                taskManagementHeight: $viewModel.taskManagementHeight,
+                date: .now,
+                entity: task) {
+                    viewModel.toggleShowingTaskEditView()
+                }
         }
     }
     
@@ -52,7 +60,11 @@ struct TodayView: View {
     private var taskForm: some View {
         Form {
             ForEach(coreDataManager.savedEnities) { entity in
-                TaskListRow(entity: entity)
+                Button {
+                    viewModel.selectedTask = entity
+                } label: {
+                    TaskListRow(entity: entity)
+                }
             }
             .onDelete { indexSet in
                 coreDataManager.deleteTask(indexSet: indexSet)
@@ -70,7 +82,7 @@ struct TodayView: View {
             HStack {
                 Spacer()
                 Button {
-                    viewModel.toggleShowingTaskEditView()
+                    viewModel.toggleShowingTaskCreateView()
                 } label: {
                     Image.TaskManagement.plus
                         .resizable()

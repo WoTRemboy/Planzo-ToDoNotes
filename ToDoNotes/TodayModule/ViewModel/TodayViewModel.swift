@@ -9,12 +9,17 @@ import SwiftUI
 
 final class TodayViewModel: ObservableObject {
     
-    @Published internal var showingTaskEditView: Bool = false
+    @Published internal var showingTaskCreateView: Bool = false
+    @Published internal var selectedTask: TaskEntity? = nil
     @Published internal var taskManagementHeight: CGFloat = 15
     
     private(set) var todayDate: Date = Date.now
     
+    internal func toggleShowingTaskCreateView() {
+        showingTaskCreateView.toggle()
+    }
+    
     internal func toggleShowingTaskEditView() {
-        showingTaskEditView.toggle()
+        selectedTask = nil
     }
 }
