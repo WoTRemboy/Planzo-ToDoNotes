@@ -5,14 +5,19 @@
 //  Created by Roman Tverdokhleb on 1/1/25.
 //
 
-import Foundation
 import SwiftUI
+import SwiftUIPager
 
-/// View displaying the onboarding process or the main `EditorView` if onboarding is complete.
+/// View displaying the onboarding process or the main `RootView` if onboarding is complete.
 struct OnboardingScreenView: View {
+    
+    @Environment(\.colorScheme) var colorScheme
     
     /// View model controlling the onboarding state.
     @EnvironmentObject private var viewModel: OnboardingViewModel
+    
+    /// Current page tracker for the pager.
+    @StateObject private var page: Page = .first()
     
     // MARK: - Body
     
@@ -20,22 +25,25 @@ struct OnboardingScreenView: View {
         if viewModel.skipOnboarding {
             RootView()
                 .environmentObject(TabRouter())
+                .environmentObject(CoreDataViewModel())
         } else {
             VStack(spacing: 0) {
                 content
                 progressCircles
-                actionButton
+                selectPageButtons
                 skipButton
             }
+            .padding(.vertical)
         }
     }
     
     // MARK: - Content
     
-    /// Displays the onboarding steps as a tab view.
+    /// Displays the onboarding steps using a Pager.
     private var content: some View {
-        TabView(selection: $viewModel.currentStep) {
-            ForEach(0 ..< viewModel.stepsCount, id: \.self) { index in
+        Pager(page: page,
+              data: viewModel.pages,
+              id: \.self) { index in
                 VStack(spacing: 0) {
                     viewModel.steps[index].image
                         .resizable()
@@ -56,10 +64,16 @@ struct OnboardingScreenView: View {
                         .padding(.top, 3)
                         .frame(width: 238)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .tag(index)
-            }
         }
-        .tabViewStyle(.page(indexDisplayMode: .never))
+              .interactive(scale: 0.8)
+              .itemSpacing(10)
+              .itemAspectRatio(1.0)
+        
+              .swipeInteractionArea(.allAvailable)
+              .multiplePagination()
+              .horizontal()
     }
     
     // MARK: - Progress Circles
@@ -67,45 +81,49 @@ struct OnboardingScreenView: View {
     /// Displays the progress indicator for the onboarding steps.
     private var progressCircles: some View {
         HStack {
-            ForEach(0 ..< viewModel.stepsCount, id: \.self) { step in
-                if step == viewModel.currentStep {
+            ForEach(viewModel.pages, id: \.self) { step in
+                if step == page.index {
                     Circle()
                         .frame(width: 15, height: 15)
                         .foregroundStyle(Color.gray)
                         .transition(.scale)
-                        .animation(.easeInOut(duration: 0.3), value: viewModel.currentStep)
                 } else {
                     Circle()
                         .frame(width: 10, height: 10)
                         .foregroundStyle(Color.labelDisable)
                         .transition(.scale)
-                        .animation(.easeInOut(duration: 0.3), value: viewModel.currentStep)
                 }
             }
         }
-        .animation(.easeInOut, value: viewModel.currentStep)
+    }
+    
+    // MARK: - Page Buttons
+    
+    private var selectPageButtons: some View {
+        VStack(spacing: 16) {
+            if !viewModel.isLastPage(current: page.index) {
+                nextPageButton
+                    .transition(.move(edge: .leading).combined(with: .opacity))
+            } else {
+                signWithAppleButton
+                    .transition(.move(edge: .trailing).combined(with: .opacity))
+                signWithGoogleButton
+                    .transition(.move(edge: .trailing).combined(with: .opacity))
+            }
+        }
     }
     
     // MARK: - Action Button
     
     /// Button for advancing to the next step or completing onboarding.
-    private var actionButton: some View {
+    private var nextPageButton: some View {
         Button {
-            switch viewModel.buttonType {
-            case .nextPage:
-                viewModel.nextStep()
-            case .getStarted:
-                viewModel.getStarted()
+            withAnimation {
+                page.update(.next)
             }
         } label: {
-            switch viewModel.buttonType {
-            case .nextPage:
-                Text(Texts.OnboardingPage.next)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            case .getStarted:
-                Text(Texts.OnboardingPage.start)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            }
+            Text(Texts.OnboardingPage.next)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
         .frame(height: 50)
         .frame(maxWidth: .infinity)
@@ -117,27 +135,85 @@ struct OnboardingScreenView: View {
         
         .padding(.horizontal)
         .padding(.top, 30)
+    }
+    
+    // MARK: - Sign with Apple Button
+    
+    private var signWithAppleButton: some View {
+        Button {
+            viewModel.startAppleSignIn()
+        } label: {
+            HStack {
+                Image.LoginPage.appleLogo
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                Text(Texts.OnboardingPage.appleLogin)
+                    .font(.system(size: 17, weight: .regular))
+                    .foregroundStyle(Color.LabelColors.labelReversed)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .background(Color.ButtonColors.appleLogin)
+        }
+        .frame(height: 50)
+        .frame(maxWidth: .infinity)
+        .minimumScaleFactor(0.4)
         
-        .animation(.easeInOut, value: viewModel.buttonType)
+        .clipShape(.rect(cornerRadius: 10))
+        .shadow(radius: 2)
+        .frame(height: 50)
+        .padding(.horizontal)
+        .padding(.top, 30)
+    }
+    
+    // MARK: - Sign with Google Button
+    
+    private var signWithGoogleButton: some View {
+        Button {
+            //viewModel.googleAuthorization()
+        } label: {
+            HStack {
+                Image.LoginPage.googleLogo
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                Text(Texts.OnboardingPage.googleLogin)
+                    .font(.system(size: 17, weight: .regular))
+                    .foregroundStyle(Color.black)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .background(Color.white)
+        }
+        .frame(height: 50)
+        .frame(maxWidth: .infinity)
+        .minimumScaleFactor(0.4)
+        
+        .clipShape(.rect(cornerRadius: 10))
+        .shadow(radius: 2)
+        .frame(height: 50)
+        .padding(.horizontal)
     }
     
     // MARK: - Skip Button
     
     /// Button allowing users to skip to the last onboarding step.
     private var skipButton: some View {
-        Text(Texts.OnboardingPage.skip)
+        Text(!viewModel.isLastPage(current: page.index) ? Texts.OnboardingPage.skip : Texts.OnboardingPage.withoutAuth)
             .font(.system(size: 14))
             .fontWeight(.light)
-            .foregroundStyle(viewModel.buttonType == .nextPage ? Color.labelSecondary : Color.clear)
+            .foregroundStyle(Color.labelSecondary)
         
             .padding(.top)
             .padding(.bottom, hasNotch() ? 20 : 16)
         
             .onTapGesture {
-                viewModel.skipSteps()
+                if !viewModel.isLastPage(current: page.index) {
+                    withAnimation {
+                        page.update(.moveToLast)
+                    }
+                } else {
+                    viewModel.transferToMainPage()
+                }
             }
-            .disabled(viewModel.buttonType == .getStarted)
-            .animation(.easeInOut, value: viewModel.buttonType)
+            .animation(.easeInOut, value: page.index)
     }
 }
 
@@ -147,4 +223,3 @@ struct OnboardingScreenView: View {
     OnboardingScreenView()
         .environmentObject(OnboardingViewModel())
 }
-

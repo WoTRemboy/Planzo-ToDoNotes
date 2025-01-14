@@ -21,6 +21,7 @@ extension Color {
     
     enum ButtonColors {
         static let onboarding = Color("OnboardingButton")
+        static let appleLogin = Color("AppleLoginButton")
     }
     
     enum LabelColors {
@@ -29,6 +30,7 @@ extension Color {
         static let labelPrimary = Color("LabelPrimary")
         static let labelSecondary = Color("LabelSecondary")
         static let labelTertiary = Color("LabelTertiary")
+        static let labelReversed = Color("LabelReversed")
     }
     
     enum SupportColors {
@@ -36,5 +38,6 @@ extension Color {
         static let supportOverlay = Color("SupportOverlay")
         static let supportSegmented = Color("SupportSegmented")
         static let supportTextField = Color("SupportTextField")
+        static let backListRow = Color("SupportListRow")
     }
 }

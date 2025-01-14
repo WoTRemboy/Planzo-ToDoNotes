@@ -12,6 +12,22 @@ final class MainViewModel: ObservableObject {
     @Published private(set) var selectedFilter: Filter = .active
     @Published internal var selectedFolder: Folder = .all
     
+    @Published internal var showingTaskCreateView: Bool = false
+    @Published internal var selectedTask: TaskEntity? = nil
+    @Published internal var taskManagementHeight: CGFloat = 15
+    
+    internal var todayDateString: String {
+        Date.now.longDayMonthWeekday
+    }
+    
+    internal func toggleShowingCreateView() {
+        showingTaskCreateView.toggle()
+    }
+    
+    internal func toggleShowingTaskEditView() {
+        selectedTask = nil
+    }
+    
     internal func setFilter(to new: Filter) {
         withAnimation(.easeInOut(duration: 0.2)) {
             selectedFilter = new
