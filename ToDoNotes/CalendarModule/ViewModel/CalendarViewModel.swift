@@ -13,6 +13,10 @@ final class CalendarViewModel: ObservableObject {
     private(set) var todayDate: Date = Date.now
     private(set) var days: [Date] = []
     
+    internal var todayDateString: String {
+        Date.now.longDayMonthWeekday
+    }
+    
     init() {
         updateDays()
     }

@@ -34,9 +34,11 @@ struct MainView: View {
             if coreDataManager.isEmpty {
                 placeholderLabel
             } else {
-                taskList
+                taskForm
             }
         }
+        .animation(.easeInOut(duration: 0.2),
+                   value: coreDataManager.isEmpty)
     }
     
     private var placeholderLabel: some View {
@@ -45,7 +47,7 @@ struct MainView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
     
-    private var taskList: some View {
+    private var taskForm: some View {
         Form {
             Section {
                 ForEach(coreDataManager.savedEnities) { entity in
@@ -61,7 +63,7 @@ struct MainView: View {
                     .textCase(.none)
             }
         }
-        .padding(.horizontal, -8)
+        .padding(.horizontal, -10)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
     }

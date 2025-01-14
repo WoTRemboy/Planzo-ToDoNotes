@@ -53,9 +53,6 @@ struct TaskListRow: View {
 
 #Preview {
     let coreDataManager = CoreDataViewModel()
-    coreDataManager.addTask(name: "Test Task",
-                            description: "Test Description",
-                            completeCheck: true)
     
     return TaskListRow(entity: coreDataManager.savedEnities.last!)
         .environmentObject(coreDataManager)

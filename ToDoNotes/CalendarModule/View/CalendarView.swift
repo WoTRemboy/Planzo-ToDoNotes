@@ -10,6 +10,7 @@ import SwiftUI
 struct CalendarView: View {
     
     @EnvironmentObject private var viewModel: CalendarViewModel
+    @EnvironmentObject private var coreDataManager: CoreDataViewModel
     
     internal var body: some View {
         ZStack {
@@ -20,21 +21,54 @@ struct CalendarView: View {
     }
     
     private var content: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 0) {
             CalendarNavBar(date: Texts.CalendarPage.today,
                            monthYear: viewModel.todayDate.longMonthYear)
             CustomCalendarView()
+                .padding(.top)
+            
             separator
-            CalendarTaskList(date: viewModel.todayDate.longDayMonthWeekday)
+            
+            if coreDataManager.isEmpty {
+                CalendarTaskFormPlaceholder(date: viewModel.todayDate.longDayMonthWeekday)
+                    .padding(.top)
+            } else {
+                taskForm
+                    .padding(.top, 1)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .animation(.easeInOut(duration: 0.2),
+                   value: coreDataManager.isEmpty)
     }
     
     private var separator: some View {
         Divider()
             .background(Color.LabelColors.labelTertiary)
             .frame(height: 0.36)
-            .padding(.horizontal)
+            .padding(.horizontal, 10)
+            .padding(.top)
+    }
+    
+    private var taskForm: some View {
+        Form {
+            Section {
+                ForEach(coreDataManager.savedEnities) { entity in
+                    TaskListRow(entity: entity)
+                }
+                .onDelete { indexSet in
+                    coreDataManager.deleteTask(indexSet: indexSet)
+                }
+                .listRowBackground(Color.SupportColors.backListRow)
+            } header: {
+                Text(viewModel.todayDateString)
+                    .font(.system(size: 13, weight: .regular))
+                    .textCase(.none)
+            }
+        }
+        .padding(.horizontal, -10)
+        .background(Color.BackColors.backDefault)
+        .scrollContentBackground(.hidden)
     }
     
     private var plusButton: some View {
@@ -59,4 +93,5 @@ struct CalendarView: View {
 #Preview {
     CalendarView()
         .environmentObject(CalendarViewModel())
+        .environmentObject(CoreDataViewModel())
 }

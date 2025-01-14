@@ -12,7 +12,7 @@ struct TaskManagementView: View {
     @FocusState private var titleFocused
     
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
-    @EnvironmentObject private var viewModel: TaskManagementViewModel
+    @StateObject private var viewModel = TaskManagementViewModel()
     
     @Binding private var taskManagementHeight: CGFloat
     
