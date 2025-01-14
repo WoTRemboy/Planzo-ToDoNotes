@@ -58,10 +58,21 @@ final class Texts {
     
     enum Settings {
         static let title = "Настройки"
+        static let cancel = "Отмена"
         
         enum About {
             static let title = "О приложении"
             static let release = "release"
+        }
+        
+        enum Language {
+            static let sectionTitle = "Основные"
+            static let title = "Язык"
+            static let details = "Русский"
+            
+            static let alertTitle = "Сменить язык"
+            static let alertContent = "Выберите нужный язык в настройках."
+            static let settings = "Настройки"
         }
         
         enum Appearance {
@@ -70,11 +81,18 @@ final class Texts {
             static let light = "Светлое"
             static let dark = "Тёмное"
         }
+        
+        enum Email {
+            static let contact = "Контакт"
+            static let emailTitle = "Email"
+            static let emailContent = "contact@avoqode.com"
+        }
     }
     
     enum TaskManagement {
         static let titlePlaceholder = "Что бы вы хотели сделать?"
         static let descriprionPlaceholder = "Описание"
+        static let today = "Сегодня"
     }
     
     enum Tabbar {

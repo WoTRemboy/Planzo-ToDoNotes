@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "check-oneLight.svg",
+      "filename" : "right.svg",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "check-oneDark.svg",
+      "filename" : "BackButtonDark.svg",
       "idiom" : "universal"
     }
   ],

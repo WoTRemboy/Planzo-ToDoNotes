@@ -10,31 +10,47 @@ import SwiftUI
 struct TaskManagementView: View {
     
     @FocusState private var titleFocused
-    @EnvironmentObject private var coreDataManager: CoreDataViewModel
     
-    @State private var nameText: String = String()
-    @State private var descriptionText: String = String()
+    @EnvironmentObject private var coreDataManager: CoreDataViewModel
+    @StateObject private var viewModel = TaskManagementViewModel()
+    
     @Binding private var taskManagementHeight: CGFloat
     
-    private var onDismiss: () -> Void
+    private let date: Date
+    private let entity: TaskEntity?
+    private let onDismiss: () -> Void
     
     init(taskManagementHeight: Binding<CGFloat>,
+         date: Date,
+         entity: TaskEntity? = nil,
          onDismiss: @escaping () -> Void) {
         self._taskManagementHeight = taskManagementHeight
+        self.date = date
         self.onDismiss = onDismiss
+        self.entity = entity
     }
     
     internal var body: some View {
         VStack(spacing: 0) {
-            nameInput
-            descriptionInput
-                .background(HeightReader(height: $taskManagementHeight))
+            if entity != nil {
+                TaskManagementNavBar(
+                    title: date.shortDate,
+                    dayName: date.shortWeekday,
+                    onDismiss: onDismiss)
+            }
             
-            Spacer()
-            buttons
+            VStack(spacing: 0) {
+                nameInput
+                descriptionInput
+                    .background(HeightReader(height: $taskManagementHeight))
+                
+                Spacer()
+                buttons
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, entity == nil ? 8 : 0)
+            .padding(.bottom, 8)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
     }
     
     private var sliderLine: some View {
@@ -44,7 +60,8 @@ struct TaskManagementView: View {
     }
     
     private var nameInput: some View {
-        TextField(Texts.TaskManagement.titlePlaceholder, text: $nameText)
+        TextField(Texts.TaskManagement.titlePlaceholder,
+                  text: $viewModel.nameText)
             .font(.system(size: 18, weight: .regular))
             .lineLimit(1)
             .padding(.top, 20)
@@ -57,7 +74,7 @@ struct TaskManagementView: View {
     
     private var descriptionInput: some View {
         TextField(Texts.TaskManagement.descriprionPlaceholder,
-                  text: $descriptionText,
+                  text: $viewModel.descriptionText,
                   axis: .vertical)
         .lineLimit(1...5)
         
@@ -87,12 +104,16 @@ struct TaskManagementView: View {
     }
     
     private var checkButton: some View {
-        Button {
-            // Action for check button
-        } label: {
-            Image.TaskManagement.EditTask.check
-                .resizable()
-                .frame(width: 20, height: 20)
+        (viewModel.check ?
+         Image.TaskManagement.EditTask.check :
+            Image.TaskManagement.EditTask.uncheck)
+        .resizable()
+        .frame(width: 20, height: 20)
+        
+        .onTapGesture {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.toggleCheck()
+            }
         }
     }
     
@@ -108,11 +129,12 @@ struct TaskManagementView: View {
     
     private var acceptButton: some View {
         Button {
-            guard !nameText.isEmpty else { return }
+            guard !viewModel.nameText.isEmpty else { return }
             withAnimation {
                 coreDataManager.addTask(
-                    name: nameText,
-                    description: descriptionText)
+                    name: viewModel.nameText,
+                    description: viewModel.descriptionText,
+                    completeCheck: viewModel.check)
             }
             onDismiss()
         } label: {
@@ -148,13 +170,17 @@ struct HeightReader: View {
 struct TaskManagementView_Previews: PreviewProvider {
     static var previews: some View {
         PreviewWrapper()
+            .environmentObject(TaskManagementViewModel())
+            .environmentObject(CoreDataViewModel())
     }
     
     struct PreviewWrapper: View {
         @State private var taskManagementHeight: CGFloat = 130
         
         var body: some View {
-            TaskManagementView(taskManagementHeight: $taskManagementHeight) { }
+            TaskManagementView(
+                taskManagementHeight: $taskManagementHeight,
+                date: .now) { }
         }
     }
 }

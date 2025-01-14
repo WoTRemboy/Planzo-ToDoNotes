@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CustomNavBar: View {
+struct MainCustomNavBar: View {
     private let title: String
     
     init(title: String) {
@@ -57,6 +57,6 @@ struct CustomNavBar: View {
 }
 
 #Preview {
-    CustomNavBar(title: Texts.MainPage.title)
+    MainCustomNavBar(title: Texts.MainPage.title)
         .environmentObject(MainViewModel())
 }

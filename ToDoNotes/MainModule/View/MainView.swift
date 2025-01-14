@@ -11,7 +11,6 @@ struct MainView: View {
     
     @EnvironmentObject private var viewModel: MainViewModel
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
-    @State private var taskManagementHeight: CGFloat = 15
     
     internal var body: some View {
         ZStack {
@@ -19,24 +18,36 @@ struct MainView: View {
             plusButton
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .sheet(isPresented: $viewModel.showingTaskEditView) {
-            TaskManagementView(taskManagementHeight: $taskManagementHeight) {
-                viewModel.toggleShowingTaskEditView()
+        .sheet(isPresented: $viewModel.showingTaskCreateView) {
+            TaskManagementView(
+                taskManagementHeight: $viewModel.taskManagementHeight,
+                date: .now) {
+                    viewModel.toggleShowingCreateView()
             }
-                .presentationDetents([.height(80 + taskManagementHeight)])
-                .presentationDragIndicator(.visible)
+            .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
+            .presentationDragIndicator(.visible)
+        }
+        .fullScreenCover(item: $viewModel.selectedTask) { task in
+            TaskManagementView(
+                taskManagementHeight: $viewModel.taskManagementHeight,
+                date: .now,
+                entity: task) {
+                    viewModel.toggleShowingTaskEditView()
+                }
         }
     }
         
     private var content: some View {
         VStack(spacing: 0) {
-            CustomNavBar(title: Texts.MainPage.title)
+            MainCustomNavBar(title: Texts.MainPage.title)
             if coreDataManager.isEmpty {
                 placeholderLabel
             } else {
-                taskList
+                taskForm
             }
         }
+        .animation(.easeInOut(duration: 0.2),
+                   value: coreDataManager.isEmpty)
     }
     
     private var placeholderLabel: some View {
@@ -45,16 +56,26 @@ struct MainView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
     
-    private var taskList: some View {
-        List {
-            ForEach(coreDataManager.savedEnities) { entity in
-                Text(entity.name ?? String())
+    private var taskForm: some View {
+        Form {
+            Section {
+                ForEach(coreDataManager.savedEnities) { entity in
+                    TaskListRow(entity: entity)
+                        .onTapGesture {
+                            viewModel.selectedTask = entity
+                        }
+                }
+                .onDelete { indexSet in
+                    coreDataManager.deleteTask(indexSet: indexSet)
+                }
+                .listRowBackground(Color.SupportColors.backListRow)
+            } header: {
+                Text(viewModel.todayDateString)
+                    .font(.system(size: 13, weight: .regular))
+                    .textCase(.none)
             }
-            .onDelete { indexSet in
-                coreDataManager.deleteTask(indexSet: indexSet)
-            }
-            .listRowBackground(Color.SupportColors.backListRow)
         }
+        .padding(.horizontal, -10)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
     }
@@ -65,7 +86,7 @@ struct MainView: View {
             HStack {
                 Spacer()
                 Button {
-                    viewModel.toggleShowingTaskEditView()
+                    viewModel.toggleShowingCreateView()
                 } label: {
                     Image.TaskManagement.plus
                         .resizable()

@@ -26,7 +26,7 @@ struct AboutAppView: View {
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(name)
-                    .font(.system(size: 20, weight: .medium))
+                    .font(.system(size: 18, weight: .medium))
                     .foregroundStyle(Color.LabelColors.labelPrimary)
                 
                 Text(version)

@@ -25,6 +25,7 @@ struct OnboardingScreenView: View {
         if viewModel.skipOnboarding {
             RootView()
                 .environmentObject(TabRouter())
+                .environmentObject(CoreDataViewModel())
         } else {
             VStack(spacing: 0) {
                 content

@@ -11,8 +11,6 @@ struct TodayView: View {
     
     @EnvironmentObject private var viewModel: TodayViewModel
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
-    
-    @State private var taskManagementHeight: CGFloat = 15
         
     internal var body: some View {
         ZStack {
@@ -21,11 +19,13 @@ struct TodayView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .sheet(isPresented: $viewModel.showingTaskEditView) {
-            TaskManagementView(taskManagementHeight: $taskManagementHeight) {
+            TaskManagementView(
+                taskManagementHeight: $viewModel.taskManagementHeight,
+                date: .now) {
                 viewModel.toggleShowingTaskEditView()
             }
-                .presentationDetents([.height(80 + taskManagementHeight)])
-                .presentationDragIndicator(.visible)
+            .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
+            .presentationDragIndicator(.visible)
         }
     }
     
@@ -36,9 +36,11 @@ struct TodayView: View {
             if coreDataManager.isEmpty {
                 placeholderLabel
             } else {
-                taskList
+                taskForm
             }
         }
+        .animation(.easeInOut(duration: 0.2),
+                   value: coreDataManager.isEmpty)
     }
     
     private var placeholderLabel: some View {
@@ -47,16 +49,17 @@ struct TodayView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
     
-    private var taskList: some View {
-        List {
+    private var taskForm: some View {
+        Form {
             ForEach(coreDataManager.savedEnities) { entity in
-                Text(entity.name ?? String())
+                TaskListRow(entity: entity)
             }
             .onDelete { indexSet in
                 coreDataManager.deleteTask(indexSet: indexSet)
             }
             .listRowBackground(Color.SupportColors.backListRow)
         }
+        .padding(.horizontal, -10)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
     }

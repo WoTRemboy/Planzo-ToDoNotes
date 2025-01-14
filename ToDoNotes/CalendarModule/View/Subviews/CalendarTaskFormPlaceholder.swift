@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CalendarTaskList: View {
+struct CalendarTaskFormPlaceholder: View {
     
     private let date: String
     
@@ -44,5 +44,5 @@ struct CalendarTaskList: View {
 }
 
 #Preview {
-    CalendarTaskList(date: "30 декабря, пн")
+    CalendarTaskFormPlaceholder(date: "30 декабря, пн")
 }
