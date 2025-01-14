@@ -46,15 +46,22 @@ struct MainView: View {
     }
     
     private var taskList: some View {
-        List {
-            ForEach(coreDataManager.savedEnities) { entity in
-                Text(entity.name ?? String())
+        Form {
+            Section {
+                ForEach(coreDataManager.savedEnities) { entity in
+                    TaskListRow(entity: entity)
+                }
+                .onDelete { indexSet in
+                    coreDataManager.deleteTask(indexSet: indexSet)
+                }
+                .listRowBackground(Color.SupportColors.backListRow)
+            } header: {
+                Text(viewModel.todayDateString)
+                    .font(.system(size: 13, weight: .regular))
+                    .textCase(.none)
             }
-            .onDelete { indexSet in
-                coreDataManager.deleteTask(indexSet: indexSet)
-            }
-            .listRowBackground(Color.SupportColors.backListRow)
         }
+        .padding(.horizontal, -8)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
     }

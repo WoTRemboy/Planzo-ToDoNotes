@@ -14,6 +14,10 @@ final class MainViewModel: ObservableObject {
     
     @Published internal var showingTaskEditView: Bool = false
     
+    internal var todayDateString: String {
+        Date.now.longDayMonthWeekday
+    }
+    
     internal func toggleShowingTaskEditView() {
         showingTaskEditView.toggle()
     }

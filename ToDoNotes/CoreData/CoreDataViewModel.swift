@@ -30,12 +30,13 @@ final class CoreDataViewModel: ObservableObject {
         fetchTasks()
     }
     
-    internal func addTask(name: String, description: String) {
+    internal func addTask(name: String, description: String, completeCheck: Bool) {
         let newTask = TaskEntity(context: container.viewContext)
         
         newTask.id = UUID()
         newTask.name = name
         newTask.details = description
+        newTask.completed = completeCheck ? 1 : 0
         saveData()
     }
     
@@ -65,4 +66,27 @@ final class CoreDataViewModel: ObservableObject {
             print("Error fetching tasks: \(error.localizedDescription)")
         }
     }
+}
+
+
+extension CoreDataViewModel {
+    
+    internal func setupChecking(for entity: TaskEntity) {
+        if entity.completed == 0 {
+            entity.completed = 1
+        } else {
+            entity.completed = 0
+        }
+        saveData()
+    }
+    
+    internal func checkCompletedStatus(for entity: TaskEntity) -> Bool {
+        entity.completed == 1
+    }
+    
+    internal func toggleCompleteChecking(for entity: TaskEntity) {
+        entity.completed = entity.completed == 1 ? 2 : 1
+        saveData()
+    }
+    
 }

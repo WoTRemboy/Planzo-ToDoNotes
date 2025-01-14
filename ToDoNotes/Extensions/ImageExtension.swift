@@ -37,8 +37,14 @@ extension Image {
         enum EditTask {
             static let calendar = Image("EditTaskCalendar")
             static let check = Image("EditTaskCheck")
+            static let uncheck = Image("EditTaskUncheck")
             static let more = Image("EditTaskMore")
             static let accept = Image("EditTaskAccept")
+        }
+        
+        enum TaskRow {
+            static let uncheckedBox = Image("TaskRowUncheckedBox")
+            static let checkedBox = Image("TaskRowCheckedBox")
         }
     }
     
