@@ -19,7 +19,9 @@ struct TodayView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .sheet(isPresented: $viewModel.showingTaskEditView) {
-            TaskManagementView(taskManagementHeight: $viewModel.taskManagementHeight) {
+            TaskManagementView(
+                taskManagementHeight: $viewModel.taskManagementHeight,
+                date: .now) {
                 viewModel.toggleShowingTaskEditView()
             }
             .presentationDetents([.height(80 + viewModel.taskManagementHeight)])

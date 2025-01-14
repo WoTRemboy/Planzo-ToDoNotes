@@ -16,25 +16,41 @@ struct TaskManagementView: View {
     
     @Binding private var taskManagementHeight: CGFloat
     
-    private var onDismiss: () -> Void
+    private let date: Date
+    private let entity: TaskEntity?
+    private let onDismiss: () -> Void
     
     init(taskManagementHeight: Binding<CGFloat>,
+         date: Date,
+         entity: TaskEntity? = nil,
          onDismiss: @escaping () -> Void) {
         self._taskManagementHeight = taskManagementHeight
+        self.date = date
         self.onDismiss = onDismiss
+        self.entity = entity
     }
     
     internal var body: some View {
         VStack(spacing: 0) {
-            nameInput
-            descriptionInput
-                .background(HeightReader(height: $taskManagementHeight))
+            if entity != nil {
+                TaskManagementNavBar(
+                    title: date.shortDate,
+                    dayName: date.shortWeekday,
+                    onDismiss: onDismiss)
+            }
             
-            Spacer()
-            buttons
+            VStack(spacing: 0) {
+                nameInput
+                descriptionInput
+                    .background(HeightReader(height: $taskManagementHeight))
+                
+                Spacer()
+                buttons
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, entity == nil ? 8 : 0)
+            .padding(.bottom, 8)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
     }
     
     private var sliderLine: some View {
@@ -162,7 +178,9 @@ struct TaskManagementView_Previews: PreviewProvider {
         @State private var taskManagementHeight: CGFloat = 130
         
         var body: some View {
-            TaskManagementView(taskManagementHeight: $taskManagementHeight) { }
+            TaskManagementView(
+                taskManagementHeight: $taskManagementHeight,
+                date: .now) { }
         }
     }
 }

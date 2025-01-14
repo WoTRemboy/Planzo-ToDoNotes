@@ -92,6 +92,7 @@ final class Texts {
     enum TaskManagement {
         static let titlePlaceholder = "Что бы вы хотели сделать?"
         static let descriprionPlaceholder = "Описание"
+        static let today = "Сегодня"
     }
     
     enum Tabbar {

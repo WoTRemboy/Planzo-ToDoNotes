@@ -12,6 +12,7 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var nameText: String
     @Published internal var descriptionText: String
     @Published internal var check: Bool
+    internal var entity: TaskEntity?
     
     init(nameText: String = String(),
          descriptionText: String = String(),
@@ -19,6 +20,13 @@ final class TaskManagementViewModel: ObservableObject {
         self.nameText = nameText
         self.descriptionText = descriptionText
         self.check = check
+    }
+    
+    convenience init(entity: TaskEntity) {
+        self.init()
+        self.nameText = entity.name ?? String()
+        self.descriptionText = entity.details ?? String()
+        self.check = entity.completed != 0
     }
     
     internal func toggleCheck() {

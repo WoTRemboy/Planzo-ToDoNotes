@@ -18,18 +18,28 @@ struct MainView: View {
             plusButton
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .sheet(isPresented: $viewModel.showingTaskEditView) {
-            TaskManagementView(taskManagementHeight: $viewModel.taskManagementHeight) {
-                viewModel.toggleShowingTaskEditView()
+        .sheet(isPresented: $viewModel.showingTaskCreateView) {
+            TaskManagementView(
+                taskManagementHeight: $viewModel.taskManagementHeight,
+                date: .now) {
+                    viewModel.toggleShowingCreateView()
             }
             .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
             .presentationDragIndicator(.visible)
+        }
+        .fullScreenCover(item: $viewModel.selectedTask) { task in
+            TaskManagementView(
+                taskManagementHeight: $viewModel.taskManagementHeight,
+                date: .now,
+                entity: task) {
+                    viewModel.toggleShowingTaskEditView()
+                }
         }
     }
         
     private var content: some View {
         VStack(spacing: 0) {
-            CustomNavBar(title: Texts.MainPage.title)
+            MainCustomNavBar(title: Texts.MainPage.title)
             if coreDataManager.isEmpty {
                 placeholderLabel
             } else {
@@ -51,6 +61,9 @@ struct MainView: View {
             Section {
                 ForEach(coreDataManager.savedEnities) { entity in
                     TaskListRow(entity: entity)
+                        .onTapGesture {
+                            viewModel.selectedTask = entity
+                        }
                 }
                 .onDelete { indexSet in
                     coreDataManager.deleteTask(indexSet: indexSet)
@@ -73,7 +86,7 @@ struct MainView: View {
             HStack {
                 Spacer()
                 Button {
-                    viewModel.toggleShowingTaskEditView()
+                    viewModel.toggleShowingCreateView()
                 } label: {
                     Image.TaskManagement.plus
                         .resizable()
