@@ -60,10 +60,11 @@ struct MainView: View {
         Form {
             Section {
                 ForEach(coreDataManager.savedEnities) { entity in
-                    TaskListRow(entity: entity)
-                        .onTapGesture {
-                            viewModel.selectedTask = entity
-                        }
+                    Button {
+                        viewModel.selectedTask = entity
+                    } label: {
+                        TaskListRow(entity: entity)
+                    }
                 }
                 .onDelete { indexSet in
                     coreDataManager.deleteTask(indexSet: indexSet)

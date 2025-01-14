@@ -30,13 +30,25 @@ final class CoreDataViewModel: ObservableObject {
         fetchTasks()
     }
     
-    internal func addTask(name: String, description: String, completeCheck: Bool) {
+    internal func addTask(name: String,
+                          description: String,
+                          completeCheck: Bool) {
         let newTask = TaskEntity(context: container.viewContext)
         
         newTask.id = UUID()
         newTask.name = name
         newTask.details = description
         newTask.completed = completeCheck ? 1 : 0
+        saveData()
+    }
+    
+    internal func updateTask(entity: TaskEntity,
+                             name: String,
+                             description: String,
+                             completeCheck: Bool) {
+        entity.name = name
+        entity.details = description
+        entity.completed = completeCheck ? 1 : 0
         saveData()
     }
     
