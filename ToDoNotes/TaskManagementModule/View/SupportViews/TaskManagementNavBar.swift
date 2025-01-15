@@ -49,14 +49,14 @@ struct TaskManagementNavBar: View {
     private var titleLabel: some View {
         HStack(spacing: 4) {
             Text(Texts.TaskManagement.today)
-                .font(.system(size: 17, weight: .regular))
+                .font(.system(size: 17, weight: .medium))
                 .padding(.leading)
             
             Text(title)
-                .font(.system(size: 17, weight: .regular))
+                .font(.system(size: 17, weight: .medium))
             
             Text(dayName)
-                .font(.system(size: 17, weight: .regular))
+                .font(.system(size: 17, weight: .medium))
                 .foregroundStyle(Color.LabelColors.labelSecondary)
                 .padding(.trailing)
         }

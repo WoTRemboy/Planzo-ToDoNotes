@@ -73,14 +73,14 @@ struct TaskManagementView: View {
     private var nameInput: some View {
         TextField(Texts.TaskManagement.titlePlaceholder,
                   text: $viewModel.nameText)
-            .font(.system(size: 18, weight: .regular))
-            .lineLimit(1)
-            .padding(.top, 20)
+        .font(.system(size: 18, weight: .medium))
+        .lineLimit(1)
+        .padding(.top, 20)
         
-            .focused($titleFocused)
-            .onAppear {
-                titleFocused = true
-            }
+        .focused($titleFocused)
+        .onAppear {
+            titleFocused = true
+        }
     }
     
     private var descriptionSheetInput: some View {
@@ -89,7 +89,7 @@ struct TaskManagementView: View {
                   axis: .vertical)
         
         .lineLimit(1...5)
-        .font(.system(size: 15, weight: .light))
+        .font(.system(size: 15, weight: .regular))
         .padding(.top, 10)
     }
     
@@ -98,8 +98,7 @@ struct TaskManagementView: View {
                   text: $viewModel.descriptionText,
                   axis: .vertical)
         
-        //.lineLimit(0)
-        .font(.system(size: 15, weight: .light))
+        .font(.system(size: 15, weight: .regular))
         .padding(.top, 10)
     }
     

@@ -37,7 +37,7 @@ struct CustomCalendarCell: View {
     
     private var dayNumber: some View {
         Text(day)
-            .font(.system(size: 20, weight: .light))
+            .font(.system(size: 20, weight: .regular))
             .foregroundStyle(today ? Color.LabelColors.labelPrimary : Color.LabelColors.labelSecondary)
     }
     
