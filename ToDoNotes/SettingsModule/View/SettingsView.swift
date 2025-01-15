@@ -49,7 +49,7 @@ struct SettingsView: View {
                          version: viewModel.appVersion)
         } header: {
             Text(Texts.Settings.About.title)
-                .font(.system(size: 13, weight: .regular))
+                .font(.system(size: 13, weight: .medium))
                 .textCase(.none)
         }
         .listRowBackground(Color.SupportColors.backListRow)
@@ -95,7 +95,7 @@ struct SettingsView: View {
             .listRowBackground(Color.SupportColors.backListRow)
         } header: {
              Text(Texts.Settings.Language.sectionTitle)
-                .font(.system(size: 13, weight: .regular))
+                .font(.system(size: 13, weight: .medium))
                 .textCase(.none)
         }
     }
@@ -111,7 +111,7 @@ struct SettingsView: View {
             })
         } header: {
             Text(Texts.Settings.Email.contact)
-                .font(.system(size: 13, weight: .regular))
+                .font(.system(size: 13, weight: .medium))
                 .textCase(.none)
         }
         .listRowBackground(Color.SupportColors.backListRow)

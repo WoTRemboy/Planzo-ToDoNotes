@@ -28,7 +28,7 @@ struct FolderCell: View {
     
     private var nameLabel: some View {
         Text(name)
-            .font(.system(size: 16, weight: .light))
+            .font(.system(size: 16, weight: .regular))
             .foregroundStyle(selected ? Color.LabelColors.labelPrimary : Color.LabelColors.labelSecondary)
     }
     

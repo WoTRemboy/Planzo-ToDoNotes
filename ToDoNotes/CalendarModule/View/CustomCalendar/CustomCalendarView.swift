@@ -29,7 +29,7 @@ struct CustomCalendarView: View {
         HStack {
             ForEach(viewModel.daysOfWeek.indices, id: \.self) { index in
                 Text(viewModel.daysOfWeek[index])
-                    .font(.system(size: 13, weight: .light))
+                    .font(.system(size: 13, weight: .regular))
                     .foregroundStyle(Color.LabelColors.labelTertiary)
                     .frame(maxWidth: .infinity)
             }

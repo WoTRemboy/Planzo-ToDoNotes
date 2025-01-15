@@ -14,6 +14,8 @@
 		632D0DD02D36B9760071684D /* TaskManagementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DCF2D36B9700071684D /* TaskManagementModel.swift */; };
 		632D0DD22D36BAF50071684D /* SettingAppearanceNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD12D36BAEF0071684D /* SettingAppearanceNavBar.swift */; };
 		632D0DD42D36BB270071684D /* TaskManagementNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */; };
+		632D0DD72D37D6D70071684D /* TaskManagementShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */; };
+		632D0DDA2D37E0AE0071684D /* HeightReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD92D37E0A90071684D /* HeightReader.swift */; };
 		634877AC2D369B2C009110B0 /* SettingFormRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634877AB2D369B21009110B0 /* SettingFormRow.swift */; };
 		634877AE2D36A164009110B0 /* SettingAppearanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634877AD2D36A157009110B0 /* SettingAppearanceView.swift */; };
 		635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF6A2D24B71C007FFBBA /* ToDoNotesApp.swift */; };
@@ -61,6 +63,7 @@
 		63F6C71A2D2AF3B900716AB0 /* CustomCalendarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C7192D2AF3B900716AB0 /* CustomCalendarCell.swift */; };
 		63F6C71C2D2B19A200716AB0 /* CustomCalendarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C71B2D2B199700716AB0 /* CustomCalendarModel.swift */; };
 		63F6C71F2D2B1E5200716AB0 /* CalendarTaskFormPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C71E2D2B1E5200716AB0 /* CalendarTaskFormPlaceholder.swift */; };
+		63F849462D38145E00E9D5CE /* TaskChecklistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F849452D38145E00E9D5CE /* TaskChecklistView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +74,8 @@
 		632D0DCF2D36B9700071684D /* TaskManagementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementModel.swift; sourceTree = "<group>"; };
 		632D0DD12D36BAEF0071684D /* SettingAppearanceNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingAppearanceNavBar.swift; sourceTree = "<group>"; };
 		632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementNavBar.swift; sourceTree = "<group>"; };
+		632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementShareView.swift; sourceTree = "<group>"; };
+		632D0DD92D37E0A90071684D /* HeightReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightReader.swift; sourceTree = "<group>"; };
 		634877AB2D369B21009110B0 /* SettingFormRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingFormRow.swift; sourceTree = "<group>"; };
 		634877AD2D36A157009110B0 /* SettingAppearanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingAppearanceView.swift; sourceTree = "<group>"; };
 		635FEF552D24B715007FFBBA /* ToDoNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,6 +122,7 @@
 		63F6C7192D2AF3B900716AB0 /* CustomCalendarCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCalendarCell.swift; sourceTree = "<group>"; };
 		63F6C71B2D2B199700716AB0 /* CustomCalendarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCalendarModel.swift; sourceTree = "<group>"; };
 		63F6C71E2D2B1E5200716AB0 /* CalendarTaskFormPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTaskFormPlaceholder.swift; sourceTree = "<group>"; };
+		63F849452D38145E00E9D5CE /* TaskChecklistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskChecklistView.swift; sourceTree = "<group>"; };
 		63FB4F272D31577A007FA140 /* ToDoNotes.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ToDoNotes.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -149,6 +155,25 @@
 				632D0DCF2D36B9700071684D /* TaskManagementModel.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		632D0DD52D37D6880071684D /* SupportViews */ = {
+			isa = PBXGroup;
+			children = (
+				63E890C92D347655003D7370 /* TaskListRow.swift */,
+				632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */,
+				632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */,
+				63F849452D38145E00E9D5CE /* TaskChecklistView.swift */,
+			);
+			path = SupportViews;
+			sourceTree = "<group>";
+		};
+		632D0DD82D37E0990071684D /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				632D0DD92D37E0A90071684D /* HeightReader.swift */,
+			);
+			path = Modifiers;
 			sourceTree = "<group>";
 		};
 		634877AF2D36A168009110B0 /* NavigationViews */ = {
@@ -196,6 +221,7 @@
 				637B9F532D29696B0010F13B /* CalendarModule */,
 				637B9F542D2969750010F13B /* SettingsModule */,
 				638E21932D2C206400FB1464 /* TaskManagementModule */,
+				632D0DD82D37E0990071684D /* Modifiers */,
 				635FEF7E2D24BCDE007FFBBA /* Extensions */,
 				635FEF752D24BAD1007FFBBA /* SupportFiles */,
 				635FEF672D24B71C007FFBBA /* Preview Content */,
@@ -394,8 +420,7 @@
 			isa = PBXGroup;
 			children = (
 				638E21952D2C209200FB1464 /* TaskManagementView.swift */,
-				63E890C92D347655003D7370 /* TaskListRow.swift */,
-				632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */,
+				632D0DD52D37D6880071684D /* SupportViews */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -628,12 +653,15 @@
 				634877AE2D36A164009110B0 /* SettingAppearanceView.swift in Sources */,
 				63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */,
 				637B9F4E2D295B490010F13B /* MainViewModel.swift in Sources */,
+				63F849462D38145E00E9D5CE /* TaskChecklistView.swift in Sources */,
 				63F6C6F92D29B78400716AB0 /* FoldersScrollView.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
 				637B9F662D2974E40010F13B /* FilterScrollView.swift in Sources */,
+				632D0DDA2D37E0AE0071684D /* HeightReader.swift in Sources */,
 				632D0DD22D36BAF50071684D /* SettingAppearanceNavBar.swift in Sources */,
 				63F6C7082D2AAA0900716AB0 /* SettingsViewModel.swift in Sources */,
 				63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */,
+				632D0DD72D37D6D70071684D /* TaskManagementShareView.swift in Sources */,
 				63F6C7172D2ABE6700716AB0 /* CustomCalendarView.swift in Sources */,
 				63E890CA2D347655003D7370 /* TaskListRow.swift in Sources */,
 				637B9F692D29754F0010F13B /* FilterCell.swift in Sources */,
@@ -800,7 +828,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -837,7 +865,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

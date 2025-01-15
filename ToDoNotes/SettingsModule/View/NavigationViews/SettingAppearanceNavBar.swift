@@ -39,7 +39,7 @@ struct SettingAppearanceNavBar: View {
     
     private var titleLabel: some View {
         Text(Texts.Settings.Appearance.title)
-            .font(.system(size: 17, weight: .regular))
+            .font(.system(size: 17, weight: .medium))
             .frame(maxWidth: .infinity, alignment: .center)
             .padding(.horizontal)
     }

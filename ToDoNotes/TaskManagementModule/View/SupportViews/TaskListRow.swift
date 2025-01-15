@@ -42,7 +42,7 @@ struct TaskListRow: View {
     
     private var nameLabel: some View {
         Text(entity.name ?? String())
-            .font(.system(size: 15, weight: .regular))
+            .font(.system(size: 15, weight: .medium))
             .foregroundStyle(entity.completed == 2 ?
                              Color.LabelColors.labelDetails :
                              Color.LabelColors.labelPrimary)

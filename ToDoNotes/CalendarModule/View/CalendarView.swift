@@ -83,7 +83,7 @@ struct CalendarView: View {
                 .listRowBackground(Color.SupportColors.backListRow)
             } header: {
                 Text(viewModel.todayDateString)
-                    .font(.system(size: 13, weight: .regular))
+                    .font(.system(size: 13, weight: .medium))
                     .textCase(.none)
             }
         }

@@ -40,22 +40,33 @@ struct TaskManagementView: View {
                 TaskManagementNavBar(
                     title: date.shortDate,
                     dayName: date.shortWeekday,
-                    onDismiss: onDismiss)
+                    onDismiss: onDismiss,
+                    onShare: viewModel.toggleShareSheet)
             }
             content
+        }
+        .sheet(isPresented: $viewModel.showingShareSheet) {
+            TaskManagementShareView()
+                .presentationDetents([.height(285)])
+                .presentationDragIndicator(.visible)
         }
     }
     
     private var content: some View {
         VStack(spacing: 0) {
-            nameInput
-            
-            if entity != nil {
-                descriptionCoverInput
-            } else {
-                descriptionSheetInput
-                    .background(HeightReader(height: $taskManagementHeight))
+            ScrollView {
+                nameInput
+                
+                if entity != nil {
+                    descriptionCoverInput
+                    TaskChecklistView()
+                } else {
+                    descriptionSheetInput
+                        .background(HeightReader(height: $taskManagementHeight))
+                }
             }
+            .scrollDisabled(entity == nil)
+            
             Spacer()
             buttons
         }
@@ -67,14 +78,14 @@ struct TaskManagementView: View {
     private var nameInput: some View {
         TextField(Texts.TaskManagement.titlePlaceholder,
                   text: $viewModel.nameText)
-            .font(.system(size: 18, weight: .regular))
-            .lineLimit(1)
-            .padding(.top, 20)
+        .font(.system(size: 18, weight: .medium))
+        .lineLimit(1)
+        .padding(.top, 20)
         
-            .focused($titleFocused)
-            .onAppear {
-                titleFocused = true
-            }
+        .focused($titleFocused)
+        .onAppear {
+            titleFocused = true
+        }
     }
     
     private var descriptionSheetInput: some View {
@@ -83,8 +94,7 @@ struct TaskManagementView: View {
                   axis: .vertical)
         
         .lineLimit(1...5)
-        .font(.system(size: 15, weight: .light))
-        .padding(.top, 10)
+        .font(.system(size: 15, weight: .regular))
     }
     
     private var descriptionCoverInput: some View {
@@ -92,9 +102,8 @@ struct TaskManagementView: View {
                   text: $viewModel.descriptionText,
                   axis: .vertical)
         
-        //.lineLimit(0)
-        .font(.system(size: 15, weight: .light))
-        .padding(.top, 10)
+        .font(.system(size: 15, weight: .regular))
+        .lineSpacing(2.5)
     }
     
     private var buttons: some View {
@@ -164,28 +173,6 @@ struct TaskManagementView: View {
             Image.TaskManagement.EditTask.accept
                 .resizable()
                 .frame(width: 30, height: 30)
-        }
-    }
-}
-
-struct HeightReader: View {
-    @Binding private var height: CGFloat
-    
-    init(height: Binding<CGFloat>) {
-        self._height = height
-    }
-    
-    var body: some View {
-        GeometryReader { geometry in
-            Color.clear
-                .onAppear {
-                    height = geometry.size.height
-                }
-                .onChange(of: geometry.size.height) { newValue in
-                    withAnimation {
-                        height = newValue
-                    }
-                }
         }
     }
 }

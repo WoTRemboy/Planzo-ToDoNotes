@@ -78,6 +78,29 @@ final class CoreDataViewModel: ObservableObject {
             print("Error fetching tasks: \(error.localizedDescription)")
         }
     }
+    
+#warning("Needed to be completed")
+    
+    @Published internal var checklistItems: [ChecklistItem] = []
+    @Published internal var checkListItemText: String = String()
+    @Published internal var lastAddedItemID: UUID?
+    @Published internal var newItemText: String = String()
+    
+    internal func addItem() {
+        guard !newItemText.isEmpty else { return }
+        
+        let newItem = ChecklistItem(title: newItemText)
+        checklistItems.append(newItem)
+        lastAddedItemID = newItem.id
+        
+        newItemText = ""
+    }
+    
+    internal func removeItem(item: ChecklistItem) {
+        guard let removeItemIndex = checklistItems.firstIndex(of: item) else { return }
+        checklistItems.remove(at: removeItemIndex)
+    }
+    
 }
 
 
@@ -100,5 +123,4 @@ extension CoreDataViewModel {
         entity.completed = entity.completed == 1 ? 2 : 1
         saveData()
     }
-    
 }
