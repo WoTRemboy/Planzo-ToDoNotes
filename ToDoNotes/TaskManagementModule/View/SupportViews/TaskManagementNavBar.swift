@@ -8,17 +8,20 @@
 import SwiftUI
 
 struct TaskManagementNavBar: View {
-    
+        
     private var title: String
     private var dayName: String
     private var onDismiss: () -> Void
+    private var onShare: () -> Void
     
     init(title: String,
          dayName: String,
-         onDismiss: @escaping () -> Void) {
+         onDismiss: @escaping () -> Void,
+         onShare: @escaping () -> Void) {
         self.title = title
         self.dayName = dayName
         self.onDismiss = onDismiss
+        self.onShare = onShare
     }
     
     internal var body: some View {
@@ -62,7 +65,7 @@ struct TaskManagementNavBar: View {
     
     private var shareButton: some View {
         Button {
-            // Share Button action
+            onShare()
         } label: {
             Image.NavigationBar.share
                 .resizable()
@@ -75,5 +78,7 @@ struct TaskManagementNavBar: View {
 #Preview {
     TaskManagementNavBar(
         title: "November 18",
-        dayName: "Sun") {}
+        dayName: "Sun",
+        onDismiss: {},
+        onShare: {})
 }

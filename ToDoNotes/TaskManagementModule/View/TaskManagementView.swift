@@ -40,9 +40,15 @@ struct TaskManagementView: View {
                 TaskManagementNavBar(
                     title: date.shortDate,
                     dayName: date.shortWeekday,
-                    onDismiss: onDismiss)
+                    onDismiss: onDismiss,
+                    onShare: viewModel.toggleShareSheet)
             }
             content
+        }
+        .sheet(isPresented: $viewModel.showingShareSheet) {
+            TaskManagementShareView()
+                .presentationDetents([.height(285)])
+                .presentationDragIndicator(.visible)
         }
     }
     
@@ -164,28 +170,6 @@ struct TaskManagementView: View {
             Image.TaskManagement.EditTask.accept
                 .resizable()
                 .frame(width: 30, height: 30)
-        }
-    }
-}
-
-struct HeightReader: View {
-    @Binding private var height: CGFloat
-    
-    init(height: Binding<CGFloat>) {
-        self._height = height
-    }
-    
-    var body: some View {
-        GeometryReader { geometry in
-            Color.clear
-                .onAppear {
-                    height = geometry.size.height
-                }
-                .onChange(of: geometry.size.height) { newValue in
-                    withAnimation {
-                        height = newValue
-                    }
-                }
         }
     }
 }

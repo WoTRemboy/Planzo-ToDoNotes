@@ -14,6 +14,9 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var check: Bool
     internal var entity: TaskEntity?
     
+    @Published internal var showingShareSheet: Bool = false
+    @Published internal var shareSheetHeight: CGFloat = 0
+    
     init(nameText: String = String(),
          descriptionText: String = String(),
          check: Bool = false) {
@@ -31,6 +34,10 @@ final class TaskManagementViewModel: ObservableObject {
     
     internal func toggleCheck() {
         check.toggle()
+    }
+    
+    internal func toggleShareSheet() {
+        showingShareSheet.toggle()
     }
     
 }

@@ -48,6 +48,7 @@ extension Image {
             static let uncheck = Image("EditTaskUncheck")
             static let more = Image("EditTaskMore")
             static let accept = Image("EditTaskAccept")
+            static let link = Image("EditTaskLink")
         }
         
         enum TaskRow {

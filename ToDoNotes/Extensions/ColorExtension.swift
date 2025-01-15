@@ -17,6 +17,7 @@ extension Color {
         static let backPopup = Color("BackPopup")
         static let backDefault = Color("BackDefault")
         static let backTableView = Color("BackTableView")
+        static let backSheetView = Color("BackSheetView")
     }
     
     enum ButtonColors {
