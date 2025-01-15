@@ -54,14 +54,19 @@ struct TaskManagementView: View {
     
     private var content: some View {
         VStack(spacing: 0) {
-            nameInput
-            
-            if entity != nil {
-                descriptionCoverInput
-            } else {
-                descriptionSheetInput
-                    .background(HeightReader(height: $taskManagementHeight))
+            ScrollView {
+                nameInput
+                
+                if entity != nil {
+                    descriptionCoverInput
+                    TaskChecklistView()
+                } else {
+                    descriptionSheetInput
+                        .background(HeightReader(height: $taskManagementHeight))
+                }
             }
+            .scrollDisabled(entity == nil)
+            
             Spacer()
             buttons
         }
@@ -90,7 +95,6 @@ struct TaskManagementView: View {
         
         .lineLimit(1...5)
         .font(.system(size: 15, weight: .regular))
-        .padding(.top, 10)
     }
     
     private var descriptionCoverInput: some View {
@@ -99,7 +103,7 @@ struct TaskManagementView: View {
                   axis: .vertical)
         
         .font(.system(size: 15, weight: .regular))
-        .padding(.top, 10)
+        .lineSpacing(2.5)
     }
     
     private var buttons: some View {

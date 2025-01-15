@@ -63,6 +63,7 @@
 		63F6C71A2D2AF3B900716AB0 /* CustomCalendarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C7192D2AF3B900716AB0 /* CustomCalendarCell.swift */; };
 		63F6C71C2D2B19A200716AB0 /* CustomCalendarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C71B2D2B199700716AB0 /* CustomCalendarModel.swift */; };
 		63F6C71F2D2B1E5200716AB0 /* CalendarTaskFormPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C71E2D2B1E5200716AB0 /* CalendarTaskFormPlaceholder.swift */; };
+		63F849462D38145E00E9D5CE /* TaskChecklistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F849452D38145E00E9D5CE /* TaskChecklistView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -121,6 +122,7 @@
 		63F6C7192D2AF3B900716AB0 /* CustomCalendarCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCalendarCell.swift; sourceTree = "<group>"; };
 		63F6C71B2D2B199700716AB0 /* CustomCalendarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCalendarModel.swift; sourceTree = "<group>"; };
 		63F6C71E2D2B1E5200716AB0 /* CalendarTaskFormPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTaskFormPlaceholder.swift; sourceTree = "<group>"; };
+		63F849452D38145E00E9D5CE /* TaskChecklistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskChecklistView.swift; sourceTree = "<group>"; };
 		63FB4F272D31577A007FA140 /* ToDoNotes.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ToDoNotes.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -161,6 +163,7 @@
 				63E890C92D347655003D7370 /* TaskListRow.swift */,
 				632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */,
 				632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */,
+				63F849452D38145E00E9D5CE /* TaskChecklistView.swift */,
 			);
 			path = SupportViews;
 			sourceTree = "<group>";
@@ -650,6 +653,7 @@
 				634877AE2D36A164009110B0 /* SettingAppearanceView.swift in Sources */,
 				63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */,
 				637B9F4E2D295B490010F13B /* MainViewModel.swift in Sources */,
+				63F849462D38145E00E9D5CE /* TaskChecklistView.swift in Sources */,
 				63F6C6F92D29B78400716AB0 /* FoldersScrollView.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
 				637B9F662D2974E40010F13B /* FilterScrollView.swift in Sources */,
