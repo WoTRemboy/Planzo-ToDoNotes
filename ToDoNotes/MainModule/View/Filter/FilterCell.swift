@@ -26,7 +26,7 @@ struct FilterCell: View {
     
     private var nameLabel: some View {
         Text(name)
-            .font(.system(size: 18, weight: .regular))
+            .font(.system(size: 18, weight: .medium))
             .foregroundStyle(selected ? Color.LabelColors.labelPrimary : Color.LabelColors.labelSecondary)
             .frame(maxWidth: .infinity)
     }

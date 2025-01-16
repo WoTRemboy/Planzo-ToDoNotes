@@ -14,6 +14,8 @@
 		632D0DD02D36B9760071684D /* TaskManagementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DCF2D36B9700071684D /* TaskManagementModel.swift */; };
 		632D0DD22D36BAF50071684D /* SettingAppearanceNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD12D36BAEF0071684D /* SettingAppearanceNavBar.swift */; };
 		632D0DD42D36BB270071684D /* TaskManagementNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */; };
+		632D0DD72D37D6D70071684D /* TaskManagementShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */; };
+		632D0DDA2D37E0AE0071684D /* HeightReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD92D37E0A90071684D /* HeightReader.swift */; };
 		634877AC2D369B2C009110B0 /* SettingFormRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634877AB2D369B21009110B0 /* SettingFormRow.swift */; };
 		634877AE2D36A164009110B0 /* SettingAppearanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634877AD2D36A157009110B0 /* SettingAppearanceView.swift */; };
 		635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF6A2D24B71C007FFBBA /* ToDoNotesApp.swift */; };
@@ -25,6 +27,8 @@
 		635FEF842D24C17B007FFBBA /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF832D24C172007FFBBA /* Labels.swift */; };
 		635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF852D24C255007FFBBA /* OnboardingScreenModel.swift */; };
 		635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */; };
+		63645A5C2D3836FB000095D3 /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 63645A5B2D3836FB000095D3 /* SwiftUIIntrospect */; };
+		63645A5E2D383897000095D3 /* TextFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63645A5D2D383890000095D3 /* TextFieldDelegate.swift */; };
 		637B9F462D29599B0010F13B /* FilterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F452D2959960010F13B /* FilterModel.swift */; };
 		637B9F482D295A510010F13B /* FolderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F472D295A4D0010F13B /* FolderModel.swift */; };
 		637B9F4C2D295B290010F13B /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F4B2D295B270010F13B /* MainView.swift */; };
@@ -61,7 +65,21 @@
 		63F6C71A2D2AF3B900716AB0 /* CustomCalendarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C7192D2AF3B900716AB0 /* CustomCalendarCell.swift */; };
 		63F6C71C2D2B19A200716AB0 /* CustomCalendarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C71B2D2B199700716AB0 /* CustomCalendarModel.swift */; };
 		63F6C71F2D2B1E5200716AB0 /* CalendarTaskFormPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C71E2D2B1E5200716AB0 /* CalendarTaskFormPlaceholder.swift */; };
+		63F849462D38145E00E9D5CE /* TaskChecklistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F849452D38145E00E9D5CE /* TaskChecklistView.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		63645A522D383526000095D3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewControllerMethods.swift; sourceTree = "<group>"; };
@@ -71,6 +89,8 @@
 		632D0DCF2D36B9700071684D /* TaskManagementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementModel.swift; sourceTree = "<group>"; };
 		632D0DD12D36BAEF0071684D /* SettingAppearanceNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingAppearanceNavBar.swift; sourceTree = "<group>"; };
 		632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementNavBar.swift; sourceTree = "<group>"; };
+		632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementShareView.swift; sourceTree = "<group>"; };
+		632D0DD92D37E0A90071684D /* HeightReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightReader.swift; sourceTree = "<group>"; };
 		634877AB2D369B21009110B0 /* SettingFormRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingFormRow.swift; sourceTree = "<group>"; };
 		634877AD2D36A157009110B0 /* SettingAppearanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingAppearanceView.swift; sourceTree = "<group>"; };
 		635FEF552D24B715007FFBBA /* ToDoNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,6 +103,7 @@
 		635FEF832D24C172007FFBBA /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
 		635FEF852D24C255007FFBBA /* OnboardingScreenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenModel.swift; sourceTree = "<group>"; };
 		635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenViewModel.swift; sourceTree = "<group>"; };
+		63645A5D2D383890000095D3 /* TextFieldDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldDelegate.swift; sourceTree = "<group>"; };
 		637B9F452D2959960010F13B /* FilterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterModel.swift; sourceTree = "<group>"; };
 		637B9F472D295A4D0010F13B /* FolderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderModel.swift; sourceTree = "<group>"; };
 		637B9F4B2D295B270010F13B /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -117,6 +138,7 @@
 		63F6C7192D2AF3B900716AB0 /* CustomCalendarCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCalendarCell.swift; sourceTree = "<group>"; };
 		63F6C71B2D2B199700716AB0 /* CustomCalendarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCalendarModel.swift; sourceTree = "<group>"; };
 		63F6C71E2D2B1E5200716AB0 /* CalendarTaskFormPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTaskFormPlaceholder.swift; sourceTree = "<group>"; };
+		63F849452D38145E00E9D5CE /* TaskChecklistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskChecklistView.swift; sourceTree = "<group>"; };
 		63FB4F272D31577A007FA140 /* ToDoNotes.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ToDoNotes.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -128,6 +150,7 @@
 				63C5A8CF2D31BECD00154101 /* GoogleSignIn in Frameworks */,
 				63C5A8D12D31BECD00154101 /* GoogleSignInSwift in Frameworks */,
 				63958D2D2D33D8FE00A1913A /* SwiftUIPager in Frameworks */,
+				63645A5C2D3836FB000095D3 /* SwiftUIIntrospect in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,8 +170,28 @@
 			isa = PBXGroup;
 			children = (
 				632D0DCF2D36B9700071684D /* TaskManagementModel.swift */,
+				63645A5D2D383890000095D3 /* TextFieldDelegate.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		632D0DD52D37D6880071684D /* SupportViews */ = {
+			isa = PBXGroup;
+			children = (
+				63E890C92D347655003D7370 /* TaskListRow.swift */,
+				632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */,
+				632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */,
+				63F849452D38145E00E9D5CE /* TaskChecklistView.swift */,
+			);
+			path = SupportViews;
+			sourceTree = "<group>";
+		};
+		632D0DD82D37E0990071684D /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				632D0DD92D37E0A90071684D /* HeightReader.swift */,
+			);
+			path = Modifiers;
 			sourceTree = "<group>";
 		};
 		634877AF2D36A168009110B0 /* NavigationViews */ = {
@@ -196,6 +239,7 @@
 				637B9F532D29696B0010F13B /* CalendarModule */,
 				637B9F542D2969750010F13B /* SettingsModule */,
 				638E21932D2C206400FB1464 /* TaskManagementModule */,
+				632D0DD82D37E0990071684D /* Modifiers */,
 				635FEF7E2D24BCDE007FFBBA /* Extensions */,
 				635FEF752D24BAD1007FFBBA /* SupportFiles */,
 				635FEF672D24B71C007FFBBA /* Preview Content */,
@@ -394,8 +438,7 @@
 			isa = PBXGroup;
 			children = (
 				638E21952D2C209200FB1464 /* TaskManagementView.swift */,
-				63E890C92D347655003D7370 /* TaskListRow.swift */,
-				632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */,
+				632D0DD52D37D6880071684D /* SupportViews */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -532,6 +575,7 @@
 				635FEF512D24B715007FFBBA /* Sources */,
 				635FEF522D24B715007FFBBA /* Frameworks */,
 				635FEF532D24B715007FFBBA /* Resources */,
+				63645A522D383526000095D3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -542,6 +586,7 @@
 				63C5A8CE2D31BECD00154101 /* GoogleSignIn */,
 				63C5A8D02D31BECD00154101 /* GoogleSignInSwift */,
 				63958D2C2D33D8FE00A1913A /* SwiftUIPager */,
+				63645A5B2D3836FB000095D3 /* SwiftUIIntrospect */,
 			);
 			productName = ToDoNotes;
 			productReference = 635FEF552D24B715007FFBBA /* ToDoNotes.app */;
@@ -574,6 +619,7 @@
 			packageReferences = (
 				63C5A8CD2D31BECD00154101 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				63958D2B2D33D8FE00A1913A /* XCRemoteSwiftPackageReference "SwiftUIPager" */,
+				63645A5A2D3836FB000095D3 /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 635FEF562D24B715007FFBBA /* Products */;
@@ -628,14 +674,18 @@
 				634877AE2D36A164009110B0 /* SettingAppearanceView.swift in Sources */,
 				63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */,
 				637B9F4E2D295B490010F13B /* MainViewModel.swift in Sources */,
+				63F849462D38145E00E9D5CE /* TaskChecklistView.swift in Sources */,
 				63F6C6F92D29B78400716AB0 /* FoldersScrollView.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
 				637B9F662D2974E40010F13B /* FilterScrollView.swift in Sources */,
+				632D0DDA2D37E0AE0071684D /* HeightReader.swift in Sources */,
 				632D0DD22D36BAF50071684D /* SettingAppearanceNavBar.swift in Sources */,
 				63F6C7082D2AAA0900716AB0 /* SettingsViewModel.swift in Sources */,
 				63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */,
+				632D0DD72D37D6D70071684D /* TaskManagementShareView.swift in Sources */,
 				63F6C7172D2ABE6700716AB0 /* CustomCalendarView.swift in Sources */,
 				63E890CA2D347655003D7370 /* TaskListRow.swift in Sources */,
+				63645A5E2D383897000095D3 /* TextFieldDelegate.swift in Sources */,
 				637B9F692D29754F0010F13B /* FilterCell.swift in Sources */,
 				63F6C7002D2AA01700716AB0 /* TodayViewModel.swift in Sources */,
 				635FEF842D24C17B007FFBBA /* Labels.swift in Sources */,
@@ -800,7 +850,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -837,7 +887,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -874,6 +924,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		63645A5A2D3836FB000095D3 /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/swiftui-introspect";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
+		};
 		63958D2B2D33D8FE00A1913A /* XCRemoteSwiftPackageReference "SwiftUIPager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/fermoya/SwiftUIPager.git";
@@ -893,6 +951,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		63645A5B2D3836FB000095D3 /* SwiftUIIntrospect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 63645A5A2D3836FB000095D3 /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
+			productName = SwiftUIIntrospect;
+		};
 		63958D2C2D33D8FE00A1913A /* SwiftUIPager */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 63958D2B2D33D8FE00A1913A /* XCRemoteSwiftPackageReference "SwiftUIPager" */;

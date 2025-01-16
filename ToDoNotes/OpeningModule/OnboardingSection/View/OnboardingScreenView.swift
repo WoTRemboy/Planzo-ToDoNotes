@@ -53,13 +53,13 @@ struct OnboardingScreenView: View {
                     
                     Text(viewModel.steps[index].name)
                         .font(.system(size: 18))
-                        .fontWeight(.regular)
+                        .fontWeight(.medium)
                         .multilineTextAlignment(.center)
                         .padding(.top)
                     
                     Text(viewModel.steps[index].description)
                         .font(.system(size: 14))
-                        .fontWeight(.light)
+                        .fontWeight(.regular)
                         .multilineTextAlignment(.center)
                         .padding(.top, 3)
                         .frame(width: 238)
@@ -123,6 +123,7 @@ struct OnboardingScreenView: View {
             }
         } label: {
             Text(Texts.OnboardingPage.next)
+                .font(.system(size: 17, weight: .medium))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
         .frame(height: 50)
@@ -148,7 +149,7 @@ struct OnboardingScreenView: View {
                     .resizable()
                     .frame(width: 20, height: 20)
                 Text(Texts.OnboardingPage.appleLogin)
-                    .font(.system(size: 17, weight: .regular))
+                    .font(.system(size: 17, weight: .medium))
                     .foregroundStyle(Color.LabelColors.labelReversed)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -176,7 +177,7 @@ struct OnboardingScreenView: View {
                     .resizable()
                     .frame(width: 20, height: 20)
                 Text(Texts.OnboardingPage.googleLogin)
-                    .font(.system(size: 17, weight: .regular))
+                    .font(.system(size: 17, weight: .medium))
                     .foregroundStyle(Color.black)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -198,7 +199,7 @@ struct OnboardingScreenView: View {
     private var skipButton: some View {
         Text(!viewModel.isLastPage(current: page.index) ? Texts.OnboardingPage.skip : Texts.OnboardingPage.withoutAuth)
             .font(.system(size: 14))
-            .fontWeight(.light)
+            .fontWeight(.medium)
             .foregroundStyle(Color.labelSecondary)
         
             .padding(.top)

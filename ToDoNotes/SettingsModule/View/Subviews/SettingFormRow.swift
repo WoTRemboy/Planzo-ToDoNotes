@@ -31,7 +31,7 @@ struct SettingFormRow: View {
             Spacer()
             if let details {
                 Text(details)
-                    .font(.system(size: 15, weight: .regular))
+                    .font(.system(size: 15, weight: .medium))
                     .lineLimit(1)
                     .foregroundStyle(Color.LabelColors.labelSecondary)
             }
@@ -45,7 +45,7 @@ struct SettingFormRow: View {
             
             if check {
                 Image.Settings.check
-                    .font(.system(size: 15, weight: .regular))
+                    .font(.system(size: 15, weight: .medium))
                     .foregroundStyle(Color.accentColor)
             }
         }
@@ -62,7 +62,7 @@ struct SettingFormRow: View {
             }
             
             Text(title)
-                .font(.system(size: 15, weight: .regular))
+                .font(.system(size: 15, weight: .medium))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
         }
     }

@@ -30,7 +30,7 @@ struct MainCustomNavBar: View {
     
     private var titleLabel: some View {
         Text(title)
-            .font(.system(size: 20, weight: .regular))
+            .font(.system(size: 20, weight: .medium))
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading, 16)
     }

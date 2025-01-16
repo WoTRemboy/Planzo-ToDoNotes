@@ -30,7 +30,7 @@ struct AboutAppView: View {
                     .foregroundStyle(Color.LabelColors.labelPrimary)
                 
                 Text(version)
-                    .font(.system(size: 15, weight: .light))
+                    .font(.system(size: 15, weight: .regular))
                     .foregroundStyle(Color.LabelColors.labelSecondary)
             }
             Spacer()

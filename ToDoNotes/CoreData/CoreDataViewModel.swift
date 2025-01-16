@@ -45,10 +45,23 @@ final class CoreDataViewModel: ObservableObject {
     internal func updateTask(entity: TaskEntity,
                              name: String,
                              description: String,
-                             completeCheck: Bool) {
+                             completeCheck: Bool,
+                             checklist: [ChecklistItem] = []) {
         entity.name = name
         entity.details = description
         entity.completed = completeCheck ? 1 : 0
+        
+        var checklistEnities = [ChecklistEntity]()
+        for item in checklist {
+            let entityItem = ChecklistEntity(context: container.viewContext)
+            entityItem.name = item.name
+            entityItem.completed = item.completed
+            checklistEnities.append(entityItem)
+        }
+        
+        let orderedChecklist = NSOrderedSet(array: checklistEnities)
+        entity.checklist = orderedChecklist
+        
         saveData()
     }
     
@@ -100,5 +113,4 @@ extension CoreDataViewModel {
         entity.completed = entity.completed == 1 ? 2 : 1
         saveData()
     }
-    
 }

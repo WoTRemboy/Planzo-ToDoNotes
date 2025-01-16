@@ -29,10 +29,10 @@ struct CalendarNavBar: View {
     private var titleLabel: some View {
         HStack(spacing: 8) {
             Text(date)
-                .font(.system(size: 20, weight: .regular))
+                .font(.system(size: 20, weight: .medium))
             
             Text(monthYear)
-                .font(.system(size: 20, weight: .regular))
+                .font(.system(size: 20, weight: .medium))
                 .foregroundStyle(Color.LabelColors.labelSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

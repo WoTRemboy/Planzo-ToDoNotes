@@ -53,6 +53,7 @@ struct MainView: View {
     private var placeholderLabel: some View {
         Text(Texts.MainPage.placeholder)
             .foregroundStyle(Color.LabelColors.labelSecondary)
+            .font(.system(size: 18, weight: .medium))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
     
@@ -72,7 +73,7 @@ struct MainView: View {
                 .listRowBackground(Color.SupportColors.backListRow)
             } header: {
                 Text(viewModel.todayDateString)
-                    .font(.system(size: 13, weight: .regular))
+                    .font(.system(size: 13, weight: .medium))
                     .textCase(.none)
             }
         }
