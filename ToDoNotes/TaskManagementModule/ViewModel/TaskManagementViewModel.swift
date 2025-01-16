@@ -17,7 +17,6 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var check: Bool
     @Published internal var checklistLocal: [ChecklistItem] = []
     
-    @Published internal var lastAddedItemID: UUID?
     @Published internal var checkListItemText: String = String()
     
     @Published internal var showingShareSheet: Bool = false
@@ -64,8 +63,16 @@ final class TaskManagementViewModel: ObservableObject {
             }
         }
         
-        checklistLocal.insert(newItem, at: index)
-        lastAddedItemID = newItem.id
+        withAnimation(.easeInOut(duration: 0.2)) {
+            checklistLocal.insert(newItem, at: index)
+        }
+    }
+    
+    internal func removeChecklistItem(for id: UUID) {
+        guard checklistLocal.count > 1 else { return }
+        if let index = checklistLocal.firstIndex(where: { $0.id == id }) {
+            checklistLocal.remove(at: index)
+        }
     }
     
     internal func setupChecklistLocal(_ checklist: NSOrderedSet?) {
