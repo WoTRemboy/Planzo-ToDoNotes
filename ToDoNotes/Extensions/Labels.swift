@@ -93,6 +93,7 @@ final class Texts {
         static let titlePlaceholder = "Что бы вы хотели сделать?"
         static let descriprionPlaceholder = "Описание"
         static let today = "Сегодня"
+        static let point = "Пункт"
         
         enum ShareView {
             static let title = "Совместный доступ"
