@@ -9,10 +9,17 @@ import SwiftUI
 
 final class TaskManagementViewModel: ObservableObject {
     
+    internal var entity: TaskEntity?
+    internal var checklistItems: [ChecklistEntity] = []
+    
     @Published internal var nameText: String
     @Published internal var descriptionText: String
     @Published internal var check: Bool
-    internal var entity: TaskEntity?
+    @Published internal var checklistLocal: [ChecklistItem] = []
+    
+    @Published internal var lastAddedItemID: UUID?
+    @Published internal var newItemText: String = String()
+    @Published internal var checkListItemText: String = String()
     
     @Published internal var showingShareSheet: Bool = false
     @Published internal var shareSheetHeight: CGFloat = 0
@@ -30,6 +37,8 @@ final class TaskManagementViewModel: ObservableObject {
         self.nameText = entity.name ?? String()
         self.descriptionText = entity.details ?? String()
         self.check = entity.completed != 0
+        
+        setupChecklistLocal(entity.checklist)
     }
     
     internal func toggleCheck() {
@@ -40,4 +49,24 @@ final class TaskManagementViewModel: ObservableObject {
         showingShareSheet.toggle()
     }
     
+    internal func addChecklistItem() {
+        guard !newItemText.isEmpty else { return }
+                
+        let newItem = ChecklistItem(name: newItemText)
+        checklistLocal.append(newItem)
+        lastAddedItemID = newItem.id
+                
+        newItemText = ""
+    }
+    
+    internal func setupChecklistLocal(_ checklist: NSOrderedSet?) {
+        guard let checklistArray = checklist?.compactMap({ $0 as? ChecklistEntity }) else { return }
+        
+        for entity in checklistArray {
+            let item = ChecklistItem(
+                name: entity.name ?? String(),
+                completed: entity.completed)
+            checklistLocal.append(item)
+        }
+    }
 }

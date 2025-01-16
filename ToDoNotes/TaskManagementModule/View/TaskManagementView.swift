@@ -59,7 +59,7 @@ struct TaskManagementView: View {
                 
                 if entity != nil {
                     descriptionCoverInput
-                    TaskChecklistView()
+                    TaskChecklistView(viewModel: viewModel)
                 } else {
                     descriptionSheetInput
                         .background(HeightReader(height: $taskManagementHeight))
@@ -160,7 +160,8 @@ struct TaskManagementView: View {
                         entity: entity,
                         name: viewModel.nameText,
                         description: viewModel.descriptionText,
-                        completeCheck: viewModel.check)
+                        completeCheck: viewModel.check,
+                        checklist: viewModel.checklistLocal)
                 } else {
                     coreDataManager.addTask(
                         name: viewModel.nameText,

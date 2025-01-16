@@ -9,8 +9,12 @@ import SwiftUI
 
 struct TaskChecklistView: View {
     
-    @EnvironmentObject private var viewModel: CoreDataViewModel
+    @ObservedObject private var viewModel: TaskManagementViewModel
     @FocusState private var newItemFocused: Bool
+    
+    init(viewModel: TaskManagementViewModel) {
+        self.viewModel = viewModel
+    }
 
     internal var body: some View {
         checkPoints
@@ -18,20 +22,20 @@ struct TaskChecklistView: View {
     
     private var checkPoints: some View {
         VStack(spacing: 8) {
-            ForEach($viewModel.checklistItems) { $item in
+            ForEach($viewModel.checklistLocal) { $item in
                 HStack {
                     Button(action: {
                         withAnimation {
-                            item.isChecked.toggle()
+                            item.completed.toggle()
                         }
                     }) {
-                        (item.isChecked ?
+                        (item.completed ?
                         Image.TaskManagement.EditTask.checkListCheck :
                         Image.TaskManagement.EditTask.checkListUncheck)
                         .frame(width: 15, height: 15)
                     }
                     
-                    TextField(String(), text: $item.title)
+                    TextField(String(), text: $item.name)
                         .textFieldStyle(PlainTextFieldStyle())
                         .focused($newItemFocused, equals: item.id == viewModel.lastAddedItemID)
                         .onAppear {
@@ -52,7 +56,7 @@ struct TaskChecklistView: View {
                           text: $viewModel.newItemText)
                     .focused($newItemFocused)
                     .onSubmit {
-                        viewModel.addItem()
+                        viewModel.addChecklistItem()
                     }
             }
         }
@@ -61,5 +65,5 @@ struct TaskChecklistView: View {
 }
 
 #Preview {
-    TaskChecklistView()
+    TaskChecklistView(viewModel: TaskManagementViewModel())
 }

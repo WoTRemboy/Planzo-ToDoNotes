@@ -8,9 +8,9 @@
 import Foundation
 
 struct ChecklistItem: Identifiable, Equatable {
-    let id = UUID()
-    var title: String
-    var isChecked: Bool = false
+    var id = UUID()
+    var name: String
+    var completed: Bool = false
 }
 
 enum ManagementViewType {
