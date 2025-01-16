@@ -6,21 +6,24 @@
 //
 
 import SwiftUI
+import SwiftUIIntrospect
 
 struct TaskChecklistView: View {
     
     @ObservedObject private var viewModel: TaskManagementViewModel
-    @FocusState private var newItemFocused: Bool
+    @FocusState private var focusedItemID: UUID?
+    
+    private var textFieldDelegates: [UUID: TextFieldDelegate]
     
     init(viewModel: TaskManagementViewModel) {
         self.viewModel = viewModel
-    }
-
-    internal var body: some View {
-        checkPoints
+        
+        self.textFieldDelegates = Dictionary(uniqueKeysWithValues: viewModel.checklistLocal.map {
+            ($0.id, TextFieldDelegate())
+        })
     }
     
-    private var checkPoints: some View {
+    internal var body: some View {
         VStack(spacing: 8) {
             ForEach($viewModel.checklistLocal) { $item in
                 HStack {
@@ -30,34 +33,19 @@ struct TaskChecklistView: View {
                         }
                     }) {
                         (item.completed ?
-                        Image.TaskManagement.EditTask.checkListCheck :
-                        Image.TaskManagement.EditTask.checkListUncheck)
+                         Image.TaskManagement.EditTask.checkListCheck :
+                         Image.TaskManagement.EditTask.checkListUncheck)
                         .frame(width: 15, height: 15)
                     }
                     
-                    TextField(String(), text: $item.name)
-                        .textFieldStyle(PlainTextFieldStyle())
-                        .focused($newItemFocused, equals: item.id == viewModel.lastAddedItemID)
-                        .onAppear {
-                            if item.id == viewModel.lastAddedItemID {
-                                DispatchQueue.main.async {
-                                    newItemFocused = true
-                                }
-                            }
+                    TextField(Texts.TaskManagement.point,
+                              text: $item.name)
+                        .focused($focusedItemID, equals: item.id)
+                        .introspect(.textField, on: .iOS(.v16, .v17, .v18)) { textField in
+                            setupDelegate(for: textField, itemID: item.id)
                         }
+                        
                 }
-            }
-            
-            HStack {
-                Image.TaskManagement.EditTask.checkListUncheck
-                    .frame(width: 15, height: 15)
-                
-                TextField("Пункт \(viewModel.checklistItems.count + 1)",
-                          text: $viewModel.newItemText)
-                    .focused($newItemFocused)
-                    .onSubmit {
-                        viewModel.addChecklistItem()
-                    }
             }
         }
         .padding(.vertical, 4)
@@ -66,4 +54,31 @@ struct TaskChecklistView: View {
 
 #Preview {
     TaskChecklistView(viewModel: TaskManagementViewModel())
+}
+
+
+extension TaskChecklistView {
+    
+    // MARK: - Delegate setup
+    
+    private func setupDelegate(for textField: UITextField, itemID: UUID) {
+        guard let delegate = textFieldDelegates[itemID] else { return }
+        
+        delegate.shouldReturn = {
+            self.viewModel.addChecklistItem(after: itemID)
+            self.focusOnNextItem(after: itemID)
+            return false
+        }
+        
+        textField.delegate = delegate
+    }
+    
+    // MARK: - Focus menagement
+    
+    private func focusOnNextItem(after id: UUID) {
+        if let currentIndex = viewModel.checklistLocal.firstIndex(where: { $0.id == id }),
+           currentIndex < viewModel.checklistLocal.count - 1 {
+            focusedItemID = viewModel.checklistLocal[currentIndex + 1].id
+        }
+    }
 }

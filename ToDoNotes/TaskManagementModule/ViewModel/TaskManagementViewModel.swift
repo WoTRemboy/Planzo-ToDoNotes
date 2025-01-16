@@ -18,7 +18,6 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var checklistLocal: [ChecklistItem] = []
     
     @Published internal var lastAddedItemID: UUID?
-    @Published internal var newItemText: String = String()
     @Published internal var checkListItemText: String = String()
     
     @Published internal var showingShareSheet: Bool = false
@@ -49,14 +48,24 @@ final class TaskManagementViewModel: ObservableObject {
         showingShareSheet.toggle()
     }
     
-    internal func addChecklistItem() {
-        guard !newItemText.isEmpty else { return }
-                
-        let newItem = ChecklistItem(name: newItemText)
-        checklistLocal.append(newItem)
+    // MARK: - Checklist Methods
+    
+    internal func addChecklistItem(after id: UUID) {
+        let newItem = ChecklistItem(name: checkListItemText)
+        let index: Int
+        
+        if checklistLocal.count < 1 {
+            index = 0
+        } else {
+            if let firstIndex = checklistLocal.firstIndex(where: { $0.id == id }) {
+                index = firstIndex + 1
+            } else {
+                index = checklistLocal.count
+            }
+        }
+        
+        checklistLocal.insert(newItem, at: index)
         lastAddedItemID = newItem.id
-                
-        newItemText = ""
     }
     
     internal func setupChecklistLocal(_ checklist: NSOrderedSet?) {
@@ -67,6 +76,11 @@ final class TaskManagementViewModel: ObservableObject {
                 name: entity.name ?? String(),
                 completed: entity.completed)
             checklistLocal.append(item)
+        }
+        
+        if checklistLocal.isEmpty {
+            let emptyItem = ChecklistItem(name: String())
+            checklistLocal.append(emptyItem)
         }
     }
 }
