@@ -82,6 +82,12 @@ final class Texts {
             static let dark = "Тёмное"
         }
         
+        enum Notification {
+            static let title = "Уведомления"
+            static let alertTitle = "Требуется доступ"
+            static let alertContent = "Пожалуйста, включите уведомления в настройках."
+        }
+        
         enum Email {
             static let contact = "Контакт"
             static let emailTitle = "Email"

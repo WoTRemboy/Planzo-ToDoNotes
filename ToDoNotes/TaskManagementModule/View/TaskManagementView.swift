@@ -45,6 +45,9 @@ struct TaskManagementView: View {
             }
             content
         }
+        .onAppear {
+            titleFocused = true
+        }
         .sheet(isPresented: $viewModel.showingShareSheet) {
             TaskManagementShareView()
                 .presentationDetents([.height(285)])
@@ -83,9 +86,6 @@ struct TaskManagementView: View {
         .padding(.top, 20)
         
         .focused($titleFocused)
-        .onAppear {
-            titleFocused = true
-        }
     }
     
     private var descriptionSheetInput: some View {
