@@ -83,6 +83,7 @@ struct TaskManagementView: View {
         .padding(.top, 20)
         
         .focused($titleFocused)
+        .immediateKeyboard()
         .onAppear {
             titleFocused = true
         }
