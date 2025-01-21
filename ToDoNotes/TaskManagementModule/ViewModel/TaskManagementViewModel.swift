@@ -22,6 +22,11 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var showingShareSheet: Bool = false
     @Published internal var shareSheetHeight: CGFloat = 0
     
+    @Published internal var targetDate: Date = .now
+    @Published internal var notificationsCheck: Bool = false
+    @Published internal var targetDateSelected: Bool = false
+    @Published internal var showingDatePicker: Bool = false
+    
     init(nameText: String = String(),
          descriptionText: String = String(),
          check: Bool = false) {
@@ -35,8 +40,15 @@ final class TaskManagementViewModel: ObservableObject {
         self.nameText = entity.name ?? String()
         self.descriptionText = entity.details ?? String()
         self.check = entity.completed != 0
+        self.targetDate = entity.target ?? .now
+        self.notificationsCheck = entity.notify
+        self.targetDateSelected = entity.target != nil
         
         setupChecklistLocal(entity.checklist)
+    }
+    
+    internal var saveTargetDate: Date? {
+        targetDateSelected ? targetDate : nil
     }
     
     internal func toggleCheck() {
@@ -45,6 +57,21 @@ final class TaskManagementViewModel: ObservableObject {
     
     internal func toggleShareSheet() {
         showingShareSheet.toggle()
+    }
+    
+    internal func toggleDatePicker() {
+        showingDatePicker.toggle()
+    }
+    
+    internal func doneDatePicker() {
+        targetDateSelected = true
+        check = true
+        showingDatePicker = false
+    }
+    
+    internal func cancelDatePicker() {
+        targetDateSelected = false
+        showingDatePicker = false
     }
     
     // MARK: - Checklist Methods
