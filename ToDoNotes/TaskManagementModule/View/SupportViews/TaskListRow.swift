@@ -23,6 +23,9 @@ struct TaskListRow: View {
                 checkBoxButton
             }
             nameLabel
+            
+            Spacer()
+            detailsBox
         }
     }
     
@@ -48,6 +51,28 @@ struct TaskListRow: View {
                              Color.LabelColors.labelPrimary)
             .strikethrough(entity.completed == 2,
                            color: Color.LabelColors.labelDetails)
+    }
+    
+    private var detailsBox: some View {
+        VStack(alignment: .trailing, spacing: 2) {
+            if entity.target != nil {
+                dateLabel
+            }
+            if entity.notify {
+                remainderImage
+            }
+        }
+    }
+    
+    private var dateLabel: some View {
+        Text(entity.target?.fullHourMinutes ?? String())
+            .font(.system(size: 12, weight: .medium))
+            .foregroundStyle(Color.LabelColors.labelPrimary)
+    }
+    
+    private var remainderImage: some View {
+        Image.TaskManagement.TaskRow.remainder
+            .frame(width: 12, height: 12)
     }
 }
 

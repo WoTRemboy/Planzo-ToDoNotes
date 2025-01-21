@@ -32,13 +32,18 @@ final class CoreDataViewModel: ObservableObject {
     
     internal func addTask(name: String,
                           description: String,
-                          completeCheck: Bool) {
+                          completeCheck: Bool,
+                          target: Date?,
+                          notify: Bool) {
         let newTask = TaskEntity(context: container.viewContext)
         
         newTask.id = UUID()
         newTask.name = name
         newTask.details = description
         newTask.completed = completeCheck ? 1 : 0
+        newTask.created = .now
+        newTask.target = target
+        newTask.notify = notify
         saveData()
     }
     
@@ -46,10 +51,14 @@ final class CoreDataViewModel: ObservableObject {
                              name: String,
                              description: String,
                              completeCheck: Bool,
+                             target: Date?,
+                             notify: Bool,
                              checklist: [ChecklistItem] = []) {
         entity.name = name
         entity.details = description
         entity.completed = completeCheck ? 1 : 0
+        entity.target = target
+        entity.notify = target != nil ? notify : false
         
         var checklistEnities = [ChecklistEntity]()
         for item in checklist {

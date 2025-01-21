@@ -101,6 +101,14 @@ final class Texts {
         static let today = "Сегодня"
         static let point = "Пункт"
         
+        enum DatePicker {
+            static let title = "Выбор даты"
+            static let target = "Цель"
+            static let notification = "Уведомление"
+            static let cancel = "Отмена"
+            static let done = "Готово"
+        }
+        
         enum ShareView {
             static let title = "Совместный доступ"
             static let view = "Просмотр"

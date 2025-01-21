@@ -49,6 +49,7 @@ extension Image {
             static let uncheck = Image("EditTaskUncheck")
             static let more = Image("EditTaskMore")
             static let accept = Image("EditTaskAccept")
+            static let ready = Image("EditTaskReady")
             static let link = Image("EditTaskLink")
             
             static let checkListCheck = Image("ChecklistItemChecked")
@@ -58,6 +59,7 @@ extension Image {
         enum TaskRow {
             static let uncheckedBox = Image("TaskRowUncheckedBox")
             static let checkedBox = Image("TaskRowCheckedBox")
+            static let remainder = Image("TaskRowRemainder")
         }
     }
     
