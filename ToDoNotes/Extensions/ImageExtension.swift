@@ -58,6 +58,7 @@ extension Image {
         enum TaskRow {
             static let uncheckedBox = Image("TaskRowUncheckedBox")
             static let checkedBox = Image("TaskRowCheckedBox")
+            static let remainder = Image("TaskRowRemainder")
         }
     }
     

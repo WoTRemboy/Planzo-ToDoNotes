@@ -58,7 +58,7 @@ final class CoreDataViewModel: ObservableObject {
         entity.details = description
         entity.completed = completeCheck ? 1 : 0
         entity.target = target
-        entity.notify = notify
+        entity.notify = target != nil ? notify : false
         
         var checklistEnities = [ChecklistEntity]()
         for item in checklist {
