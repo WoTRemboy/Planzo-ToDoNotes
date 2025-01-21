@@ -162,12 +162,16 @@ struct TaskManagementView: View {
                         name: viewModel.nameText,
                         description: viewModel.descriptionText,
                         completeCheck: viewModel.check,
+                        target: nil,
+                        notify: false,
                         checklist: viewModel.checklistLocal)
                 } else {
                     coreDataManager.addTask(
                         name: viewModel.nameText,
                         description: viewModel.descriptionText,
-                        completeCheck: viewModel.check)
+                        completeCheck: viewModel.check,
+                        target: nil,
+                        notify: false)
                 }
             }
             onDismiss()
