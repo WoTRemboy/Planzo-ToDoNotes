@@ -12,6 +12,7 @@ import CoreData
 final class CoreDataViewModel: ObservableObject {
     
     @Published internal var savedEnities: [TaskEntity] = []
+    @Published internal var segmentedAndSortedTasks: [(Date?, [TaskEntity])] = []
     private let container: NSPersistentContainer
     
     internal var isEmpty : Bool {
@@ -96,9 +97,39 @@ final class CoreDataViewModel: ObservableObject {
         
         do {
             savedEnities = try container.viewContext.fetch(request)
+            setupSegmentedAndSortedTasks()
         } catch let error {
             print("Error fetching tasks: \(error.localizedDescription)")
         }
+    }
+    
+    private func setupSegmentedAndSortedTasks() {
+        var groupedTasks: [Date: [TaskEntity]] = [:]
+        
+        for task in savedEnities {
+            let referenceDate = task.target ?? task.created ?? Date.distantPast
+            let day = Calendar.current.startOfDay(for: referenceDate)
+            groupedTasks[day, default: []].append(task)
+        }
+        
+        segmentedAndSortedTasks = groupedTasks
+            .map { (day, tasks) in
+                (day, tasks.sorted {
+                    ($0.target ?? Date.distantFuture < $1.target ?? Date.distantFuture)
+                })
+            }
+            .sorted { $0.0 > $1.0 }
+    }
+
+
+    
+    internal func deleteTasks(with ids: [NSManagedObjectID]) {
+        ids.forEach { id in
+            if let object = try? container.viewContext.existingObject(with: id) {
+                container.viewContext.delete(object)
+            }
+        }
+        saveData()
     }
 }
 

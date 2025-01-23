@@ -43,8 +43,10 @@ struct TaskManagementView: View {
                         title: date.shortDate,
                         dayName: date.shortWeekday,
                         onDismiss: {
-                            updateTask()
-                            onDismiss()
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                updateTask()
+                                onDismiss()
+                            }
                         },
                         onShare: viewModel.toggleShareSheet)
                 }
