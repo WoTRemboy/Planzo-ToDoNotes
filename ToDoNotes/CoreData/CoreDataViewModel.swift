@@ -105,6 +105,16 @@ final class CoreDataViewModel: ObservableObject {
 
 extension CoreDataViewModel {
     
+    internal func haveTextContent(for entity: TaskEntity) -> Bool {
+        let details = entity.details ?? String()
+        
+        let firstChecklistElement = entity.checklist?.compactMap({ $0 as? ChecklistEntity }).first
+        let firstChecklistName = firstChecklistElement?.name ?? String()
+        let checklistCount = entity.checklist?.count ?? 0
+
+        return !details.isEmpty || (!firstChecklistName.isEmpty || checklistCount > 1)
+    }
+    
     internal func setupChecking(for entity: TaskEntity) {
         if entity.completed == 0 {
             entity.completed = 1
@@ -116,6 +126,10 @@ extension CoreDataViewModel {
     
     internal func checkCompletedStatus(for entity: TaskEntity) -> Bool {
         entity.completed == 1
+    }
+    
+    internal func taskCheckStatus(for entity: TaskEntity) -> Bool {
+        entity.completed == 2
     }
     
     internal func toggleCompleteChecking(for entity: TaskEntity) {
