@@ -23,6 +23,7 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var shareSheetHeight: CGFloat = 0
     
     @Published internal var targetDate: Date = .now
+    @Published internal var hasDate: Bool = false
     @Published internal var notificationsCheck: Bool = false
     @Published internal var targetDateSelected: Bool = false
     @Published internal var showingDatePicker: Bool = false
@@ -41,6 +42,7 @@ final class TaskManagementViewModel: ObservableObject {
         self.descriptionText = entity.details ?? String()
         self.check = entity.completed != 0
         self.targetDate = entity.target ?? .now
+        self.hasDate = entity.target != nil
         self.notificationsCheck = entity.notify
         self.targetDateSelected = entity.target != nil
         
@@ -48,7 +50,7 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     internal var saveTargetDate: Date? {
-        targetDateSelected ? targetDate : nil
+        hasDate ? targetDate : nil
     }
     
     internal func toggleCheck() {
@@ -61,6 +63,10 @@ final class TaskManagementViewModel: ObservableObject {
     
     internal func toggleDatePicker() {
         showingDatePicker.toggle()
+    }
+    
+    internal func showDate(to show: Bool) {
+        hasDate = show
     }
     
     internal func doneDatePicker() {

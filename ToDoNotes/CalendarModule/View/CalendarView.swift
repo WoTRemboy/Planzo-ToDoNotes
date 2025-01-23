@@ -63,7 +63,6 @@ struct CalendarView: View {
         Divider()
             .background(Color.LabelColors.labelTertiary)
             .frame(height: 0.36)
-            .padding(.horizontal, 10)
             .padding(.top)
     }
     
