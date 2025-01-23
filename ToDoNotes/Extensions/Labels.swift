@@ -40,7 +40,7 @@ final class Texts {
             static let title = "Папки"
             static let all = "Все"
             static let noDate = "Без дат"
-            static let purchases = "Покупки"
+            static let purchases = "Списки"
             static let passwords = "Пароли"
         }
     }
@@ -105,8 +105,8 @@ final class Texts {
             static let title = "Выбор даты"
             static let target = "Цель"
             static let notification = "Уведомление"
-            static let cancel = "Отмена"
-            static let done = "Готово"
+            static let cancel = "Убрать"
+            static let done = "Сохранить"
         }
         
         enum ShareView {

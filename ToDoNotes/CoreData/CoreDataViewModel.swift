@@ -56,7 +56,7 @@ final class CoreDataViewModel: ObservableObject {
                              checklist: [ChecklistItem] = []) {
         entity.name = name
         entity.details = description
-        entity.completed = completeCheck ? 1 : 0
+        entity.completed = completeCheck ? showCheckStatus(for: entity) : 0
         entity.target = target
         entity.notify = target != nil ? notify : false
         
@@ -122,6 +122,10 @@ extension CoreDataViewModel {
             entity.completed = 0
         }
         saveData()
+    }
+    
+    private func showCheckStatus(for entity: TaskEntity) -> Int16 {
+        entity.completed == 2 ? 2 : 1
     }
     
     internal func checkCompletedStatus(for entity: TaskEntity) -> Bool {

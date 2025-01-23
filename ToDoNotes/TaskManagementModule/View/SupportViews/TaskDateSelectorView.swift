@@ -71,6 +71,7 @@ struct TaskDateSelectorView: View {
     private var doneButton: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.showDate(to: true)
                 viewModel.doneDatePicker()
             }
         } label: {
@@ -92,6 +93,7 @@ struct TaskDateSelectorView: View {
     private var cancelButton: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.showDate(to: false)
                 viewModel.cancelDatePicker()
             }
         } label: {

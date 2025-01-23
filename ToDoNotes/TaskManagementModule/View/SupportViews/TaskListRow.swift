@@ -46,6 +46,7 @@ struct TaskListRow: View {
     private var nameLabel: some View {
         Text(entity.name ?? String())
             .font(.system(size: 15, weight: .medium))
+            .lineLimit(1)
             .foregroundStyle(coreDataManager.taskCheckStatus(for: entity) ?
                              Color.LabelColors.labelDetails :
                                 Color.LabelColors.labelPrimary)
