@@ -12,6 +12,8 @@ final class TaskManagementViewModel: ObservableObject {
     internal var entity: TaskEntity?
     internal var checklistItems: [ChecklistEntity] = []
     
+    @AppStorage(Texts.UserDefaults.notifications) private var notificationsStatus: NotificationStatus = .prohibited
+    
     @Published internal var nameText: String
     @Published internal var descriptionText: String
     @Published internal var check: Bool
@@ -21,6 +23,12 @@ final class TaskManagementViewModel: ObservableObject {
     
     @Published internal var showingShareSheet: Bool = false
     @Published internal var shareSheetHeight: CGFloat = 0
+    
+    @Published internal var targetDate: Date = .now
+    @Published internal var hasDate: Bool = false
+    @Published internal var notificationsCheck: Bool = false
+    @Published internal var targetDateSelected: Bool = false
+    @Published internal var showingDatePicker: Bool = false
     
     init(nameText: String = String(),
          descriptionText: String = String(),
@@ -35,8 +43,16 @@ final class TaskManagementViewModel: ObservableObject {
         self.nameText = entity.name ?? String()
         self.descriptionText = entity.details ?? String()
         self.check = entity.completed != 0
+        self.targetDate = entity.target ?? .now
+        self.hasDate = entity.target != nil
+        self.notificationsCheck = entity.notify
+        self.targetDateSelected = entity.target != nil
         
         setupChecklistLocal(entity.checklist)
+    }
+    
+    internal var saveTargetDate: Date? {
+        hasDate ? targetDate : nil
     }
     
     internal func toggleCheck() {
@@ -45,6 +61,25 @@ final class TaskManagementViewModel: ObservableObject {
     
     internal func toggleShareSheet() {
         showingShareSheet.toggle()
+    }
+    
+    internal func toggleDatePicker() {
+        showingDatePicker.toggle()
+    }
+    
+    internal func showDate(to show: Bool) {
+        hasDate = show
+    }
+    
+    internal func doneDatePicker() {
+        targetDateSelected = true
+        check = true
+        showingDatePicker = false
+    }
+    
+    internal func cancelDatePicker() {
+        targetDateSelected = false
+        showingDatePicker = false
     }
     
     // MARK: - Checklist Methods
@@ -89,5 +124,41 @@ final class TaskManagementViewModel: ObservableObject {
             let emptyItem = ChecklistItem(name: String())
             checklistLocal.append(emptyItem)
         }
+    }
+}
+
+extension TaskManagementViewModel {
+    internal func notificationSetup(for task: TaskEntity) {
+        guard let id = task.id,
+              let name = task.name,
+              let targetDate = task.target,
+              notificationsStatus == .allowed
+        else {
+            return
+        }
+        notificationRemove(for: id)
+        
+        let content = UNMutableNotificationContent()
+        content.title = Texts.Notifications.now
+        content.body = name
+        content.sound = .default
+        
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: targetDate)
+
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        
+        let request = UNNotificationRequest(identifier: id.uuidString, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Notification setup error: \(error.localizedDescription)")
+            } else {
+                print("Notification successfully setup for \(name) at \(targetDate)")
+            }
+        }
+    }
+
+    internal func notificationRemove(for id: UUID?) {
+        guard let id = id else { return }
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id.uuidString])
     }
 }

@@ -51,4 +51,26 @@ extension Date {
     internal var longDayMonthWeekday: String {
         return Date.longDayMonthWeekdayFormatter.string(from: self).lowercased()
     }
+        
+    private static let shortDayMonthHourMinutesFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMM, HH:mm"
+        formatter.locale = Locale(identifier: Texts.DateParameters.locale)
+        return formatter
+    }()
+    
+    internal var shortDayMonthHourMinutes: String {
+        return Date.shortDayMonthHourMinutesFormatter.string(from: self).lowercased()
+    }
+    
+    private static let fullHourMinutesFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        formatter.locale = Locale(identifier: Texts.DateParameters.locale)
+        return formatter
+    }()
+    
+    internal var fullHourMinutes: String {
+        return Date.fullHourMinutesFormatter.string(from: self).lowercased()
+    }
 }

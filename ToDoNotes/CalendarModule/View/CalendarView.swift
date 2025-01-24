@@ -46,8 +46,8 @@ struct CalendarView: View {
             
             separator
             
-            if coreDataManager.isEmpty {
-                CalendarTaskFormPlaceholder(date: viewModel.todayDate.longDayMonthWeekday)
+            if coreDataManager.dayTasks(for: viewModel.selectedDate).isEmpty {
+                CalendarTaskFormPlaceholder(date: viewModel.selectedDate.longDayMonthWeekday)
                     .padding(.top)
             } else {
                 taskForm
@@ -55,22 +55,21 @@ struct CalendarView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .animation(.easeInOut(duration: 0.2),
-                   value: coreDataManager.isEmpty)
+        .animation(.easeInOut(duration: 0.15),
+                   value: viewModel.selectedDate)
     }
     
     private var separator: some View {
         Divider()
             .background(Color.LabelColors.labelTertiary)
             .frame(height: 0.36)
-            .padding(.horizontal, 10)
             .padding(.top)
     }
     
     private var taskForm: some View {
         Form {
             Section {
-                ForEach(coreDataManager.savedEnities) { entity in
+                ForEach(coreDataManager.dayTasks(for: viewModel.selectedDate)) { entity in
                     Button {
                         viewModel.selectedTask = entity
                     } label: {
@@ -82,7 +81,7 @@ struct CalendarView: View {
                 }
                 .listRowBackground(Color.SupportColors.backListRow)
             } header: {
-                Text(viewModel.todayDateString)
+                Text(viewModel.selectedDate.longDayMonthWeekday)
                     .font(.system(size: 13, weight: .medium))
                     .textCase(.none)
             }

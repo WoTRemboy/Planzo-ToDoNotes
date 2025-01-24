@@ -59,27 +59,34 @@ struct MainView: View {
     
     private var taskForm: some View {
         Form {
-            Section {
-                ForEach(coreDataManager.savedEnities) { entity in
-                    Button {
-                        viewModel.selectedTask = entity
-                    } label: {
-                        TaskListRow(entity: entity)
+            ForEach(coreDataManager.segmentedAndSortedTasksArray, id: \.0) { segment, tasks in
+                Section(header: segmentHeader(name: segment)) {
+                    ForEach(tasks) { entity in
+                        Button {
+                            viewModel.selectedTask = entity
+                        } label: {
+                            TaskListRow(entity: entity)
+                        }
                     }
+                    .onDelete { indexSet in
+                        let idsToDelete = indexSet.map { tasks[$0].objectID }
+                        withAnimation {
+                            coreDataManager.deleteTasks(with: idsToDelete)
+                        }
+                    }
+                    .listRowBackground(Color.SupportColors.backListRow)
                 }
-                .onDelete { indexSet in
-                    coreDataManager.deleteTask(indexSet: indexSet)
-                }
-                .listRowBackground(Color.SupportColors.backListRow)
-            } header: {
-                Text(viewModel.todayDateString)
-                    .font(.system(size: 13, weight: .medium))
-                    .textCase(.none)
             }
         }
         .padding(.horizontal, -10)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
+    }
+    
+    private func segmentHeader(name: Date?) -> some View {
+        Text(name?.longDayMonthWeekday ?? String())
+            .font(.system(size: 13, weight: .medium))
+            .textCase(.none)
     }
     
     private var plusButton: some View {

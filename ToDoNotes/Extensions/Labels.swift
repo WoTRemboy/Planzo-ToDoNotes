@@ -40,7 +40,7 @@ final class Texts {
             static let title = "Папки"
             static let all = "Все"
             static let noDate = "Без дат"
-            static let purchases = "Покупки"
+            static let purchases = "Списки"
             static let passwords = "Пароли"
         }
     }
@@ -48,6 +48,8 @@ final class Texts {
     enum TodayPage {
         static let title = "Сегодня"
         static let placeholder = "У вас пока нет заметок"
+        static let notCompleted = "Не выполнено"
+        static let completed = "Выполнено"
     }
     
     enum CalendarPage {
@@ -82,6 +84,12 @@ final class Texts {
             static let dark = "Тёмное"
         }
         
+        enum Notification {
+            static let title = "Уведомления"
+            static let alertTitle = "Требуется доступ"
+            static let alertContent = "Пожалуйста, включите уведомления в настройках."
+        }
+        
         enum Email {
             static let contact = "Контакт"
             static let emailTitle = "Email"
@@ -94,6 +102,14 @@ final class Texts {
         static let descriprionPlaceholder = "Описание"
         static let today = "Сегодня"
         static let point = "Пункт"
+        
+        enum DatePicker {
+            static let title = "Выбор даты"
+            static let target = "Цель"
+            static let notification = "Уведомление"
+            static let cancel = "Убрать"
+            static let done = "Сохранить"
+        }
         
         enum ShareView {
             static let title = "Совместный доступ"
@@ -108,6 +124,10 @@ final class Texts {
         static let today = "Сегодня"
         static let calendar = "Календарь"
         static let settings = "Настройки"
+    }
+    
+    enum Notifications {
+        static let now = "Сейчас"
     }
     
     enum DateParameters {

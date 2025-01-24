@@ -18,4 +18,8 @@ extension View {
         }
         return keyWindow.safeAreaInsets.top > 20
     }
+    
+    internal func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
 }

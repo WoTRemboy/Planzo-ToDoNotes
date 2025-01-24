@@ -54,13 +54,13 @@ struct TaskChecklistView: View {
                     }
                 }
                 .onChange(of: item.name) { newValue in
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        item.completed = false
-                    }
+//                    withAnimation(.easeInOut(duration: 0.2)) {
+//                        item.completed = false
+//                    }
                     
                     if newValue == String() {
+                        focusOnPreviousItem(before: item.id)
                         withAnimation(.linear(duration: 0.2)) {
-                            focusOnPreviousItem(before: item.id)
                             viewModel.removeChecklistItem(for: item.id)
                         }
                     }
@@ -94,8 +94,15 @@ extension TaskChecklistView {
         guard let delegate = textFieldDelegates[itemID] else { return }
         
         delegate.shouldReturn = {
-            self.viewModel.addChecklistItem(after: itemID)
-            self.focusOnNextItem(after: itemID)
+            if let text = textField.text, text.isEmpty {
+                self.focusOnPreviousItem(before: itemID)
+                withAnimation(.linear(duration: 0.2)) {
+                    self.viewModel.removeChecklistItem(for: itemID)
+                }
+            } else {
+                self.viewModel.addChecklistItem(after: itemID)
+                self.focusOnNextItem(after: itemID)
+            }
             return false
         }
         

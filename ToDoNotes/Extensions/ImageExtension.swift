@@ -32,6 +32,7 @@ extension Image {
         static let about = Image("SettingsAboutApp")
         static let appearance = Image("SettingsAppearance")
         static let language = Image("SettingsLanguage")
+        static let notifications = Image("SettingsNotification")
         static let email = Image("SettingsEmail")
         
         static let chevron = Image(systemName: "chevron.right")
@@ -48,6 +49,7 @@ extension Image {
             static let uncheck = Image("EditTaskUncheck")
             static let more = Image("EditTaskMore")
             static let accept = Image("EditTaskAccept")
+            static let ready = Image("EditTaskReady")
             static let link = Image("EditTaskLink")
             
             static let checkListCheck = Image("ChecklistItemChecked")
@@ -57,6 +59,10 @@ extension Image {
         enum TaskRow {
             static let uncheckedBox = Image("TaskRowUncheckedBox")
             static let checkedBox = Image("TaskRowCheckedBox")
+            static let uncheckedRemainder = Image("TaskRowUncheckedRemainder")
+            static let checkedRemainder = Image("TaskRowCheckedRemainder")
+            static let uncheckedContent = Image("TaskRowUncheckedContent")
+            static let checkedContent = Image("TaskRowCheckedContent")
         }
     }
     
