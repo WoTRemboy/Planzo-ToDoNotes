@@ -126,6 +126,10 @@ final class Texts {
         static let settings = "Настройки"
     }
     
+    enum Notifications {
+        static let now = "Сейчас"
+    }
+    
     enum DateParameters {
         static let locale = "ru_RU"
     }

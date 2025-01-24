@@ -50,7 +50,7 @@ struct CustomCalendarView: View {
                         today: Date.now.startOfDay == day.startOfDay,
                         task: hasTask)
                     .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.1)) {
+                        withAnimation(.easeInOut(duration: 0.15)) {
                             viewModel.selectedDate = day
                         }
                     }

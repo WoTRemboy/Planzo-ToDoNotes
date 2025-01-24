@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     
+    @EnvironmentObject private var coreDataManager: CoreDataViewModel
     @EnvironmentObject private var viewModel: SettingsViewModel
     
     internal var body: some View {
@@ -117,7 +118,7 @@ struct SettingsView: View {
                 image: Image.Settings.notifications)
         }
         .onChange(of: viewModel.notificationsEnabled) { newValue in
-            viewModel.setNotificationsStatus(allowed: newValue)
+            viewModel.setNotificationsStatus(allowed: newValue, items: coreDataManager.savedEnities)
         }
         .alert(isPresented: $viewModel.showingNotificationAlert) {
             Alert(

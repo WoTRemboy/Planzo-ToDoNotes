@@ -168,8 +168,8 @@ extension CoreDataViewModel {
     private func sortSegmentedAndSortedTasksDict() {
         for (day, tasks) in segmentedAndSortedTasksDict {
             let sortedTasks = tasks.sorted { t1, t2 in
-                let d1 = t1.target ?? t1.created ?? Date.distantFuture
-                let d2 = t2.target ?? t2.created ?? Date.distantFuture
+                let d1 = t1.target ?? Date.distantFuture
+                let d2 = t2.target ?? Date.distantFuture
                 return d1 < d2
             }
             segmentedAndSortedTasksDict[day] = sortedTasks

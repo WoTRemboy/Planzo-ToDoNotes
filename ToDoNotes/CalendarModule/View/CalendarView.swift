@@ -55,7 +55,7 @@ struct CalendarView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .animation(.easeInOut(duration: 0.1),
+        .animation(.easeInOut(duration: 0.15),
                    value: viewModel.selectedDate)
     }
     

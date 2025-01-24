@@ -12,6 +12,8 @@ final class TaskManagementViewModel: ObservableObject {
     internal var entity: TaskEntity?
     internal var checklistItems: [ChecklistEntity] = []
     
+    @AppStorage(Texts.UserDefaults.notifications) private var notificationsStatus: NotificationStatus = .prohibited
+    
     @Published internal var nameText: String
     @Published internal var descriptionText: String
     @Published internal var check: Bool
@@ -122,5 +124,41 @@ final class TaskManagementViewModel: ObservableObject {
             let emptyItem = ChecklistItem(name: String())
             checklistLocal.append(emptyItem)
         }
+    }
+}
+
+extension TaskManagementViewModel {
+    internal func notificationSetup(for task: TaskEntity) {
+        guard let id = task.id,
+              let name = task.name,
+              let targetDate = task.target,
+              notificationsStatus == .allowed
+        else {
+            return
+        }
+        notificationRemove(for: id)
+        
+        let content = UNMutableNotificationContent()
+        content.title = Texts.Notifications.now
+        content.body = name
+        content.sound = .default
+        
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: targetDate)
+
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        
+        let request = UNNotificationRequest(identifier: id.uuidString, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Notification setup error: \(error.localizedDescription)")
+            } else {
+                print("Notification successfully setup for \(name) at \(targetDate)")
+            }
+        }
+    }
+
+    internal func notificationRemove(for id: UUID?) {
+        guard let id = id else { return }
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id.uuidString])
     }
 }
