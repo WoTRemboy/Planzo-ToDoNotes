@@ -48,6 +48,8 @@ final class Texts {
     enum TodayPage {
         static let title = "Сегодня"
         static let placeholder = "У вас пока нет заметок"
+        static let notCompleted = "Не выполнено"
+        static let completed = "Выполнено"
     }
     
     enum CalendarPage {
