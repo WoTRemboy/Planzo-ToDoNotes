@@ -11,6 +11,7 @@ final class CalendarViewModel: ObservableObject {
     
     @Published internal var showingTaskCreateView: Bool = false
     @Published internal var selectedTask: TaskEntity? = nil
+    @Published internal var selectedDate: Date = .now
     @Published internal var taskManagementHeight: CGFloat = 15
     
     internal let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays

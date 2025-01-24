@@ -276,6 +276,12 @@ extension TaskManagementView {
                 target: viewModel.saveTargetDate,
                 notify: viewModel.notificationsCheck,
                 checklist: viewModel.checklistLocal)
+            
+            if entity.target != nil && entity.notify {
+                viewModel.notificationSetup(for: entity)
+            } else {
+                viewModel.notificationRemove(for: entity.id)
+            }
         }
     }
     

@@ -12,11 +12,22 @@ import CoreData
 final class CoreDataViewModel: ObservableObject {
     
     @Published internal var savedEnities: [TaskEntity] = []
-    @Published internal var segmentedAndSortedTasks: [(Date?, [TaskEntity])] = []
+    @Published internal var segmentedAndSortedTasksArray: [(Date?, [TaskEntity])] = []
+    @Published internal var segmentedAndSortedTasksDict: [Date?: [TaskEntity]] = [:]
     private let container: NSPersistentContainer
     
     internal var isEmpty : Bool {
         savedEnities.isEmpty
+    }
+    
+    internal var daysWithTasks: Set<Date> {
+        var result = Set<Date>()
+        
+        for date in segmentedAndSortedTasksDict {
+            let day = date.0 ?? Date()
+            result.insert(day)
+        }
+        return result
     }
     
     init() {
@@ -112,7 +123,10 @@ final class CoreDataViewModel: ObservableObject {
             groupedTasks[day, default: []].append(task)
         }
         
-        segmentedAndSortedTasks = groupedTasks
+        segmentedAndSortedTasksDict = groupedTasks
+        sortSegmentedAndSortedTasksDict()
+        
+        segmentedAndSortedTasksArray = groupedTasks
             .map { (day, tasks) in
                 (day, tasks.sorted {
                     ($0.target ?? Date.distantFuture < $1.target ?? Date.distantFuture)
@@ -136,6 +150,11 @@ final class CoreDataViewModel: ObservableObject {
 
 extension CoreDataViewModel {
     
+    internal func dayTasks(for date: Date) -> [TaskEntity] {
+        let day = Calendar.current.startOfDay(for: date)
+        return segmentedAndSortedTasksDict[day] ?? []
+    }
+    
     internal func haveTextContent(for entity: TaskEntity) -> Bool {
         let details = entity.details ?? String()
         
@@ -144,6 +163,17 @@ extension CoreDataViewModel {
         let checklistCount = entity.checklist?.count ?? 0
 
         return !details.isEmpty || (!firstChecklistName.isEmpty || checklistCount > 1)
+    }
+    
+    private func sortSegmentedAndSortedTasksDict() {
+        for (day, tasks) in segmentedAndSortedTasksDict {
+            let sortedTasks = tasks.sorted { t1, t2 in
+                let d1 = t1.target ?? Date.distantFuture
+                let d2 = t2.target ?? Date.distantFuture
+                return d1 < d2
+            }
+            segmentedAndSortedTasksDict[day] = sortedTasks
+        }
     }
     
     internal func setupChecking(for entity: TaskEntity) {

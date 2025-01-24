@@ -50,7 +50,7 @@ struct TaskDateSelectorView: View {
     }
     
     private var datePicker: some View {
-        DatePicker("\(Texts.TaskManagement.DatePicker.target):", selection: $viewModel.targetDate, in: Date()...)
+        DatePicker("\(Texts.TaskManagement.DatePicker.target):", selection: $viewModel.targetDate)
             .padding(.horizontal)
     }
     

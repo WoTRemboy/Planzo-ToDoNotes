@@ -59,7 +59,7 @@ struct MainView: View {
     
     private var taskForm: some View {
         Form {
-            ForEach(coreDataManager.segmentedAndSortedTasks, id: \.0) { segment, tasks in
+            ForEach(coreDataManager.segmentedAndSortedTasksArray, id: \.0) { segment, tasks in
                 Section(header: segmentHeader(name: segment)) {
                     ForEach(tasks) { entity in
                         Button {

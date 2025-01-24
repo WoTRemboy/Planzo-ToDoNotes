@@ -24,7 +24,7 @@ struct CalendarTaskFormPlaceholder: View {
     }
     
     private var dateLabel: some View {
-        Text("\(Texts.CalendarPage.today) \(date)")
+        Text(date)
             .font(.system(size: 13, weight: .medium))
             .foregroundStyle(Color.LabelColors.labelSecondary)
     }

@@ -60,17 +60,23 @@ struct TodayView: View {
     
     private var taskForm: some View {
         Form {
-            ForEach(coreDataManager.savedEnities) { entity in
-                Button {
-                    viewModel.selectedTask = entity
-                } label: {
-                    TaskListRow(entity: entity)
+            Section {
+                ForEach(coreDataManager.dayTasks(for: viewModel.todayDate)) { entity in
+                    Button {
+                        viewModel.selectedTask = entity
+                    } label: {
+                        TaskListRow(entity: entity)
+                    }
                 }
+                .onDelete { indexSet in
+                    coreDataManager.deleteTask(indexSet: indexSet)
+                }
+                .listRowBackground(Color.SupportColors.backListRow)
+            } header: {
+                Text(Texts.TodayPage.notCompleted)
+                    .font(.system(size: 13, weight: .medium))
+                    .textCase(.none)
             }
-            .onDelete { indexSet in
-                coreDataManager.deleteTask(indexSet: indexSet)
-            }
-            .listRowBackground(Color.SupportColors.backListRow)
         }
         .padding(.horizontal, -10)
         .background(Color.BackColors.backDefault)
