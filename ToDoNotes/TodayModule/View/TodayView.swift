@@ -41,7 +41,8 @@ struct TodayView: View {
         VStack(spacing: 0) {
             TodayNavBar(date: viewModel.todayDate.shortDate,
                         day: viewModel.todayDate.shortWeekday)
-            if coreDataManager.isEmpty {
+            if coreDataManager.dayTasks(
+                for: viewModel.todayDate).isEmpty {
                 placeholderLabel
             } else {
                 taskForm
@@ -69,7 +70,12 @@ struct TodayView: View {
                     }
                 }
                 .onDelete { indexSet in
-                    coreDataManager.deleteTask(indexSet: indexSet)
+                    let tasksForToday = coreDataManager.dayTasks(for: viewModel.todayDate)
+                    let idsToDelete = indexSet.map { tasksForToday[$0].objectID }
+                    
+                    withAnimation {
+                        coreDataManager.deleteTasks(with: idsToDelete)
+                    }
                 }
                 .listRowBackground(Color.SupportColors.backListRow)
             } header: {
