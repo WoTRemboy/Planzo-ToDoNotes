@@ -22,10 +22,10 @@ struct CalendarView: View {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
                 date: .now) {
-                viewModel.toggleShowingTaskCreateView()
-            }
-            .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
-            .presentationDragIndicator(.visible)
+                    viewModel.toggleShowingTaskCreateView()
+                }
+                .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
+                .presentationDragIndicator(.visible)
         }
         .fullScreenCover(item: $viewModel.selectedTask) { task in
             TaskManagementView(
@@ -46,9 +46,9 @@ struct CalendarView: View {
             
             separator
             
-            if coreDataManager.dayTasks(for: viewModel.selectedDate).isEmpty {
-                CalendarTaskFormPlaceholder(date: viewModel.selectedDate.longDayMonthWeekday)
-                    .padding(.top)
+            if coreDataManager.dayTasks(
+                for: viewModel.selectedDate).isEmpty {
+                placeholder
             } else {
                 taskForm
                     .padding(.top, 1)
@@ -69,7 +69,8 @@ struct CalendarView: View {
     private var taskForm: some View {
         Form {
             Section {
-                ForEach(coreDataManager.dayTasks(for: viewModel.selectedDate)) { entity in
+                ForEach(coreDataManager.dayTasks(
+                    for: viewModel.selectedDate)) { entity in
                     Button {
                         viewModel.selectedTask = entity
                     } label: {
@@ -77,7 +78,14 @@ struct CalendarView: View {
                     }
                 }
                 .onDelete { indexSet in
-                    coreDataManager.deleteTask(indexSet: indexSet)
+                    let tasksForToday = coreDataManager.dayTasks(
+                        for: viewModel.selectedDate)
+                    let idsToDelete = indexSet.map { tasksForToday[$0].objectID }
+                    
+                    withAnimation {
+                        coreDataManager.deleteTasks(
+                            with: idsToDelete)
+                    }
                 }
                 .listRowBackground(Color.SupportColors.backListRow)
             } header: {
@@ -89,6 +97,15 @@ struct CalendarView: View {
         .padding(.horizontal, -10)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
+    }
+    
+    private var placeholder: some View {
+        ScrollView {
+            CalendarTaskFormPlaceholder(
+                date: viewModel.selectedDate.longDayMonthWeekday)
+                .padding(.top)
+        }
+        .scrollDisabled(true)
     }
     
     private var plusButton: some View {
