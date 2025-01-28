@@ -25,10 +25,36 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var shareSheetHeight: CGFloat = 0
     
     @Published internal var targetDate: Date = .now
+    @Published internal var selectedDate: Date = .now
     @Published internal var hasDate: Bool = false
+    
+    @Published internal var selectedNotifications: Set<TaskNotificationsType> = []
     @Published internal var notificationsCheck: Bool = false
     @Published internal var targetDateSelected: Bool = false
     @Published internal var showingDatePicker: Bool = false
+    
+    internal let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
+    private(set) var todayDate: Date = Date.now
+    private(set) var days: [Date] = []
+    
+    internal var todayDateString: String {
+        Date.now.longDayMonthWeekday
+    }
+    
+    internal var saveTargetDate: Date? {
+        hasDate ? targetDate : nil
+    }
+    
+    internal var selectedNotificationDescription: String {
+        if selectedNotifications.isEmpty {
+            return Texts.TaskManagement.DatePicker.noneReminder
+        } else {
+            return selectedNotifications
+                .sorted { $0.sortOrder < $1.sortOrder }
+                .map { $0.name }
+                .joined(separator: ", ")
+        }
+    }
     
     init(nameText: String = String(),
          descriptionText: String = String(),
@@ -36,6 +62,7 @@ final class TaskManagementViewModel: ObservableObject {
         self.nameText = nameText
         self.descriptionText = descriptionText
         self.check = check
+        updateDays()
     }
     
     convenience init(entity: TaskEntity) {
@@ -51,8 +78,8 @@ final class TaskManagementViewModel: ObservableObject {
         setupChecklistLocal(entity.checklist)
     }
     
-    internal var saveTargetDate: Date? {
-        hasDate ? targetDate : nil
+    internal func updateDays() {
+        days = todayDate.calendarDisplayDays
     }
     
     internal func toggleCheck() {
@@ -80,6 +107,19 @@ final class TaskManagementViewModel: ObservableObject {
     internal func cancelDatePicker() {
         targetDateSelected = false
         showingDatePicker = false
+    }
+    
+    internal func toggleNotificationSelection(for type: TaskNotificationsType) {
+        guard type != .none else {
+            selectedNotifications.removeAll()
+            return
+        }
+        
+        if selectedNotifications.contains(type) {
+            selectedNotifications.remove(type)
+        } else {
+            selectedNotifications.insert(type)
+        }
     }
     
     // MARK: - Checklist Methods

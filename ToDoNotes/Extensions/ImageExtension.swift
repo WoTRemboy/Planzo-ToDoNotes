@@ -59,10 +59,27 @@ extension Image {
         enum TaskRow {
             static let uncheckedBox = Image("TaskRowUncheckedBox")
             static let checkedBox = Image("TaskRowCheckedBox")
+            
             static let uncheckedRemainder = Image("TaskRowUncheckedRemainder")
             static let checkedRemainder = Image("TaskRowCheckedRemainder")
+            
             static let uncheckedContent = Image("TaskRowUncheckedContent")
             static let checkedContent = Image("TaskRowCheckedContent")
+        }
+        
+        enum DateSelector {
+            static let monthForward = Image("TaskDateSelectorMonthForward")
+            static let monthBackward = Image("TaskDateSelectorMonthBackward")
+            
+            static let time = Image("TaskDateSelectionTime")
+            static let remainder = Image("TaskDateSelectionRemainder")
+            static let cycle = Image("TaskDateSelectionCycle")
+            
+            static let checked = Image("TaskDateSelectionChecked")
+            static let unchecked = Image("TaskDateSelectionUnchecked")
+            
+            static let remove = Image("TaskDateSelectionRemove")
+            static let menu = Image("TaskDateSelectionMenu")
         }
     }
     
