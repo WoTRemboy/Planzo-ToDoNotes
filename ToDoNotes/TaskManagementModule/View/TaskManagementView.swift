@@ -52,10 +52,6 @@ struct TaskManagementView: View {
                 }
                 content
             }
-            
-            if viewModel.showingDatePicker {
-                calendarPicker
-            }
         }
         .onAppear {
             subscribeToKeyboardNotifications()
@@ -67,6 +63,10 @@ struct TaskManagementView: View {
             TaskManagementShareView()
                 .presentationDetents([.height(285)])
                 .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $viewModel.showingDatePicker) {
+            TaskCalendarSelectorView(viewModel: viewModel)
+                .presentationDetents([.height(670)])
         }
     }
     
@@ -127,9 +127,7 @@ struct TaskManagementView: View {
     
     private var buttons: some View {
         HStack(alignment: .bottom, spacing: 16) {
-            if entity != nil {
-                calendarModule
-            }
+            calendarModule
             checkButton
             moreButton
             
@@ -141,7 +139,9 @@ struct TaskManagementView: View {
     }
     
     private var calendarModule: some View {
-        HStack(spacing: 4) {
+        Button {
+            viewModel.toggleDatePicker()
+        } label: {
             calendarImage
             
             if viewModel.hasDate {
@@ -150,36 +150,12 @@ struct TaskManagementView: View {
                     .foregroundStyle(Color.LabelColors.labelPrimary)
             }
         }
-        .onTapGesture {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                viewModel.toggleDatePicker()
-                hideKeyboard()
-            }
-        }
     }
     
     private var calendarImage: some View {
         Image.TaskManagement.EditTask.calendar
             .resizable()
             .frame(width: 20, height: 20)
-    }
-    
-    private var calendarPicker: some View {
-        ZStack {
-            Color.black.opacity(0.4)
-                .edgesIgnoringSafeArea(.all)
-                .onTapGesture {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        viewModel.showingDatePicker = false
-                    }
-                }
-            VStack {
-                Spacer()
-                TaskDateSelectorView(viewModel: viewModel)
-                Spacer()
-            }
-        }
-        .zIndex(1)
     }
     
     private var checkButton: some View {
@@ -250,14 +226,10 @@ struct TaskManagementView_Previews: PreviewProvider {
 extension TaskManagementView {
     private func subscribeToKeyboardNotifications() {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
-            withAnimation(.easeInOut(duration: 0.2)) {
-                isKeyboardActive = true
-            }
+            isKeyboardActive = true
         }
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-            withAnimation(.easeInOut(duration: 0.2)) {
-                isKeyboardActive = false
-            }
+            isKeyboardActive = false
         }
     }
     

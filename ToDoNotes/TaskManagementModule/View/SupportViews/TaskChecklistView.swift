@@ -54,10 +54,6 @@ struct TaskChecklistView: View {
                     }
                 }
                 .onChange(of: item.name) { newValue in
-//                    withAnimation(.easeInOut(duration: 0.2)) {
-//                        item.completed = false
-//                    }
-                    
                     if newValue == String() {
                         focusOnPreviousItem(before: item.id)
                         withAnimation(.linear(duration: 0.2)) {

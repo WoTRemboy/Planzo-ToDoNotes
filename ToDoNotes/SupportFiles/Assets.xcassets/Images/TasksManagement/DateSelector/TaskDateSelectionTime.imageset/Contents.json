@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "right.svg",
+      "filename" : "time.svg",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "right 1.svg",
+      "filename" : "time 1.svg",
       "idiom" : "universal"
     }
   ],

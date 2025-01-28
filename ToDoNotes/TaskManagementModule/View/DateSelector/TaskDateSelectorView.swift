@@ -55,7 +55,7 @@ struct TaskDateSelectorView: View {
     }
     
     private var notificationToggle: some View {
-        Toggle("\(Texts.TaskManagement.DatePicker.notification):", isOn: $viewModel.notificationsCheck)
+        Toggle("\(Texts.TaskManagement.DatePicker.remainder):", isOn: $viewModel.notificationsCheck)
             .padding(.horizontal)
     }
     

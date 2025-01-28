@@ -104,11 +104,22 @@ final class Texts {
         static let point = "Пункт"
         
         enum DatePicker {
-            static let title = "Выбор даты"
-            static let target = "Цель"
-            static let notification = "Уведомление"
-            static let cancel = "Убрать"
+            static let title = "Дата и время"
+            static let cancel = "Отменить"
             static let done = "Сохранить"
+            static let target = "Цель"
+            static let time = "Время"
+            static let remainder = "Напоминание"
+            static let cycle = "Повтор"
+            static let endCycle = "Завершить повторы"
+            static let removeAll = "Очистить всё"
+            
+            static let noneReminder = "Нет уведомлений"
+            static let inTime = "Во время"
+            static let fiveMinutesBefore = "За 5 минут"
+            static let thirtyMinutesBefore = "За 30 минут"
+            static let oneHourBefore = "За 1 час"
+            static let oneDayBefore = "За 1 день"
         }
         
         enum ShareView {
