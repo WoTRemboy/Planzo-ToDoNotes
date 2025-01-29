@@ -120,6 +120,14 @@ final class Texts {
             static let thirtyMinutesBefore = "За 30 минут"
             static let oneHourBefore = "За 1 час"
             static let oneDayBefore = "За 1 день"
+            
+            static let noneRepeating = "Без повторений"
+            static let dailyRepeating = "Каждый день"
+            static let weeklyRepeating = "Каждую неделю"
+            static let monthlyRepeating = "Каждый месяц"
+            static let yearlyRepeating = "Каждый год"
+            static let businessRepeating = "По будням"
+            static let weekendRepeating = "По выходным"
         }
         
         enum ShareView {

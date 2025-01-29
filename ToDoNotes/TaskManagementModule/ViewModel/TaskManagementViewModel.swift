@@ -29,6 +29,8 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var hasDate: Bool = false
     
     @Published internal var selectedNotifications: Set<TaskNotificationsType> = []
+    @Published internal var selectedRepeating: TaskRepeatingType = .none
+    
     @Published internal var notificationsCheck: Bool = false
     @Published internal var targetDateSelected: Bool = false
     @Published internal var showingDatePicker: Bool = false
@@ -54,6 +56,10 @@ final class TaskManagementViewModel: ObservableObject {
                 .map { $0.name }
                 .joined(separator: ", ")
         }
+    }
+    
+    internal var selectedRepeatingDescription: String {
+        selectedRepeating.name
     }
     
     init(nameText: String = String(),
@@ -119,6 +125,49 @@ final class TaskManagementViewModel: ObservableObject {
             selectedNotifications.remove(type)
         } else {
             selectedNotifications.insert(type)
+        }
+    }
+    
+    internal func toggleRepeatingSelection(for type: TaskRepeatingType) {
+        selectedRepeating = type
+    }
+    
+    internal func menuLabel(for type: TaskDateParamType) -> String {
+        switch type {
+        case .time:
+            selectedNotificationDescription
+        case .notifications:
+            selectedNotificationDescription
+        case .repeating:
+            selectedRepeatingDescription
+        case .endRepeating:
+            selectedRepeatingDescription
+        }
+    }
+    
+    internal func showingMenuIcon(for type: TaskDateParamType) -> Bool {
+        switch type {
+        case .time:
+            true
+        case .notifications:
+            selectedNotifications.isEmpty
+        case .repeating:
+            selectedRepeating == .none
+        case .endRepeating:
+            true
+        }
+    }
+    
+    internal func paramRemoveMethod(for type: TaskDateParamType) {
+        switch type {
+        case .time:
+            selectedNotifications.removeAll()
+        case .notifications:
+            selectedNotifications.removeAll()
+        case .repeating:
+            selectedRepeating = .none
+        case .endRepeating:
+            selectedRepeating = .none
         }
     }
     
