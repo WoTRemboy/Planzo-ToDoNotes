@@ -74,8 +74,11 @@ struct TaskCalendarSelectorView: View {
                              viewModel: viewModel)
             TaskDateParamRow(type: .repeating,
                              viewModel: viewModel)
-            TaskDateParamRow(type: .endRepeating,
-                             viewModel: viewModel)
+            
+            if viewModel.selectedRepeating != .none {
+                TaskDateParamRow(type: .endRepeating,
+                                 viewModel: viewModel)
+            }
         }
         .clipShape(.rect(cornerRadius: 10))
         .padding()

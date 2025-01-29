@@ -141,7 +141,7 @@ final class TaskManagementViewModel: ObservableObject {
         case .repeating:
             selectedRepeatingDescription
         case .endRepeating:
-            selectedRepeatingDescription
+            Texts.TaskManagement.DatePicker.noneEndRepeating
         }
     }
     

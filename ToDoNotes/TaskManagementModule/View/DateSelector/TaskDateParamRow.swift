@@ -75,7 +75,7 @@ struct TaskDateParamRow: View {
             case .repeating:
                 repeatingSelector
             case .endRepeating:
-                repeatingSelector
+                endRepeatingSelector
             }
         }
     }
@@ -84,14 +84,16 @@ struct TaskDateParamRow: View {
         Menu {
             ForEach(TaskNotificationsType.allCases.reversed(), id: \.self) { notificationType in
                 Button {
-                    viewModel.toggleNotificationSelection(for: notificationType)
+                    viewModel.toggleNotificationSelection(
+                        for: notificationType)
                 } label: {
                     remainderMenuContent(type: notificationType)
                 }
             }
             
             Button {
-                viewModel.toggleNotificationSelection(for: TaskNotificationsType.none)
+                viewModel.toggleNotificationSelection(
+                    for: TaskNotificationsType.none)
             } label: {
                 remainderMenuContent(type: TaskNotificationsType.none)
             }
@@ -118,14 +120,16 @@ struct TaskDateParamRow: View {
         Menu {
             ForEach(TaskRepeatingType.allCases.reversed(), id: \.self) { repeatingType in
                 Button {
-                    viewModel.toggleRepeatingSelection(for: repeatingType)
+                    viewModel.toggleRepeatingSelection(
+                        for: repeatingType)
                 } label: {
                     repeatingMenuContent(type: repeatingType)
                 }
             }
             
             Button {
-                viewModel.toggleRepeatingSelection(for: TaskRepeatingType.none)
+                viewModel.toggleRepeatingSelection(
+                    for: TaskRepeatingType.none)
             } label: {
                 repeatingMenuContent(type: TaskRepeatingType.none)
             }
@@ -144,6 +148,27 @@ struct TaskDateParamRow: View {
             } else {
                 Image.TaskManagement.DateSelector.unchecked
             }
+        }
+    }
+    
+    private var endRepeatingSelector: some View {
+        Menu {
+            Button {
+                // End repeating selector logic
+            } label: {
+                endRepeatingMenuContent(
+                    type: TaskEndRepeatingType.none)
+            }
+        } label: {
+            menuLabel
+        }
+    }
+    
+    private func endRepeatingMenuContent(type: TaskEndRepeatingType) -> some View {
+        return HStack {
+            Text(type.name)
+            Spacer()
+            Image.TaskManagement.DateSelector.checked
         }
     }
     

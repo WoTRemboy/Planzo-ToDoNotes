@@ -95,3 +95,15 @@ enum TaskRepeatingType {
         }
     }
 }
+
+enum TaskEndRepeatingType {
+    case none
+    // Add more later
+    
+    internal var name: String {
+        switch self {
+        case .none:
+            Texts.TaskManagement.DatePicker.noneEndRepeating
+        }
+    }
+}

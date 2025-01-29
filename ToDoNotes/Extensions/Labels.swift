@@ -128,6 +128,8 @@ final class Texts {
             static let yearlyRepeating = "Каждый год"
             static let businessRepeating = "По будням"
             static let weekendRepeating = "По выходным"
+            
+            static let noneEndRepeating = "Никогда"
         }
         
         enum ShareView {
