@@ -28,7 +28,11 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var selectedDate: Date = .now
     @Published internal var hasDate: Bool = false
     
+    @Published internal var selectedTime: Date = .now
+    @Published internal var selectedTimeType: TaskTimeType = .none
     @Published internal var selectedNotifications: Set<TaskNotificationsType> = []
+    @Published internal var selectedRepeating: TaskRepeatingType = .none
+    
     @Published internal var notificationsCheck: Bool = false
     @Published internal var targetDateSelected: Bool = false
     @Published internal var showingDatePicker: Bool = false
@@ -45,6 +49,15 @@ final class TaskManagementViewModel: ObservableObject {
         hasDate ? targetDate : nil
     }
     
+    internal var selectedTimeDescription: String {
+        switch selectedTimeType {
+        case .none:
+            Texts.TaskManagement.DatePicker.noneTime
+        case .value(_):
+            selectedTime.formatted(date: .omitted, time: .shortened)
+        }
+    }
+    
     internal var selectedNotificationDescription: String {
         if selectedNotifications.isEmpty {
             return Texts.TaskManagement.DatePicker.noneReminder
@@ -54,6 +67,10 @@ final class TaskManagementViewModel: ObservableObject {
                 .map { $0.name }
                 .joined(separator: ", ")
         }
+    }
+    
+    internal var selectedRepeatingDescription: String {
+        selectedRepeating.name
     }
     
     init(nameText: String = String(),
@@ -120,6 +137,57 @@ final class TaskManagementViewModel: ObservableObject {
         } else {
             selectedNotifications.insert(type)
         }
+    }
+    
+    internal func toggleRepeatingSelection(for type: TaskRepeatingType) {
+        selectedRepeating = type
+    }
+    
+    internal func menuLabel(for type: TaskDateParamType) -> String {
+        switch type {
+        case .time:
+            selectedTimeDescription
+        case .notifications:
+            selectedNotificationDescription
+        case .repeating:
+            selectedRepeatingDescription
+        case .endRepeating:
+            Texts.TaskManagement.DatePicker.noneEndRepeating
+        }
+    }
+    
+    internal func showingMenuIcon(for type: TaskDateParamType) -> Bool {
+        switch type {
+        case .time:
+            selectedTimeType == .none
+        case .notifications:
+            selectedNotifications.isEmpty
+        case .repeating:
+            selectedRepeating == .none
+        case .endRepeating:
+            true
+        }
+    }
+    
+    internal func paramRemoveMethod(for type: TaskDateParamType) {
+        switch type {
+        case .time:
+            selectedTimeType = .none
+        case .notifications:
+            selectedNotifications.removeAll()
+        case .repeating:
+            selectedRepeating = .none
+        case .endRepeating:
+            selectedRepeating = .none
+        }
+    }
+    
+    internal func allParamRemoveMethod() {
+        selectedDate = .now
+        selectedTimeType = .none
+        selectedNotifications.removeAll()
+        selectedRepeating = .none
+        selectedRepeating = .none
     }
     
     // MARK: - Checklist Methods

@@ -66,26 +66,63 @@ struct TaskDateParamRow: View {
     }
     
     private var selector: some View {
+        HStack {
+            switch type {
+            case .time:
+                timeSelector
+            case .notifications:
+                remainderSelector
+            case .repeating:
+                repeatingSelector
+            case .endRepeating:
+                endRepeatingSelector
+            }
+        }
+    }
+    
+    private var timeSelector: some View {
+        HStack {
+            menuLabel
+        }
+        .overlay {
+            DatePicker(String(),
+                       selection: $viewModel.selectedTime,
+                       displayedComponents: [.hourAndMinute])
+            .onChange(of: viewModel.selectedTime) { newValue in
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    viewModel.selectedTimeType = .value(newValue)
+                }
+            }
+            .labelsHidden()
+            .blendMode(.destinationOver)
+            .padding(.trailing,
+                     viewModel.selectedTimeType == .none ? 0 : 30)
+        }
+    }
+    
+    private var remainderSelector: some View {
         Menu {
             ForEach(TaskNotificationsType.allCases.reversed(), id: \.self) { notificationType in
                 Button {
-                    viewModel.toggleNotificationSelection(for: notificationType)
+                    viewModel.toggleNotificationSelection(
+                        for: notificationType)
                 } label: {
-                    menuContent(type: notificationType)
+                    remainderMenuContent(type: notificationType)
                 }
             }
             
             Button {
-                viewModel.toggleNotificationSelection(for: TaskNotificationsType.none)
+                viewModel.toggleNotificationSelection(
+                    for: TaskNotificationsType.none)
             } label: {
-                menuContent(type: TaskNotificationsType.none)
+                remainderMenuContent(type: TaskNotificationsType.none)
             }
         } label: {
             menuLabel
         }
     }
     
-    private func menuContent(type: TaskNotificationsType) -> some View {
+    private func remainderMenuContent(type: TaskNotificationsType) -> some View {
         return HStack {
             Text(type.name)
             Spacer()
@@ -99,15 +136,71 @@ struct TaskDateParamRow: View {
         }
     }
     
+    private var repeatingSelector: some View {
+        Menu {
+            ForEach(TaskRepeatingType.allCases.reversed(), id: \.self) { repeatingType in
+                Button {
+                    viewModel.toggleRepeatingSelection(
+                        for: repeatingType)
+                } label: {
+                    repeatingMenuContent(type: repeatingType)
+                }
+            }
+            
+            Button {
+                viewModel.toggleRepeatingSelection(
+                    for: TaskRepeatingType.none)
+            } label: {
+                repeatingMenuContent(type: TaskRepeatingType.none)
+            }
+        } label: {
+            menuLabel
+        }
+    }
+    
+    private func repeatingMenuContent(type: TaskRepeatingType) -> some View {
+        return HStack {
+            Text(type.name)
+            Spacer()
+            
+            if viewModel.selectedRepeating == type {
+                Image.TaskManagement.DateSelector.checked
+            }
+        }
+    }
+    
+    private var endRepeatingSelector: some View {
+        Menu {
+            Button {
+                // End repeating selector logic
+            } label: {
+                endRepeatingMenuContent(
+                    type: TaskEndRepeatingType.none)
+            }
+        } label: {
+            menuLabel
+        }
+    }
+    
+    private func endRepeatingMenuContent(type: TaskEndRepeatingType) -> some View {
+        return HStack {
+            Text(type.name)
+            Spacer()
+            Image.TaskManagement.DateSelector.checked
+        }
+    }
+    
     private var menuLabel: some View {
-        HStack {
-            Text(viewModel.selectedNotificationDescription)
+        HStack(spacing: 0) {
+            Text(viewModel.menuLabel(for: type))
                 .font(.system(size: 12, weight: .regular))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
                 .lineLimit(1)
             
-            if viewModel.selectedNotifications.isEmpty {
+            if viewModel.showingMenuIcon(for: type) {
                 Image.TaskManagement.DateSelector.menu
+                    .resizable()
+                    .frame(width: 10, height: 20)
                     .padding(.leading, 9)
                     .padding(.trailing)
             }
@@ -116,11 +209,13 @@ struct TaskDateParamRow: View {
     
     private var removeButton: some View {
         HStack {
-            if !viewModel.selectedNotifications.isEmpty {
+            if !viewModel.showingMenuIcon(for: type) {
                 Button {
-                    viewModel.selectedNotifications.removeAll()
+                    viewModel.paramRemoveMethod(for: type)
                 } label: {
                     Image.TaskManagement.DateSelector.remove
+                        .resizable()
+                        .frame(width: 12, height: 12)
                 }
                 .padding(.leading, 9)
                 .padding(.trailing)
@@ -130,5 +225,6 @@ struct TaskDateParamRow: View {
 }
 
 #Preview {
-    TaskDateParamRow(type: .notifications, viewModel: TaskManagementViewModel())
+    TaskDateParamRow(type: .time,
+                     viewModel: TaskManagementViewModel())
 }

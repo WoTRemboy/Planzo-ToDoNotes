@@ -25,6 +25,11 @@ enum TaskDateParamType {
     case endRepeating
 }
 
+enum TaskTimeType: Equatable {
+    case none
+    case value(Date)
+}
+
 enum TaskNotificationsType {
     case none
     case inTime
@@ -67,4 +72,43 @@ enum TaskRepeatingType {
     case yearly
     case businessDays
     case weekendDays
+    
+    static internal var allCases: [Self] {
+        [.daily, .weekly, .monthly, .yearly, .businessDays, .weekendDays]
+    }
+    
+    internal var sortOrder: Int {
+        Self.allCases.firstIndex(of: self) ?? Int.max
+    }
+    
+    internal var name: String {
+        switch self {
+        case .none:
+            Texts.TaskManagement.DatePicker.noneRepeating
+        case .daily:
+            Texts.TaskManagement.DatePicker.dailyRepeating
+        case .weekly:
+            Texts.TaskManagement.DatePicker.weeklyRepeating
+        case .monthly:
+            Texts.TaskManagement.DatePicker.monthlyRepeating
+        case .yearly:
+            Texts.TaskManagement.DatePicker.yearlyRepeating
+        case .businessDays:
+            Texts.TaskManagement.DatePicker.businessRepeating
+        case .weekendDays:
+            Texts.TaskManagement.DatePicker.weekendRepeating
+        }
+    }
+}
+
+enum TaskEndRepeatingType {
+    case none
+    // Add more later
+    
+    internal var name: String {
+        switch self {
+        case .none:
+            Texts.TaskManagement.DatePicker.noneEndRepeating
+        }
+    }
 }

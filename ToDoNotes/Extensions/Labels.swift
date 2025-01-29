@@ -114,12 +114,24 @@ final class Texts {
             static let endCycle = "Завершить повторы"
             static let removeAll = "Очистить всё"
             
+            static let noneTime = "Нет цели"
+            
             static let noneReminder = "Нет уведомлений"
             static let inTime = "Во время"
             static let fiveMinutesBefore = "За 5 минут"
             static let thirtyMinutesBefore = "За 30 минут"
             static let oneHourBefore = "За 1 час"
             static let oneDayBefore = "За 1 день"
+            
+            static let noneRepeating = "Без повторений"
+            static let dailyRepeating = "Каждый день"
+            static let weeklyRepeating = "Каждую неделю"
+            static let monthlyRepeating = "Каждый месяц"
+            static let yearlyRepeating = "Каждый год"
+            static let businessRepeating = "По будням"
+            static let weekendRepeating = "По выходным"
+            
+            static let noneEndRepeating = "Никогда"
         }
         
         enum ShareView {
