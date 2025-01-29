@@ -86,7 +86,7 @@ struct TaskCalendarSelectorView: View {
     
     private var removeButton: some View {
         Button {
-            // Remove button logic
+            viewModel.allParamRemoveMethod()
         } label: {
             Text(Texts.TaskManagement.DatePicker.removeAll)
                 .font(.system(size: 15, weight: .medium))

@@ -25,6 +25,11 @@ enum TaskDateParamType {
     case endRepeating
 }
 
+enum TaskTimeType: Equatable {
+    case none
+    case value(Date)
+}
+
 enum TaskNotificationsType {
     case none
     case inTime

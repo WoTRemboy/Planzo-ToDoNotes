@@ -69,7 +69,7 @@ struct TaskDateParamRow: View {
         HStack {
             switch type {
             case .time:
-                remainderSelector
+                timeSelector
             case .notifications:
                 remainderSelector
             case .repeating:
@@ -77,6 +77,26 @@ struct TaskDateParamRow: View {
             case .endRepeating:
                 endRepeatingSelector
             }
+        }
+    }
+    
+    private var timeSelector: some View {
+        HStack {
+            menuLabel
+        }
+        .overlay {
+            DatePicker(String(),
+                       selection: $viewModel.selectedTime,
+                       displayedComponents: [.hourAndMinute])
+            .onChange(of: viewModel.selectedTime) { newValue in
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    viewModel.selectedTimeType = .value(newValue)
+                }
+            }
+            .labelsHidden()
+            .blendMode(.destinationOver)
+            .padding(.trailing,
+                     viewModel.selectedTimeType == .none ? 0 : 30)
         }
     }
     
@@ -145,8 +165,6 @@ struct TaskDateParamRow: View {
             
             if viewModel.selectedRepeating == type {
                 Image.TaskManagement.DateSelector.checked
-            } else {
-                Image.TaskManagement.DateSelector.unchecked
             }
         }
     }
@@ -207,6 +225,6 @@ struct TaskDateParamRow: View {
 }
 
 #Preview {
-    TaskDateParamRow(type: .repeating,
+    TaskDateParamRow(type: .time,
                      viewModel: TaskManagementViewModel())
 }

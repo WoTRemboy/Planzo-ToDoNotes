@@ -28,6 +28,8 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var selectedDate: Date = .now
     @Published internal var hasDate: Bool = false
     
+    @Published internal var selectedTime: Date = .now
+    @Published internal var selectedTimeType: TaskTimeType = .none
     @Published internal var selectedNotifications: Set<TaskNotificationsType> = []
     @Published internal var selectedRepeating: TaskRepeatingType = .none
     
@@ -45,6 +47,15 @@ final class TaskManagementViewModel: ObservableObject {
     
     internal var saveTargetDate: Date? {
         hasDate ? targetDate : nil
+    }
+    
+    internal var selectedTimeDescription: String {
+        switch selectedTimeType {
+        case .none:
+            Texts.TaskManagement.DatePicker.noneTime
+        case .value(_):
+            selectedTime.formatted(date: .omitted, time: .shortened)
+        }
     }
     
     internal var selectedNotificationDescription: String {
@@ -135,7 +146,7 @@ final class TaskManagementViewModel: ObservableObject {
     internal func menuLabel(for type: TaskDateParamType) -> String {
         switch type {
         case .time:
-            selectedNotificationDescription
+            selectedTimeDescription
         case .notifications:
             selectedNotificationDescription
         case .repeating:
@@ -148,7 +159,7 @@ final class TaskManagementViewModel: ObservableObject {
     internal func showingMenuIcon(for type: TaskDateParamType) -> Bool {
         switch type {
         case .time:
-            true
+            selectedTimeType == .none
         case .notifications:
             selectedNotifications.isEmpty
         case .repeating:
@@ -161,7 +172,7 @@ final class TaskManagementViewModel: ObservableObject {
     internal func paramRemoveMethod(for type: TaskDateParamType) {
         switch type {
         case .time:
-            selectedNotifications.removeAll()
+            selectedTimeType = .none
         case .notifications:
             selectedNotifications.removeAll()
         case .repeating:
@@ -169,6 +180,14 @@ final class TaskManagementViewModel: ObservableObject {
         case .endRepeating:
             selectedRepeating = .none
         }
+    }
+    
+    internal func allParamRemoveMethod() {
+        selectedDate = .now
+        selectedTimeType = .none
+        selectedNotifications.removeAll()
+        selectedRepeating = .none
+        selectedRepeating = .none
     }
     
     // MARK: - Checklist Methods
