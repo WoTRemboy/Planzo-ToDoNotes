@@ -17,16 +17,14 @@ struct TaskManagementView: View {
     @Binding private var taskManagementHeight: CGFloat
     @State private var isKeyboardActive = false
     
-    private let date: Date
+    private let date: Date = .now
     private let entity: TaskEntity?
     private let onDismiss: () -> Void
     
     init(taskManagementHeight: Binding<CGFloat>,
-         date: Date,
          entity: TaskEntity? = nil,
          onDismiss: @escaping () -> Void) {
         self._taskManagementHeight = taskManagementHeight
-        self.date = date
         self.onDismiss = onDismiss
         self.entity = entity
         
@@ -145,7 +143,9 @@ struct TaskManagementView: View {
             calendarImage
             
             if viewModel.hasDate {
-                Text(viewModel.targetDate.shortDayMonthHourMinutes)
+                Text(viewModel.hasTime ?
+                     viewModel.targetDate.shortDayMonthHourMinutes :
+                        viewModel.targetDate.shortDate)
                     .font(.system(size: 13, weight: .regular))
                     .foregroundStyle(Color.LabelColors.labelPrimary)
             }
@@ -216,8 +216,8 @@ struct TaskManagementView_Previews: PreviewProvider {
         
         var body: some View {
             TaskManagementView(
-                taskManagementHeight: $taskManagementHeight,
-                date: .now) { }
+                taskManagementHeight: $taskManagementHeight)
+            { }
         }
     }
 }
@@ -246,6 +246,7 @@ extension TaskManagementView {
                 description: viewModel.descriptionText,
                 completeCheck: viewModel.check,
                 target: viewModel.saveTargetDate,
+                hasTime: viewModel.hasTime,
                 notify: viewModel.notificationsCheck,
                 checklist: viewModel.checklistLocal)
             
@@ -262,7 +263,8 @@ extension TaskManagementView {
             name: viewModel.nameText,
             description: viewModel.descriptionText,
             completeCheck: viewModel.check,
-            target: nil,
+            target: viewModel.targetDate,
+            hasTime: viewModel.hasTime,
             notify: false)
     }
 }

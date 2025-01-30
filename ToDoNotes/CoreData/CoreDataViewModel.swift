@@ -46,6 +46,7 @@ final class CoreDataViewModel: ObservableObject {
                           description: String,
                           completeCheck: Bool,
                           target: Date?,
+                          hasTime: Bool,
                           notify: Bool) {
         let newTask = TaskEntity(context: container.viewContext)
         
@@ -55,6 +56,7 @@ final class CoreDataViewModel: ObservableObject {
         newTask.completed = completeCheck ? 1 : 0
         newTask.created = .now
         newTask.target = target
+        newTask.hasTargetTime = hasTime
         newTask.notify = notify
         saveData()
     }
@@ -64,12 +66,14 @@ final class CoreDataViewModel: ObservableObject {
                              description: String,
                              completeCheck: Bool,
                              target: Date?,
+                             hasTime: Bool,
                              notify: Bool,
                              checklist: [ChecklistItem] = []) {
         entity.name = name
         entity.details = description
         entity.completed = completeCheck ? showCheckStatus(for: entity) : 0
         entity.target = target
+        entity.hasTargetTime = hasTime
         entity.notify = target != nil ? notify : false
         
         var checklistEnities = [ChecklistEntity]()

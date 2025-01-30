@@ -56,7 +56,7 @@ struct TaskListRow: View {
     
     private var detailsBox: some View {
         VStack(alignment: .trailing, spacing: 2) {
-            if entity.target != nil {
+            if entity.target != nil, entity.hasTargetTime {
                 dateLabel
             }
             

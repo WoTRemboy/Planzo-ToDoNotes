@@ -20,8 +20,7 @@ struct TodayView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
-                taskManagementHeight: $viewModel.taskManagementHeight,
-                date: .now) {
+                taskManagementHeight: $viewModel.taskManagementHeight) {
                     viewModel.toggleShowingTaskCreateView()
             }
             .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
@@ -30,7 +29,6 @@ struct TodayView: View {
         .fullScreenCover(item: $viewModel.selectedTask) { task in
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
-                date: .now,
                 entity: task) {
                     viewModel.toggleShowingTaskEditView()
                 }

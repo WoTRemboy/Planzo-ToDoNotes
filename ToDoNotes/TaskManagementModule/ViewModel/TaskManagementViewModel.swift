@@ -24,11 +24,13 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var showingShareSheet: Bool = false
     @Published internal var shareSheetHeight: CGFloat = 0
     
+
     @Published internal var targetDate: Date = .now
-    @Published internal var selectedDate: Date = .now
     @Published internal var hasDate: Bool = false
-    
+    @Published internal var hasTime: Bool = false
+    @Published internal var selectedDay: Date = .now.startOfDay
     @Published internal var selectedTime: Date = .now
+    
     @Published internal var selectedTimeType: TaskTimeType = .none
     @Published internal var selectedNotifications: Set<TaskNotificationsType> = []
     @Published internal var selectedRepeating: TaskRepeatingType = .none
@@ -38,7 +40,7 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var showingDatePicker: Bool = false
     
     internal let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
-    private(set) var todayDate: Date = Date.now
+    private(set) var todayDate: Date = Date.now.startOfDay
     private(set) var days: [Date] = []
     
     internal var todayDateString: String {
@@ -73,6 +75,30 @@ final class TaskManagementViewModel: ObservableObject {
         selectedRepeating.name
     }
     
+    private var combinedDateTime: Date {
+        guard selectedTimeType != .none else {
+            hasTime = false
+            hasDate = selectedDay != todayDate
+            return selectedDay
+        }
+        hasTime = true
+        hasDate = true
+        check = true
+
+        let calendar = Calendar.current
+        let dayComponents = calendar.dateComponents([.year, .month, .day], from: selectedDay)
+        let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: selectedTime)
+        
+        return calendar.date(from: DateComponents(
+            year: dayComponents.year,
+            month: dayComponents.month,
+            day: dayComponents.day,
+            hour: timeComponents.hour,
+            minute: timeComponents.minute,
+            second: timeComponents.second
+        )) ?? selectedDay
+    }
+    
     init(nameText: String = String(),
          descriptionText: String = String(),
          check: Bool = false) {
@@ -87,11 +113,13 @@ final class TaskManagementViewModel: ObservableObject {
         self.nameText = entity.name ?? String()
         self.descriptionText = entity.details ?? String()
         self.check = entity.completed != 0
-        self.targetDate = entity.target ?? .now
+        self.targetDate = entity.target ?? .now.startOfDay
         self.hasDate = entity.target != nil
+        self.hasTime = entity.hasTargetTime
         self.notificationsCheck = entity.notify
         self.targetDateSelected = entity.target != nil
         
+        separateTargetDateToTimeAndDay(targetDate: entity.target)
         setupChecklistLocal(entity.checklist)
     }
     
@@ -119,6 +147,33 @@ final class TaskManagementViewModel: ObservableObject {
         targetDateSelected = true
         check = true
         showingDatePicker = false
+    }
+    
+    internal func saveTaskDateParams() {
+        targetDate = combinedDateTime
+    }
+    
+    private func separateTargetDateToTimeAndDay(targetDate: Date?) {
+        guard let time = targetDate else { return }
+        let calendar = Calendar.current
+        let dayComponents = calendar.dateComponents([.year, .month, .day], from: time)
+        let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: time)
+        
+        selectedDay = calendar.date(from: DateComponents(
+            year: dayComponents.year,
+            month: dayComponents.month,
+            day: dayComponents.day
+        )) ?? .now
+        
+        guard hasTime else { return }
+        
+        selectedTime = calendar.date(from: DateComponents(
+            hour: timeComponents.hour,
+            minute: timeComponents.minute,
+            second: timeComponents.second
+        )) ?? .now
+        
+        selectedTimeType = .value(selectedTime)
     }
     
     internal func cancelDatePicker() {
@@ -183,7 +238,7 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     internal func allParamRemoveMethod() {
-        selectedDate = .now
+        selectedDay = .now.startOfDay
         selectedTimeType = .none
         selectedNotifications.removeAll()
         selectedRepeating = .none

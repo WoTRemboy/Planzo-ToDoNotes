@@ -48,7 +48,10 @@ struct TaskCalendarSelectorView: View {
     
     private var toolBarButtonDone: some View {
         Button {
-            // Done button Action
+            withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.saveTaskDateParams()
+                viewModel.toggleDatePicker()
+            }
         } label: {
             Text(Texts.TaskManagement.DatePicker.done)
                 .font(.system(size: 17, weight: .semibold))

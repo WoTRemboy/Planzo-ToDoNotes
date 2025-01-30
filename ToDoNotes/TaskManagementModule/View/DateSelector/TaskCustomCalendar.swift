@@ -73,12 +73,12 @@ struct TaskCustomCalendar: View {
                 } else {
                     CustomCalendarCell(
                         day: day.formatted(.dateTime.day()),
-                        selected: viewModel.selectedDate == day.startOfDay,
+                        selected: viewModel.selectedDay == day.startOfDay,
                         today: Date.now.startOfDay == day.startOfDay,
                         task: false)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.15)) {
-                            viewModel.selectedDate = day
+                            viewModel.selectedDay = day.startOfDay
                         }
                     }
                 }
