@@ -30,7 +30,6 @@ struct TaskDateParamRow: View {
                 .padding(.leading, 6)
             Spacer()
             selector
-            removeButton
         }
         .frame(height: 44)
         .background(
@@ -81,45 +80,55 @@ struct TaskDateParamRow: View {
     }
     
     private var timeSelector: some View {
-        HStack {
-            menuLabel
-        }
-        .overlay {
-            DatePicker(String(),
-                       selection: $viewModel.selectedTime,
-                       displayedComponents: [.hourAndMinute])
-            .onChange(of: viewModel.selectedTime) { newValue in
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    viewModel.selectedTimeType = .value(newValue)
+        menuLabel
+            .overlay {
+                DatePicker(String(),
+                           selection: $viewModel.selectedTime,
+                           displayedComponents: [.hourAndMinute])
+                .onChange(of: viewModel.selectedTime) { newValue in
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        viewModel.selectedTimeType = .value(newValue)
+                    }
                 }
+                .labelsHidden()
+                .blendMode(.destinationOver)
+                .padding(.trailing,
+                         viewModel.selectedTimeType == .none ? 16 : 70)
             }
-            .labelsHidden()
-            .blendMode(.destinationOver)
-            .padding(.trailing,
-                     viewModel.selectedTimeType == .none ? 0 : 30)
-        }
+            .animation(.easeInOut(duration: 0.2), value: viewModel.selectedTime)
     }
     
     private var remainderSelector: some View {
-        Menu {
-            ForEach(TaskNotificationsType.allCases.reversed(), id: \.self) { notificationType in
-                Button {
-                    viewModel.toggleNotificationSelection(
-                        for: notificationType)
+        menuLabel
+            .overlay {
+                Menu {
+                    ForEach(TaskNotificationsType.allCases.reversed(), id: \.self) { notificationType in
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                viewModel.toggleNotificationSelection(
+                                    for: notificationType)
+                            }
+                        } label: {
+                            remainderMenuContent(type: notificationType)
+                        }
+                    }
+                    // "None" remainder button
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            viewModel.toggleNotificationSelection(
+                                for: TaskNotificationsType.none)
+                        }
+                    } label: {
+                        remainderMenuContent(type: TaskNotificationsType.none)
+                    }
                 } label: {
-                    remainderMenuContent(type: notificationType)
+                    Rectangle()
+                        .frame(maxWidth: .infinity)
                 }
+                .blendMode(.destinationOver)
+                .padding(.trailing,
+                         viewModel.selectedNotifications.isEmpty ? 10 : 35)
             }
-            
-            Button {
-                viewModel.toggleNotificationSelection(
-                    for: TaskNotificationsType.none)
-            } label: {
-                remainderMenuContent(type: TaskNotificationsType.none)
-            }
-        } label: {
-            menuLabel
-        }
     }
     
     private func remainderMenuContent(type: TaskNotificationsType) -> some View {
@@ -137,25 +146,36 @@ struct TaskDateParamRow: View {
     }
     
     private var repeatingSelector: some View {
-        Menu {
-            ForEach(TaskRepeatingType.allCases.reversed(), id: \.self) { repeatingType in
-                Button {
-                    viewModel.toggleRepeatingSelection(
-                        for: repeatingType)
+        menuLabel
+            .overlay {
+                Menu {
+                    ForEach(TaskRepeatingType.allCases.reversed(), id: \.self) { repeatingType in
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                viewModel.toggleRepeatingSelection(
+                                    for: repeatingType)
+                            }
+                        } label: {
+                            repeatingMenuContent(type: repeatingType)
+                        }
+                    }
+                    // "None" repeating button
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            viewModel.toggleRepeatingSelection(
+                                for: TaskRepeatingType.none)
+                        }
+                    } label: {
+                        repeatingMenuContent(type: TaskRepeatingType.none)
+                    }
                 } label: {
-                    repeatingMenuContent(type: repeatingType)
+                    Rectangle()
+                        .frame(maxWidth: .infinity)
                 }
+                .blendMode(.destinationOver)
+                .padding(.trailing,
+                         viewModel.selectedRepeating == .none ? 10 : 35)
             }
-            
-            Button {
-                viewModel.toggleRepeatingSelection(
-                    for: TaskRepeatingType.none)
-            } label: {
-                repeatingMenuContent(type: TaskRepeatingType.none)
-            }
-        } label: {
-            menuLabel
-        }
     }
     
     private func repeatingMenuContent(type: TaskRepeatingType) -> some View {
@@ -170,16 +190,22 @@ struct TaskDateParamRow: View {
     }
     
     private var endRepeatingSelector: some View {
-        Menu {
-            Button {
-                // End repeating selector logic
-            } label: {
-                endRepeatingMenuContent(
-                    type: TaskEndRepeatingType.none)
+        menuLabel
+            .overlay {
+                Menu {
+                    Button {
+                        // End repeating selector logic
+                    } label: {
+                        endRepeatingMenuContent(
+                            type: TaskEndRepeatingType.none)
+                    }
+                } label: {
+                    Rectangle()
+                        .frame(maxWidth: .infinity)
+                }
+                .blendMode(.destinationOver)
+                .padding(.trailing, 10)
             }
-        } label: {
-            menuLabel
-        }
     }
     
     private func endRepeatingMenuContent(type: TaskEndRepeatingType) -> some View {
@@ -194,10 +220,32 @@ struct TaskDateParamRow: View {
         HStack(spacing: 0) {
             Text(viewModel.menuLabel(for: type))
                 .font(.system(size: 12, weight: .regular))
-                .foregroundStyle(Color.LabelColors.labelPrimary)
                 .lineLimit(1)
+                .foregroundStyle(
+                    viewModel.showingMenuIcon(for: type) ?
+                    Color.LabelColors.labelSecondary :
+                        Color.LabelColors.labelPrimary)
             
-            if viewModel.showingMenuIcon(for: type) {
+            removeButton
+        }
+        .frame(height: 30)
+    }
+    
+    private var removeButton: some View {
+        HStack {
+            if !viewModel.showingMenuIcon(for: type) {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        viewModel.paramRemoveMethod(for: type)
+                    }
+                } label: {
+                    Image.TaskManagement.DateSelector.remove
+                        .resizable()
+                        .frame(width: 12, height: 12)
+                }
+                .padding(.leading, 9)
+                .padding(.trailing)
+            } else {
                 Image.TaskManagement.DateSelector.menu
                     .resizable()
                     .frame(width: 10, height: 20)
@@ -206,25 +254,9 @@ struct TaskDateParamRow: View {
             }
         }
     }
-    
-    private var removeButton: some View {
-        HStack {
-            if !viewModel.showingMenuIcon(for: type) {
-                Button {
-                    viewModel.paramRemoveMethod(for: type)
-                } label: {
-                    Image.TaskManagement.DateSelector.remove
-                        .resizable()
-                        .frame(width: 12, height: 12)
-                }
-                .padding(.leading, 9)
-                .padding(.trailing)
-            }
-        }
-    }
 }
 
 #Preview {
-    TaskDateParamRow(type: .time,
+    TaskDateParamRow(type: .endRepeating,
                      viewModel: TaskManagementViewModel())
 }

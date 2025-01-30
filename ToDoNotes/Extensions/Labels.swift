@@ -114,16 +114,16 @@ final class Texts {
             static let endCycle = "Завершить повторы"
             static let removeAll = "Очистить всё"
             
-            static let noneTime = "Нет цели"
+            static let noneTime = "Нет"
             
-            static let noneReminder = "Нет уведомлений"
+            static let noneReminder = "Нет"
             static let inTime = "Во время"
             static let fiveMinutesBefore = "За 5 минут"
             static let thirtyMinutesBefore = "За 30 минут"
             static let oneHourBefore = "За 1 час"
             static let oneDayBefore = "За 1 день"
             
-            static let noneRepeating = "Без повторений"
+            static let noneRepeating = "Нет"
             static let dailyRepeating = "Каждый день"
             static let weeklyRepeating = "Каждую неделю"
             static let monthlyRepeating = "Каждый месяц"
