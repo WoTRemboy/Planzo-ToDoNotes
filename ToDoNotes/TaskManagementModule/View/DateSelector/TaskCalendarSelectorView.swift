@@ -17,13 +17,20 @@ struct TaskCalendarSelectorView: View {
     
     internal var body: some View {
         NavigationStack {
-            VStack {
-                calendarSection
-                separator
-                paramsForm
-                Spacer()
+            ZStack(alignment: .bottom) {
+                ScrollView {
+                    calendarSection
+                    separator
+                    paramsForm
+                }
+                .scrollIndicators(.hidden)
+                .padding(.bottom, hasNotch() ? 100 : 80)
+
                 removeButton
+                    .zIndex(1)
             }
+            .edgesIgnoringSafeArea(.bottom)
+            
             .navigationTitle(Texts.TaskManagement.DatePicker.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -88,15 +95,28 @@ struct TaskCalendarSelectorView: View {
     }
     
     private var removeButton: some View {
-        Button {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                viewModel.allParamRemoveMethod()
+        ZStack(alignment: hasNotch() ? .top : .center) {
+            Rectangle()
+                .fill(Color.BackColors.backDefault)
+                .frame(maxWidth: .infinity, maxHeight: hasNotch() ? 100 : 80)
+            
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    viewModel.allParamRemoveMethod()
+                }
+            } label: {
+                Text(Texts.TaskManagement.DatePicker.removeAll)
+                    .font(.system(size: 15, weight: .medium))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             }
-        } label: {
-            Text(Texts.TaskManagement.DatePicker.removeAll)
-                .font(.system(size: 15, weight: .medium))
-                .foregroundStyle(Color.ButtonColors.remove)
-                .padding(.bottom, 10)
+            .frame(height: 50)
+            .frame(maxWidth: .infinity)
+            .minimumScaleFactor(0.4)
+            
+            .foregroundStyle(Color.ButtonColors.remove)
+            .tint(Color.ButtonColors.remove)
+            .buttonStyle(.bordered)
+            .padding()
         }
     }
 }
