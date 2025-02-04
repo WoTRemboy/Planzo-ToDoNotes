@@ -31,6 +31,7 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var selectedTime: Date = .now
     
     @Published internal var selectedTimeType: TaskTime = .none
+    @Published internal var availableNotifications = [TaskNotification]()
     @Published internal var notificationsLocal: Set<NotificationItem> = []
     
     @Published internal var selectedRepeating: TaskRepeating = .none
@@ -78,7 +79,7 @@ final class TaskManagementViewModel: ObservableObject {
         selectedRepeating.name
     }
     
-    private var combinedDateTime: Date {
+    internal var combinedDateTime: Date {
         guard selectedTimeType != .none else {
             hasTime = false
             hasDate = selectedDay != todayDate
@@ -108,6 +109,7 @@ final class TaskManagementViewModel: ObservableObject {
         self.nameText = nameText
         self.descriptionText = descriptionText
         self.check = check
+        
         updateDays()
     }
     
@@ -190,6 +192,16 @@ final class TaskManagementViewModel: ObservableObject {
         showingDatePicker = false
     }
     
+    internal func setupNotificationAvailability() {
+        availableNotifications = TaskNotification.availableNotifications(for: combinedDateTime)
+        deselectUnavailableNotifications()
+    }
+    
+    internal func deselectUnavailableNotifications() {
+        let allowedTypes = Set(availableNotifications)
+        notificationsLocal = notificationsLocal.filter { allowedTypes.contains($0.type) }
+    }
+    
     internal func toggleNotificationSelection(for type: TaskNotification) {
         guard type != .none else {
             notificationsLocal.removeAll()
@@ -264,6 +276,7 @@ final class TaskManagementViewModel: ObservableObject {
         switch type {
         case .time:
             selectedTimeType = .none
+            setupNotificationAvailability()
         case .notifications:
             notificationsLocal.removeAll()
         case .repeating:

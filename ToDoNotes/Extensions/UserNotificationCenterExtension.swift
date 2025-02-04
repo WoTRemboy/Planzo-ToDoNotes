@@ -16,6 +16,7 @@ extension UNUserNotificationCenter {
             print("Notification setup error: params are not valid")
             return
         }
+        removeNotifications(for: notifications)
         
         for notification in notifications {
             guard let targetDate = notification.target else { continue }
@@ -44,5 +45,24 @@ extension UNUserNotificationCenter {
         let identifiers = items.map { $0.id.uuidString }
         self.removePendingNotificationRequests(withIdentifiers: identifiers)
         self.removeDeliveredNotifications(withIdentifiers: identifiers)
+        print("Remove notifications success")
+    }
+    
+    internal func removeNotifications(for items: NSSet?) {
+        guard let notifications = items?.compactMap({ $0 as? NotificationEntity }) else {
+            print("Remove notifications error: items must be Set<NotificationEntity>")
+            return
+        }
+        let identifiers = notifications.map({ $0.id?.uuidString ?? String() })
+        
+        guard !identifiers.isEmpty else {
+            print("No valid notification IDs found for removal")
+            return
+        }
+        
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: identifiers)
+        
+        print("Removed notifications: \(identifiers)")
     }
 }

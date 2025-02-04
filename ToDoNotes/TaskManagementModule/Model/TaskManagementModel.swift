@@ -85,6 +85,31 @@ enum TaskNotification: String {
             Texts.TaskManagement.DatePicker.oneDayBeforeNotification
         }
     }
+    
+    static internal func availableNotifications(for target: Date?) -> [Self] {
+        guard let date = target else { return [.none] }
+        
+        let now = Date.now
+        var availableTypes: [Self] = []
+        
+        if now < date {
+            availableTypes.append(.inTime)
+        }
+        if now < date.addingTimeInterval(-5 * 60) {
+            availableTypes.append(.fiveMinutesBefore)
+        }
+        if now < date.addingTimeInterval(-30 * 60) {
+            availableTypes.append(.thirtyMinutesBefore)
+        }
+        if now < date.addingTimeInterval(-60 * 60) {
+            availableTypes.append(.oneHourBefore)
+        }
+        if now < date.addingTimeInterval(-24 * 60 * 60) {
+            availableTypes.append(.oneDayBefore)
+        }
+        
+        return availableTypes
+    }
 }
 
 enum TaskRepeating {

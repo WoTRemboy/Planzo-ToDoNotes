@@ -88,6 +88,7 @@ struct TaskDateParamRow: View {
                 .onChange(of: viewModel.selectedTime) { newValue in
                     withAnimation(.easeInOut(duration: 0.2)) {
                         viewModel.selectedTimeType = .value(newValue)
+                        viewModel.setupNotificationAvailability()
                     }
                 }
                 .labelsHidden()
@@ -112,7 +113,7 @@ struct TaskDateParamRow: View {
                         remainderMenuContent(type: TaskNotification.none)
                     }
                     
-                    ForEach(TaskNotification.allCases, id: \.self) { notificationType in
+                    ForEach(viewModel.availableNotifications, id: \.self) { notificationType in
                         Button {
                             withAnimation(.easeInOut(duration: 0.3)) {
                                 viewModel.toggleNotificationSelection(
@@ -129,6 +130,12 @@ struct TaskDateParamRow: View {
                 .blendMode(.destinationOver)
                 .padding(.trailing,
                          viewModel.notificationsLocal.isEmpty ? 10 : 35)
+            }
+            .onAppear {
+                viewModel.setupNotificationAvailability()
+            }
+            .onChange(of: viewModel.selectedDay) { _ in
+                viewModel.setupNotificationAvailability()
             }
     }
     

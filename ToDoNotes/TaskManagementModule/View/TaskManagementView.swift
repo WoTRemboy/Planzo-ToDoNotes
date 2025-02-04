@@ -265,6 +265,8 @@ extension TaskManagementView {
             completeCheck: viewModel.check,
             target: viewModel.targetDate,
             hasTime: viewModel.hasTime,
-            notify: false)
+            notifications: viewModel.notificationsLocal)
+        
+        viewModel.setupUserNotifications()
     }
 }

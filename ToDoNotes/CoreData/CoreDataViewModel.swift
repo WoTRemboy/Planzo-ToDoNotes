@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import CoreData
+import UserNotifications
 
 final class CoreDataViewModel: ObservableObject {
     
@@ -47,7 +48,7 @@ final class CoreDataViewModel: ObservableObject {
                           completeCheck: Bool,
                           target: Date?,
                           hasTime: Bool,
-                          notify: Bool) {
+                          notifications: Set<NotificationItem>) {
         let newTask = TaskEntity(context: container.viewContext)
         
         newTask.id = UUID()
@@ -57,6 +58,18 @@ final class CoreDataViewModel: ObservableObject {
         newTask.created = .now
         newTask.target = target
         newTask.hasTargetTime = hasTime
+        
+        var notificationEntities = [NotificationEntity]()
+        for item in notifications {
+            let entityItem = NotificationEntity(context: container.viewContext)
+            entityItem.id = item.id
+            entityItem.type = item.type.rawValue
+            entityItem.target = item.target
+            notificationEntities.append(entityItem)
+        }
+        let notificationsSet = NSSet(array: notificationEntities)
+        newTask.notifications = notificationsSet
+        
         saveData()
     }
     
@@ -77,6 +90,7 @@ final class CoreDataViewModel: ObservableObject {
         var notificationEntities = [NotificationEntity]()
         for item in notifications {
             let entityItem = NotificationEntity(context: container.viewContext)
+            entityItem.id = item.id
             entityItem.type = item.type.rawValue
             entityItem.target = item.target
             notificationEntities.append(entityItem)
@@ -97,7 +111,7 @@ final class CoreDataViewModel: ObservableObject {
         saveData()
     }
     
-    internal func deleteTask(indexSet: IndexSet) {
+    private func deleteTask(indexSet: IndexSet) {
         guard let index = indexSet.first else { return }
         
         let entity = savedEnities[index]
@@ -150,7 +164,8 @@ final class CoreDataViewModel: ObservableObject {
     
     internal func deleteTasks(with ids: [NSManagedObjectID]) {
         ids.forEach { id in
-            if let object = try? container.viewContext.existingObject(with: id) {
+            if let object = try? container.viewContext.existingObject(with: id) as? TaskEntity {
+                UNUserNotificationCenter.current().removeNotifications(for: object.notifications)
                 container.viewContext.delete(object)
             }
         }
