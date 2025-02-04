@@ -52,6 +52,7 @@
 		63C5A8CF2D31BECD00154101 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 63C5A8CE2D31BECD00154101 /* GoogleSignIn */; };
 		63C5A8D12D31BECD00154101 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 63C5A8D02D31BECD00154101 /* GoogleSignInSwift */; };
 		63CD66982D367EC50053C93C /* TaskManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD66972D367EBD0053C93C /* TaskManagementViewModel.swift */; };
+		63D9A1BA2D50F2FF008454E9 /* UserNotificationCenterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D9A1B92D50F2F2008454E9 /* UserNotificationCenterExtension.swift */; };
 		63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA81012D24C822005CEECB /* OnboardingScreenView.swift */; };
 		63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA81032D24CE44005CEECB /* ViewExtension.swift */; };
 		63E890CA2D347655003D7370 /* TaskListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E890C92D347655003D7370 /* TaskListRow.swift */; };
@@ -129,6 +130,7 @@
 		63A5B6662D493C3700B0E408 /* TaskCustomCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCustomCalendar.swift; sourceTree = "<group>"; };
 		63A5B6682D49446800B0E408 /* TaskDateParamRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDateParamRow.swift; sourceTree = "<group>"; };
 		63CD66972D367EBD0053C93C /* TaskManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementViewModel.swift; sourceTree = "<group>"; };
+		63D9A1B92D50F2F2008454E9 /* UserNotificationCenterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationCenterExtension.swift; sourceTree = "<group>"; };
 		63DA81012D24C822005CEECB /* OnboardingScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenView.swift; sourceTree = "<group>"; };
 		63DA81032D24CE44005CEECB /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		63DA81382D24D170005CEECB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -344,6 +346,7 @@
 				635FEF812D24BEA2007FFBBA /* ImageExtension.swift */,
 				635FEF832D24C172007FFBBA /* Labels.swift */,
 				63F6C7012D2AA37F00716AB0 /* DateFormatter.swift */,
+				63D9A1B92D50F2F2008454E9 /* UserNotificationCenterExtension.swift */,
 				63DA81032D24CE44005CEECB /* ViewExtension.swift */,
 				6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */,
 			);
@@ -705,6 +708,7 @@
 				637B9F5C2D2969C30010F13B /* SettingsView.swift in Sources */,
 				632D0DD02D36B9760071684D /* TaskManagementModel.swift in Sources */,
 				63F6C71C2D2B19A200716AB0 /* CustomCalendarModel.swift in Sources */,
+				63D9A1BA2D50F2FF008454E9 /* UserNotificationCenterExtension.swift in Sources */,
 				634877AE2D36A164009110B0 /* SettingAppearanceView.swift in Sources */,
 				63A5B6642D4937D100B0E408 /* TaskCalendarSelectorView.swift in Sources */,
 				63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */,
@@ -886,7 +890,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.3;
+				MARKETING_VERSION = 0.2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -923,7 +927,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.3;
+				MARKETING_VERSION = 0.2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

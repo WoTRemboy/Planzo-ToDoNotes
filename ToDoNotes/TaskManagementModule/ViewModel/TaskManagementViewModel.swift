@@ -25,21 +25,26 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var shareSheetHeight: CGFloat = 0
     
     @Published internal var targetDate: Date = .now
-    @Published internal var selectedDate: Date = .now
     @Published internal var hasDate: Bool = false
-    
+    @Published internal var hasTime: Bool = false
+    @Published internal var selectedDay: Date = .now.startOfDay
     @Published internal var selectedTime: Date = .now
-    @Published internal var selectedTimeType: TaskTimeType = .none
-    @Published internal var selectedNotifications: Set<TaskNotificationsType> = []
-    @Published internal var selectedRepeating: TaskRepeatingType = .none
+    
+    @Published internal var selectedTimeType: TaskTime = .none
+    @Published internal var availableNotifications = [TaskNotification]()
+    @Published internal var notificationsLocal: Set<NotificationItem> = []
+    
+    @Published internal var selectedRepeating: TaskRepeating = .none
     
     @Published internal var notificationsCheck: Bool = false
     @Published internal var targetDateSelected: Bool = false
     @Published internal var showingDatePicker: Bool = false
     
     internal let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
-    private(set) var todayDate: Date = Date.now
+    private(set) var todayDate: Date = Date.now.startOfDay
     private(set) var days: [Date] = []
+    
+    private let notificationCenter = UNUserNotificationCenter.current()
     
     internal var todayDateString: String {
         Date.now.longDayMonthWeekday
@@ -59,18 +64,43 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     internal var selectedNotificationDescription: String {
-        if selectedNotifications.isEmpty {
+        if notificationsLocal.isEmpty {
             return Texts.TaskManagement.DatePicker.noneReminder
         } else {
-            return selectedNotifications
-                .sorted { $0.sortOrder < $1.sortOrder }
-                .map { $0.name }
-                .joined(separator: ", ")
+            if notificationsLocal.count > 1 {
+                return Texts.TaskManagement.DatePicker.someRemainders
+            } else {
+                return notificationsLocal.first?.type.selectorName ?? Texts.TaskManagement.DatePicker.errorRemainder
+            }
         }
     }
     
     internal var selectedRepeatingDescription: String {
         selectedRepeating.name
+    }
+    
+    internal var combinedDateTime: Date {
+        guard selectedTimeType != .none else {
+            hasTime = false
+            hasDate = selectedDay != todayDate
+            return selectedDay
+        }
+        hasTime = true
+        hasDate = true
+        check = true
+
+        let calendar = Calendar.current
+        let dayComponents = calendar.dateComponents([.year, .month, .day], from: selectedDay)
+        let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: selectedTime)
+        
+        return calendar.date(from: DateComponents(
+            year: dayComponents.year,
+            month: dayComponents.month,
+            day: dayComponents.day,
+            hour: timeComponents.hour,
+            minute: timeComponents.minute,
+            second: timeComponents.second
+        )) ?? selectedDay
     }
     
     init(nameText: String = String(),
@@ -79,6 +109,7 @@ final class TaskManagementViewModel: ObservableObject {
         self.nameText = nameText
         self.descriptionText = descriptionText
         self.check = check
+        
         updateDays()
     }
     
@@ -87,12 +118,15 @@ final class TaskManagementViewModel: ObservableObject {
         self.nameText = entity.name ?? String()
         self.descriptionText = entity.details ?? String()
         self.check = entity.completed != 0
-        self.targetDate = entity.target ?? .now
+        self.targetDate = entity.target ?? .now.startOfDay
         self.hasDate = entity.target != nil
-        self.notificationsCheck = entity.notify
+        self.hasTime = entity.hasTargetTime
         self.targetDateSelected = entity.target != nil
         
+        separateTargetDateToTimeAndDay(targetDate: entity.target)
+        
         setupChecklistLocal(entity.checklist)
+        setupNotificationsLocal(entity.notifications)
     }
     
     internal func updateDays() {
@@ -121,29 +155,98 @@ final class TaskManagementViewModel: ObservableObject {
         showingDatePicker = false
     }
     
+    internal func saveTaskDateParams() {
+        targetDate = combinedDateTime
+    }
+    
+    internal func setupUserNotifications() {
+        notificationCenter.setupNotifications(for: notificationsLocal,
+                                              with: nameText)
+    }
+    
+    private func separateTargetDateToTimeAndDay(targetDate: Date?) {
+        guard let time = targetDate else { return }
+        let calendar = Calendar.current
+        let dayComponents = calendar.dateComponents([.year, .month, .day], from: time)
+        let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: time)
+        
+        selectedDay = calendar.date(from: DateComponents(
+            year: dayComponents.year,
+            month: dayComponents.month,
+            day: dayComponents.day
+        )) ?? .now
+        
+        guard hasTime else { return }
+        
+        selectedTime = calendar.date(from: DateComponents(
+            hour: timeComponents.hour,
+            minute: timeComponents.minute,
+            second: timeComponents.second
+        )) ?? .now
+        
+        selectedTimeType = .value(selectedTime)
+    }
+    
     internal func cancelDatePicker() {
         targetDateSelected = false
         showingDatePicker = false
     }
     
-    internal func toggleNotificationSelection(for type: TaskNotificationsType) {
+    internal func setupNotificationAvailability() {
+        availableNotifications = TaskNotification.availableNotifications(for: combinedDateTime)
+        deselectUnavailableNotifications()
+    }
+    
+    internal func deselectUnavailableNotifications() {
+        let allowedTypes = Set(availableNotifications)
+        notificationsLocal = notificationsLocal.filter { allowedTypes.contains($0.type) }
+    }
+    
+    internal func toggleNotificationSelection(for type: TaskNotification) {
         guard type != .none else {
-            selectedNotifications.removeAll()
+            notificationsLocal.removeAll()
             return
         }
+        let notification = NotificationItem(type: type,
+                                            target: notificationTargetCalculation(for: type))
         
-        if selectedNotifications.contains(type) {
-            selectedNotifications.remove(type)
+        if let item = notificationsLocal.first(where: { $0.type == notification.type }) {
+            notificationsLocal.remove(item)
         } else {
-            selectedNotifications.insert(type)
+            notificationsLocal.insert(notification)
         }
     }
     
-    internal func toggleRepeatingSelection(for type: TaskRepeatingType) {
+    private func notificationTargetCalculation(for type: TaskNotification) -> Date? {
+        switch type {
+        case .none:
+            return .distantPast
+        case .inTime:
+            return combinedDateTime
+        case .fiveMinutesBefore:
+            return Calendar.current.date(byAdding: .minute,
+                                         value: -5,
+                                         to: combinedDateTime)
+        case .thirtyMinutesBefore:
+            return Calendar.current.date(byAdding: .minute,
+                                         value: -30,
+                                         to: combinedDateTime)
+        case .oneHourBefore:
+            return Calendar.current.date(byAdding: .hour,
+                                         value: -1,
+                                         to: combinedDateTime)
+        case .oneDayBefore:
+            return Calendar.current.date(byAdding: .day,
+                                         value: -1,
+                                         to: combinedDateTime)
+        }
+    }
+    
+    internal func toggleRepeatingSelection(for type: TaskRepeating) {
         selectedRepeating = type
     }
     
-    internal func menuLabel(for type: TaskDateParamType) -> String {
+    internal func menuLabel(for type: TaskDateParam) -> String {
         switch type {
         case .time:
             selectedTimeDescription
@@ -156,12 +259,12 @@ final class TaskManagementViewModel: ObservableObject {
         }
     }
     
-    internal func showingMenuIcon(for type: TaskDateParamType) -> Bool {
+    internal func showingMenuIcon(for type: TaskDateParam) -> Bool {
         switch type {
         case .time:
             selectedTimeType == .none
         case .notifications:
-            selectedNotifications.isEmpty
+            notificationsLocal.isEmpty
         case .repeating:
             selectedRepeating == .none
         case .endRepeating:
@@ -169,12 +272,13 @@ final class TaskManagementViewModel: ObservableObject {
         }
     }
     
-    internal func paramRemoveMethod(for type: TaskDateParamType) {
+    internal func paramRemoveMethod(for type: TaskDateParam) {
         switch type {
         case .time:
             selectedTimeType = .none
+            setupNotificationAvailability()
         case .notifications:
-            selectedNotifications.removeAll()
+            notificationsLocal.removeAll()
         case .repeating:
             selectedRepeating = .none
         case .endRepeating:
@@ -183,9 +287,9 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     internal func allParamRemoveMethod() {
-        selectedDate = .now
+        selectedDay = .now.startOfDay
         selectedTimeType = .none
-        selectedNotifications.removeAll()
+        notificationsLocal.removeAll()
         selectedRepeating = .none
         selectedRepeating = .none
     }
@@ -236,37 +340,24 @@ final class TaskManagementViewModel: ObservableObject {
 }
 
 extension TaskManagementViewModel {
-    internal func notificationSetup(for task: TaskEntity) {
-        guard let id = task.id,
-              let name = task.name,
-              let targetDate = task.target,
-              notificationsStatus == .allowed
-        else {
-            return
+    
+    internal func setupNotificationsLocal(_ notifications: NSSet?) {
+        guard let notificationsArray = notifications?.compactMap({ $0 as? NotificationEntity }) else { return }
+        
+        for entity in notificationsArray {
+            guard let type = entity.type,
+                  let target = entity.target
+            else { continue }
+            
+            let itemType = TaskNotification(rawValue: type) ?? .inTime
+            let item = NotificationItem(type: itemType,
+                                        target: target)
+            notificationsLocal.insert(item)
         }
-        notificationRemove(for: id)
         
-        let content = UNMutableNotificationContent()
-        content.title = Texts.Notifications.now
-        content.body = name
-        content.sound = .default
-        
-        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: targetDate)
-
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        
-        let request = UNNotificationRequest(identifier: id.uuidString, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("Notification setup error: \(error.localizedDescription)")
-            } else {
-                print("Notification successfully setup for \(name) at \(targetDate)")
-            }
+        if checklistLocal.isEmpty {
+            let emptyItem = ChecklistItem(name: String())
+            checklistLocal.append(emptyItem)
         }
-    }
-
-    internal func notificationRemove(for id: UUID?) {
-        guard let id = id else { return }
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id.uuidString])
     }
 }

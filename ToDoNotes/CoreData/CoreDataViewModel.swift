@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import CoreData
+import UserNotifications
 
 final class CoreDataViewModel: ObservableObject {
     
@@ -46,7 +47,8 @@ final class CoreDataViewModel: ObservableObject {
                           description: String,
                           completeCheck: Bool,
                           target: Date?,
-                          notify: Bool) {
+                          hasTime: Bool,
+                          notifications: Set<NotificationItem>) {
         let newTask = TaskEntity(context: container.viewContext)
         
         newTask.id = UUID()
@@ -55,7 +57,19 @@ final class CoreDataViewModel: ObservableObject {
         newTask.completed = completeCheck ? 1 : 0
         newTask.created = .now
         newTask.target = target
-        newTask.notify = notify
+        newTask.hasTargetTime = hasTime
+        
+        var notificationEntities = [NotificationEntity]()
+        for item in notifications {
+            let entityItem = NotificationEntity(context: container.viewContext)
+            entityItem.id = item.id
+            entityItem.type = item.type.rawValue
+            entityItem.target = item.target
+            notificationEntities.append(entityItem)
+        }
+        let notificationsSet = NSSet(array: notificationEntities)
+        newTask.notifications = notificationsSet
+        
         saveData()
     }
     
@@ -64,13 +78,25 @@ final class CoreDataViewModel: ObservableObject {
                              description: String,
                              completeCheck: Bool,
                              target: Date?,
-                             notify: Bool,
+                             hasTime: Bool,
+                             notifications: Set<NotificationItem> = [],
                              checklist: [ChecklistItem] = []) {
         entity.name = name
         entity.details = description
         entity.completed = completeCheck ? showCheckStatus(for: entity) : 0
         entity.target = target
-        entity.notify = target != nil ? notify : false
+        entity.hasTargetTime = hasTime
+        
+        var notificationEntities = [NotificationEntity]()
+        for item in notifications {
+            let entityItem = NotificationEntity(context: container.viewContext)
+            entityItem.id = item.id
+            entityItem.type = item.type.rawValue
+            entityItem.target = item.target
+            notificationEntities.append(entityItem)
+        }
+        let notificationsSet = NSSet(array: notificationEntities)
+        entity.notifications = notificationsSet
         
         var checklistEnities = [ChecklistEntity]()
         for item in checklist {
@@ -79,14 +105,13 @@ final class CoreDataViewModel: ObservableObject {
             entityItem.completed = item.completed
             checklistEnities.append(entityItem)
         }
-        
         let orderedChecklist = NSOrderedSet(array: checklistEnities)
         entity.checklist = orderedChecklist
         
         saveData()
     }
     
-    internal func deleteTask(indexSet: IndexSet) {
+    private func deleteTask(indexSet: IndexSet) {
         guard let index = indexSet.first else { return }
         
         let entity = savedEnities[index]
@@ -139,7 +164,8 @@ final class CoreDataViewModel: ObservableObject {
     
     internal func deleteTasks(with ids: [NSManagedObjectID]) {
         ids.forEach { id in
-            if let object = try? container.viewContext.existingObject(with: id) {
+            if let object = try? container.viewContext.existingObject(with: id) as? TaskEntity {
+                UNUserNotificationCenter.current().removeNotifications(for: object.notifications)
                 container.viewContext.delete(object)
             }
         }

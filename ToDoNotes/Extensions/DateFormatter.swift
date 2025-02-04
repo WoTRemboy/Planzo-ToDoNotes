@@ -41,6 +41,17 @@ extension Date {
         return Date.longMonthYearFormatter.string(from: self).lowercased()
     }
     
+    private static let longMonthYearWithoutCommaFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "LLLL yyyy"
+        formatter.locale = Locale(identifier: Texts.DateParameters.locale)
+        return formatter
+    }()
+    
+    internal var longMonthYearWithoutComma: String {
+        return Date.longMonthYearWithoutCommaFormatter.string(from: self).capitalized
+    }
+    
     private static let longDayMonthWeekdayFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "d MMMM, E"
