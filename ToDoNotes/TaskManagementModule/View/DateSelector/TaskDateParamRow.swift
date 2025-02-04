@@ -11,9 +11,9 @@ struct TaskDateParamRow: View {
     
     @ObservedObject private var viewModel: TaskManagementViewModel
     
-    private let type: TaskDateParamType
+    private let type: TaskDateParam
     
-    init(type: TaskDateParamType, viewModel: TaskManagementViewModel) {
+    init(type: TaskDateParam, viewModel: TaskManagementViewModel) {
         self.type = type
         self.viewModel = viewModel
     }
@@ -102,7 +102,17 @@ struct TaskDateParamRow: View {
         menuLabel
             .overlay {
                 Menu {
-                    ForEach(TaskNotificationsType.allCases.reversed(), id: \.self) { notificationType in
+                    // "None" remainder button
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            viewModel.toggleNotificationSelection(
+                                for: TaskNotification.none)
+                        }
+                    } label: {
+                        remainderMenuContent(type: TaskNotification.none)
+                    }
+                    
+                    ForEach(TaskNotification.allCases, id: \.self) { notificationType in
                         Button {
                             withAnimation(.easeInOut(duration: 0.3)) {
                                 viewModel.toggleNotificationSelection(
@@ -112,32 +122,23 @@ struct TaskDateParamRow: View {
                             remainderMenuContent(type: notificationType)
                         }
                     }
-                    // "None" remainder button
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            viewModel.toggleNotificationSelection(
-                                for: TaskNotificationsType.none)
-                        }
-                    } label: {
-                        remainderMenuContent(type: TaskNotificationsType.none)
-                    }
                 } label: {
                     Rectangle()
                         .frame(maxWidth: .infinity)
                 }
                 .blendMode(.destinationOver)
                 .padding(.trailing,
-                         viewModel.selectedNotifications.isEmpty ? 10 : 35)
+                         viewModel.notificationsLocal.isEmpty ? 10 : 35)
             }
     }
     
-    private func remainderMenuContent(type: TaskNotificationsType) -> some View {
+    private func remainderMenuContent(type: TaskNotification) -> some View {
         return HStack {
-            Text(type.name)
+            Text(type.selectorName)
             Spacer()
             
-            if viewModel.selectedNotifications.contains(type) ||
-                (viewModel.selectedNotifications.isEmpty && type == .none) {
+            if viewModel.notificationsLocal.contains(where: { $0.type == type }) ||
+                (viewModel.notificationsLocal.isEmpty && type == .none) {
                 Image.TaskManagement.DateSelector.checked
             } else {
                 Image.TaskManagement.DateSelector.unchecked
@@ -149,7 +150,17 @@ struct TaskDateParamRow: View {
         menuLabel
             .overlay {
                 Menu {
-                    ForEach(TaskRepeatingType.allCases.reversed(), id: \.self) { repeatingType in
+                    // "None" repeating button
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            viewModel.toggleRepeatingSelection(
+                                for: TaskRepeating.none)
+                        }
+                    } label: {
+                        repeatingMenuContent(type: TaskRepeating.none)
+                    }
+                    
+                    ForEach(TaskRepeating.allCases, id: \.self) { repeatingType in
                         Button {
                             withAnimation(.easeInOut(duration: 0.2)) {
                                 viewModel.toggleRepeatingSelection(
@@ -158,15 +169,6 @@ struct TaskDateParamRow: View {
                         } label: {
                             repeatingMenuContent(type: repeatingType)
                         }
-                    }
-                    // "None" repeating button
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            viewModel.toggleRepeatingSelection(
-                                for: TaskRepeatingType.none)
-                        }
-                    } label: {
-                        repeatingMenuContent(type: TaskRepeatingType.none)
                     }
                 } label: {
                     Rectangle()
@@ -178,7 +180,7 @@ struct TaskDateParamRow: View {
             }
     }
     
-    private func repeatingMenuContent(type: TaskRepeatingType) -> some View {
+    private func repeatingMenuContent(type: TaskRepeating) -> some View {
         return HStack {
             Text(type.name)
             Spacer()
@@ -197,7 +199,7 @@ struct TaskDateParamRow: View {
                         // End repeating selector logic
                     } label: {
                         endRepeatingMenuContent(
-                            type: TaskEndRepeatingType.none)
+                            type: TaskEndRepeating.none)
                     }
                 } label: {
                     Rectangle()
@@ -208,7 +210,7 @@ struct TaskDateParamRow: View {
             }
     }
     
-    private func endRepeatingMenuContent(type: TaskEndRepeatingType) -> some View {
+    private func endRepeatingMenuContent(type: TaskEndRepeating) -> some View {
         return HStack {
             Text(type.name)
             Spacer()

@@ -117,11 +117,20 @@ final class Texts {
             static let noneTime = "Нет"
             
             static let noneReminder = "Нет"
+            static let someRemainders = "Несколько"
+            static let errorRemainder = "Ошибка"
+            
             static let inTime = "Во время"
             static let fiveMinutesBefore = "За 5 минут"
             static let thirtyMinutesBefore = "За 30 минут"
             static let oneHourBefore = "За 1 час"
             static let oneDayBefore = "За 1 день"
+            
+            static let inTimeNotification = "Сейчас"
+            static let fiveMinutesBeforeNotification = "Через 5 минут"
+            static let thirtyMinutesBeforeNotification = "Через 30 минут"
+            static let oneHourBeforeNotification = "Через 1 час"
+            static let oneDayBeforeNotification = "Через 1 день"
             
             static let noneRepeating = "Нет"
             static let dailyRepeating = "Каждый день"

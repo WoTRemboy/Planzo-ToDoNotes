@@ -57,7 +57,6 @@ final class CoreDataViewModel: ObservableObject {
         newTask.created = .now
         newTask.target = target
         newTask.hasTargetTime = hasTime
-        newTask.notify = notify
         saveData()
     }
     
@@ -67,14 +66,23 @@ final class CoreDataViewModel: ObservableObject {
                              completeCheck: Bool,
                              target: Date?,
                              hasTime: Bool,
-                             notify: Bool,
+                             notifications: Set<NotificationItem> = [],
                              checklist: [ChecklistItem] = []) {
         entity.name = name
         entity.details = description
         entity.completed = completeCheck ? showCheckStatus(for: entity) : 0
         entity.target = target
         entity.hasTargetTime = hasTime
-        entity.notify = target != nil ? notify : false
+        
+        var notificationEntities = [NotificationEntity]()
+        for item in notifications {
+            let entityItem = NotificationEntity(context: container.viewContext)
+            entityItem.type = item.type.rawValue
+            entityItem.target = item.target
+            notificationEntities.append(entityItem)
+        }
+        let notificationsSet = NSSet(array: notificationEntities)
+        entity.notifications = notificationsSet
         
         var checklistEnities = [ChecklistEntity]()
         for item in checklist {
@@ -83,7 +91,6 @@ final class CoreDataViewModel: ObservableObject {
             entityItem.completed = item.completed
             checklistEnities.append(entityItem)
         }
-        
         let orderedChecklist = NSOrderedSet(array: checklistEnities)
         entity.checklist = orderedChecklist
         

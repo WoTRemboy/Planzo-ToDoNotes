@@ -64,7 +64,8 @@ struct TaskListRow: View {
                 if coreDataManager.haveTextContent(for: entity) {
                     textContentImage
                 }
-                if entity.notify {
+                if let notifications = entity.notifications,
+                   notifications.count > 0 {
                     remainderImage
                 }
             }

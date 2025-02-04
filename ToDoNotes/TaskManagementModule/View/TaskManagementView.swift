@@ -247,14 +247,14 @@ extension TaskManagementView {
                 completeCheck: viewModel.check,
                 target: viewModel.saveTargetDate,
                 hasTime: viewModel.hasTime,
-                notify: viewModel.notificationsCheck,
+                notifications: viewModel.notificationsLocal,
                 checklist: viewModel.checklistLocal)
             
-            if entity.target != nil && entity.notify {
-                viewModel.notificationSetup(for: entity)
-            } else {
-                viewModel.notificationRemove(for: entity.id)
-            }
+//            if entity.target != nil && entity.notify {
+            viewModel.setupUserNotifications()
+//            } else {
+//                viewModel.notificationRemove(for: entity.id)
+//            }
         }
     }
     

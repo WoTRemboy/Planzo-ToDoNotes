@@ -5,6 +5,11 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TaskEntity" inverseName="checklist" inverseEntity="TaskEntity"/>
     </entity>
+    <entity name="NotificationEntity" representedClassName="NotificationEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="target" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
+        <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TaskEntity" inverseName="notifications" inverseEntity="TaskEntity"/>
+    </entity>
     <entity name="TaskEntity" representedClassName="TaskEntity" syncable="YES" codeGenerationType="class">
         <attribute name="completed" optional="YES" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -12,8 +17,8 @@
         <attribute name="hasTargetTime" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="notify" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="target" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="checklist" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="ChecklistEntity" inverseName="task" inverseEntity="ChecklistEntity"/>
+        <relationship name="notifications" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NotificationEntity" inverseName="task" inverseEntity="NotificationEntity"/>
     </entity>
 </model>
