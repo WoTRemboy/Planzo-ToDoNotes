@@ -39,7 +39,7 @@ struct TaskCustomCalendar: View {
             }
             
             Spacer()
-            Text("Январь 2025")
+            Text(viewModel.todayDate.longMonthYearWithoutComma)
                 .font(.system(size: 17, weight: .medium))
             
             Spacer()
