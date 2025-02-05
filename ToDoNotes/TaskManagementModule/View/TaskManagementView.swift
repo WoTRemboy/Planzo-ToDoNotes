@@ -187,7 +187,6 @@ struct TaskManagementView: View {
             guard !viewModel.nameText.isEmpty else { return }
             withAnimation {
                 if entity != nil {
-                    updateTask()
                     hideKeyboard()
                 } else {
                     addTask()
@@ -240,6 +239,8 @@ extension TaskManagementView {
     
     private func updateTask() {
         if let entity {
+            viewModel.setupUserNotifications(remove: entity.notifications)
+            
             coreDataManager.updateTask(
                 entity: entity,
                 name: viewModel.nameText,
@@ -249,12 +250,6 @@ extension TaskManagementView {
                 hasTime: viewModel.hasTime,
                 notifications: viewModel.notificationsLocal,
                 checklist: viewModel.checklistLocal)
-            
-//            if entity.target != nil && entity.notify {
-            viewModel.setupUserNotifications()
-//            } else {
-//                viewModel.notificationRemove(for: entity.id)
-//            }
         }
     }
     
@@ -267,6 +262,6 @@ extension TaskManagementView {
             hasTime: viewModel.hasTime,
             notifications: viewModel.notificationsLocal)
         
-        viewModel.setupUserNotifications()
+        viewModel.setupUserNotifications(remove: nil)
     }
 }

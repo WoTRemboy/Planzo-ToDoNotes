@@ -41,6 +41,20 @@ struct TaskCalendarSelectorView: View {
                     toolBarButtonDone
                 }
             }
+            .onAppear {
+                viewModel.readNotificationStatus()
+            }
+            .alert(isPresented: $viewModel.showingNotificationAlert) {
+                Alert(
+                    title: Text(Texts.Settings.Notification.alertTitle),
+                    message: Text(Texts.Settings.Notification.alertContent),
+                    primaryButton: .default(Text(Texts.Settings.title)) {
+                        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                        UIApplication.shared.open(url)
+                    },
+                    secondaryButton: .cancel(Text(Texts.Settings.cancel))
+                )
+            }
         }
     }
     

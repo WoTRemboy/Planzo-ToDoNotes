@@ -9,10 +9,9 @@ import SwiftUI
 
 final class TaskManagementViewModel: ObservableObject {
     
-    internal var entity: TaskEntity?
     internal var checklistItems: [ChecklistEntity] = []
     
-    @AppStorage(Texts.UserDefaults.notifications) private var notificationsStatus: NotificationStatus = .prohibited
+    private(set) var notificationsStatus: NotificationStatus = .prohibited
     
     @Published internal var nameText: String
     @Published internal var descriptionText: String
@@ -39,6 +38,7 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var notificationsCheck: Bool = false
     @Published internal var targetDateSelected: Bool = false
     @Published internal var showingDatePicker: Bool = false
+    @Published internal var showingNotificationAlert: Bool = false
     
     internal let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
     private(set) var todayDate: Date = Date.now.startOfDay
@@ -60,6 +60,16 @@ final class TaskManagementViewModel: ObservableObject {
             Texts.TaskManagement.DatePicker.noneTime
         case .value(_):
             selectedTime.formatted(date: .omitted, time: .shortened)
+        }
+    }
+    
+    internal func readNotificationStatus() {
+        let defaults = UserDefaults.standard
+        let rawValue = defaults.string(forKey: Texts.UserDefaults.notifications) ?? String()
+        notificationsStatus = NotificationStatus(rawValue: rawValue) ?? .prohibited
+        
+        if notificationsStatus != .allowed {
+            notificationsLocal.removeAll()
         }
     }
     
@@ -159,8 +169,9 @@ final class TaskManagementViewModel: ObservableObject {
         targetDate = combinedDateTime
     }
     
-    internal func setupUserNotifications() {
+    internal func setupUserNotifications(remove notifications: NSSet?) {
         notificationCenter.setupNotifications(for: notificationsLocal,
+                                              remove: notifications,
                                               with: nameText)
     }
     
@@ -193,7 +204,9 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     internal func setupNotificationAvailability() {
-        availableNotifications = TaskNotification.availableNotifications(for: combinedDateTime)
+        availableNotifications = TaskNotification.availableNotifications(
+            for: combinedDateTime,
+            hasTime: hasTime)
         deselectUnavailableNotifications()
     }
     
@@ -203,6 +216,11 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     internal func toggleNotificationSelection(for type: TaskNotification) {
+        guard notificationsStatus == .allowed else {
+            notificationsLocal.removeAll()
+            showingNotificationAlert.toggle()
+            return
+        }
         guard type != .none else {
             notificationsLocal.removeAll()
             return
@@ -353,11 +371,6 @@ extension TaskManagementViewModel {
             let item = NotificationItem(type: itemType,
                                         target: target)
             notificationsLocal.insert(item)
-        }
-        
-        if checklistLocal.isEmpty {
-            let emptyItem = ChecklistItem(name: String())
-            checklistLocal.append(emptyItem)
         }
     }
 }

@@ -9,21 +9,16 @@ import UserNotifications
 
 extension UNUserNotificationCenter {
     internal func setupNotifications(for notifications: Set<NotificationItem>,
+                                     remove entityNotifications: NSSet?,
                                      with name: String?) {
-        guard !notifications.isEmpty,
-              let name = name
-        else {
-            print("Notification setup error: params are not valid")
-            return
-        }
-        removeNotifications(for: notifications)
+        removeNotifications(for: entityNotifications)
         
         for notification in notifications {
             guard let targetDate = notification.target else { continue }
             
             let content = UNMutableNotificationContent()
             content.title = notification.type.notificationName
-            content.body = name
+            content.body = name ?? String()
             content.sound = .default
             
             let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: targetDate)
@@ -35,7 +30,7 @@ extension UNUserNotificationCenter {
                 if let error = error {
                     print("Notification setup error: \(error.localizedDescription)")
                 } else {
-                    print("Notification successfully setup for \(name) at \(targetDate) with type \(notification.type.selectorName)")
+                    print("Notification successfully setup for \(String(describing: name)) at \(targetDate) with type \(notification.type.selectorName)")
                 }
             }
         }
