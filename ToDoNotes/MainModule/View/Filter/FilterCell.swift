@@ -8,20 +8,25 @@
 import SwiftUI
 
 struct FilterCell: View {
-    
+        
     private let selected: Bool
     private let name: String
+    private let namespace: Namespace.ID
     
-    init(name: String, selected: Bool) {
+    init(name: String, selected: Bool, namespace: Namespace.ID) {
         self.name = name
         self.selected = selected
+        self.namespace = namespace
     }
     
     internal var body: some View {
-        VStack(spacing: 6) {
-            nameLabel
-            underline
-        }
+        nameLabel
+            .background(alignment: .bottom) {
+                if selected {
+                    underline
+                        .offset(y: 5)
+                }
+            }
     }
     
     private var nameLabel: some View {
@@ -33,12 +38,13 @@ struct FilterCell: View {
     
     private var underline: some View {
         Rectangle()
-            .foregroundStyle(selected ? Color.LabelColors.labelPrimary : Color.clear)
+            .foregroundStyle(Color.LabelColors.labelPrimary)
             .frame(maxWidth: .infinity)
             .frame(height: 2)
+            .matchedGeometryEffect(id: Texts.NamespaceID.selectedTab, in: namespace)
     }
 }
 
 #Preview {
-    FilterCell(name: "Active", selected: true)
+    FilterCell(name: "Active", selected: true, namespace: Namespace().wrappedValue)
 }

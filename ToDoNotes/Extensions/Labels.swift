@@ -177,4 +177,8 @@ final class Texts {
         static let notifications = "notificationsEnabled"
         static let theme = "userTheme"
     }
+    
+    enum NamespaceID {
+        static let selectedTab = "SelectedTab"
+    }
 }
