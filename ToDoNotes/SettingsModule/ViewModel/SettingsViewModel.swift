@@ -17,6 +17,10 @@ final class SettingsViewModel: ObservableObject {
     @Published internal var showingLanguageAlert: Bool = false
     @Published internal var showingAppearance: Bool = false
     
+    @Published internal var showingResetDialog: Bool = false
+    @Published internal var showingResetResult: Bool = false
+    @Published internal var resetMessage: ResetMessage = .failure
+    
     @Published internal var notificationsEnabled: Bool = false
     @Published internal var showingNotificationAlert: Bool = false
         
@@ -42,6 +46,10 @@ final class SettingsViewModel: ObservableObject {
     
     internal func toggleShowingAppearance() {
         showingAppearance.toggle()
+    }
+    
+    internal func toggleShowingResetDialog() {
+        showingResetDialog.toggle()
     }
     
     internal func changeTheme(theme: Theme) {

@@ -33,6 +33,7 @@ extension Image {
         static let appearance = Image("SettingsAppearance")
         static let language = Image("SettingsLanguage")
         static let notifications = Image("SettingsNotification")
+        static let reset = Image("SettingsReset")
         static let email = Image("SettingsEmail")
         
         static let chevron = Image(systemName: "chevron.right")

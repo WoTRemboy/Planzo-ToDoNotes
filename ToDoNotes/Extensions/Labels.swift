@@ -41,7 +41,7 @@ final class Texts {
             static let all = "Все"
             static let noDate = "Без дат"
             static let purchases = "Списки"
-            static let passwords = "Пароли"
+            static let passwords = "Скрытые"
         }
     }
     
@@ -61,6 +61,7 @@ final class Texts {
     enum Settings {
         static let title = "Настройки"
         static let cancel = "Отмена"
+        static let ok = "Хорошо"
         
         enum About {
             static let title = "О приложении"
@@ -88,6 +89,21 @@ final class Texts {
             static let title = "Уведомления"
             static let alertTitle = "Требуется доступ"
             static let alertContent = "Пожалуйста, включите уведомления в настройках."
+        }
+        
+        enum Reset {
+            static let sectionTitle = "Контент"
+            static let title = "Сброс"
+            static let warning = "Вы действительно хотите удалить все существующие задачи? Восстановить их будет невозможно."
+            static let confirm = "Удалить данные"
+            
+            static let success = "Выполнено"
+            static let failure = "Ошибка"
+            static let empty = "Отменено"
+            
+            static let successMessage = "Данные успешно удалены"
+            static let failureMessage = "Не удалось удалить данные"
+            static let emptyMessage = "Данные уже отсутсвуют"
         }
         
         enum Email {

@@ -171,6 +171,32 @@ final class CoreDataViewModel: ObservableObject {
         }
         saveData()
     }
+    
+    internal func deleteAllTasksAndClearNotifications(completion: ((Bool) -> Void)? = nil) {
+        let notificationCenter = UNUserNotificationCenter.current()
+        
+        notificationCenter.removeAllPendingNotificationRequests()
+        notificationCenter.removeAllDeliveredNotifications()
+        
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Texts.CoreData.entity)
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        batchDeleteRequest.resultType = .resultTypeObjectIDs
+        
+        do {
+            if let result = try container.viewContext.execute(batchDeleteRequest) as? NSBatchDeleteResult,
+               let objectIDs = result.result as? [NSManagedObjectID] {
+                let changes = [NSDeletedObjectsKey: objectIDs]
+                NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [container.viewContext])
+            }
+            container.viewContext.reset()
+            
+            fetchTasks()
+            completion?(true)
+        } catch {
+            print("Batch delete error: \(error.localizedDescription)")
+            completion?(false)
+        }
+    }
 }
 
 

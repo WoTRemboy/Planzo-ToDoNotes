@@ -36,8 +36,9 @@ struct SettingsView: View {
     private var paramsForm: some View {
         Form {
             aboutAppSection
-            application
-            contact
+            applicationSection
+            contentSection
+            contactSection
         }
         .padding(.horizontal, -10)
         .background(Color.BackColors.backDefault)
@@ -56,7 +57,7 @@ struct SettingsView: View {
         .listRowBackground(Color.SupportColors.backListRow)
     }
     
-    private var application: some View {
+    private var applicationSection: some View {
         Section {
             // Change language button
             languageButton
@@ -134,7 +135,59 @@ struct SettingsView: View {
         .listRowBackground(Color.SupportColors.backListRow)
     }
     
-    private var contact: some View {
+    private var contentSection: some View {
+        Section {
+            // Reset data button
+            resetButton
+        } header: {
+            Text(Texts.Settings.Reset.sectionTitle)
+                .font(.system(size: 13, weight: .medium))
+                .textCase(.none)
+        }
+        .alert(isPresented: $viewModel.showingResetResult) {
+            Alert(
+                title: Text(viewModel.resetMessage.title),
+                message: Text(viewModel.resetMessage.message),
+                dismissButton: .cancel(Text(Texts.Settings.ok))
+            )
+        }
+    }
+    
+    private var resetButton: some View {
+        Button {
+            if !coreDataManager.savedEnities.isEmpty {
+                viewModel.toggleShowingResetDialog()
+            } else {
+                viewModel.resetMessage = .empty
+                viewModel.showingResetResult.toggle()
+            }
+        } label: {
+            SettingFormRow(title: Texts.Settings.Reset.title,
+                           image: Image.Settings.reset,
+                           chevron: true)
+        }
+        .listRowBackground(Color.SupportColors.backListRow)
+        .confirmationDialog(Texts.Settings.Reset.warning,
+                            isPresented: $viewModel.showingResetDialog,
+                            titleVisibility: .visible) {
+            Button(role: .destructive) {
+                withAnimation {
+                    coreDataManager.deleteAllTasksAndClearNotifications { success in
+                        if success {
+                            viewModel.resetMessage = .success
+                        } else {
+                            viewModel.resetMessage = .failure
+                        }
+                        viewModel.showingResetResult.toggle()
+                    }
+                }
+            } label: {
+                Text(Texts.Settings.Reset.confirm)
+            }
+        }
+    }
+    
+    private var contactSection: some View {
         Section {
             Link(destination: URL(string: "mailto:\(Texts.Settings.Email.emailContent)")!, label: {
                 SettingFormRow(

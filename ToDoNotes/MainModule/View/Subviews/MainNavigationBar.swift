@@ -21,7 +21,7 @@ struct MainCustomNavBar: View {
                 buttons
             }
             FilterScrollView()
-                .padding(.top, 16)
+                .padding(.top, 10)
             FoldersScrollView()
                 .padding(.top, 12)
         }
