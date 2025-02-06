@@ -14,6 +14,9 @@ struct SplashScreenView: View {
     
     // Show splash screen toggle
     @State private var isActive = false
+    @State private var id = 0
+    
+    private let texts = [String(), Texts.SplashScreen.title]
     
     // MARK: - Body view
     
@@ -26,8 +29,8 @@ struct SplashScreenView: View {
             // Shows splash screnn
             content
                 .onAppear {
-                    // Then hides view after 0.5s
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    // Then hides view after 1s
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         withAnimation {
                             self.isActive = true
                         }
@@ -51,8 +54,20 @@ struct SplashScreenView: View {
                     .scaledToFit()
                     .frame(height: 300)
                 
-                Text(Texts.SplashScreen.title)
-                    .font(.title)
+                Text(texts[id])
+                    .foregroundStyle(Color.LabelColors.labelSecondary)
+                    .font(.system(size: 55, weight: .medium))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .padding(.horizontal, 30)
+            }
+            .contentTransition(.numericText())
+            .onAppear {
+                Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { timer in
+                    withAnimation {
+                        id += 1
+                    }
+                }
             }
         }
     }

@@ -9,7 +9,7 @@ import Foundation
 
 final class Texts {
     enum SplashScreen {
-        static let title = "Splash Screen"
+        static let title = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "ToDo"
     }
     
     enum OnboardingPage {
