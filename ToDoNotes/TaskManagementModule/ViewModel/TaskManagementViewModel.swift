@@ -13,6 +13,8 @@ final class TaskManagementViewModel: ObservableObject {
     
     private(set) var notificationsStatus: NotificationStatus = .prohibited
     
+    @AppStorage(Texts.UserDefaults.addTaskButtonGlow) private var addTaskButtonGlow: Bool = false
+    
     @Published internal var nameText: String
     @Published internal var descriptionText: String
     @Published internal var check: Bool
@@ -61,6 +63,11 @@ final class TaskManagementViewModel: ObservableObject {
         case .value(_):
             selectedTime.formatted(date: .omitted, time: .shortened)
         }
+    }
+    
+    internal func disableButtonGlow() {
+        guard addTaskButtonGlow != false else { return }
+        addTaskButtonGlow.toggle()
     }
     
     internal func readNotificationStatus() {

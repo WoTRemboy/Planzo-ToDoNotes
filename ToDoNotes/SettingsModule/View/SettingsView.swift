@@ -64,7 +64,7 @@ struct SettingsView: View {
             // Change theme button
             appearanceButton
             
-//            notificationToggle
+            notificationToggle
         } header: {
              Text(Texts.Settings.Language.sectionTitle)
                 .font(.system(size: 13, weight: .medium))

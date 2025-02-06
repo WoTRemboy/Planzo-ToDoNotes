@@ -240,6 +240,7 @@ extension TaskManagementView {
     private func updateTask() {
         if let entity {
             viewModel.setupUserNotifications(remove: entity.notifications)
+            viewModel.disableButtonGlow()
             
             coreDataManager.updateTask(
                 entity: entity,
@@ -263,5 +264,6 @@ extension TaskManagementView {
             notifications: viewModel.notificationsLocal)
         
         viewModel.setupUserNotifications(remove: nil)
+        viewModel.disableButtonGlow()
     }
 }

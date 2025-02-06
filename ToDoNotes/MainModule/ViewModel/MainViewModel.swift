@@ -9,6 +9,8 @@ import SwiftUI
 
 final class MainViewModel: ObservableObject {
     
+    @AppStorage(Texts.UserDefaults.addTaskButtonGlow) var addTaskButtonGlow: Bool = false
+    
     @Published private(set) var selectedFilter: Filter = .active
     @Published internal var selectedFolder: Folder = .all
     

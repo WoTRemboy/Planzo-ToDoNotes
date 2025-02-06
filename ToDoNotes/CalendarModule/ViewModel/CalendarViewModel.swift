@@ -9,6 +9,8 @@ import SwiftUI
 
 final class CalendarViewModel: ObservableObject {
     
+    @AppStorage(Texts.UserDefaults.addTaskButtonGlow) var addTaskButtonGlow: Bool = false
+    
     @Published internal var showingTaskCreateView: Bool = false
     @Published internal var selectedTask: TaskEntity? = nil
     @Published internal var selectedDate: Date = .now

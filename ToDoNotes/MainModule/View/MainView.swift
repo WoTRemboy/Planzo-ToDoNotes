@@ -101,8 +101,10 @@ struct MainView: View {
                         .frame(width: 58, height: 58)
                 }
                 .padding()
+                .glow(available: viewModel.addTaskButtonGlow)
             }
         }
+        .ignoresSafeArea(.keyboard)
     }
 }
 

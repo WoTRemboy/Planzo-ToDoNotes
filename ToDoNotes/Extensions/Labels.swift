@@ -173,6 +173,7 @@ final class Texts {
     
     enum UserDefaults {
         static let skipOnboarding = "skipOnboarding"
+        static let addTaskButtonGlow = "addTaskButtonGlow"
         static let notifications = "notificationsEnabled"
         static let theme = "userTheme"
     }
