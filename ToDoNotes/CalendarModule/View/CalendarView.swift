@@ -24,7 +24,8 @@ struct CalendarView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
-                taskManagementHeight: $viewModel.taskManagementHeight) {
+                taskManagementHeight: $viewModel.taskManagementHeight,
+                selectedDate: viewModel.selectedDate) {
                     viewModel.toggleShowingTaskCreateView()
                 }
                 .presentationDetents([.height(80 + viewModel.taskManagementHeight)])

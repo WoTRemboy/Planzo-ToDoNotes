@@ -22,6 +22,7 @@ struct TaskManagementView: View {
     private let onDismiss: () -> Void
     
     init(taskManagementHeight: Binding<CGFloat>,
+         selectedDate: Date? = nil,
          entity: TaskEntity? = nil,
          onDismiss: @escaping () -> Void) {
         self._taskManagementHeight = taskManagementHeight
@@ -30,6 +31,8 @@ struct TaskManagementView: View {
         
         if let entity {
             self._viewModel = StateObject(wrappedValue: TaskManagementViewModel(entity: entity))
+        } else if let selectedDate {
+            self._viewModel = StateObject(wrappedValue: TaskManagementViewModel(targetDate: selectedDate))
         }
     }
     
@@ -259,7 +262,7 @@ extension TaskManagementView {
             name: viewModel.nameText,
             description: viewModel.descriptionText,
             completeCheck: viewModel.check,
-            target: viewModel.targetDate,
+            target: viewModel.saveTargetDate,
             hasTime: viewModel.hasTime,
             notifications: viewModel.notificationsLocal)
         

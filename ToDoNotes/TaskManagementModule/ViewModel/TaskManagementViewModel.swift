@@ -25,7 +25,7 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var showingShareSheet: Bool = false
     @Published internal var shareSheetHeight: CGFloat = 0
     
-    @Published internal var targetDate: Date = .now
+    @Published internal var targetDate: Date
     @Published internal var hasDate: Bool = false
     @Published internal var hasTime: Bool = false
     @Published internal var selectedDay: Date = .now.startOfDay
@@ -38,7 +38,6 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var selectedRepeating: TaskRepeating = .none
     
     @Published internal var notificationsCheck: Bool = false
-    @Published internal var targetDateSelected: Bool = false
     @Published internal var showingDatePicker: Bool = false
     @Published internal var showingNotificationAlert: Bool = false
     
@@ -122,10 +121,18 @@ final class TaskManagementViewModel: ObservableObject {
     
     init(nameText: String = String(),
          descriptionText: String = String(),
-         check: Bool = false) {
+         check: Bool = false,
+         targetDate: Date = .now.startOfDay) {
         self.nameText = nameText
         self.descriptionText = descriptionText
         self.check = check
+        
+        self.targetDate = targetDate.startOfDay
+        self.hasDate = targetDate != todayDate
+        
+        if hasDate {
+            separateTargetDateToTimeAndDay(targetDate: targetDate)
+        }
         
         updateDays()
     }
@@ -138,7 +145,6 @@ final class TaskManagementViewModel: ObservableObject {
         self.targetDate = entity.target ?? .now.startOfDay
         self.hasDate = entity.target != nil
         self.hasTime = entity.hasTargetTime
-        self.targetDateSelected = entity.target != nil
         
         separateTargetDateToTimeAndDay(targetDate: entity.target)
         
@@ -167,7 +173,6 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     internal func doneDatePicker() {
-        targetDateSelected = true
         check = true
         showingDatePicker = false
     }
@@ -207,7 +212,6 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     internal func cancelDatePicker() {
-        targetDateSelected = false
         showingDatePicker = false
     }
     

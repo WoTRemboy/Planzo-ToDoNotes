@@ -51,7 +51,7 @@ struct CustomCalendarView: View {
                         namespace: calendarCellNamespace)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.15)) {
-                            viewModel.selectedDate = day
+                            viewModel.selectedDate = day.startOfDay
                         }
                     }
                 }

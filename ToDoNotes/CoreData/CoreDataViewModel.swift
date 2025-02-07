@@ -153,11 +153,14 @@ final class CoreDataViewModel: ObservableObject {
         
         segmentedAndSortedTasksArray = groupedTasks
             .map { (day, tasks) in
-                (day, tasks.sorted {
-                    ($0.target ?? Date.distantFuture < $1.target ?? Date.distantFuture)
-                })
+                let sortedTasks = tasks.sorted { t1, t2 in
+                    let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : Date.distantFuture
+                    let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : Date.distantFuture
+                    return d1 < d2
+                }
+                return (day, sortedTasks)
             }
-            .sorted { $0.0 > $1.0 }
+            .sorted { $0.0 ?? Date.distantFuture > $1.0 ?? Date.distantFuture }
     }
     
     internal func deleteTasks(with ids: [NSManagedObjectID]) {
@@ -218,8 +221,8 @@ extension CoreDataViewModel {
     private func sortSegmentedAndSortedTasksDict() {
         for (day, tasks) in segmentedAndSortedTasksDict {
             let sortedTasks = tasks.sorted { t1, t2 in
-                let d1 = t1.target ?? Date.distantFuture
-                let d2 = t2.target ?? Date.distantFuture
+                let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : Date.distantFuture
+                let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : Date.distantFuture
                 return d1 < d2
             }
             segmentedAndSortedTasksDict[day] = sortedTasks
