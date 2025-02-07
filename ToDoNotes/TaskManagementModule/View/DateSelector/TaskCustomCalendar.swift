@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TaskCustomCalendar: View {
     
+    @Namespace private var calendarCellNamespace
     @ObservedObject private var viewModel: TaskManagementViewModel
     
     init(viewModel: TaskManagementViewModel) {
@@ -75,7 +76,8 @@ struct TaskCustomCalendar: View {
                         day: day.formatted(.dateTime.day()),
                         selected: viewModel.selectedDay == day.startOfDay,
                         today: Date.now.startOfDay == day.startOfDay,
-                        task: false)
+                        task: false,
+                        namespace: calendarCellNamespace)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.15)) {
                             viewModel.selectedDay = day.startOfDay

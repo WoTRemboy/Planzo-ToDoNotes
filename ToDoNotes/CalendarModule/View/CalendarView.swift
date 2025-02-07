@@ -16,11 +16,16 @@ struct CalendarView: View {
         ZStack {
             content
             plusButton
+            
+            if viewModel.showingCalendarSelector {
+                calendarSelector
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
-                taskManagementHeight: $viewModel.taskManagementHeight) {
+                taskManagementHeight: $viewModel.taskManagementHeight,
+                selectedDate: viewModel.selectedDate) {
                     viewModel.toggleShowingTaskCreateView()
                 }
                 .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
@@ -38,7 +43,7 @@ struct CalendarView: View {
     private var content: some View {
         VStack(spacing: 0) {
             CalendarNavBar(date: Texts.CalendarPage.today,
-                           monthYear: viewModel.todayDate.longMonthYear)
+                           monthYear: viewModel.calendarDate.longMonthYear)
             CustomCalendarView()
                 .padding(.top)
             
@@ -120,8 +125,28 @@ struct CalendarView: View {
                         .frame(width: 58, height: 58)
                 }
                 .padding()
+                .glow(available: viewModel.addTaskButtonGlow)
             }
         }
+        .ignoresSafeArea(.keyboard)
+    }
+    
+    private var calendarSelector: some View {
+        ZStack {
+            Color.black.opacity(0.4)
+                .edgesIgnoringSafeArea(.all)
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        viewModel.toggleShowingCalendarSelector()
+                    }
+                }
+            VStack {
+                Spacer()
+                CalendarMonthSelector()
+                Spacer()
+            }
+        }
+        .zIndex(1)
     }
 }
 

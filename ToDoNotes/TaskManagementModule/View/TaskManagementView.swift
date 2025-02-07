@@ -22,6 +22,7 @@ struct TaskManagementView: View {
     private let onDismiss: () -> Void
     
     init(taskManagementHeight: Binding<CGFloat>,
+         selectedDate: Date? = nil,
          entity: TaskEntity? = nil,
          onDismiss: @escaping () -> Void) {
         self._taskManagementHeight = taskManagementHeight
@@ -30,6 +31,8 @@ struct TaskManagementView: View {
         
         if let entity {
             self._viewModel = StateObject(wrappedValue: TaskManagementViewModel(entity: entity))
+        } else if let selectedDate {
+            self._viewModel = StateObject(wrappedValue: TaskManagementViewModel(targetDate: selectedDate))
         }
     }
     
@@ -187,7 +190,6 @@ struct TaskManagementView: View {
             guard !viewModel.nameText.isEmpty else { return }
             withAnimation {
                 if entity != nil {
-                    updateTask()
                     hideKeyboard()
                 } else {
                     addTask()
@@ -240,6 +242,9 @@ extension TaskManagementView {
     
     private func updateTask() {
         if let entity {
+            viewModel.setupUserNotifications(remove: entity.notifications)
+            viewModel.disableButtonGlow()
+            
             coreDataManager.updateTask(
                 entity: entity,
                 name: viewModel.nameText,
@@ -249,12 +254,6 @@ extension TaskManagementView {
                 hasTime: viewModel.hasTime,
                 notifications: viewModel.notificationsLocal,
                 checklist: viewModel.checklistLocal)
-            
-//            if entity.target != nil && entity.notify {
-            viewModel.setupUserNotifications()
-//            } else {
-//                viewModel.notificationRemove(for: entity.id)
-//            }
         }
     }
     
@@ -263,10 +262,11 @@ extension TaskManagementView {
             name: viewModel.nameText,
             description: viewModel.descriptionText,
             completeCheck: viewModel.check,
-            target: viewModel.targetDate,
+            target: viewModel.saveTargetDate,
             hasTime: viewModel.hasTime,
             notifications: viewModel.notificationsLocal)
         
-        viewModel.setupUserNotifications()
+        viewModel.setupUserNotifications(remove: nil)
+        viewModel.disableButtonGlow()
     }
 }

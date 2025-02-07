@@ -41,7 +41,37 @@ struct TaskCalendarSelectorView: View {
                     toolBarButtonDone
                 }
             }
+            .onAppear {
+                viewModel.readNotificationStatus()
+            }
+            .alert(isPresented: $viewModel.showingNotificationAlert) {
+                if viewModel.notificationsStatus == .disabled {
+                    disabledAlert
+                } else {
+                    prohibitedAlert
+                }
+            }
         }
+    }
+    
+    private var prohibitedAlert: Alert {
+        Alert(
+            title: Text(Texts.Settings.Notification.prohibitedTitle),
+            message: Text(Texts.Settings.Notification.alertContent),
+            primaryButton: .default(Text(Texts.Settings.title)) {
+                guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                UIApplication.shared.open(url)
+            },
+            secondaryButton: .cancel(Text(Texts.Settings.cancel))
+        )
+    }
+    
+    private var disabledAlert: Alert {
+        Alert(
+            title: Text(Texts.Settings.Notification.disableTitle),
+            message: Text(Texts.Settings.Notification.alertContent),
+            dismissButton: .cancel(Text(Texts.Settings.ok))
+        )
     }
     
     private var toolBarButtonCancel: some View {

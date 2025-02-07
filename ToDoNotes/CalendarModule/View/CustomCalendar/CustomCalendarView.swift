@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CustomCalendarView: View {
     
+    @Namespace private var calendarCellNamespace
+    
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
     @EnvironmentObject private var viewModel: CalendarViewModel
     
@@ -19,9 +21,6 @@ struct CustomCalendarView: View {
         VStack {
             weekdayNames
             daysGrid
-        }
-        .onChange(of: viewModel.days) { _ in
-            viewModel.updateDays()
         }
         .padding(.horizontal)
     }
@@ -40,7 +39,7 @@ struct CustomCalendarView: View {
     private var daysGrid: some View {
         LazyVGrid(columns: columns) {
             ForEach(viewModel.days, id: \.self) { day in
-                if day.monthInt != viewModel.todayDate.monthInt {
+                if day.monthInt != viewModel.calendarDate.monthInt {
                     Text(String())
                 } else {
                     let hasTask = coreDataManager.daysWithTasks.contains(day.startOfDay)
@@ -48,10 +47,11 @@ struct CustomCalendarView: View {
                         day: day.formatted(.dateTime.day()),
                         selected: viewModel.selectedDate == day.startOfDay,
                         today: Date.now.startOfDay == day.startOfDay,
-                        task: hasTask)
+                        task: hasTask,
+                        namespace: calendarCellNamespace)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.15)) {
-                            viewModel.selectedDate = day
+                            viewModel.selectedDate = day.startOfDay
                         }
                     }
                 }

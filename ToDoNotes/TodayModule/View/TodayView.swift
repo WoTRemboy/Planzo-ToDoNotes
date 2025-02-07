@@ -11,7 +11,7 @@ struct TodayView: View {
     
     @EnvironmentObject private var viewModel: TodayViewModel
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
-        
+    
     internal var body: some View {
         ZStack {
             content
@@ -22,9 +22,9 @@ struct TodayView: View {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight) {
                     viewModel.toggleShowingTaskCreateView()
-            }
-            .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
-            .presentationDragIndicator(.visible)
+                }
+                .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
+                .presentationDragIndicator(.visible)
         }
         .fullScreenCover(item: $viewModel.selectedTask) { task in
             TaskManagementView(
@@ -101,8 +101,10 @@ struct TodayView: View {
                         .frame(width: 58, height: 58)
                 }
                 .padding()
+                .glow(available: viewModel.addTaskButtonGlow)
             }
         }
+        .ignoresSafeArea(.keyboard)
     }
 }
 

@@ -86,22 +86,23 @@ enum TaskNotification: String {
         }
     }
     
-    static internal func availableNotifications(for target: Date?) -> [Self] {
+    static internal func availableNotifications(for target: Date?,
+                                                hasTime: Bool) -> [Self] {
         guard let date = target else { return [.none] }
         
         let now = Date.now
         var availableTypes: [Self] = []
         
-        if now < date {
+        if now < date, hasTime {
             availableTypes.append(.inTime)
         }
-        if now < date.addingTimeInterval(-5 * 60) {
+        if now < date.addingTimeInterval(-5 * 60), hasTime {
             availableTypes.append(.fiveMinutesBefore)
         }
-        if now < date.addingTimeInterval(-30 * 60) {
+        if now < date.addingTimeInterval(-30 * 60), hasTime {
             availableTypes.append(.thirtyMinutesBefore)
         }
-        if now < date.addingTimeInterval(-60 * 60) {
+        if now < date.addingTimeInterval(-60 * 60), hasTime {
             availableTypes.append(.oneHourBefore)
         }
         if now < date.addingTimeInterval(-24 * 60 * 60) {

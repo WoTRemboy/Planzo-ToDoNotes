@@ -9,10 +9,11 @@ import SwiftUI
 
 final class TaskManagementViewModel: ObservableObject {
     
-    internal var entity: TaskEntity?
     internal var checklistItems: [ChecklistEntity] = []
     
-    @AppStorage(Texts.UserDefaults.notifications) private var notificationsStatus: NotificationStatus = .prohibited
+    private(set) var notificationsStatus: NotificationStatus = .prohibited
+    
+    @AppStorage(Texts.UserDefaults.addTaskButtonGlow) private var addTaskButtonGlow: Bool = false
     
     @Published internal var nameText: String
     @Published internal var descriptionText: String
@@ -24,7 +25,7 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var showingShareSheet: Bool = false
     @Published internal var shareSheetHeight: CGFloat = 0
     
-    @Published internal var targetDate: Date = .now
+    @Published internal var targetDate: Date
     @Published internal var hasDate: Bool = false
     @Published internal var hasTime: Bool = false
     @Published internal var selectedDay: Date = .now.startOfDay
@@ -37,8 +38,8 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var selectedRepeating: TaskRepeating = .none
     
     @Published internal var notificationsCheck: Bool = false
-    @Published internal var targetDateSelected: Bool = false
     @Published internal var showingDatePicker: Bool = false
+    @Published internal var showingNotificationAlert: Bool = false
     
     internal let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
     private(set) var todayDate: Date = Date.now.startOfDay
@@ -60,6 +61,21 @@ final class TaskManagementViewModel: ObservableObject {
             Texts.TaskManagement.DatePicker.noneTime
         case .value(_):
             selectedTime.formatted(date: .omitted, time: .shortened)
+        }
+    }
+    
+    internal func disableButtonGlow() {
+        guard addTaskButtonGlow != false else { return }
+        addTaskButtonGlow.toggle()
+    }
+    
+    internal func readNotificationStatus() {
+        let defaults = UserDefaults.standard
+        let rawValue = defaults.string(forKey: Texts.UserDefaults.notifications) ?? String()
+        notificationsStatus = NotificationStatus(rawValue: rawValue) ?? .prohibited
+        
+        if notificationsStatus != .allowed {
+            notificationsLocal.removeAll()
         }
     }
     
@@ -105,10 +121,18 @@ final class TaskManagementViewModel: ObservableObject {
     
     init(nameText: String = String(),
          descriptionText: String = String(),
-         check: Bool = false) {
+         check: Bool = false,
+         targetDate: Date = .now.startOfDay) {
         self.nameText = nameText
         self.descriptionText = descriptionText
         self.check = check
+        
+        self.targetDate = targetDate.startOfDay
+        self.hasDate = targetDate != todayDate
+        
+        if hasDate {
+            separateTargetDateToTimeAndDay(targetDate: targetDate)
+        }
         
         updateDays()
     }
@@ -121,7 +145,6 @@ final class TaskManagementViewModel: ObservableObject {
         self.targetDate = entity.target ?? .now.startOfDay
         self.hasDate = entity.target != nil
         self.hasTime = entity.hasTargetTime
-        self.targetDateSelected = entity.target != nil
         
         separateTargetDateToTimeAndDay(targetDate: entity.target)
         
@@ -150,7 +173,6 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     internal func doneDatePicker() {
-        targetDateSelected = true
         check = true
         showingDatePicker = false
     }
@@ -159,8 +181,10 @@ final class TaskManagementViewModel: ObservableObject {
         targetDate = combinedDateTime
     }
     
-    internal func setupUserNotifications() {
+    internal func setupUserNotifications(remove notifications: NSSet?) {
+        guard notificationsStatus == .allowed else { return }
         notificationCenter.setupNotifications(for: notificationsLocal,
+                                              remove: notifications,
                                               with: nameText)
     }
     
@@ -188,12 +212,13 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     internal func cancelDatePicker() {
-        targetDateSelected = false
         showingDatePicker = false
     }
     
     internal func setupNotificationAvailability() {
-        availableNotifications = TaskNotification.availableNotifications(for: combinedDateTime)
+        availableNotifications = TaskNotification.availableNotifications(
+            for: combinedDateTime,
+            hasTime: hasTime)
         deselectUnavailableNotifications()
     }
     
@@ -203,6 +228,11 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     internal func toggleNotificationSelection(for type: TaskNotification) {
+        guard notificationsStatus == .allowed else {
+            notificationsLocal.removeAll()
+            type != .none ? showingNotificationAlert.toggle() : nil
+            return
+        }
         guard type != .none else {
             notificationsLocal.removeAll()
             return
@@ -353,11 +383,6 @@ extension TaskManagementViewModel {
             let item = NotificationItem(type: itemType,
                                         target: target)
             notificationsLocal.insert(item)
-        }
-        
-        if checklistLocal.isEmpty {
-            let emptyItem = ChecklistItem(name: String())
-            checklistLocal.append(emptyItem)
         }
     }
 }

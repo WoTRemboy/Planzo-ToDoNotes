@@ -36,8 +36,9 @@ struct SettingsView: View {
     private var paramsForm: some View {
         Form {
             aboutAppSection
-            application
-            contact
+            applicationSection
+            contentSection
+            contactSection
         }
         .padding(.horizontal, -10)
         .background(Color.BackColors.backDefault)
@@ -56,7 +57,7 @@ struct SettingsView: View {
         .listRowBackground(Color.SupportColors.backListRow)
     }
     
-    private var application: some View {
+    private var applicationSection: some View {
         Section {
             // Change language button
             languageButton
@@ -65,6 +66,9 @@ struct SettingsView: View {
             appearanceButton
             
             notificationToggle
+                .onAppear {
+                    viewModel.readNotificationStatus()
+                }
         } header: {
              Text(Texts.Settings.Language.sectionTitle)
                 .font(.system(size: 13, weight: .medium))
@@ -118,11 +122,11 @@ struct SettingsView: View {
                 image: Image.Settings.notifications)
         }
         .onChange(of: viewModel.notificationsEnabled) { newValue in
-            viewModel.setNotificationsStatus(allowed: newValue, items: coreDataManager.savedEnities)
+            setNotificationsStatus(allowed: newValue)
         }
         .alert(isPresented: $viewModel.showingNotificationAlert) {
             Alert(
-                title: Text(Texts.Settings.Notification.alertTitle),
+                title: Text(Texts.Settings.Notification.prohibitedTitle),
                 message: Text(Texts.Settings.Notification.alertContent),
                 primaryButton: .default(Text(Texts.Settings.title)) {
                     guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
@@ -134,7 +138,59 @@ struct SettingsView: View {
         .listRowBackground(Color.SupportColors.backListRow)
     }
     
-    private var contact: some View {
+    private var contentSection: some View {
+        Section {
+            // Reset data button
+            resetButton
+        } header: {
+            Text(Texts.Settings.Reset.sectionTitle)
+                .font(.system(size: 13, weight: .medium))
+                .textCase(.none)
+        }
+        .alert(isPresented: $viewModel.showingResetResult) {
+            Alert(
+                title: Text(viewModel.resetMessage.title),
+                message: Text(viewModel.resetMessage.message),
+                dismissButton: .cancel(Text(Texts.Settings.ok))
+            )
+        }
+    }
+    
+    private var resetButton: some View {
+        Button {
+            if !coreDataManager.savedEnities.isEmpty {
+                viewModel.toggleShowingResetDialog()
+            } else {
+                viewModel.resetMessage = .empty
+                viewModel.showingResetResult.toggle()
+            }
+        } label: {
+            SettingFormRow(title: Texts.Settings.Reset.title,
+                           image: Image.Settings.reset,
+                           chevron: true)
+        }
+        .listRowBackground(Color.SupportColors.backListRow)
+        .confirmationDialog(Texts.Settings.Reset.warning,
+                            isPresented: $viewModel.showingResetDialog,
+                            titleVisibility: .visible) {
+            Button(role: .destructive) {
+                withAnimation {
+                    coreDataManager.deleteAllTasksAndClearNotifications { success in
+                        if success {
+                            viewModel.resetMessage = .success
+                        } else {
+                            viewModel.resetMessage = .failure
+                        }
+                        viewModel.showingResetResult.toggle()
+                    }
+                }
+            } label: {
+                Text(Texts.Settings.Reset.confirm)
+            }
+        }
+    }
+    
+    private var contactSection: some View {
         Section {
             Link(destination: URL(string: "mailto:\(Texts.Settings.Email.emailContent)")!, label: {
                 SettingFormRow(
@@ -154,5 +210,35 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
-        .environmentObject(SettingsViewModel())
+        .environmentObject(SettingsViewModel(notificationsEnabled: false))
+}
+
+
+extension SettingsView {
+    private func setNotificationsStatus(allowed: Bool) {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { success, error in
+            DispatchQueue.main.async {
+                if success {
+                    viewModel.setupNotificationStatus(for: allowed)
+                    if allowed {
+                        coreDataManager.restoreNotificationsForAllTasks { complete in
+                            if complete {
+                                print("Restoration complete: Notifications have been restored.")
+                            } else {
+                                print("Restoration failed.")
+                            }
+                        }
+                    } else {
+                        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+                    }
+                    print("Notifications are set to \(allowed).")
+                } else if let error {
+                    print(error.localizedDescription)
+                } else {
+                    viewModel.notificationsProhibited()
+                    print("Notifications are prohibited.")
+                }
+            }
+        }
+        }
 }

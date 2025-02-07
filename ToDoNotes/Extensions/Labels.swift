@@ -9,7 +9,7 @@ import Foundation
 
 final class Texts {
     enum SplashScreen {
-        static let title = "Splash Screen"
+        static let title = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "ToDo"
     }
     
     enum OnboardingPage {
@@ -41,7 +41,7 @@ final class Texts {
             static let all = "Все"
             static let noDate = "Без дат"
             static let purchases = "Списки"
-            static let passwords = "Пароли"
+            static let passwords = "Скрытые"
         }
     }
     
@@ -56,11 +56,13 @@ final class Texts {
         static let title = "Календарь"
         static let today = "Сегодня"
         static let emptyList = "Свободный день"
+        static let accept = "Принять"
     }
     
     enum Settings {
         static let title = "Настройки"
         static let cancel = "Отмена"
+        static let ok = "Хорошо"
         
         enum About {
             static let title = "О приложении"
@@ -86,8 +88,24 @@ final class Texts {
         
         enum Notification {
             static let title = "Уведомления"
-            static let alertTitle = "Требуется доступ"
-            static let alertContent = "Пожалуйста, включите уведомления в настройках."
+            static let prohibitedTitle = "Уведомления отключены"
+            static let disableTitle = "Уведомления отключены"
+            static let alertContent = "Пожалуйста, включите параметр в Настройках."
+        }
+        
+        enum Reset {
+            static let sectionTitle = "Контент"
+            static let title = "Сброс"
+            static let warning = "Вы действительно хотите удалить все существующие задачи? Восстановить их будет невозможно."
+            static let confirm = "Удалить данные"
+            
+            static let success = "Выполнено"
+            static let failure = "Ошибка"
+            static let empty = "Отменено"
+            
+            static let successMessage = "Данные успешно удалены"
+            static let failureMessage = "Не удалось удалить данные"
+            static let emptyMessage = "Данные уже отсутсвуют"
         }
         
         enum Email {
@@ -173,7 +191,13 @@ final class Texts {
     
     enum UserDefaults {
         static let skipOnboarding = "skipOnboarding"
+        static let addTaskButtonGlow = "addTaskButtonGlow"
         static let notifications = "notificationsEnabled"
         static let theme = "userTheme"
+    }
+    
+    enum NamespaceID {
+        static let selectedTab = "SelectedTab"
+        static let selectedCalendarCell = "SelectedCalendarCell"
     }
 }
