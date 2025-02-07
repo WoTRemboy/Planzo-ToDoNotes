@@ -87,8 +87,9 @@ final class Texts {
         
         enum Notification {
             static let title = "Уведомления"
-            static let alertTitle = "Требуется доступ"
-            static let alertContent = "Пожалуйста, включите уведомления в настройках."
+            static let prohibitedTitle = "Уведомления отключены"
+            static let disableTitle = "Уведомления отключены"
+            static let alertContent = "Пожалуйста, включите параметр в Настройках."
         }
         
         enum Reset {

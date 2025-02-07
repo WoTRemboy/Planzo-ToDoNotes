@@ -69,8 +69,11 @@ struct TaskManagementNavBar: View {
         } label: {
             Image.NavigationBar.share
                 .resizable()
+                .renderingMode(.template)
+                .foregroundStyle(Color.clear)
                 .frame(width: 22, height: 22)
         }
+        .disabled(true)
         .padding(.trailing)
     }
 }

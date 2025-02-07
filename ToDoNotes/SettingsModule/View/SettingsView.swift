@@ -66,6 +66,9 @@ struct SettingsView: View {
             appearanceButton
             
             notificationToggle
+                .onAppear {
+                    viewModel.readNotificationStatus()
+                }
         } header: {
              Text(Texts.Settings.Language.sectionTitle)
                 .font(.system(size: 13, weight: .medium))
@@ -119,11 +122,11 @@ struct SettingsView: View {
                 image: Image.Settings.notifications)
         }
         .onChange(of: viewModel.notificationsEnabled) { newValue in
-            viewModel.setNotificationsStatus(allowed: newValue, items: coreDataManager.savedEnities)
+            setNotificationsStatus(allowed: newValue)
         }
         .alert(isPresented: $viewModel.showingNotificationAlert) {
             Alert(
-                title: Text(Texts.Settings.Notification.alertTitle),
+                title: Text(Texts.Settings.Notification.prohibitedTitle),
                 message: Text(Texts.Settings.Notification.alertContent),
                 primaryButton: .default(Text(Texts.Settings.title)) {
                     guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
@@ -207,5 +210,35 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
-        .environmentObject(SettingsViewModel())
+        .environmentObject(SettingsViewModel(notificationsEnabled: false))
+}
+
+
+extension SettingsView {
+    private func setNotificationsStatus(allowed: Bool) {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { success, error in
+            DispatchQueue.main.async {
+                if success {
+                    viewModel.setupNotificationStatus(for: allowed)
+                    if allowed {
+                        coreDataManager.restoreNotificationsForAllTasks { complete in
+                            if complete {
+                                print("Restoration complete: Notifications have been restored.")
+                            } else {
+                                print("Restoration failed.")
+                            }
+                        }
+                    } else {
+                        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+                    }
+                    print("Notifications are set to \(allowed).")
+                } else if let error {
+                    print(error.localizedDescription)
+                } else {
+                    viewModel.notificationsProhibited()
+                    print("Notifications are prohibited.")
+                }
+            }
+        }
+        }
 }

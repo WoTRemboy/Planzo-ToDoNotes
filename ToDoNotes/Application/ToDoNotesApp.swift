@@ -76,6 +76,8 @@ extension ToDoNotesApp {
                 // In error case notifications become prohibited
                 self.notificationsEnabled = .prohibited
                 print(error.localizedDescription)
+            } else {
+                print("Notifications are prohibited.")
             }
         }
     }

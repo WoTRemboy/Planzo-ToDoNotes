@@ -177,6 +177,7 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     internal func setupUserNotifications(remove notifications: NSSet?) {
+        guard notificationsStatus == .allowed else { return }
         notificationCenter.setupNotifications(for: notificationsLocal,
                                               remove: notifications,
                                               with: nameText)
@@ -225,7 +226,7 @@ final class TaskManagementViewModel: ObservableObject {
     internal func toggleNotificationSelection(for type: TaskNotification) {
         guard notificationsStatus == .allowed else {
             notificationsLocal.removeAll()
-            showingNotificationAlert.toggle()
+            type != .none ? showingNotificationAlert.toggle() : nil
             return
         }
         guard type != .none else {

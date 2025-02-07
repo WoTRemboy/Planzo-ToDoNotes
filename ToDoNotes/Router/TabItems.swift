@@ -39,8 +39,13 @@ struct TabItems {
     }
     
     static func settingsTab() -> some View {
-        SettingsView()
-            .environmentObject(SettingsViewModel())
+        let defaults = UserDefaults.standard
+        let rawValue = defaults.string(forKey: Texts.UserDefaults.notifications) ?? String()
+        let notificationsStatus = NotificationStatus(rawValue: rawValue) ?? .prohibited
+        
+        return SettingsView()
+            .environmentObject(SettingsViewModel(
+                notificationsEnabled: notificationsStatus == .allowed))
             .tabItem {
                 Image.Placeholder.tabbarIcon
                     .renderingMode(.template)

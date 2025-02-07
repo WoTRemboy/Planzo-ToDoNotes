@@ -24,9 +24,8 @@ struct SplashScreenView: View {
         if isActive {
             // Step to the main view
             OnboardingScreenView()
-                .environmentObject(OnboardingViewModel())
         } else {
-            // Shows splash screnn
+            // Shows splash screen
             content
                 .onAppear {
                     // Then hides view after 1s

@@ -43,5 +43,5 @@ struct SettingAppearanceView: View {
 
 #Preview {
     SettingAppearanceView()
-        .environmentObject(SettingsViewModel())
+        .environmentObject(SettingsViewModel(notificationsEnabled: false))
 }

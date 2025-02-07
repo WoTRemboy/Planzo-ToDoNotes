@@ -159,8 +159,6 @@ final class CoreDataViewModel: ObservableObject {
             }
             .sorted { $0.0 > $1.0 }
     }
-
-
     
     internal func deleteTasks(with ids: [NSManagedObjectID]) {
         ids.forEach { id in
@@ -252,5 +250,82 @@ extension CoreDataViewModel {
     internal func toggleCompleteChecking(for entity: TaskEntity) {
         entity.completed = entity.completed == 1 ? 2 : 1
         saveData()
+    }
+    
+    private func notificationName(for type: String) -> String {
+        let notificationType = TaskNotification(rawValue: type) ?? .inTime
+        
+        switch notificationType {
+        case .none:
+            return String()
+        case .inTime:
+            return Texts.TaskManagement.DatePicker.inTimeNotification
+        case .fiveMinutesBefore:
+            return Texts.TaskManagement.DatePicker.fiveMinutesBeforeNotification
+        case .thirtyMinutesBefore:
+            return Texts.TaskManagement.DatePicker.thirtyMinutesBeforeNotification
+        case .oneHourBefore:
+            return Texts.TaskManagement.DatePicker.oneHourBeforeNotification
+        case .oneDayBefore:
+            return Texts.TaskManagement.DatePicker.oneDayBeforeNotification
+        }
+    }
+}
+
+
+extension CoreDataViewModel {
+    internal func restoreNotificationsForAllTasks(completion: ((Bool) -> Void)? = nil) {
+        // Create a fetch request for tasks that have at least one notification.
+        let request: NSFetchRequest<TaskEntity> = NSFetchRequest(entityName: Texts.CoreData.entity)
+        request.predicate = NSPredicate(format: "notifications.@count > 0")
+        
+        do {
+            // Fetch tasks with notifications from Core Data.
+            let tasksWithNotifications = try container.viewContext.fetch(request)
+            let group = DispatchGroup()
+            let notificationCenter = UNUserNotificationCenter.current()
+            
+            // Iterate over each task
+            for task in tasksWithNotifications {
+                if let notificationsSet = task.notifications as? Set<NotificationEntity> {
+                    for entity in notificationsSet {
+                        // Ensure the target date exists and is in the future
+                        guard let targetDate = entity.target, targetDate > Date() else { continue }
+                        
+                        // Convert the ObjectIdentifier (or similar type) to a String
+                        let identifier = entity.id?.uuidString ?? String()
+                        
+                        // Create the notification content
+                        let content = UNMutableNotificationContent()
+                        content.title = notificationName(for: entity.type ?? TaskNotification.inTime.rawValue)
+                        content.body = task.name ?? String()
+                        content.sound = .default
+                        
+                        // Create date components from the target date
+                        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: targetDate)
+                        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+                        
+                        // Create the notification request
+                        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+                        
+                        group.enter()
+                        notificationCenter.add(request) { error in
+                            if let error = error {
+                                print("Error scheduling notification with id \(identifier): \(error.localizedDescription)")
+                            }
+                            group.leave()
+                        }
+                    }
+                }
+            }
+            
+            // Call the completion handler once all notifications are scheduled.
+            group.notify(queue: .main) {
+                completion?(true)
+            }
+        } catch {
+            print("Error fetching tasks for restoring notifications: \(error.localizedDescription)")
+            completion?(false)
+        }
     }
 }

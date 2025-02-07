@@ -23,5 +23,5 @@ struct SettingsNavBar: View {
 
 #Preview {
     SettingsNavBar()
-        .environmentObject(SettingsViewModel())
+        .environmentObject(SettingsViewModel(notificationsEnabled: false))
 }

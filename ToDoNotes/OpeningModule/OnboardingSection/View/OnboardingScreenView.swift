@@ -14,7 +14,7 @@ struct OnboardingScreenView: View {
     @Environment(\.colorScheme) var colorScheme
     
     /// View model controlling the onboarding state.
-    @EnvironmentObject private var viewModel: OnboardingViewModel
+    @StateObject private var viewModel = OnboardingViewModel()
     
     /// Current page tracker for the pager.
     @StateObject private var page: Page = .first()
