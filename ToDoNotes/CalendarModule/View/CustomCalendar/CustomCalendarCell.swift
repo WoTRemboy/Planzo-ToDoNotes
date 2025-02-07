@@ -13,13 +13,16 @@ struct CustomCalendarCell: View {
     private let selected: Bool
     private let today: Bool
     private let task: Bool
+    private let namespace: Namespace.ID
     
     init(day: String, selected: Bool,
-         today: Bool, task: Bool) {
+         today: Bool, task: Bool,
+         namespace: Namespace.ID) {
         self.day = day
         self.selected = selected
         self.today = today
         self.task = task
+        self.namespace = namespace
     }
     
     internal var body: some View {
@@ -45,13 +48,21 @@ struct CustomCalendarCell: View {
         Text(day)
             .font(.system(size: 20, weight: .regular))
             .foregroundStyle(today ? Color.LabelColors.labelPrimary : Color.LabelColors.labelSecondary)
+        
             .background {
-                Circle()
-                    .frame(width: 50, height: 50)
-                    .foregroundStyle((selected && !today) ?
-                                     Color.LabelColors.labelDisable:
-                                        Color.clear)
+                if selected && !today {
+                    selectedCircle
+                }
             }
+    }
+    
+    private var selectedCircle: some View {
+        Circle()
+            .frame(width: 50, height: 50)
+            .foregroundStyle(Color.LabelColors.labelDisable)
+            .matchedGeometryEffect(
+                id: Texts.NamespaceID.selectedCalendarCell,
+                in: namespace)
     }
     
     private var underline: some View {
@@ -66,5 +77,6 @@ struct CustomCalendarCell: View {
     CustomCalendarCell(day: "5",
                        selected: true,
                        today: true,
-                       task: true)
+                       task: true,
+                       namespace: Namespace().wrappedValue)
 }

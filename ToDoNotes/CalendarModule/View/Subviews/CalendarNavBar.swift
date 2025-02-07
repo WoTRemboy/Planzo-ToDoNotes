@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct CalendarNavBar: View {
+    @EnvironmentObject private var viewModel: CalendarViewModel
+
     private let date: String
     private let monthYear: String
-    
+        
     init(date: String, monthYear: String) {
         self.date = date
         self.monthYear = monthYear
@@ -30,6 +32,11 @@ struct CalendarNavBar: View {
         HStack(spacing: 8) {
             Text(date)
                 .font(.system(size: 20, weight: .medium))
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        viewModel.restoreTodayDate()
+                    }
+                }
             
             Text(monthYear)
                 .font(.system(size: 20, weight: .medium))
@@ -43,7 +50,9 @@ struct CalendarNavBar: View {
         HStack(spacing: 20) {
             // Calendar Button
             Button {
-                // Action for calendar button
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    viewModel.toggleShowingCalendarSelector()
+                }
             } label: {
                 Image.NavigationBar.calendar
             }
@@ -61,5 +70,5 @@ struct CalendarNavBar: View {
 
 #Preview {
     CalendarNavBar(date: "Сегодня", monthYear: "декабрь, 2024")
-        .environmentObject(TodayViewModel())
+        .environmentObject(CalendarViewModel())
 }

@@ -56,6 +56,7 @@ final class Texts {
         static let title = "Календарь"
         static let today = "Сегодня"
         static let emptyList = "Свободный день"
+        static let accept = "Принять"
     }
     
     enum Settings {
@@ -197,5 +198,6 @@ final class Texts {
     
     enum NamespaceID {
         static let selectedTab = "SelectedTab"
+        static let selectedCalendarCell = "SelectedCalendarCell"
     }
 }
