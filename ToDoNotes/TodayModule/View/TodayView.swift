@@ -76,13 +76,14 @@ struct TodayView: View {
                     }
                 }
                 .listRowBackground(Color.SupportColors.backListRow)
+                .listRowInsets(EdgeInsets())
             } header: {
                 Text(Texts.TodayPage.notCompleted)
                     .font(.system(size: 13, weight: .medium))
                     .textCase(.none)
             }
         }
-        .padding(.horizontal, -10)
+        .padding(.horizontal, hasNotch() ? -4 : 0)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
     }

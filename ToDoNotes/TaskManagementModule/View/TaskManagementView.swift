@@ -123,7 +123,6 @@ struct TaskManagementView: View {
                   axis: .vertical)
         
         .font(.system(size: 15, weight: .regular))
-        .lineSpacing(2.5)
     }
     
     private var buttons: some View {

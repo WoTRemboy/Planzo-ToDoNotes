@@ -66,7 +66,7 @@ struct CalendarView: View {
         Divider()
             .background(Color.LabelColors.labelTertiary)
             .frame(height: 0.36)
-            .padding(.top)
+            .padding([.top, .horizontal])
     }
     
     private var taskForm: some View {
@@ -91,13 +91,14 @@ struct CalendarView: View {
                     }
                 }
                 .listRowBackground(Color.SupportColors.backListRow)
+                .listRowInsets(EdgeInsets())
             } header: {
                 Text(viewModel.selectedDate.longDayMonthWeekday)
                     .font(.system(size: 13, weight: .medium))
                     .textCase(.none)
             }
         }
-        .padding(.horizontal, -10)
+        .padding(.horizontal, hasNotch() ? -4 : 0)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
     }

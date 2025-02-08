@@ -18,7 +18,8 @@ struct TaskListRow: View {
     }
     
     internal var body: some View {
-        HStack {
+        HStack(spacing: 0) {
+            folderIndicatior
             if entity.completed != 0 {
                 checkBoxButton
             }
@@ -26,7 +27,15 @@ struct TaskListRow: View {
             
             Spacer()
             detailsBox
+            //additionalStatus
         }
+    }
+    
+    private var folderIndicatior: some View {
+        Rectangle()
+            .foregroundStyle(Color.clear)
+            .frame(maxWidth: 1, maxHeight: .infinity)
+            .padding(.trailing, 14)
     }
     
     private var checkBoxButton: some View {
@@ -41,6 +50,7 @@ struct TaskListRow: View {
                     coreDataManager.toggleCompleteChecking(for: entity)
                 }
             }
+            .padding(.trailing, 8)
     }
     
     private var nameLabel: some View {
@@ -70,6 +80,8 @@ struct TaskListRow: View {
                 }
             }
         }
+        .padding(.leading)
+        .padding(.trailing, 22)
     }
     
     private var dateLabel: some View {
@@ -94,6 +106,20 @@ struct TaskListRow: View {
             Image.TaskManagement.TaskRow.uncheckedContent)
             .resizable()
             .frame(width: 12, height: 12)
+    }
+    
+    private var additionalStatus: some View {
+        VStack(spacing: 2) {
+            Image(String())
+                .resizable()
+                .frame(width: 12, height: 12)
+                .padding(.leading, 5)
+            
+            Rectangle()
+                .foregroundStyle(Color.clear)
+                .frame(width: 12, height: 12)
+        }
+        .padding(.trailing, 6)
     }
 }
 

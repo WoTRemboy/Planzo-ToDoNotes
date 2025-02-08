@@ -66,6 +66,11 @@ extension Image {
             
             static let uncheckedContent = Image("TaskRowUncheckedContent")
             static let checkedContent = Image("TaskRowCheckedContent")
+            
+            static let uncheckedImportant = Image("TaskRowUncheckedImportant")
+            static let checkedImportant = Image("TaskRowCheckedImportant")
+            
+            static let uncheckedExpired = Image("TaskRowUncheckedExpired")
         }
         
         enum DateSelector {
