@@ -32,7 +32,7 @@ struct CalendarMonthSelector: View {
     private var content: some View {
         HStack {
             Spacer()
-            DatePicker(selection: $viewModel.calendarDate.animation(),
+            DatePicker(selection: $viewModel.calendarDate.animation(.easeInOut(duration: 0.2)),
                        displayedComponents: .date) {
                 EmptyView()
             }

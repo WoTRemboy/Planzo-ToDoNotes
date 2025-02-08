@@ -161,3 +161,8 @@ enum TaskEndRepeating {
         }
     }
 }
+
+enum CalendarMovement {
+    case forward
+    case backward
+}

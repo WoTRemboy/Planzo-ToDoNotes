@@ -8,14 +8,17 @@
 import SwiftUI
 
 struct CustomCalendarView: View {
-    
-    @Namespace private var calendarCellNamespace
-    
+        
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
     @EnvironmentObject private var viewModel: CalendarViewModel
     
+    private let namespace: Namespace.ID
     private let columns = Array(repeating: GridItem(.flexible()),
                                 count: 7)
+    
+    init(namespace: Namespace.ID) {
+        self.namespace = namespace
+    }
     
     internal var body: some View {
         VStack {
@@ -48,7 +51,7 @@ struct CustomCalendarView: View {
                         selected: viewModel.selectedDate == day.startOfDay,
                         today: Date.now.startOfDay == day.startOfDay,
                         task: hasTask,
-                        namespace: calendarCellNamespace)
+                        namespace: namespace)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.15)) {
                             viewModel.selectedDate = day.startOfDay
@@ -56,12 +59,13 @@ struct CustomCalendarView: View {
                     }
                 }
             }
+            .transition(.scale)
         }
     }
 }
 
 #Preview {
-    CustomCalendarView()
+    CustomCalendarView(namespace: Namespace().wrappedValue)
         .environmentObject(CalendarViewModel())
         .environmentObject(CoreDataViewModel())
 }

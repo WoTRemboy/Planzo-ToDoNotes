@@ -25,27 +25,30 @@ struct TaskCustomCalendar: View {
             weekdayNames
             daysGrid
         }
-        .onChange(of: viewModel.days) { _ in
-            viewModel.updateDays()
-        }
         .padding(.horizontal, 16)
     }
     
     private var monthSelector: some View {
         HStack {
             Button {
-                // Action for month forward
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    viewModel.calendarMonthMove(for: .backward)
+                }
             } label: {
                 Image.TaskManagement.DateSelector.monthBackward
             }
             
             Spacer()
-            Text(viewModel.todayDate.longMonthYearWithoutComma)
+            Text(viewModel.calendarDate.longMonthYearWithoutComma)
                 .font(.system(size: 17, weight: .medium))
+                .contentTransition(
+                    .numericText(countsDown: viewModel.calendarSwapDirection == .backward))
             
             Spacer()
             Button {
-                // Action for month backward
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    viewModel.calendarMonthMove(for: .forward)
+                }
             } label: {
                 Image.TaskManagement.DateSelector.monthForward
             }
@@ -69,7 +72,7 @@ struct TaskCustomCalendar: View {
     private var daysGrid: some View {
         LazyVGrid(columns: columns) {
             ForEach(viewModel.days, id: \.self) { day in
-                if day.monthInt != viewModel.todayDate.monthInt {
+                if day.monthInt != viewModel.calendarDate.monthInt {
                     Text(String())
                 } else {
                     CustomCalendarCell(
@@ -85,6 +88,7 @@ struct TaskCustomCalendar: View {
                     }
                 }
             }
+            .transition(.scale)
         }
     }
 }

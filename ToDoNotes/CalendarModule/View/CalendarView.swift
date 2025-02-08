@@ -12,6 +12,8 @@ struct CalendarView: View {
     @EnvironmentObject private var viewModel: CalendarViewModel
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
     
+    @Namespace private var animationNamespace
+    
     internal var body: some View {
         ZStack {
             content
@@ -44,7 +46,7 @@ struct CalendarView: View {
         VStack(spacing: 0) {
             CalendarNavBar(date: Texts.CalendarPage.today,
                            monthYear: viewModel.calendarDate.longMonthYear)
-            CustomCalendarView()
+            CustomCalendarView(namespace: animationNamespace)
                 .padding(.top)
             
             separator
@@ -96,6 +98,10 @@ struct CalendarView: View {
                 Text(viewModel.selectedDate.longDayMonthWeekday)
                     .font(.system(size: 13, weight: .medium))
                     .textCase(.none)
+                    .contentTransition(.numericText())
+                    .matchedGeometryEffect(
+                        id: Texts.NamespaceID.selectedCalendarDate,
+                        in: animationNamespace)
             }
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
@@ -106,7 +112,8 @@ struct CalendarView: View {
     private var placeholder: some View {
         ScrollView {
             CalendarTaskFormPlaceholder(
-                date: viewModel.selectedDate.longDayMonthWeekday)
+                date: viewModel.selectedDate.longDayMonthWeekday,
+                namespace: animationNamespace)
                 .padding(.top)
         }
         .scrollDisabled(true)

@@ -41,7 +41,14 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var showingDatePicker: Bool = false
     @Published internal var showingNotificationAlert: Bool = false
     
+    @Published internal var calendarDate: Date = Date.now {
+        didSet {
+            updateDays()
+        }
+    }
+    
     internal let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
+    private(set) var calendarSwapDirection: CalendarMovement = .forward
     private(set) var todayDate: Date = Date.now.startOfDay
     private(set) var days: [Date] = []
     
@@ -152,8 +159,24 @@ final class TaskManagementViewModel: ObservableObject {
         setupNotificationsLocal(entity.notifications)
     }
     
-    internal func updateDays() {
-        days = todayDate.calendarDisplayDays
+    private func updateDays() {
+        days = calendarDate.calendarDisplayDays
+    }
+    
+    internal func calendarMonthMove(for direction: CalendarMovement) {
+        let value: Int
+        switch direction {
+        case .backward:
+            value = -1
+            calendarSwapDirection = .backward
+        case .forward:
+            value = 1
+            calendarSwapDirection = .forward
+        }
+        
+        if let newDate = Calendar.current.date(byAdding: .month, value: value, to: calendarDate) {
+            calendarDate = newDate
+        }
     }
     
     internal func toggleCheck() {
@@ -199,6 +222,7 @@ final class TaskManagementViewModel: ObservableObject {
             month: dayComponents.month,
             day: dayComponents.day
         )) ?? .now
+        calendarDate = selectedDay
         
         guard hasTime else { return }
         
@@ -318,6 +342,7 @@ final class TaskManagementViewModel: ObservableObject {
     
     internal func allParamRemoveMethod() {
         selectedDay = .now.startOfDay
+        calendarDate = .now.startOfDay
         selectedTimeType = .none
         notificationsLocal.removeAll()
         selectedRepeating = .none

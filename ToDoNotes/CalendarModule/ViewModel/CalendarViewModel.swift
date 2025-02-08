@@ -45,7 +45,7 @@ final class CalendarViewModel: ObservableObject {
     }
     
     private func updateDays() {
-        self.days = calendarDate.calendarDisplayDays
+        days = calendarDate.calendarDisplayDays
     }
     
     private func selectDay() {
