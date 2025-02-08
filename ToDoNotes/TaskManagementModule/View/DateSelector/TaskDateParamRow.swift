@@ -238,6 +238,7 @@ struct TaskDateParamRow: View {
             removeButton
         }
         .frame(height: 30)
+        .transition(.scale)
     }
     
     private var removeButton: some View {

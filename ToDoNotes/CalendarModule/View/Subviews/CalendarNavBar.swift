@@ -41,6 +41,7 @@ struct CalendarNavBar: View {
             Text(monthYear)
                 .font(.system(size: 20, weight: .medium))
                 .foregroundStyle(Color.LabelColors.labelSecondary)
+                .contentTransition(.numericText())
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.leading, 16)

@@ -40,7 +40,7 @@ struct SettingsView: View {
             contentSection
             contactSection
         }
-        .padding(.horizontal, -10)
+        .padding(.horizontal, hasNotch() ? -4 : 0)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
     }

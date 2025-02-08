@@ -12,6 +12,8 @@ struct CalendarView: View {
     @EnvironmentObject private var viewModel: CalendarViewModel
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
     
+    @Namespace private var animationNamespace
+    
     internal var body: some View {
         ZStack {
             content
@@ -44,7 +46,7 @@ struct CalendarView: View {
         VStack(spacing: 0) {
             CalendarNavBar(date: Texts.CalendarPage.today,
                            monthYear: viewModel.calendarDate.longMonthYear)
-            CustomCalendarView()
+            CustomCalendarView(namespace: animationNamespace)
                 .padding(.top)
             
             separator
@@ -66,7 +68,7 @@ struct CalendarView: View {
         Divider()
             .background(Color.LabelColors.labelTertiary)
             .frame(height: 0.36)
-            .padding(.top)
+            .padding([.top, .horizontal])
     }
     
     private var taskForm: some View {
@@ -91,13 +93,18 @@ struct CalendarView: View {
                     }
                 }
                 .listRowBackground(Color.SupportColors.backListRow)
+                .listRowInsets(EdgeInsets())
             } header: {
                 Text(viewModel.selectedDate.longDayMonthWeekday)
                     .font(.system(size: 13, weight: .medium))
                     .textCase(.none)
+                    .contentTransition(.numericText())
+                    .matchedGeometryEffect(
+                        id: Texts.NamespaceID.selectedCalendarDate,
+                        in: animationNamespace)
             }
         }
-        .padding(.horizontal, -10)
+        .padding(.horizontal, hasNotch() ? -4 : 0)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
     }
@@ -105,7 +112,8 @@ struct CalendarView: View {
     private var placeholder: some View {
         ScrollView {
             CalendarTaskFormPlaceholder(
-                date: viewModel.selectedDate.longDayMonthWeekday)
+                date: viewModel.selectedDate.longDayMonthWeekday,
+                namespace: animationNamespace)
                 .padding(.top)
         }
         .scrollDisabled(true)

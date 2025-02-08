@@ -199,5 +199,6 @@ final class Texts {
     enum NamespaceID {
         static let selectedTab = "SelectedTab"
         static let selectedCalendarCell = "SelectedCalendarCell"
+        static let selectedCalendarDate = "SelectedCalendarDate"
     }
 }
