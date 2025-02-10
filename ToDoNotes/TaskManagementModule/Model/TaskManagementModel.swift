@@ -93,7 +93,7 @@ enum TaskNotification: String {
         let now = Date.now
         var availableTypes: [Self] = []
         
-        if now < date, hasTime {
+        if now < date {
             availableTypes.append(.inTime)
         }
         if now < date.addingTimeInterval(-5 * 60), hasTime {

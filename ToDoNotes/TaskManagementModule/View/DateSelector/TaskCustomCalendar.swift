@@ -9,11 +9,14 @@ import SwiftUI
 
 struct TaskCustomCalendar: View {
     
-    @Namespace private var calendarCellNamespace
     @ObservedObject private var viewModel: TaskManagementViewModel
     
-    init(viewModel: TaskManagementViewModel) {
+    private let animation: Namespace.ID
+    
+    init(viewModel: TaskManagementViewModel,
+         namespace: Namespace.ID) {
         self.viewModel = viewModel
+        self.animation = namespace
     }
     
     private let columns = Array(repeating: GridItem(.flexible()),
@@ -70,29 +73,33 @@ struct TaskCustomCalendar: View {
     }
     
     private var daysGrid: some View {
-        LazyVGrid(columns: columns) {
-            ForEach(viewModel.days, id: \.self) { day in
-                if day.monthInt != viewModel.calendarDate.monthInt {
-                    Text(String())
-                } else {
-                    CustomCalendarCell(
-                        day: day.formatted(.dateTime.day()),
-                        selected: viewModel.selectedDay == day.startOfDay,
-                        today: Date.now.startOfDay == day.startOfDay,
-                        task: false,
-                        namespace: calendarCellNamespace)
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.15)) {
-                            viewModel.selectedDay = day.startOfDay
+        Group {
+            LazyVGrid(columns: columns) {
+                ForEach(viewModel.days, id: \.self) { day in
+                    if day.monthInt != viewModel.calendarDate.monthInt {
+                        Text(String())
+                    } else {
+                        CustomCalendarCell(
+                            day: day.formatted(.dateTime.day()),
+                            selected: viewModel.selectedDay == day.startOfDay,
+                            today: Date.now.startOfDay == day.startOfDay,
+                            task: false,
+                            namespace: animation)
+                        
+                        .onTapGesture {
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                viewModel.selectedDay = day.startOfDay
+                            }
                         }
                     }
                 }
             }
-            .transition(.scale)
         }
+        .id(viewModel.calendarDate)
     }
 }
 
 #Preview {
-    TaskCustomCalendar(viewModel: TaskManagementViewModel())
+    TaskCustomCalendar(viewModel: TaskManagementViewModel(),
+                       namespace: Namespace().wrappedValue)
 }

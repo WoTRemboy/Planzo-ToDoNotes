@@ -11,8 +11,12 @@ struct TaskCalendarSelectorView: View {
     
     @ObservedObject private var viewModel: TaskManagementViewModel
     
-    init(viewModel: TaskManagementViewModel) {
+    private let namespace: Namespace.ID
+    
+    init(viewModel: TaskManagementViewModel,
+         namespace: Namespace.ID) {
         self.viewModel = viewModel
+        self.namespace = namespace
     }
     
     internal var body: some View {
@@ -96,7 +100,8 @@ struct TaskCalendarSelectorView: View {
     }
     
     private var calendarSection: some View {
-        TaskCustomCalendar(viewModel: viewModel)
+        TaskCustomCalendar(viewModel: viewModel,
+                           namespace: namespace)
     }
     
     private var separator: some View {
@@ -152,5 +157,7 @@ struct TaskCalendarSelectorView: View {
 }
 
 #Preview {
-    TaskCalendarSelectorView(viewModel: TaskManagementViewModel())
+    TaskCalendarSelectorView(
+        viewModel: TaskManagementViewModel(),
+        namespace: Namespace().wrappedValue)
 }
