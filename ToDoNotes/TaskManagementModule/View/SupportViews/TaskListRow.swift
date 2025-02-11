@@ -11,10 +11,12 @@ import CoreData
 struct TaskListRow: View {
     
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
-    private var entity: TaskEntity
+    private let entity: TaskEntity
+    private let status: TaskStatus
     
     init(entity: TaskEntity) {
         self.entity = entity
+        self.status = .setupStatus(for: entity)
     }
     
     internal var body: some View {
@@ -27,7 +29,7 @@ struct TaskListRow: View {
             
             Spacer()
             detailsBox
-            //additionalStatus
+            additionalStatus
         }
     }
     
@@ -43,7 +45,14 @@ struct TaskListRow: View {
          Image.TaskManagement.TaskRow.checkedBox :
             Image.TaskManagement.TaskRow.uncheckedBox)
             .resizable()
+            .renderingMode(.template)
             .frame(width: 15, height: 15)
+        
+            .foregroundStyle(
+                status == .outdated || coreDataManager.taskCheckStatus(for: entity) ?
+                Color.LabelColors.labelDetails :
+                    Color.LabelColors.labelPrimary
+            )
         
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.2)) {
@@ -57,7 +66,9 @@ struct TaskListRow: View {
         Text(entity.name ?? String())
             .font(.system(size: 15, weight: .medium))
             .lineLimit(1)
-            .foregroundStyle(coreDataManager.taskCheckStatus(for: entity) ?
+            .foregroundStyle(
+                coreDataManager.taskCheckStatus(for: entity)
+                || status == .outdated ?
                              Color.LabelColors.labelDetails :
                                 Color.LabelColors.labelPrimary)
             .strikethrough(coreDataManager.taskCheckStatus(for: entity),
@@ -81,13 +92,14 @@ struct TaskListRow: View {
             }
         }
         .padding(.leading)
-        .padding(.trailing, 22)
     }
     
     private var dateLabel: some View {
         Text(entity.target?.fullHourMinutes ?? String())
             .font(.system(size: 12, weight: .medium))
-            .foregroundStyle(coreDataManager.taskCheckStatus(for: entity) ?
+            .foregroundStyle(
+                coreDataManager.taskCheckStatus(for: entity)
+                || status == .outdated ?
                              Color.LabelColors.labelDetails :
                                 Color.LabelColors.labelPrimary)
     }
@@ -110,16 +122,28 @@ struct TaskListRow: View {
     
     private var additionalStatus: some View {
         VStack(spacing: 2) {
-            Image(String())
-                .resizable()
-                .frame(width: 12, height: 12)
-                .padding(.leading, 5)
+            if status != .none {
+                additionalImage
+                    .resizable()
+                    .frame(width: 12, height: 12)
+            }
             
             Rectangle()
                 .foregroundStyle(Color.clear)
                 .frame(width: 12, height: 12)
         }
-        .padding(.trailing, 6)
+        .padding(.horizontal, 5)
+    }
+    
+    private var additionalImage: Image {
+        switch status {
+        case .none:
+            Image.TaskManagement.TaskRow.uncheckedExpired
+        case .outdated:
+            Image.TaskManagement.TaskRow.uncheckedExpired
+        case .important:
+            Image.TaskManagement.TaskRow.uncheckedImportant
+        }
     }
 }
 

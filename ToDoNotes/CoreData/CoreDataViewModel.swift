@@ -170,7 +170,9 @@ final class CoreDataViewModel: ObservableObject {
                 switch filter {
                 case .active:
                     guard task.completed != 2 else { return false }
-                    if let target = task.target, task.hasTargetTime, target < now {
+                    if let target = task.target, target < (task.hasTargetTime ? now : now.startOfDay) {
+                        return false
+                    } else if task.target == nil, let created = task.created, created < now.startOfDay {
                         return false
                     }
                     return true

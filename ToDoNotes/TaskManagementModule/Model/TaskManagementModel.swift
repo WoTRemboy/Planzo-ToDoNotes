@@ -166,3 +166,16 @@ enum CalendarMovement {
     case forward
     case backward
 }
+
+enum TaskStatus {
+    case none
+    case outdated
+    case important
+    
+    static internal func setupStatus(for entity: TaskEntity) -> Self {
+        if entity.completed == 1,
+           entity.target ?? .distantPast < .now { return .outdated }
+        if entity.important { return .important }
+        return .none
+    }
+}
