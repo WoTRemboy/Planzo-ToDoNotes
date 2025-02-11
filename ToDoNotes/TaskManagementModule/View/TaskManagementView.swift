@@ -10,6 +10,7 @@ import SwiftUI
 struct TaskManagementView: View {
     
     @FocusState private var titleFocused
+    @Namespace private var animation
     
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
     @StateObject private var viewModel = TaskManagementViewModel()
@@ -66,7 +67,9 @@ struct TaskManagementView: View {
                 .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $viewModel.showingDatePicker) {
-            TaskCalendarSelectorView(viewModel: viewModel)
+            TaskCalendarSelectorView(
+                viewModel: viewModel,
+                namespace: animation)
                 .presentationDetents([.height(670)])
         }
     }

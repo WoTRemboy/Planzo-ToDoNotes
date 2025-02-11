@@ -105,7 +105,7 @@ struct TaskDateParamRow: View {
                 Menu {
                     // "None" remainder button
                     Button {
-                        withAnimation(.easeInOut(duration: 0.3)) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
                             viewModel.toggleNotificationSelection(
                                 for: TaskNotification.none)
                         }
@@ -115,7 +115,7 @@ struct TaskDateParamRow: View {
                     
                     ForEach(viewModel.availableNotifications, id: \.self) { notificationType in
                         Button {
-                            withAnimation(.easeInOut(duration: 0.3)) {
+                            withAnimation(.easeInOut(duration: 0.2)) {
                                 viewModel.toggleNotificationSelection(
                                     for: notificationType)
                             }
@@ -238,7 +238,7 @@ struct TaskDateParamRow: View {
             removeButton
         }
         .frame(height: 30)
-        .transition(.scale)
+        .transition(.slide)
     }
     
     private var removeButton: some View {

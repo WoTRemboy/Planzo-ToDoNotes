@@ -40,27 +40,29 @@ struct CustomCalendarView: View {
     }
     
     private var daysGrid: some View {
-        LazyVGrid(columns: columns) {
-            ForEach(viewModel.days, id: \.self) { day in
-                if day.monthInt != viewModel.calendarDate.monthInt {
-                    Text(String())
-                } else {
-                    let hasTask = coreDataManager.daysWithTasks.contains(day.startOfDay)
-                    CustomCalendarCell(
-                        day: day.formatted(.dateTime.day()),
-                        selected: viewModel.selectedDate == day.startOfDay,
-                        today: Date.now.startOfDay == day.startOfDay,
-                        task: hasTask,
-                        namespace: namespace)
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.15)) {
-                            viewModel.selectedDate = day.startOfDay
+        Group {
+            LazyVGrid(columns: columns) {
+                ForEach(viewModel.days, id: \.self) { day in
+                    if day.monthInt != viewModel.calendarDate.monthInt {
+                        Text(String())
+                    } else {
+                        let hasTask = coreDataManager.daysWithTasks.contains(day.startOfDay)
+                        CustomCalendarCell(
+                            day: day.formatted(.dateTime.day()),
+                            selected: viewModel.selectedDate == day.startOfDay,
+                            today: Date.now.startOfDay == day.startOfDay,
+                            task: hasTask,
+                            namespace: namespace)
+                        .onTapGesture {
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                viewModel.selectedDate = day.startOfDay
+                            }
                         }
                     }
                 }
             }
-            .transition(.scale)
         }
+        .id(viewModel.calendarDate)
     }
 }
 
