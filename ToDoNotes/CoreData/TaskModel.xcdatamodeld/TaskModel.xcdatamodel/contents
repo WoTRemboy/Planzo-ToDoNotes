@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23605" systemVersion="24C101" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23605" systemVersion="24D60" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="ChecklistEntity" representedClassName="ChecklistEntity" syncable="YES" codeGenerationType="class">
         <attribute name="completed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TaskEntity" inverseName="checklist" inverseEntity="TaskEntity"/>
     </entity>
@@ -17,6 +18,7 @@
         <attribute name="details" optional="YES" attributeType="String"/>
         <attribute name="hasTargetTime" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="important" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="target" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="checklist" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="ChecklistEntity" inverseName="task" inverseEntity="ChecklistEntity"/>

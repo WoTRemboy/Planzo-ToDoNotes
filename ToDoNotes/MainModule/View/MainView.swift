@@ -13,9 +13,9 @@ struct MainView: View {
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
     
     internal var body: some View {
-        ZStack {
+        ZStack(alignment: .bottomTrailing) {
             content
-            plusButton
+            floatingButtons
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
@@ -57,7 +57,7 @@ struct MainView: View {
     
     private var taskForm: some View {
         Form {
-            ForEach(coreDataManager.segmentedAndSortedTasksArray, id: \.0) { segment, tasks in
+            ForEach(coreDataManager.filteredSegmentedTasks(for: viewModel.selectedFilter), id: \.0) { segment, tasks in
                 Section(header: segmentHeader(name: segment)) {
                     ForEach(tasks) { entity in
                         Button {
@@ -88,24 +88,49 @@ struct MainView: View {
             .textCase(.none)
     }
     
-    private var plusButton: some View {
-        VStack {
+    private var floatingButtons: some View {
+        VStack(alignment: .trailing, spacing: 16) {
             Spacer()
-            HStack {
-                Spacer()
-                Button {
-                    viewModel.toggleShowingCreateView()
-                } label: {
-                    Image.TaskManagement.plus
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 58, height: 58)
-                }
-                .padding()
-                .glow(available: viewModel.addTaskButtonGlow)
-            }
+//            scrollToTopButton
+            plusButton
         }
+        .padding(.horizontal)
         .ignoresSafeArea(.keyboard)
+    }
+    
+    private var scrollToTopButton: some View {
+        Button {
+            
+        } label: {
+            Image.TaskManagement.scrollToTop
+                .resizable()
+                .scaledToFit()
+                .frame(width: 32, height: 32)
+        }
+    }
+    
+    private var scrollToBottomButton: some View {
+        Button {
+            
+        } label: {
+            Image.TaskManagement.scrollToBottom
+                .resizable()
+                .scaledToFit()
+                .frame(width: 32, height: 32)
+        }
+    }
+    
+    private var plusButton: some View {
+        Button {
+            viewModel.toggleShowingCreateView()
+        } label: {
+            Image.TaskManagement.plus
+                .resizable()
+                .scaledToFit()
+                .frame(width: 58, height: 58)
+        }
+        .padding(.bottom)
+        .glow(available: viewModel.addTaskButtonGlow)
     }
 }
 

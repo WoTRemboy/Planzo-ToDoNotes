@@ -43,6 +43,8 @@ extension Image {
     enum TaskManagement {
         static let plus = Image("AddPlusIcon")
         static let emptyList = Image("EmptyTaskList")
+        static let scrollToTop = Image("ScrollToTopIcon")
+        static let scrollToBottom = Image("ScrollToBottomIcon")
         
         enum EditTask {
             static let calendar = Image("EditTaskCalendar")

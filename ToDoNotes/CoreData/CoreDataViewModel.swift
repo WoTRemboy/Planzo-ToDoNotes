@@ -163,6 +163,35 @@ final class CoreDataViewModel: ObservableObject {
             .sorted { $0.0 ?? Date.distantFuture > $1.0 ?? Date.distantFuture }
     }
     
+    internal func filteredSegmentedTasks(for filter: Filter) -> [(Date?, [TaskEntity])] {
+        let now = Date()
+        return segmentedAndSortedTasksArray.compactMap { (date, tasks) in
+            let filteredTasks = tasks.filter { task in
+                switch filter {
+                case .active:
+                    guard task.completed != 2 else { return false }
+                    if let target = task.target, task.hasTargetTime, target < now {
+                        return false
+                    }
+                    return true
+                case .outdated:
+                    if task.completed == 1,
+                       let target = task.target,
+                       task.hasTargetTime,
+                       target < now {
+                        return true
+                    }
+                    return false
+                case .completed:
+                    return task.completed == 2
+                case .unsorted:
+                    return true
+                }
+            }
+            return filteredTasks.isEmpty ? nil : (date, filteredTasks)
+        }
+    }
+    
     internal func deleteTasks(with ids: [NSManagedObjectID]) {
         ids.forEach { id in
             if let object = try? container.viewContext.existingObject(with: id) as? TaskEntity {
