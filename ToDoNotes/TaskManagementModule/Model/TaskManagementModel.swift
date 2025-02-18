@@ -11,6 +11,11 @@ struct ChecklistItem: Identifiable, Equatable {
     var id = UUID()
     var name: String
     var completed: Bool = false
+    
+    mutating internal func toggleCompleted(to active: Bool) {
+        guard completed != active, !name.isEmpty else { return }
+        self.completed = active
+    }
 }
 
 struct NotificationItem: Identifiable, Equatable, Hashable {
@@ -178,4 +183,11 @@ enum TaskStatus {
         if entity.important { return .important }
         return .none
     }
+}
+
+
+enum TaskCheck: Int16 {
+    case none = 0
+    case unchecked = 1
+    case checked = 2
 }

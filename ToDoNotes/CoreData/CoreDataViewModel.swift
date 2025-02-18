@@ -45,7 +45,7 @@ final class CoreDataViewModel: ObservableObject {
     
     internal func addTask(name: String,
                           description: String,
-                          completeCheck: Bool,
+                          completeCheck: TaskCheck,
                           target: Date?,
                           hasTime: Bool,
                           notifications: Set<NotificationItem>) {
@@ -54,7 +54,7 @@ final class CoreDataViewModel: ObservableObject {
         newTask.id = UUID()
         newTask.name = name
         newTask.details = description
-        newTask.completed = completeCheck ? 1 : 0
+        newTask.completed = completeCheck.rawValue
         newTask.created = .now
         newTask.target = target
         newTask.hasTargetTime = hasTime
@@ -76,14 +76,14 @@ final class CoreDataViewModel: ObservableObject {
     internal func updateTask(entity: TaskEntity,
                              name: String,
                              description: String,
-                             completeCheck: Bool,
+                             completeCheck: TaskCheck,
                              target: Date?,
                              hasTime: Bool,
                              notifications: Set<NotificationItem> = [],
                              checklist: [ChecklistItem] = []) {
         entity.name = name
         entity.details = description
-        entity.completed = completeCheck ? showCheckStatus(for: entity) : 0
+        entity.completed = completeCheck.rawValue
         entity.target = target
         entity.hasTargetTime = hasTime
         

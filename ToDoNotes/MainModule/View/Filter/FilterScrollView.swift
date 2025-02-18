@@ -13,8 +13,8 @@ struct FilterScrollView: View {
     @EnvironmentObject private var viewModel: MainViewModel
     
     internal var body: some View {
-        ScrollView(.horizontal) {
-            ScrollViewReader { proxy in
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal) {
                 scrollTabsContent(proxy: proxy)
             }
         }

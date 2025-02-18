@@ -40,13 +40,17 @@ struct TaskChecklistView: View {
                                 }
                             }
                         }
+                        .onAppear {
+                            if !item.name.isEmpty, viewModel.check == .checked {
+                                item.completed = true
+                            }
+                        }
                     
                     TextField(Texts.TaskManagement.point,
                               text: $item.name)
                     .font(.system(size: 15, weight: .regular))
                     .foregroundStyle(
                         item.completed ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
-                    .strikethrough(item.completed)
                     
                     .focused($focusedItemID, equals: item.id)
                     .introspect(.textField, on: .iOS(.v16, .v17, .v18)) { textField in

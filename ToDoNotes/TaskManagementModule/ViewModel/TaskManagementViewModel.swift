@@ -17,7 +17,7 @@ final class TaskManagementViewModel: ObservableObject {
     
     @Published internal var nameText: String
     @Published internal var descriptionText: String
-    @Published internal var check: Bool
+    @Published internal var check: TaskCheck
     @Published internal var checklistLocal: [ChecklistItem] = []
     
     @Published internal var checkListItemText: String = String()
@@ -110,7 +110,6 @@ final class TaskManagementViewModel: ObservableObject {
         }
         hasTime = true
         hasDate = true
-        check = true
 
         let calendar = Calendar.current
         let dayComponents = calendar.dateComponents([.year, .month, .day], from: selectedDay)
@@ -128,7 +127,7 @@ final class TaskManagementViewModel: ObservableObject {
     
     init(nameText: String = String(),
          descriptionText: String = String(),
-         check: Bool = false,
+         check: TaskCheck = .none,
          targetDate: Date = .now.startOfDay) {
         self.nameText = nameText
         self.descriptionText = descriptionText
@@ -148,7 +147,7 @@ final class TaskManagementViewModel: ObservableObject {
         self.init()
         self.nameText = entity.name ?? String()
         self.descriptionText = entity.details ?? String()
-        self.check = entity.completed != 0
+        self.check = TaskCheck(rawValue: entity.completed) ?? .none
         self.targetDate = entity.target ?? .now.startOfDay
         self.hasDate = entity.target != nil
         self.hasTime = entity.hasTargetTime
@@ -179,8 +178,34 @@ final class TaskManagementViewModel: ObservableObject {
         }
     }
     
-    internal func toggleCheck() {
-        check.toggle()
+    internal func toggleTitleCheck() {
+        switch check {
+        case .none, .checked:
+            self.check = .unchecked
+            setChecklistCompletion(to: false)
+        case .unchecked:
+            self.check = .checked
+            setChecklistCompletion(to: true)
+        }
+    }
+    
+    internal func setCheckFalse() {
+        check = .unchecked
+    }
+    
+    internal func toggleBottomCheck() {
+        switch check {
+        case .none:
+            self.check = .unchecked
+        case .unchecked, .checked:
+            self.check = .none
+        }
+    }
+    
+    private func setChecklistCompletion(to active: Bool) {
+        for index in checklistLocal.indices {
+            checklistLocal[index].toggleCompleted(to: active)
+        }
     }
     
     internal func toggleShareSheet() {
@@ -196,7 +221,6 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     internal func doneDatePicker() {
-        check = true
         showingDatePicker = false
     }
     

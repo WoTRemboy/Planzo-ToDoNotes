@@ -57,6 +57,8 @@ struct TaskListRow: View {
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     coreDataManager.toggleCompleteChecking(for: entity)
+                    let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                    impactMed.impactOccurred()
                 }
             }
             .padding(.trailing, 8)

@@ -98,16 +98,45 @@ struct TaskManagementView: View {
     }
     
     private var nameInput: some View {
-        TextField(Texts.TaskManagement.titlePlaceholder,
-                  text: $viewModel.nameText)
-        .font(.system(size: 18, weight: .medium))
-        .lineLimit(1)
+        HStack {
+            if viewModel.check != .none {
+                titleCheckbox
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            viewModel.toggleTitleCheck()
+                            let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                            impactMed.impactOccurred()
+                        }
+                    }
+            }
+            
+            TextField(Texts.TaskManagement.titlePlaceholder,
+                      text: $viewModel.nameText)
+            .font(.system(size: 18, weight: .medium))
+            .lineLimit(1)
+            
+            .foregroundStyle(
+                viewModel.check == .checked ?
+                Color.LabelColors.labelDetails :
+                    Color.LabelColors.labelPrimary)
+            .strikethrough(viewModel.check == .checked)
+            
+            .focused($titleFocused)
+            .immediateKeyboard()
+            .onAppear {
+                titleFocused = true
+            }
+        }
         .padding(.top, 20)
-        
-        .focused($titleFocused)
-        .immediateKeyboard()
-        .onAppear {
-            titleFocused = true
+    }
+    
+    private var titleCheckbox: Image {
+        if viewModel.check == .unchecked {
+            Image.TaskManagement.EditTask.checkListUncheck
+        } else {
+            Image.TaskManagement.EditTask.checkListCheck
         }
     }
     
@@ -118,6 +147,10 @@ struct TaskManagementView: View {
         
         .lineLimit(1...5)
         .font(.system(size: 15, weight: .regular))
+        .foregroundStyle(
+            viewModel.check == .checked ?
+            Color.LabelColors.labelDetails :
+                Color.LabelColors.labelPrimary)
     }
     
     private var descriptionCoverInput: some View {
@@ -126,6 +159,10 @@ struct TaskManagementView: View {
                   axis: .vertical)
         
         .font(.system(size: 15, weight: .regular))
+        .foregroundStyle(
+            viewModel.check == .checked ?
+            Color.LabelColors.labelDetails :
+                Color.LabelColors.labelPrimary)
     }
     
     private var buttons: some View {
@@ -164,7 +201,7 @@ struct TaskManagementView: View {
     }
     
     private var checkButton: some View {
-        (viewModel.check ?
+        (viewModel.check != .none ?
          Image.TaskManagement.EditTask.check :
             Image.TaskManagement.EditTask.uncheck)
         .resizable()
@@ -172,7 +209,7 @@ struct TaskManagementView: View {
         
         .onTapGesture {
             withAnimation(.easeInOut(duration: 0.2)) {
-                viewModel.toggleCheck()
+                viewModel.toggleBottomCheck()
             }
         }
     }
