@@ -121,6 +121,14 @@ final class Texts {
         static let today = "Сегодня"
         static let point = "Пункт"
         
+        enum ContextMenu {
+            static let complete = "Завершить задачу"
+            static let dublicate = "Дублировать заметку"
+            static let important = "Сделать избранной"
+            static let pin = "Закрепить"
+            static let delete = "Удалить"
+        }
+        
         enum DatePicker {
             static let title = "Дата и время"
             static let cancel = "Отменить"

@@ -8,20 +8,14 @@
 import SwiftUI
 
 struct TaskManagementNavBar: View {
-        
-    private var title: String
-    private var dayName: String
-    private var onDismiss: () -> Void
-    private var onShare: () -> Void
     
-    init(title: String,
-         dayName: String,
-         onDismiss: @escaping () -> Void,
-         onShare: @escaping () -> Void) {
-        self.title = title
-        self.dayName = dayName
+    @ObservedObject private var viewModel: TaskManagementViewModel
+    private var onDismiss: () -> Void
+    
+    init(viewModel: TaskManagementViewModel,
+         onDismiss: @escaping () -> Void) {
+        self.viewModel = viewModel
         self.onDismiss = onDismiss
-        self.onShare = onShare
     }
     
     internal var body: some View {
@@ -29,7 +23,7 @@ struct TaskManagementNavBar: View {
             HStack {
                 backButton
                 titleLabel
-                shareButton
+                moreButton
             }
         }
         .frame(height: 46.5)
@@ -52,20 +46,20 @@ struct TaskManagementNavBar: View {
                 .font(.system(size: 17, weight: .medium))
                 .padding(.leading)
             
-            Text(title)
+            Text(viewModel.todayDate.shortDate)
                 .font(.system(size: 17, weight: .medium))
             
-            Text(dayName)
+            Text(viewModel.todayDate.shortWeekday)
                 .font(.system(size: 17, weight: .medium))
                 .foregroundStyle(Color.LabelColors.labelSecondary)
                 .padding(.trailing)
         }
-        .frame(maxWidth: .infinity, alignment: .center)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     private var shareButton: some View {
         Button {
-            onShare()
+            // Share Action
         } label: {
             Image.NavigationBar.share
                 .resizable()
@@ -76,12 +70,76 @@ struct TaskManagementNavBar: View {
         .disabled(true)
         .padding(.trailing)
     }
+    
+    private var moreButton: some View {
+        Menu {
+            Button {
+                // Complete Status Action
+            } label: {
+                Label {
+                    Text(Texts.TaskManagement.ContextMenu.complete)
+                } icon: {
+                    Image.NavigationBar.uncompleted
+                        .renderingMode(.template)
+                }
+            }
+            
+            Button {
+                // Dublicate Task Action
+            } label: {
+                Label {
+                    Text(Texts.TaskManagement.ContextMenu.dublicate)
+                } icon: {
+                    Image.NavigationBar.copy
+                        .renderingMode(.template)
+                }
+            }
+            
+            Section {
+                Button {
+                    // Set Important Action
+                } label: {
+                    Label {
+                        Text(Texts.TaskManagement.ContextMenu.important)
+                    } icon: {
+                        Image.NavigationBar.favorite
+                            .renderingMode(.template)
+                    }
+                }
+                
+                Button {
+                    // Pin Task Action
+                } label: {
+                    Label {
+                        Text(Texts.TaskManagement.ContextMenu.pin)
+                    } icon: {
+                        Image.NavigationBar.pin
+                            .renderingMode(.template)
+                    }
+                }
+                
+                Button(role: .destructive) {
+                    // Delete Task Action
+                } label: {
+                    Label {
+                        Text(Texts.TaskManagement.ContextMenu.delete)
+                    } icon: {
+                        Image.NavigationBar.trash
+                            .renderingMode(.template)
+                    }
+                }
+            }
+        } label: {
+            Image.NavigationBar.more
+                .resizable()
+                .frame(width: 22, height: 22)
+        }
+        .padding(.trailing, 8)
+    }
 }
 
 #Preview {
     TaskManagementNavBar(
-        title: "November 18",
-        dayName: "Sun",
-        onDismiss: {},
-        onShare: {})
+        viewModel: TaskManagementViewModel(),
+        onDismiss: {})
 }

@@ -14,12 +14,22 @@ extension Image {
     }
     
     enum NavigationBar {
-        static let search = Image("SearchNavIcon")
-        static let favorites = Image("FavoritesNavIcon")
-        static let calendar = Image("CalendarNavIcon")
-        static let more = Image("MoreNavIcon")
-        static let back = Image("BackNavIcon")
-        static let share = Image("ShareNavIcon")
+        static let search = Image("NavIconSearch")
+        static let favorites = Image("NavIconFavorites")
+        static let calendar = Image("NavIconCalendar")
+        static let more = Image("NavIconMore")
+        static let back = Image("NavIconBack")
+        static let share = Image("NavIconShare")
+        
+        static let completed = Image("NavIconCompleted")
+        static let uncompleted = Image("NavIconUncompleted")
+        static let pin = Image("NavIconPin")
+        static let unpin = Image("NavIconUnpin")
+        static let favorite = Image("NavIconFavorite")
+        static let unfavorite = Image("NavIconUnfavorite")
+        
+        static let copy = Image("NavIconCopy")
+        static let trash = Image("NavIconTrash")
     }
     
     enum Folder {

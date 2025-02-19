@@ -18,7 +18,6 @@ struct TaskManagementView: View {
     @Binding private var taskManagementHeight: CGFloat
     @State private var isKeyboardActive = false
     
-    private let date: Date = .now
     private let entity: TaskEntity?
     private let onDismiss: () -> Void
     
@@ -42,15 +41,12 @@ struct TaskManagementView: View {
             VStack(spacing: 0) {
                 if entity != nil {
                     TaskManagementNavBar(
-                        title: date.shortDate,
-                        dayName: date.shortWeekday,
-                        onDismiss: {
+                        viewModel: viewModel) {
                             withAnimation(.easeInOut(duration: 0.2)) {
                                 updateTask()
                                 onDismiss()
                             }
-                        },
-                        onShare: viewModel.toggleShareSheet)
+                        }
                 }
                 content
             }
