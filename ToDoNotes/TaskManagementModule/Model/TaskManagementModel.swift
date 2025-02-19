@@ -179,6 +179,7 @@ enum TaskStatus {
     
     static internal func setupStatus(for entity: TaskEntity) -> Self {
         if entity.completed == 1,
+           entity.hasTargetTime,
            entity.target ?? .distantPast < .now { return .outdated }
         if entity.important { return .important }
         return .none
