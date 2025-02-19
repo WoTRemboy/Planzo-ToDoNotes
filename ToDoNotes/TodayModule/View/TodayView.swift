@@ -18,6 +18,16 @@ struct TodayView: View {
             plusButton
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        
+        .onAppear {
+            coreDataManager.dayTasks(for: viewModel.todayDate)
+        }
+        .onChange(of: coreDataManager.savedEnities) { _ in
+            withAnimation {
+                coreDataManager.dayTasks(for: viewModel.todayDate)
+            }
+        }
+        
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight) {
@@ -39,8 +49,7 @@ struct TodayView: View {
         VStack(spacing: 0) {
             TodayNavBar(date: viewModel.todayDate.shortDate,
                         day: viewModel.todayDate.shortWeekday)
-            if coreDataManager.dayTasks(
-                for: viewModel.todayDate).isEmpty {
+            if coreDataManager.dayTasks.isEmpty {
                 placeholderLabel
             } else {
                 taskForm
@@ -59,33 +68,40 @@ struct TodayView: View {
     
     private var taskForm: some View {
         Form {
-            Section {
-                ForEach(coreDataManager.dayTasks(for: viewModel.todayDate)) { entity in
-                    Button {
-                        viewModel.selectedTask = entity
-                    } label: {
-                        TaskListRow(entity: entity)
-                    }
-                }
-                .onDelete { indexSet in
-                    let tasksForToday = coreDataManager.dayTasks(for: viewModel.todayDate)
-                    let idsToDelete = indexSet.map { tasksForToday[$0].objectID }
-                    
-                    withAnimation {
-                        coreDataManager.deleteTasks(with: idsToDelete)
-                    }
-                }
-                .listRowBackground(Color.SupportColors.backListRow)
-                .listRowInsets(EdgeInsets())
-            } header: {
-                Text(Texts.TodayPage.notCompleted)
-                    .font(.system(size: 13, weight: .medium))
-                    .textCase(.none)
+            ForEach(TaskSection.availableRarities(for: coreDataManager.dayTasks.keys), id: \.self) { section in
+                taskFormSection(for: section)
             }
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
+    }
+    
+    @ViewBuilder
+    private func taskFormSection(for section: TaskSection) -> some View {
+        Section {
+            ForEach(coreDataManager.dayTasks[section] ?? []) { entity in
+                Button {
+                    viewModel.selectedTask = entity
+                } label: {
+                    TaskListRow(entity: entity)
+                }
+            }
+            .onDelete { indexSet in
+                let tasksForToday = coreDataManager.dayTasks[section] ?? []
+                let idsToDelete = indexSet.map { tasksForToday[$0].objectID }
+                
+                withAnimation {
+                    coreDataManager.deleteTasks(with: idsToDelete)
+                }
+            }
+            .listRowBackground(Color.SupportColors.backListRow)
+            .listRowInsets(EdgeInsets())
+        } header: {
+            Text(section.name)
+                .font(.system(size: 13, weight: .medium))
+                .textCase(.none)
+        }
     }
     
     private var plusButton: some View {

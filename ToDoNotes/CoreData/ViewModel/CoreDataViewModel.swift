@@ -15,6 +15,9 @@ final class CoreDataViewModel: ObservableObject {
     @Published internal var savedEnities: [TaskEntity] = []
     @Published internal var segmentedAndSortedTasksArray: [(Date?, [TaskEntity])] = []
     @Published internal var segmentedAndSortedTasksDict: [Date?: [TaskEntity]] = [:]
+    @Published internal var dayTasks: [TaskSection : [TaskEntity]] = [:]
+    
+    @Published internal var dayTasksHasUpdated: Bool = false
     private let container: NSPersistentContainer
     
     internal var isEmpty : Bool {
@@ -234,9 +237,17 @@ final class CoreDataViewModel: ObservableObject {
 
 extension CoreDataViewModel {
     
-    internal func dayTasks(for date: Date) -> [TaskEntity] {
+    internal func dayTasks(for date: Date) {
         let day = Calendar.current.startOfDay(for: date)
-        return segmentedAndSortedTasksDict[day] ?? []
+        let tasksForDay = segmentedAndSortedTasksDict[day] ?? []
+        dayTasks.removeAll()
+        
+//        let pinnedTasks = tasksForDay.filter { $0.isPinned }
+        let activeTasks = tasksForDay.filter { $0.completed != 2 }
+        let completedTasks = tasksForDay.filter { $0.completed == 2 }
+        
+        !activeTasks.isEmpty ? dayTasks[.active] = activeTasks : nil
+        !completedTasks.isEmpty ? dayTasks[.completed] = completedTasks : nil
     }
     
     internal func haveTextContent(for entity: TaskEntity) -> Bool {
@@ -283,6 +294,7 @@ extension CoreDataViewModel {
     
     internal func toggleCompleteChecking(for entity: TaskEntity) {
         entity.completed = entity.completed == 1 ? 2 : 1
+        dayTasksHasUpdated.toggle()
         saveData()
     }
     

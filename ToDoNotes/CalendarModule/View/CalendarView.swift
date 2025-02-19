@@ -24,6 +24,21 @@ struct CalendarView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        
+        .onAppear {
+            coreDataManager.dayTasks(for: viewModel.selectedDate)
+        }
+        .onChange(of: coreDataManager.savedEnities) { _ in
+            withAnimation {
+                coreDataManager.dayTasks(for: viewModel.selectedDate)
+            }
+        }
+        .onChange(of: coreDataManager.dayTasksHasUpdated) { _ in
+            withAnimation {
+                coreDataManager.dayTasks(for: viewModel.selectedDate)
+            }
+        }
+        
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
@@ -51,8 +66,7 @@ struct CalendarView: View {
             
             separator
             
-            if coreDataManager.dayTasks(
-                for: viewModel.selectedDate).isEmpty {
+            if coreDataManager.dayTasks.isEmpty {
                 placeholder
             } else {
                 taskForm
@@ -73,9 +87,19 @@ struct CalendarView: View {
     
     private var taskForm: some View {
         Form {
-            Section {
-                ForEach(coreDataManager.dayTasks(
-                    for: viewModel.selectedDate)) { entity in
+            ForEach(TaskSection.availableRarities(for: coreDataManager.dayTasks.keys), id: \.self) { section in
+                taskSection(for: section)
+            }
+        }
+        .padding(.horizontal, hasNotch() ? -4 : 0)
+        .background(Color.BackColors.backDefault)
+        .scrollContentBackground(.hidden)
+    }
+    
+    @ViewBuilder
+    private func taskSection(for section: TaskSection) -> some View {
+        Section {
+            ForEach(coreDataManager.dayTasks[section] ?? []) { entity in
                     Button {
                         viewModel.selectedTask = entity
                     } label: {
@@ -83,8 +107,7 @@ struct CalendarView: View {
                     }
                 }
                 .onDelete { indexSet in
-                    let tasksForToday = coreDataManager.dayTasks(
-                        for: viewModel.selectedDate)
+                    let tasksForToday = coreDataManager.dayTasks[section] ?? []
                     let idsToDelete = indexSet.map { tasksForToday[$0].objectID }
                     
                     withAnimation {
@@ -94,7 +117,8 @@ struct CalendarView: View {
                 }
                 .listRowBackground(Color.SupportColors.backListRow)
                 .listRowInsets(EdgeInsets())
-            } header: {
+        } header: {
+            if section == .active {
                 Text(viewModel.selectedDate.longDayMonthWeekday)
                     .font(.system(size: 13, weight: .medium))
                     .textCase(.none)
@@ -102,11 +126,12 @@ struct CalendarView: View {
                     .matchedGeometryEffect(
                         id: Texts.NamespaceID.selectedCalendarDate,
                         in: animationNamespace)
+            } else {
+                Text(section.name)
+                    .font(.system(size: 13, weight: .medium))
+                    .textCase(.none)
             }
         }
-        .padding(.horizontal, hasNotch() ? -4 : 0)
-        .background(Color.BackColors.backDefault)
-        .scrollContentBackground(.hidden)
     }
     
     private var placeholder: some View {

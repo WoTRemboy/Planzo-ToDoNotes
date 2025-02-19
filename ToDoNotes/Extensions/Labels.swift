@@ -187,6 +187,12 @@ final class Texts {
     enum CoreData {
         static let container = "TaskModel"
         static let entity = "TaskEntity"
+        
+        enum TaskSection {
+            static let pinned = "Закреплено"
+            static let active = "Активные"
+            static let completed = "Выполнено"
+        }
     }
     
     enum UserDefaults {

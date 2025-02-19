@@ -56,6 +56,7 @@ struct CustomCalendarView: View {
                         .onTapGesture {
                             withAnimation(.easeInOut(duration: 0.15)) {
                                 viewModel.selectedDate = day.startOfDay
+                                coreDataManager.dayTasks(for: viewModel.selectedDate)
                             }
                         }
                     }
