@@ -12,6 +12,8 @@ struct MainView: View {
     @EnvironmentObject private var viewModel: MainViewModel
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
     
+    @Namespace private var animation
+    
     internal var body: some View {
         ZStack(alignment: .bottomTrailing) {
             content
@@ -20,7 +22,8 @@ struct MainView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
-                taskManagementHeight: $viewModel.taskManagementHeight) {
+                taskManagementHeight: $viewModel.taskManagementHeight,
+                namespace: animation) {
                     viewModel.toggleShowingCreateView()
             }
             .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
@@ -29,7 +32,8 @@ struct MainView: View {
         .fullScreenCover(item: $viewModel.selectedTask) { task in
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
-                entity: task) {
+                entity: task,
+                namespace: animation) {
                     viewModel.toggleShowingTaskEditView()
                 }
         }
@@ -58,23 +62,7 @@ struct MainView: View {
     private var taskForm: some View {
         Form {
             ForEach(coreDataManager.filteredSegmentedTasks(for: viewModel.selectedFilter), id: \.0) { segment, tasks in
-                Section(header: segmentHeader(name: segment)) {
-                    ForEach(tasks) { entity in
-                        Button {
-                            viewModel.selectedTask = entity
-                        } label: {
-                            TaskListRow(entity: entity)
-                        }
-                    }
-                    .onDelete { indexSet in
-                        let idsToDelete = indexSet.map { tasks[$0].objectID }
-                        withAnimation {
-                            coreDataManager.deleteTasks(with: idsToDelete)
-                        }
-                    }
-                    .listRowBackground(Color.SupportColors.backListRow)
-                    .listRowInsets(EdgeInsets())
-                }
+                segmentView(segment: segment, tasks: tasks)
             }
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
@@ -82,6 +70,39 @@ struct MainView: View {
         .scrollContentBackground(.hidden)
     }
     
+    @ViewBuilder
+    private func segmentView(segment: Date?, tasks: [TaskEntity]) -> some View {
+        Section(header: segmentHeader(name: segment)) {
+            ForEach(tasks) { entity in
+                if #available(iOS 18.0, *) {
+                    Button {
+                        viewModel.selectedTask = entity
+                    } label: {
+                        TaskListRow(entity: entity)
+                    }
+                    .matchedTransitionSource(
+                        id: "\(String(describing: entity.id))",
+                        in: animation)
+                } else {
+                    Button {
+                        viewModel.selectedTask = entity
+                    } label: {
+                        TaskListRow(entity: entity)
+                    }
+                }
+            }
+            .onDelete { indexSet in
+                let idsToDelete = indexSet.map { tasks[$0].objectID }
+                withAnimation {
+                    coreDataManager.deleteTasks(with: idsToDelete)
+                }
+            }
+            .listRowBackground(Color.SupportColors.backListRow)
+            .listRowInsets(EdgeInsets())
+        }
+    }
+    
+    @ViewBuilder
     private func segmentHeader(name: Date?) -> some View {
         Text(name?.longDayMonthWeekday ?? String())
             .font(.system(size: 13, weight: .medium))

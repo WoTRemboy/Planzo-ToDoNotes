@@ -10,7 +10,6 @@ import SwiftUI
 struct TaskManagementView: View {
     
     @FocusState private var titleFocused
-    @Namespace private var animation
     
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
     @StateObject private var viewModel = TaskManagementViewModel()
@@ -19,15 +18,18 @@ struct TaskManagementView: View {
     @State private var isKeyboardActive = false
     
     private let entity: TaskEntity?
+    private let animation: Namespace.ID
     private let onDismiss: () -> Void
     
     init(taskManagementHeight: Binding<CGFloat>,
          selectedDate: Date? = nil,
          entity: TaskEntity? = nil,
+         namespace: Namespace.ID,
          onDismiss: @escaping () -> Void) {
         self._taskManagementHeight = taskManagementHeight
         self.onDismiss = onDismiss
         self.entity = entity
+        self.animation = namespace
         
         if let entity {
             self._viewModel = StateObject(wrappedValue: TaskManagementViewModel(entity: entity))
@@ -68,6 +70,9 @@ struct TaskManagementView: View {
                 namespace: animation)
                 .presentationDetents([.height(670)])
         }
+        .navigationTransition(
+            id: entity?.id,
+            namespace: animation)
     }
     
     private var content: some View {
@@ -120,7 +125,7 @@ struct TaskManagementView: View {
             .strikethrough(viewModel.check == .checked)
             
             .focused($titleFocused)
-            .immediateKeyboard()
+            .immediateKeyboard(delay: entity != nil ? 0.3 : 0)
             .onAppear {
                 titleFocused = true
             }
@@ -253,7 +258,8 @@ struct TaskManagementView_Previews: PreviewProvider {
         
         var body: some View {
             TaskManagementView(
-                taskManagementHeight: $taskManagementHeight)
+                taskManagementHeight: $taskManagementHeight,
+                namespace: Namespace().wrappedValue)
             { }
         }
     }

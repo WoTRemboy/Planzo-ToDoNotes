@@ -12,6 +12,8 @@ struct TodayView: View {
     @EnvironmentObject private var viewModel: TodayViewModel
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
     
+    @Namespace private var animation
+    
     internal var body: some View {
         ZStack {
             content
@@ -30,7 +32,8 @@ struct TodayView: View {
         
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
-                taskManagementHeight: $viewModel.taskManagementHeight) {
+                taskManagementHeight: $viewModel.taskManagementHeight,
+                namespace: animation) {
                     viewModel.toggleShowingTaskCreateView()
                 }
                 .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
@@ -39,7 +42,8 @@ struct TodayView: View {
         .fullScreenCover(item: $viewModel.selectedTask) { task in
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
-                entity: task) {
+                entity: task,
+                namespace: animation) {
                     viewModel.toggleShowingTaskEditView()
                 }
         }

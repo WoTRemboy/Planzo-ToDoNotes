@@ -12,7 +12,7 @@ struct CalendarView: View {
     @EnvironmentObject private var viewModel: CalendarViewModel
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
     
-    @Namespace private var animationNamespace
+    @Namespace private var animation
     
     internal var body: some View {
         ZStack {
@@ -42,7 +42,8 @@ struct CalendarView: View {
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
-                selectedDate: viewModel.selectedDate) {
+                selectedDate: viewModel.selectedDate,
+                namespace: animation) {
                     viewModel.toggleShowingTaskCreateView()
                 }
                 .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
@@ -51,7 +52,8 @@ struct CalendarView: View {
         .fullScreenCover(item: $viewModel.selectedTask) { task in
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
-                entity: task) {
+                entity: task,
+                namespace: animation) {
                     viewModel.toggleShowingTaskEditView()
                 }
         }
@@ -61,7 +63,7 @@ struct CalendarView: View {
         VStack(spacing: 0) {
             CalendarNavBar(date: Texts.CalendarPage.today,
                            monthYear: viewModel.calendarDate.longMonthYear)
-            CustomCalendarView(namespace: animationNamespace)
+            CustomCalendarView(namespace: animation)
                 .padding(.top)
             
             separator
@@ -125,7 +127,7 @@ struct CalendarView: View {
                     .contentTransition(.numericText())
                     .matchedGeometryEffect(
                         id: Texts.NamespaceID.selectedCalendarDate,
-                        in: animationNamespace)
+                        in: animation)
             } else {
                 Text(section.name)
                     .font(.system(size: 13, weight: .medium))
@@ -138,7 +140,7 @@ struct CalendarView: View {
         ScrollView {
             CalendarTaskFormPlaceholder(
                 date: viewModel.selectedDate.longDayMonthWeekday,
-                namespace: animationNamespace)
+                namespace: animation)
                 .padding(.top)
         }
         .scrollDisabled(true)
