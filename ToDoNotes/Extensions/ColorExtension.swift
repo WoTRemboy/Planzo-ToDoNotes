@@ -43,3 +43,10 @@ extension Color {
         static let backListRow = Color("SupportListRow")
     }
 }
+
+
+extension UIColor {
+    enum ShadowColors {
+        static let defaultShadow = UIColor(named: "ShadowDefaultColor")
+    }
+}
