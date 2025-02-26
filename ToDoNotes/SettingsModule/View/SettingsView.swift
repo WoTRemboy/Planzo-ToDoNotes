@@ -24,6 +24,8 @@ struct SettingsView: View {
     private var content: some View {
         VStack(spacing: 0) {
             SettingsNavBar()
+                .zIndex(1)
+            
             paramsForm
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
