@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct MainCustomNavBar: View {
-    @State private var safeAreaTop: CGFloat = 0
-    
     private let title: String
     
     init(title: String) {
@@ -37,10 +35,6 @@ struct MainCustomNavBar: View {
                 .padding(.top, topInset + 8)
             }
             .ignoresSafeArea(edges: .top)
-            .onAppear {
-                safeAreaTop = topInset
-            }
-            
         }
         .frame(height: 140)
     }

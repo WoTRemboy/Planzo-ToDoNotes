@@ -53,6 +53,8 @@ struct TodayView: View {
         VStack(spacing: 0) {
             TodayNavBar(date: viewModel.todayDate.shortDate,
                         day: viewModel.todayDate.shortWeekday)
+            .zIndex(1)
+            
             if coreDataManager.dayTasks.isEmpty {
                 placeholderLabel
             } else {
