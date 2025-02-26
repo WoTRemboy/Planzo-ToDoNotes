@@ -42,6 +42,8 @@ struct MainView: View {
     private var content: some View {
         VStack(spacing: 0) {
             MainCustomNavBar(title: Texts.MainPage.title)
+                .zIndex(1)
+            
             if coreDataManager.filteredSegmentedTasks(for: viewModel.selectedFilter).isEmpty {
                 placeholderLabel
             } else {

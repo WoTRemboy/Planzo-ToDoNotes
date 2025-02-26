@@ -42,6 +42,17 @@ extension Color {
         static let supportTextField = Color("SupportTextField")
         static let backListRow = Color("SupportListRow")
     }
+    
+    enum FolderColors {
+        static let all = Color("FolderAll")
+        static let noDate = Color("FolderNoDate")
+        static let lists = Color("FolderLists")
+        static let passwords = Color("FolderPasswords")
+    }
+    
+    enum ShadowColors {
+        static let shadowDefault = Color("ShadowDefaultColor")
+    }
 }
 
 

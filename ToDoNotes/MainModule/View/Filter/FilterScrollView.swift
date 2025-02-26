@@ -9,7 +9,6 @@ import SwiftUI
 
 struct FilterScrollView: View {
     
-    @Namespace private var animation
     @EnvironmentObject private var viewModel: MainViewModel
     
     internal var body: some View {
@@ -26,8 +25,7 @@ struct FilterScrollView: View {
         HStack(spacing: 8) {
             ForEach(Filter.allCases, id: \.self) { filter in
                 FilterCell(name: filter.name,
-                           selected: viewModel.compareFilters(with: filter),
-                           namespace: animation)
+                           selected: viewModel.compareFilters(with: filter))
                 .frame(height: 35)
                 .id(filter)
                 .onTapGesture {

@@ -11,40 +11,25 @@ struct FilterCell: View {
         
     private let selected: Bool
     private let name: String
-    private let namespace: Namespace.ID
     
-    init(name: String, selected: Bool, namespace: Namespace.ID) {
+    init(name: String, selected: Bool) {
         self.name = name
         self.selected = selected
-        self.namespace = namespace
     }
     
     internal var body: some View {
         nameLabel
-            .background(alignment: .bottom) {
-                if selected {
-                    underline
-                        .offset(y: 5)
-                }
-            }
     }
     
     private var nameLabel: some View {
         Text(name)
-            .font(.system(size: 18, weight: .medium))
+            .font(.system(size: 22, weight: selected ? .bold : .medium))
             .foregroundStyle(selected ? Color.LabelColors.labelPrimary : Color.LabelColors.labelSecondary)
             .frame(maxWidth: .infinity)
-    }
-    
-    private var underline: some View {
-        Rectangle()
-            .foregroundStyle(Color.LabelColors.labelPrimary)
-            .frame(maxWidth: .infinity)
-            .frame(height: 2)
-            .matchedGeometryEffect(id: Texts.NamespaceID.selectedTab, in: namespace)
+            .transition(.scale)
     }
 }
 
 #Preview {
-    FilterCell(name: "Active", selected: true, namespace: Namespace().wrappedValue)
+    FilterCell(name: "Active", selected: true)
 }
