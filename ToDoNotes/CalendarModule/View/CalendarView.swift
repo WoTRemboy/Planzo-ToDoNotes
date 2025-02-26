@@ -63,6 +63,8 @@ struct CalendarView: View {
         VStack(spacing: 0) {
             CalendarNavBar(date: Texts.CalendarPage.today,
                            monthYear: viewModel.calendarDate.longMonthYear)
+            .zIndex(1)
+            
             CustomCalendarView(namespace: animation)
                 .padding(.top)
             
