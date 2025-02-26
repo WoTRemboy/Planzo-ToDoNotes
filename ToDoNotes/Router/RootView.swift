@@ -12,19 +12,19 @@ struct RootView: View {
     
     internal var body: some View {
         TabView(selection: $router.selectedTab) {
-            TabItems.mainTab()
+            TabItems.mainTab(isSelected: router.selectedTab == .main)
                 .tag(TabRouter.Tab.main)
             
-            TabItems.todayTab()
+            TabItems.todayTab(isSelected: router.selectedTab == .today)
                 .tag(TabRouter.Tab.today)
             
-            TabItems.calendarTab()
+            TabItems.calendarTab(isSelected: router.selectedTab == .calendar)
                 .tag(TabRouter.Tab.calendar)
             
-            TabItems.settingsTab()
+            TabItems.settingsTab(isSelected: router.selectedTab == .settings)
                 .tag(TabRouter.Tab.settings)
         }
-        .accentColor(.LabelColors.labelSecondary)
+        .accentColor(Color.LabelColors.labelPrimary)
         .environmentObject(router)
     }
 }
