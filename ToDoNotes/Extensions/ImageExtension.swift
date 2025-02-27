@@ -89,16 +89,10 @@ extension Image {
             static let uncheckedBox = Image("TaskRowUncheckedBox")
             static let checkedBox = Image("TaskRowCheckedBox")
             
-            static let uncheckedRemainder = Image("TaskRowUncheckedRemainder")
-            static let checkedRemainder = Image("TaskRowCheckedRemainder")
-            
-            static let uncheckedContent = Image("TaskRowUncheckedContent")
-            static let checkedContent = Image("TaskRowCheckedContent")
-            
-            static let uncheckedImportant = Image("TaskRowUncheckedImportant")
-            static let checkedImportant = Image("TaskRowCheckedImportant")
-            
-            static let uncheckedExpired = Image("TaskRowUncheckedExpired")
+            static let remainder = Image("TaskRowRemainder")
+            static let content = Image("TaskRowContent")
+            static let important = Image("TaskRowImportant")
+            static let expired = Image("TaskRowExpired")
         }
         
         enum DateSelector {

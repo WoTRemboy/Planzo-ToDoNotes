@@ -83,8 +83,8 @@ struct CalendarView: View {
     }
     
     private var separator: some View {
-        Divider()
-            .background(Color.LabelColors.labelTertiary)
+        Rectangle()
+            .foregroundStyle(Color.clear)
             .frame(height: 0.36)
             .padding([.top, .horizontal])
     }
@@ -97,6 +97,7 @@ struct CalendarView: View {
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .background(Color.BackColors.backDefault)
+        .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
         .scrollContentBackground(.hidden)
     }
     
@@ -119,12 +120,11 @@ struct CalendarView: View {
                             with: idsToDelete)
                     }
                 }
-                .listRowBackground(Color.SupportColors.backListRow)
                 .listRowInsets(EdgeInsets())
         } header: {
             if section == .active {
                 Text(viewModel.selectedDate.longDayMonthWeekday)
-                    .font(.system(size: 13, weight: .medium))
+                    .font(.system(size: 15, weight: .medium))
                     .textCase(.none)
                     .contentTransition(.numericText())
                     .matchedGeometryEffect(
@@ -132,7 +132,7 @@ struct CalendarView: View {
                         in: animation)
             } else {
                 Text(section.name)
-                    .font(.system(size: 13, weight: .medium))
+                    .font(.system(size: 15, weight: .medium))
                     .textCase(.none)
             }
         }

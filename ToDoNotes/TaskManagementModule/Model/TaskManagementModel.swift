@@ -176,13 +176,23 @@ enum TaskStatus {
     case none
     case outdated
     case important
+    case outdatedImportant
     
     static internal func setupStatus(for entity: TaskEntity) -> Self {
-        if entity.completed == 1,
-           entity.hasTargetTime,
-           entity.target ?? .distantPast < .now { return .outdated }
-        if entity.important { return .important }
-        return .none
+        let isOutdated = (entity.completed == 1) &&
+        entity.hasTargetTime &&
+        ((entity.target ?? .distantPast) < Date.now)
+        let isImportant = entity.important
+        
+        if isOutdated && isImportant {
+            return .outdatedImportant
+        } else if isOutdated {
+            return .outdated
+        } else if isImportant {
+            return .important
+        } else {
+            return .none
+        }
     }
 }
 

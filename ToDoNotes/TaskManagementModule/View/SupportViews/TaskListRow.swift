@@ -29,15 +29,15 @@ struct TaskListRow: View {
             
             Spacer()
             detailsBox
-            additionalStatus
         }
+        .frame(height: 62)
     }
     
     private var folderIndicatior: some View {
         Rectangle()
-            .foregroundStyle(Color.clear)
-            .frame(maxWidth: 1, maxHeight: .infinity)
-            .padding(.trailing, 14)
+            .foregroundStyle(Color.FolderColors.lists)
+            .frame(maxWidth: 6, maxHeight: .infinity)
+            .padding(.trailing, 10)
     }
     
     private var checkBoxButton: some View {
@@ -46,7 +46,7 @@ struct TaskListRow: View {
             Image.TaskManagement.TaskRow.uncheckedBox)
             .resizable()
             .renderingMode(.template)
-            .frame(width: 15, height: 15)
+            .frame(width: 18, height: 18)
         
             .foregroundStyle(
                 status == .outdated || coreDataManager.taskCheckStatus(for: entity) ?
@@ -66,7 +66,7 @@ struct TaskListRow: View {
     
     private var nameLabel: some View {
         Text(entity.name ?? String())
-            .font(.system(size: 15, weight: .medium))
+            .font(.system(size: 18, weight: .medium))
             .lineLimit(1)
             .foregroundStyle(
                 coreDataManager.taskCheckStatus(for: entity)
@@ -78,74 +78,95 @@ struct TaskListRow: View {
     }
     
     private var detailsBox: some View {
-        VStack(alignment: .trailing, spacing: 2) {
+        VStack(alignment: .trailing, spacing: 6) {
             if entity.target != nil, entity.hasTargetTime {
                 dateLabel
             }
             
             HStack(spacing: 2) {
-                if coreDataManager.haveTextContent(for: entity) {
+                let context = coreDataManager.haveTextContent(for: entity)
+                let notifications = entity.notifications?.count ?? 0
+                
+                if context {
                     textContentImage
                 }
-                if let notifications = entity.notifications,
-                   notifications.count > 0 {
+                if notifications > 0 {
                     remainderImage
+                }
+                if context || notifications > 0 {
+                    additionalStatus
+                        .frame(width: 15, height: 15)
                 }
             }
         }
         .padding(.leading)
+        .padding(.trailing, 4)
     }
     
     private var dateLabel: some View {
-        Text(entity.target?.fullHourMinutes ?? String())
-            .font(.system(size: 12, weight: .medium))
-            .foregroundStyle(
-                coreDataManager.taskCheckStatus(for: entity)
-                || status == .outdated ?
-                             Color.LabelColors.labelDetails :
-                                Color.LabelColors.labelPrimary)
+        HStack(spacing: 2) {
+            Text(entity.target?.fullHourMinutes ?? String())
+                .font(.system(size: 14, weight: .regular))
+                .foregroundStyle(
+                    coreDataManager.taskCheckStatus(for: entity)
+                    || status == .outdated ?
+                    Color.LabelColors.labelDetails :
+                        Color.LabelColors.labelPrimary)
+            
+            dateLabelAdditionalIcon
+                .frame(width: 15, height: 15)
+        }
     }
     
     private var remainderImage: some View {
-        (coreDataManager.taskCheckStatus(for: entity) ?
-         Image.TaskManagement.TaskRow.checkedRemainder :
-            Image.TaskManagement.TaskRow.uncheckedRemainder)
+        Image.TaskManagement.TaskRow.remainder
             .resizable()
-            .frame(width: 12, height: 12)
+            .frame(width: 18, height: 18)
     }
     
     private var textContentImage: some View {
-        (coreDataManager.taskCheckStatus(for: entity) ?
-         Image.TaskManagement.TaskRow.checkedContent :
-            Image.TaskManagement.TaskRow.uncheckedContent)
+        Image.TaskManagement.TaskRow.content
             .resizable()
-            .frame(width: 12, height: 12)
+            .frame(width: 18, height: 18)
+    }
+    
+    private var dateLabelAdditionalIcon: some View {
+        Group {
+            switch status {
+            case .none:
+                emptyRectangle
+            case .outdated:
+                Image.TaskManagement.TaskRow.expired
+            case .important:
+                Image.TaskManagement.TaskRow.important
+            case .outdatedImportant:
+                Image.TaskManagement.TaskRow.important
+            }
+        }
     }
     
     private var additionalStatus: some View {
-        VStack(spacing: 2) {
-            if status != .none {
-                additionalImage
-                    .resizable()
-                    .frame(width: 12, height: 12)
+        Group {
+            switch status {
+            case .none:
+                emptyRectangle
+            case .outdated:
+                emptyRectangle
+            case .important:
+                if entity.hasTargetTime {
+                    emptyRectangle
+                } else {
+                    Image.TaskManagement.TaskRow.important
+                }
+            case .outdatedImportant:
+                Image.TaskManagement.TaskRow.expired
             }
-            
-            Rectangle()
-                .foregroundStyle(Color.clear)
-                .frame(width: 12, height: 12)
         }
-        .padding(.horizontal, 5)
     }
     
-    private var additionalImage: Image {
-        switch status {
-        case .none:
-            Image.TaskManagement.TaskRow.uncheckedExpired
-        case .outdated:
-            Image.TaskManagement.TaskRow.uncheckedExpired
-        case .important:
-            Image.TaskManagement.TaskRow.uncheckedImportant
-        }
+    private var emptyRectangle: some View {
+        Rectangle()
+            .foregroundStyle(.clear)
     }
 }
 

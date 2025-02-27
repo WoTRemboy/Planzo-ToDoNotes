@@ -29,7 +29,7 @@ struct CalendarTaskFormPlaceholder: View {
     
     private var dateLabel: some View {
         Text(date)
-            .font(.system(size: 13, weight: .medium))
+            .font(.system(size: 15, weight: .medium))
             .foregroundStyle(Color.LabelColors.labelSecondary)
             .contentTransition(.numericText())
             .matchedGeometryEffect(

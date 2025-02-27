@@ -65,9 +65,11 @@ struct MainView: View {
         Form {
             ForEach(coreDataManager.filteredSegmentedTasks(for: viewModel.selectedFilter), id: \.0) { segment, tasks in
                 segmentView(segment: segment, tasks: tasks)
+                    .listRowSeparator(.hidden)
             }
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
+        .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
     }
@@ -99,7 +101,6 @@ struct MainView: View {
                     coreDataManager.deleteTasks(with: idsToDelete)
                 }
             }
-            .listRowBackground(Color.SupportColors.backListRow)
             .listRowInsets(EdgeInsets())
         }
     }
@@ -107,7 +108,7 @@ struct MainView: View {
     @ViewBuilder
     private func segmentHeader(name: Date?) -> some View {
         Text(name?.longDayMonthWeekday ?? String())
-            .font(.system(size: 13, weight: .medium))
+            .font(.system(size: 15, weight: .medium))
             .textCase(.none)
     }
     

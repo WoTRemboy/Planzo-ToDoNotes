@@ -52,6 +52,7 @@ extension Color {
     
     enum ShadowColors {
         static let shadowDefault = Color("ShadowDefaultColor")
+        static let shadowTaskSection = Color("ShadowTaskSectionColor")
     }
 }
 
