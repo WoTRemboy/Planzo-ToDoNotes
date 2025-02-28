@@ -61,8 +61,9 @@ extension Image {
         static let notifications = Image("SettingsNotification")
         static let reset = Image("SettingsReset")
         static let email = Image("SettingsEmail")
+        static let taskCreate = Image("SettingsTaskCreate")
         
-        static let chevron = Image(systemName: "chevron.right")
+        static let chevron = Image("SettingsChevron")
         static let check = Image(systemName: "checkmark")
     }
     

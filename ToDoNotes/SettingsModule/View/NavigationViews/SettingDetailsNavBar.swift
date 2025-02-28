@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SettingAppearanceNavBar: View {
+struct SettingDetailsNavBar: View {
     
     private var onDismiss: () -> Void
     
@@ -53,5 +53,5 @@ struct SettingAppearanceNavBar: View {
 }
 
 #Preview {
-    SettingAppearanceNavBar() {}
+    SettingDetailsNavBar() {}
 }

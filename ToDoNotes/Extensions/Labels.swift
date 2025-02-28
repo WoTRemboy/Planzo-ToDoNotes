@@ -95,7 +95,7 @@ final class Texts {
         
         enum Reset {
             static let sectionTitle = "Контент"
-            static let title = "Сброс"
+            static let title = "Очистка памяти"
             static let warning = "Вы действительно хотите удалить все существующие задачи? Восстановить их будет невозможно."
             static let confirm = "Удалить данные"
             
@@ -112,6 +112,10 @@ final class Texts {
             static let contact = "Контакт"
             static let emailTitle = "Email"
             static let emailContent = "contact@avoqode.com"
+        }
+        
+        enum TaskCreate {
+            static let title = "Окно создания заметки"
         }
     }
     

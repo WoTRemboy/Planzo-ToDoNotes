@@ -26,7 +26,7 @@ struct SettingsView: View {
             SettingsNavBar()
                 .zIndex(1)
             
-            paramsForm
+            paramsButtons
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .fullScreenCover(isPresented: $viewModel.showingAppearance) {
@@ -35,15 +35,26 @@ struct SettingsView: View {
         }
     }
     
-    private var paramsForm: some View {
-        Form {
-            aboutAppSection
-            applicationSection
-            contentSection
-            contactSection
+    private var paramsButtons: some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                appearanceButton
+                notificationRow
+                    .onAppear {
+                        viewModel.readNotificationStatus()
+                    }
+                languageButton
+                contentSection
+                taskCreatePageButton
+            }
+            .clipShape(.rect(cornerRadius: 10))
+            .padding([.horizontal, .top])
+            
+            
+            aboutAppButton
+                .clipShape(.rect(cornerRadius: 10))
+                .padding(.horizontal)
         }
-        .padding(.horizontal, hasNotch() ? -4 : 0)
-        .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
     }
     
@@ -53,26 +64,6 @@ struct SettingsView: View {
                          version: viewModel.appVersion)
         } header: {
             Text(Texts.Settings.About.title)
-                .font(.system(size: 13, weight: .medium))
-                .textCase(.none)
-        }
-        .listRowBackground(Color.SupportColors.backListRow)
-    }
-    
-    private var applicationSection: some View {
-        Section {
-            // Change language button
-            languageButton
-            
-            // Change theme button
-            appearanceButton
-            
-            notificationToggle
-                .onAppear {
-                    viewModel.readNotificationStatus()
-                }
-        } header: {
-             Text(Texts.Settings.Language.sectionTitle)
                 .font(.system(size: 13, weight: .medium))
                 .textCase(.none)
         }
@@ -88,7 +79,6 @@ struct SettingsView: View {
                 details: Texts.Settings.Language.details,
                 chevron: true)
         }
-        .listRowBackground(Color.SupportColors.backListRow)
         
         .alert(isPresented: $viewModel.showingLanguageAlert) {
             // Change language alert
@@ -114,15 +104,26 @@ struct SettingsView: View {
                 details: viewModel.userTheme.name,
                 chevron: true)
         }
-        .listRowBackground(Color.SupportColors.backListRow)
     }
     
-    private var notificationToggle: some View {
-        Toggle(isOn: $viewModel.notificationsEnabled) {
+    private var notificationRow: some View {
+        ZStack(alignment: .trailing) {
             SettingFormRow(
                 title: Texts.Settings.Notification.title,
                 image: Image.Settings.notifications)
+            
+            notificationToggle
+                .padding(.trailing, 14)
         }
+    }
+    
+    private var notificationToggle: some View {
+        Toggle(isOn: $viewModel.notificationsEnabled) {}
+            .fixedSize()
+            .background(Color.BackColors.backFormCell)
+            .tint(Color.black)
+            .scaleEffect(0.8)
+        
         .onChange(of: viewModel.notificationsEnabled) { newValue in
             setNotificationsStatus(allowed: newValue)
         }
@@ -137,25 +138,17 @@ struct SettingsView: View {
                 secondaryButton: .cancel(Text(Texts.Settings.cancel))
             )
         }
-        .listRowBackground(Color.SupportColors.backListRow)
     }
     
     private var contentSection: some View {
-        Section {
-            // Reset data button
-            resetButton
-        } header: {
-            Text(Texts.Settings.Reset.sectionTitle)
-                .font(.system(size: 13, weight: .medium))
-                .textCase(.none)
-        }
-        .alert(isPresented: $viewModel.showingResetResult) {
-            Alert(
-                title: Text(viewModel.resetMessage.title),
-                message: Text(viewModel.resetMessage.message),
-                dismissButton: .cancel(Text(Texts.Settings.ok))
-            )
-        }
+        resetButton
+            .alert(isPresented: $viewModel.showingResetResult) {
+                Alert(
+                    title: Text(viewModel.resetMessage.title),
+                    message: Text(viewModel.resetMessage.message),
+                    dismissButton: .cancel(Text(Texts.Settings.ok))
+                )
+            }
     }
     
     private var resetButton: some View {
@@ -171,7 +164,6 @@ struct SettingsView: View {
                            image: Image.Settings.reset,
                            chevron: true)
         }
-        .listRowBackground(Color.SupportColors.backListRow)
         .confirmationDialog(Texts.Settings.Reset.warning,
                             isPresented: $viewModel.showingResetDialog,
                             titleVisibility: .visible) {
@@ -192,21 +184,28 @@ struct SettingsView: View {
         }
     }
     
-    private var contactSection: some View {
-        Section {
-            Link(destination: URL(string: "mailto:\(Texts.Settings.Email.emailContent)")!, label: {
-                SettingFormRow(
-                    title: Texts.Settings.Email.emailTitle,
-                    image: Image.Settings.email,
-                    details: Texts.Settings.Email.emailContent,
-                    chevron: true)
-            })
-        } header: {
-            Text(Texts.Settings.Email.contact)
-                .font(.system(size: 13, weight: .medium))
-                .textCase(.none)
+    private var taskCreatePageButton: some View {
+        Button {
+            // Action
+        } label: {
+            SettingFormRow(
+                title: Texts.Settings.TaskCreate.title,
+                image: Image.Settings.taskCreate,
+                chevron: true,
+                last: true)
         }
-        .listRowBackground(Color.SupportColors.backListRow)
+    }
+    
+    private var aboutAppButton: some View {
+        Button {
+            // Action
+        } label: {
+            SettingFormRow(
+                title: Texts.Settings.About.title,
+                image: Image.Settings.about,
+                chevron: true,
+                last: true)
+        }
     }
 }
 

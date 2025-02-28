@@ -74,13 +74,13 @@ struct CalendarNavBar: View {
             }
             
             // More options Button
-            Button {
+//            Button {
                 // Action for more options button
-            } label: {
-                Image.NavigationBar.more
-                    .resizable()
-                    .frame(width: 26, height: 26)
-            }
+//            } label: {
+//                Image.NavigationBar.more
+//                    .resizable()
+//                    .frame(width: 26, height: 26)
+//            }
         }
         .padding(.horizontal, 16)
     }
