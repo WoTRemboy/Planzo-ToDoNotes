@@ -67,6 +67,8 @@ final class Texts {
         enum About {
             static let title = "О приложении"
             static let release = "release"
+            static let version = "Версия"
+            static let copyright = "2025 Avoqode LTD"
         }
         
         enum Language {

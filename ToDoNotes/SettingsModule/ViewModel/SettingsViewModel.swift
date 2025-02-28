@@ -34,9 +34,8 @@ final class SettingsViewModel: ObservableObject {
     }
     
     internal var appVersion: String {
-        if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
-           let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-            return "\(appVersion) \(Texts.Settings.About.release) \(buildVersion)"
+        if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            return appVersion
         }
         return String()
     }

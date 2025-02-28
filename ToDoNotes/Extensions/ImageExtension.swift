@@ -57,6 +57,7 @@ extension Image {
     
     enum Settings {
         static let about = Image("SettingsAboutApp")
+        static let aboutLogo = Image("SettingsAboutAppLogo")
         static let appearance = Image("SettingsAppearance")
         static let language = Image("SettingsLanguage")
         static let notifications = Image("SettingsNotification")

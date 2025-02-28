@@ -53,6 +53,7 @@
 		63A5B6692D49446800B0E408 /* TaskDateParamRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A5B6682D49446800B0E408 /* TaskDateParamRow.swift */; };
 		63AE657D2D71F9E6009A3541 /* SettingTaskCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AE657C2D71F9E6009A3541 /* SettingTaskCreateView.swift */; };
 		63AE657F2D72172E009A3541 /* TaskCreationPageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AE657E2D721728009A3541 /* TaskCreationPageModel.swift */; };
+		63AE65832D721AED009A3541 /* SettingAboutPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AE65822D721AED009A3541 /* SettingAboutPageView.swift */; };
 		63C5A8CF2D31BECD00154101 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 63C5A8CE2D31BECD00154101 /* GoogleSignIn */; };
 		63C5A8D12D31BECD00154101 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 63C5A8D02D31BECD00154101 /* GoogleSignInSwift */; };
 		63CD66982D367EC50053C93C /* TaskManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD66972D367EBD0053C93C /* TaskManagementViewModel.swift */; };
@@ -140,6 +141,7 @@
 		63A5B6682D49446800B0E408 /* TaskDateParamRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDateParamRow.swift; sourceTree = "<group>"; };
 		63AE657C2D71F9E6009A3541 /* SettingTaskCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTaskCreateView.swift; sourceTree = "<group>"; };
 		63AE657E2D721728009A3541 /* TaskCreationPageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCreationPageModel.swift; sourceTree = "<group>"; };
+		63AE65822D721AED009A3541 /* SettingAboutPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingAboutPageView.swift; sourceTree = "<group>"; };
 		63CD66972D367EBD0053C93C /* TaskManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementViewModel.swift; sourceTree = "<group>"; };
 		63D9A1B92D50F2F2008454E9 /* UserNotificationCenterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationCenterExtension.swift; sourceTree = "<group>"; };
 		63DA81012D24C822005CEECB /* OnboardingScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenView.swift; sourceTree = "<group>"; };
@@ -227,6 +229,7 @@
 				634877AD2D36A157009110B0 /* SettingAppearanceView.swift */,
 				632D0DD12D36BAEF0071684D /* SettingDetailsNavBar.swift */,
 				63AE657C2D71F9E6009A3541 /* SettingTaskCreateView.swift */,
+				63AE65822D721AED009A3541 /* SettingAboutPageView.swift */,
 			);
 			path = NavigationViews;
 			sourceTree = "<group>";
@@ -760,6 +763,7 @@
 				637B9F662D2974E40010F13B /* FilterScrollView.swift in Sources */,
 				632D0DDA2D37E0AE0071684D /* HeightReader.swift in Sources */,
 				63AE657F2D72172E009A3541 /* TaskCreationPageModel.swift in Sources */,
+				63AE65832D721AED009A3541 /* SettingAboutPageView.swift in Sources */,
 				632D0DD22D36BAF50071684D /* SettingDetailsNavBar.swift in Sources */,
 				63F6C7082D2AAA0900716AB0 /* SettingsViewModel.swift in Sources */,
 				63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */,
