@@ -18,6 +18,7 @@ extension Image {
         static let favorites = Image("NavIconFavorites")
         static let calendar = Image("NavIconCalendar")
         static let more = Image("NavIconMore")
+        static let hide = Image("NavIconHide")
         static let back = Image("NavIconBack")
         static let share = Image("NavIconShare")
         
@@ -65,6 +66,16 @@ extension Image {
         
         static let chevron = Image("SettingsChevron")
         static let check = Image(systemName: "checkmark")
+        
+        enum TaskCreate {
+            static let popup = Image("TaskCreationPopup")
+            static let fullScreen = Image("TaskCreationFullScreen")
+        }
+    }
+    
+    enum Selector {
+        static let selected = Image("SelectorSelected")
+        static let unselected = Image("SelectorUnselected")
     }
     
     enum TaskManagement {

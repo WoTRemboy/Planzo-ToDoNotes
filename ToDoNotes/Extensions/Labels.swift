@@ -116,6 +116,9 @@ final class Texts {
         
         enum TaskCreate {
             static let title = "Окно создания заметки"
+            static let popup = "Всплывающее окно"
+            static let fullScreen = "Страница"
+            static let descriptionContent = "Выберите между стилями «Страница» и «Всплывающее окно» для создания заметок."
         }
     }
     
@@ -208,10 +211,11 @@ final class Texts {
     }
     
     enum UserDefaults {
-        static let skipOnboarding = "skipOnboarding"
-        static let addTaskButtonGlow = "addTaskButtonGlow"
-        static let notifications = "notificationsEnabled"
-        static let theme = "userTheme"
+        static let skipOnboarding = "SkipOnboarding"
+        static let addTaskButtonGlow = "AddTaskButtonGlow"
+        static let notifications = "NotificationsEnabled"
+        static let theme = "UserTheme"
+        static let taskCreation = "TaskCreationPage"
     }
     
     enum NamespaceID {

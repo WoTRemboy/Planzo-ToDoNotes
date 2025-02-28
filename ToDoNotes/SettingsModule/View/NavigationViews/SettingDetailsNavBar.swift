@@ -9,21 +9,35 @@ import SwiftUI
 
 struct SettingDetailsNavBar: View {
     
+    private let title: String
     private var onDismiss: () -> Void
     
-    init(onDismiss: @escaping () -> Void) {
+    init(title: String, onDismiss: @escaping () -> Void) {
+        self.title = title
         self.onDismiss = onDismiss
     }
     
     internal var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                backButton
-                titleLabel
-                placeholder
+        GeometryReader { proxy in
+            let topInset = proxy.safeAreaInsets.top
+            
+            ZStack(alignment: .top) {
+                Color.BackColors.backDefault
+                    .shadow(color: Color.ShadowColors.shadowDefault, radius: 15, x: 0, y: 5)
+                
+                content
+                    .padding(.top, topInset + 9.5)
             }
+            .ignoresSafeArea(edges: .top)
         }
-        .frame(height: 46.5)
+        .frame(height: 48)
+    }
+    
+    private var content: some View {
+        HStack(spacing: 8) {
+            backButton
+            titleLabel
+        }
     }
     
     private var backButton: some View {
@@ -32,26 +46,18 @@ struct SettingDetailsNavBar: View {
         } label: {
             Image.NavigationBar.back
                 .resizable()
-                .frame(width: 22, height: 22)
+                .frame(width: 20, height: 20)
         }
         .padding(.leading)
     }
     
     private var titleLabel: some View {
-        Text(Texts.Settings.Appearance.title)
-            .font(.system(size: 17, weight: .medium))
-            .frame(maxWidth: .infinity, alignment: .center)
-            .padding(.horizontal)
-    }
-    
-    private var placeholder: some View {
-        Rectangle()
-            .foregroundStyle(Color.clear)
-            .frame(width: 22, height: 22)
-            .padding(.trailing)
+        Text(title)
+            .font(.system(size: 20, weight: .medium))
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
 #Preview {
-    SettingDetailsNavBar() {}
+    SettingDetailsNavBar(title: "Task Creation Page") {}
 }

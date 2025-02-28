@@ -14,7 +14,7 @@ struct SettingAppearanceView: View {
     
     internal var body: some View {
         VStack(spacing: 0) {
-            SettingDetailsNavBar {
+            SettingDetailsNavBar(title: Texts.Settings.Appearance.title) {
                 viewModel.toggleShowingAppearance()
             }
             themePicker

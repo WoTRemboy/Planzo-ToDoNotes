@@ -33,7 +33,7 @@ struct TaskManagementNavBar: View {
         Button {
             onDismiss()
         } label: {
-            Image.NavigationBar.back
+            Image.NavigationBar.hide
                 .resizable()
                 .frame(width: 22, height: 22)
         }

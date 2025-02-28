@@ -8,11 +8,102 @@
 import SwiftUI
 
 struct SettingTaskCreateView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+    
+    @EnvironmentObject private var viewModel: SettingsViewModel
+    
+    private var onDismiss: () -> Void
+    
+    init(onDismiss: @escaping () -> Void) {
+        self.onDismiss = onDismiss
+    }
+    
+    internal var body: some View {
+        VStack(spacing: 0) {
+            SettingDetailsNavBar(title: Texts.Settings.TaskCreate.title) {}
+                .zIndex(1)
+            
+            content
+                .padding(.top)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
+    
+    private var content: some View {
+        VStack(spacing: 16) {
+            buttons
+            descriptionLabel
+        }
+    }
+    
+    private var buttons: some View {
+        HStack(spacing: 25) {
+            sheetPageButton
+            fullScreenPageButton
+        }
+        .padding(32)
+        .background(Color.BackColors.backFormCell)
+        .clipShape(.rect(cornerRadius: 10))
+
+    }
+    
+    private var sheetPageButton: some View {
+        VStack(spacing: 16) {
+            Image.Settings.TaskCreate.popup
+                .resizable()
+                .scaledToFit()
+                .frame(height: 250)
+            
+            HStack(spacing: 4) {
+                Text(Texts.Settings.TaskCreate.popup)
+                    .font(.system(size: 13, weight: .regular))
+                
+                (viewModel.taskCreation == .popup ?
+                 Image.Selector.selected :
+                    Image.Selector.unselected)
+                    .resizable()
+                    .frame(width: 15, height: 15)
+            }
+        }
+        .onTapGesture {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.taskCreationChange(to: .popup)
+            }
+        }
+    }
+    
+    private var fullScreenPageButton: some View {
+        VStack(spacing: 16) {
+            Image.Settings.TaskCreate.fullScreen
+                .resizable()
+                .scaledToFit()
+                .frame(height: 250)
+            
+            HStack(spacing: 4) {
+                Text(Texts.Settings.TaskCreate.fullScreen)
+                    .font(.system(size: 13, weight: .regular))
+                
+                (viewModel.taskCreation == .fullScreen ?
+                 Image.Selector.selected :
+                    Image.Selector.unselected)
+                    .resizable()
+                    .frame(width: 15, height: 15)
+            }
+        }
+        .onTapGesture {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.taskCreationChange(to: .fullScreen)
+            }
+        }
+    }
+    
+    private var descriptionLabel: some View {
+        Text(Texts.Settings.TaskCreate.descriptionContent)
+            .font(.system(size: 15, weight: .regular))
+            .padding(.horizontal)
     }
 }
 
 #Preview {
-    SettingTaskCreateView()
+    SettingTaskCreateView(onDismiss: {})
+        .environmentObject(SettingsViewModel(notificationsEnabled: true))
 }
