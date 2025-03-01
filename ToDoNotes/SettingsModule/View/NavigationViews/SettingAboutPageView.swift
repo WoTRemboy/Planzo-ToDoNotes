@@ -11,19 +11,13 @@ struct SettingAboutPageView: View {
     
     @EnvironmentObject private var viewModel: SettingsViewModel
     
-    private var onDismiss: () -> Void
-    
-    init(onDismiss: @escaping () -> Void) {
-        self.onDismiss = onDismiss
-    }
-    
     internal var body: some View {
         VStack(spacing: 0) {
-            SettingDetailsNavBar(title: Texts.Settings.About.title) {}
-                .zIndex(1)
-            
             content
                 .padding(.top, 100)
+                .customNavBarItems(
+                    title: Texts.Settings.About.title,
+                    showBackButton: true)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
@@ -56,6 +50,6 @@ struct SettingAboutPageView: View {
 }
 
 #Preview {
-    SettingAboutPageView() {}
+    SettingAboutPageView()
         .environmentObject(SettingsViewModel(notificationsEnabled: false))
 }

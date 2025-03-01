@@ -11,19 +11,13 @@ struct SettingTaskCreateView: View {
     
     @EnvironmentObject private var viewModel: SettingsViewModel
     
-    private var onDismiss: () -> Void
-    
-    init(onDismiss: @escaping () -> Void) {
-        self.onDismiss = onDismiss
-    }
-    
     internal var body: some View {
         VStack(spacing: 0) {
-            SettingDetailsNavBar(title: Texts.Settings.TaskCreate.title) {}
-                .zIndex(1)
-            
             content
                 .padding(.top)
+                .customNavBarItems(
+                    title: Texts.Settings.TaskCreate.title,
+                    showBackButton: true)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
@@ -104,6 +98,6 @@ struct SettingTaskCreateView: View {
 }
 
 #Preview {
-    SettingTaskCreateView(onDismiss: {})
+    SettingTaskCreateView()
         .environmentObject(SettingsViewModel(notificationsEnabled: true))
 }

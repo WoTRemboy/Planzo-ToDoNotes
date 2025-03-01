@@ -19,6 +19,10 @@ struct SettingsView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .introspect(.navigationStack, on: .iOS(.v16, .v17, .v18)) { navController in
+            navController.interactivePopGestureRecognizer?.delegate = navController as? UIGestureRecognizerDelegate
+            navController.interactivePopGestureRecognizer?.isEnabled = true
+        }
     }
     
     private var content: some View {
@@ -185,21 +189,18 @@ struct SettingsView: View {
     }
     
     private var taskCreatePageButton: some View {
-        Button {
-            // Action
-        } label: {
+        CustomNavLink(destination: SettingTaskCreateView(),
+        label: {
             SettingFormRow(
                 title: Texts.Settings.TaskCreate.title,
                 image: Image.Settings.taskCreate,
                 chevron: true,
                 last: true)
-        }
+        })
     }
     
     private var aboutAppButton: some View {
-        Button {
-            // Action
-        } label: {
+        CustomNavLink(destination: SettingAboutPageView()) {
             SettingFormRow(
                 title: Texts.Settings.About.title,
                 image: Image.Settings.about,

@@ -14,9 +14,7 @@ struct SettingAppearanceView: View {
     
     internal var body: some View {
         VStack(spacing: 0) {
-            SettingDetailsNavBar(title: Texts.Settings.Appearance.title) {
-                viewModel.toggleShowingAppearance()
-            }
+            CustomNavBar(title: Texts.Settings.Appearance.title)
             themePicker
                 .scrollDisabled(true)
         }

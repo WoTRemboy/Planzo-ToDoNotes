@@ -1,5 +1,5 @@
 //
-//  SettingAppearanceNavBar.swift
+//  CustomNavBar.swift
 //  ToDoNotes
 //
 //  Created by Roman Tverdokhleb on 1/14/25.
@@ -7,14 +7,15 @@
 
 import SwiftUI
 
-struct SettingDetailsNavBar: View {
+struct CustomNavBar: View {
+    @Environment(\.dismiss) private var dismiss
     
     private let title: String
-    private var onDismiss: () -> Void
+    private let showBackButton: Bool
     
-    init(title: String, onDismiss: @escaping () -> Void) {
+    init(title: String, showBackButton: Bool = false) {
         self.title = title
-        self.onDismiss = onDismiss
+        self.showBackButton = showBackButton
     }
     
     internal var body: some View {
@@ -34,15 +35,17 @@ struct SettingDetailsNavBar: View {
     }
     
     private var content: some View {
-        HStack(spacing: 8) {
-            backButton
+        HStack(spacing: 0) {
+            if showBackButton {
+                backButton
+            }
             titleLabel
         }
     }
     
     private var backButton: some View {
         Button {
-            onDismiss()
+            dismiss()
         } label: {
             Image.NavigationBar.back
                 .resizable()
@@ -55,9 +58,10 @@ struct SettingDetailsNavBar: View {
         Text(title)
             .font(.system(size: 20, weight: .medium))
             .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading, showBackButton ? 8 : 16)
     }
 }
 
 #Preview {
-    SettingDetailsNavBar(title: "Task Creation Page") {}
+    CustomNavBar(title: "Task Creation Page", showBackButton: true)
 }
