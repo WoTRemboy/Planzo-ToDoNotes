@@ -17,7 +17,7 @@ struct FullSwipeNavigationStack<Content: View>: View {
         return gesture
     }()
     
-    var body: some View {
+    internal var body: some View {
         NavigationStack {
             content
                 .background {
@@ -50,7 +50,7 @@ fileprivate struct AttachGestureView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UIView, context: Context) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             if let parentViewController = uiView.parentViewController {
                 if let navigationController = parentViewController.navigationController {
                     if let _ = navigationController.view.gestureRecognizers?.first(where: { $0.name == gesture.name }) {

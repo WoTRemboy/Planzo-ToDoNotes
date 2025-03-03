@@ -84,7 +84,7 @@ struct SettingTaskCreateView: View {
             }
         }
         .onTapGesture {
-            withAnimation(.easeInOut(duration: 0.2)) {
+            withAnimation(.easeInOut(duration: 0.1)) {
                 viewModel.taskCreationChange(to: .fullScreen)
             }
         }

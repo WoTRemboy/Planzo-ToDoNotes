@@ -42,7 +42,7 @@ struct SettingAppearanceView: View {
         VStack(spacing: 16) {
             ForEach(Theme.allCases, id: \.self) { theme in
                 Button {
-                    withAnimation(.easeInOut(duration: 0.2)) {
+                    withAnimation(.easeInOut(duration: 0.1)) {
                         selectedTheme = theme
                     }
                 } label: {
@@ -58,13 +58,13 @@ struct SettingAppearanceView: View {
     private func selectorRow(title: String, isSelected: Bool) -> some View {
         HStack {
             Text(title)
-                .font(.system(size: 17, weight: isSelected ? .bold : .regular))
+                .font(.system(size: 17, weight: .medium))
             Spacer()
             
             (isSelected ? Image.Selector.selected :
                Image.Selector.unselected)
                .resizable()
-               .frame(width: 15, height: 15)
+               .frame(width: 20, height: 20)
         }
         .contentShape(Rectangle())
         .padding(.horizontal, 16)

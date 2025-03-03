@@ -1,11 +1,11 @@
-<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="8" cy="8" r="7" stroke="#14141E"/>
-<circle cx="8" cy="8" r="7" stroke="black" stroke-opacity="0.2"/>
-<circle cx="8" cy="8" r="7" stroke="black" stroke-opacity="0.2"/>
-<circle cx="8" cy="8" r="4" fill="#14141E"/>
-<circle cx="8" cy="8" r="4" fill="black" fill-opacity="0.2"/>
-<circle cx="8" cy="8" r="4" fill="black" fill-opacity="0.2"/>
-<circle cx="8" cy="8" r="4" stroke="#14141E"/>
-<circle cx="8" cy="8" r="4" stroke="black" stroke-opacity="0.2"/>
-<circle cx="8" cy="8" r="4" stroke="black" stroke-opacity="0.2"/>
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="10" cy="10" r="9.5" stroke="#14141E"/>
+<circle cx="10" cy="10" r="9.5" stroke="black" stroke-opacity="0.2"/>
+<circle cx="10" cy="10" r="9.5" stroke="black" stroke-opacity="0.2"/>
+<circle cx="10" cy="10" r="5.5" fill="#14141E"/>
+<circle cx="10" cy="10" r="5.5" fill="black" fill-opacity="0.2"/>
+<circle cx="10" cy="10" r="5.5" fill="black" fill-opacity="0.2"/>
+<circle cx="10" cy="10" r="5.5" stroke="#14141E"/>
+<circle cx="10" cy="10" r="5.5" stroke="black" stroke-opacity="0.2"/>
+<circle cx="10" cy="10" r="5.5" stroke="black" stroke-opacity="0.2"/>
 </svg>
