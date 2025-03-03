@@ -13,19 +13,6 @@ struct SettingsView: View {
     @EnvironmentObject private var viewModel: SettingsViewModel
     
     internal var body: some View {
-        NavigationStack {
-            ZStack {
-                content
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .introspect(.navigationStack, on: .iOS(.v16, .v17, .v18)) { navController in
-            navController.interactivePopGestureRecognizer?.delegate = navController as? UIGestureRecognizerDelegate
-            navController.interactivePopGestureRecognizer?.isEnabled = true
-        }
-    }
-    
-    private var content: some View {
         VStack(spacing: 0) {
             SettingsNavBar()
                 .zIndex(1)
@@ -189,7 +176,9 @@ struct SettingsView: View {
     }
     
     private var taskCreatePageButton: some View {
-        CustomNavLink(destination: SettingTaskCreateView(),
+        CustomNavLink(
+            destination: SettingTaskCreateView()
+                .environmentObject(viewModel),
         label: {
             SettingFormRow(
                 title: Texts.Settings.TaskCreate.title,
@@ -200,7 +189,9 @@ struct SettingsView: View {
     }
     
     private var aboutAppButton: some View {
-        CustomNavLink(destination: SettingAboutPageView()) {
+        CustomNavLink(
+            destination: SettingAboutPageView()
+                .environmentObject(viewModel)) {
             SettingFormRow(
                 title: Texts.Settings.About.title,
                 image: Image.Settings.about,

@@ -23,6 +23,7 @@ struct CustomNavLink<Label: View, Destination: View>: View {
                     destination
                 }
                 .navigationBarHidden(true)
+                .enableFullSwipePop(true)
         } label: {
             label
         }
