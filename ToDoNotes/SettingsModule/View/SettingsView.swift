@@ -13,16 +13,18 @@ struct SettingsView: View {
     @EnvironmentObject private var viewModel: SettingsViewModel
     
     internal var body: some View {
-        VStack(spacing: 0) {
-            SettingsNavBar()
-                .zIndex(1)
+        ZStack {
+            VStack(spacing: 0) {
+                SettingsNavBar()
+                    .zIndex(1)
+                
+                paramsButtons
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             
-            paramsButtons
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .fullScreenCover(isPresented: $viewModel.showingAppearance) {
-            SettingAppearanceView()
-                .transition(.move(edge: .leading))
+            if viewModel.showingAppearance {
+                appearanceSelector
+            }
         }
     }
     
@@ -87,13 +89,16 @@ struct SettingsView: View {
     
     private var appearanceButton: some View {
         Button {
-            viewModel.toggleShowingAppearance()
+            withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.toggleShowingAppearance()
+            }
         } label: {
             SettingFormRow(
                 title: Texts.Settings.Appearance.title,
                 image: Image.Settings.appearance,
                 details: viewModel.userTheme.name,
                 chevron: true)
+            .animation(.easeInOut(duration: 0.1), value: viewModel.userTheme)
         }
     }
     
@@ -198,6 +203,24 @@ struct SettingsView: View {
                 chevron: true,
                 last: true)
         }
+    }
+    
+    private var appearanceSelector: some View {
+        ZStack {
+            Color.black.opacity(0.4)
+                .edgesIgnoringSafeArea(.all)
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        viewModel.toggleShowingAppearance()
+                    }
+                }
+            VStack {
+                Spacer()
+                SettingAppearanceView()
+                Spacer()
+            }
+        }
+        .zIndex(2)
     }
 }
 

@@ -85,7 +85,10 @@ final class Texts {
             static let title = "Оформление"
             static let system = "Системное"
             static let light = "Светлое"
-            static let dark = "Тёмное"
+            static let dark = "Темное"
+            
+            static let accept = "Применить"
+            static let cancel = "Отмена"
         }
         
         enum Notification {
