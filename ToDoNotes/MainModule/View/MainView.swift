@@ -65,8 +65,8 @@ struct MainView: View {
         Form {
             ForEach(coreDataManager.filteredSegmentedTasks(for: viewModel.selectedFilter), id: \.0) { segment, tasks in
                 segmentView(segment: segment, tasks: tasks)
-                    .listRowSeparator(.hidden)
             }
+            .listRowSeparator(.hidden)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
@@ -82,7 +82,7 @@ struct MainView: View {
                     Button {
                         viewModel.selectedTask = entity
                     } label: {
-                        TaskListRow(entity: entity)
+                        TaskListRow(entity: entity, isLast: tasks.last == entity)
                     }
                     .matchedTransitionSource(
                         id: "\(String(describing: entity.id))",
@@ -91,7 +91,7 @@ struct MainView: View {
                     Button {
                         viewModel.selectedTask = entity
                     } label: {
-                        TaskListRow(entity: entity)
+                        TaskListRow(entity: entity, isLast: tasks.last == entity)
                     }
                 }
             }
@@ -124,7 +124,7 @@ struct MainView: View {
     
     private var scrollToTopButton: some View {
         Button {
-            
+            // Scroll to Top Action
         } label: {
             Image.TaskManagement.scrollToTop
                 .resizable()

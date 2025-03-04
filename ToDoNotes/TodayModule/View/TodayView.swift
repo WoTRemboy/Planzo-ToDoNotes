@@ -77,6 +77,7 @@ struct TodayView: View {
             ForEach(TaskSection.availableRarities(for: coreDataManager.dayTasks.keys), id: \.self) { section in
                 taskFormSection(for: section)
             }
+            .listRowSeparator(.hidden)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .background(Color.BackColors.backDefault)
@@ -87,11 +88,12 @@ struct TodayView: View {
     @ViewBuilder
     private func taskFormSection(for section: TaskSection) -> some View {
         Section {
-            ForEach(coreDataManager.dayTasks[section] ?? []) { entity in
+            let tasks = coreDataManager.dayTasks[section] ?? []
+            ForEach(tasks) { entity in
                 Button {
                     viewModel.selectedTask = entity
                 } label: {
-                    TaskListRow(entity: entity)
+                    TaskListRow(entity: entity, isLast: tasks.last == entity)
                 }
             }
             .onDelete { indexSet in

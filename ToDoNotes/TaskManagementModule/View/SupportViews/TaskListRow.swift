@@ -13,10 +13,12 @@ struct TaskListRow: View {
     @EnvironmentObject private var coreDataManager: CoreDataViewModel
     private let entity: TaskEntity
     private let status: TaskStatus
+    private let isLast: Bool
     
-    init(entity: TaskEntity) {
+    init(entity: TaskEntity, isLast: Bool) {
         self.entity = entity
         self.status = .setupStatus(for: entity)
+        self.isLast = isLast
     }
     
     internal var body: some View {
@@ -31,6 +33,15 @@ struct TaskListRow: View {
             detailsBox
         }
         .frame(height: 62)
+        
+        .overlay(alignment: .bottom) {
+            if !isLast {
+                Rectangle()
+                    .frame(height: 0.5)
+                    .foregroundStyle(Color.LabelColors.labelDetails)
+                    .padding(.horizontal, 16)
+            }
+        }
     }
     
     private var folderIndicatior: some View {
@@ -173,6 +184,6 @@ struct TaskListRow: View {
 #Preview {
     let coreDataManager = CoreDataViewModel()
     
-    return TaskListRow(entity: coreDataManager.savedEnities.last!)
+    return TaskListRow(entity: coreDataManager.savedEnities.last!, isLast: false)
         .environmentObject(coreDataManager)
 }

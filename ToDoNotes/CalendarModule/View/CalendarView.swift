@@ -93,6 +93,7 @@ struct CalendarView: View {
             ForEach(TaskSection.availableRarities(for: coreDataManager.dayTasks.keys), id: \.self) { section in
                 taskSection(for: section)
             }
+            .listRowSeparator(.hidden)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .background(Color.BackColors.backDefault)
@@ -103,11 +104,12 @@ struct CalendarView: View {
     @ViewBuilder
     private func taskSection(for section: TaskSection) -> some View {
         Section {
-            ForEach(coreDataManager.dayTasks[section] ?? []) { entity in
+            let tasks = coreDataManager.dayTasks[section] ?? []
+            ForEach(tasks) { entity in
                     Button {
                         viewModel.selectedTask = entity
                     } label: {
-                        TaskListRow(entity: entity)
+                        TaskListRow(entity: entity, isLast: tasks.last == entity)
                     }
                 }
                 .onDelete { indexSet in

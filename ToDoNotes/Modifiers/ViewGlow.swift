@@ -12,7 +12,7 @@ struct GlowAnimation: ViewModifier {
     
     internal func body(content: Content) -> some View {
         content
-            .scaleEffect(animate ? 1.1 : 1.0)
+            .scaleEffect(animate ? 1.2 : 1.0)
             .shadow(color: Color.gray.opacity(animate ? 0.8 : 0.2),
                     radius: animate ? 15 : 5, x: 0, y: 0)
             .onAppear {
