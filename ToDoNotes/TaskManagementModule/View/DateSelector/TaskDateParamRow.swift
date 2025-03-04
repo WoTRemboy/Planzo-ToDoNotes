@@ -85,7 +85,7 @@ struct TaskDateParamRow: View {
                 DatePicker(String(),
                            selection: $viewModel.selectedTime,
                            displayedComponents: [.hourAndMinute])
-                .onChange(of: viewModel.selectedTime) { newValue in
+                .onChange(of: viewModel.selectedTime) { _, newValue in
                     withAnimation(.easeInOut(duration: 0.2)) {
                         viewModel.selectedTimeType = .value(newValue)
                         viewModel.setupNotificationAvailability()
@@ -134,7 +134,7 @@ struct TaskDateParamRow: View {
             .onAppear {
                 viewModel.setupNotificationAvailability()
             }
-            .onChange(of: viewModel.selectedDay) { _ in
+            .onChange(of: viewModel.selectedDay) {
                 viewModel.setupNotificationAvailability()
             }
     }

@@ -24,7 +24,7 @@ struct TodayView: View {
         .onAppear {
             coreDataManager.dayTasks(for: viewModel.todayDate)
         }
-        .onChange(of: coreDataManager.savedEnities) { _ in
+        .onChange(of: coreDataManager.savedEnities) {
             withAnimation {
                 coreDataManager.dayTasks(for: viewModel.todayDate)
             }

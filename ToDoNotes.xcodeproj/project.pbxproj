@@ -58,6 +58,7 @@
 		63AE65882D73181A009A3541 /* CustomNavLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AE65872D73181A009A3541 /* CustomNavLink.swift */; };
 		63AE658A2D731A15009A3541 /* CustomNavBarContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AE65892D731A15009A3541 /* CustomNavBarContainerView.swift */; };
 		63AE658C2D731EDF009A3541 /* CustomNavBarPreferenceKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AE658B2D731ED6009A3541 /* CustomNavBarPreferenceKeys.swift */; };
+		63BCD8B02D77298D0016950F /* PopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD8AF2D77298D0016950F /* PopView.swift */; };
 		63C5A8CF2D31BECD00154101 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 63C5A8CE2D31BECD00154101 /* GoogleSignIn */; };
 		63C5A8D12D31BECD00154101 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 63C5A8D02D31BECD00154101 /* GoogleSignInSwift */; };
 		63CD66982D367EC50053C93C /* TaskManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD66972D367EBD0053C93C /* TaskManagementViewModel.swift */; };
@@ -150,6 +151,7 @@
 		63AE65872D73181A009A3541 /* CustomNavLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavLink.swift; sourceTree = "<group>"; };
 		63AE65892D731A15009A3541 /* CustomNavBarContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavBarContainerView.swift; sourceTree = "<group>"; };
 		63AE658B2D731ED6009A3541 /* CustomNavBarPreferenceKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavBarPreferenceKeys.swift; sourceTree = "<group>"; };
+		63BCD8AF2D77298D0016950F /* PopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopView.swift; sourceTree = "<group>"; };
 		63CD66972D367EBD0053C93C /* TaskManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementViewModel.swift; sourceTree = "<group>"; };
 		63D9A1B92D50F2F2008454E9 /* UserNotificationCenterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationCenterExtension.swift; sourceTree = "<group>"; };
 		63DA81012D24C822005CEECB /* OnboardingScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenView.swift; sourceTree = "<group>"; };
@@ -287,13 +289,13 @@
 				635FEF712D24B72E007FFBBA /* Application */,
 				6303E2C82D3469DC0096DB64 /* CoreData */,
 				637B9F5D2D296F290010F13B /* Router */,
-				63AE658E2D73291F009A3541 /* CustomNavigationBar */,
 				635FEF732D24BAA1007FFBBA /* OpeningModule */,
 				635FEF742D24BAC2007FFBBA /* MainModule */,
 				637B9F522D29695D0010F13B /* TodayModule */,
 				637B9F532D29696B0010F13B /* CalendarModule */,
 				637B9F542D2969750010F13B /* SettingsModule */,
 				638E21932D2C206400FB1464 /* TaskManagementModule */,
+				63BCD8AD2D7729460016950F /* Helpers */,
 				632D0DD82D37E0990071684D /* Modifiers */,
 				635FEF7E2D24BCDE007FFBBA /* Extensions */,
 				635FEF752D24BAD1007FFBBA /* SupportFiles */,
@@ -531,6 +533,23 @@
 				63AE658B2D731ED6009A3541 /* CustomNavBarPreferenceKeys.swift */,
 			);
 			path = CustomNavigationBar;
+			sourceTree = "<group>";
+		};
+		63BCD8AD2D7729460016950F /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				63BCD8AE2D7729730016950F /* AlertPopView */,
+				63AE658E2D73291F009A3541 /* CustomNavigationBar */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		63BCD8AE2D7729730016950F /* AlertPopView */ = {
+			isa = PBXGroup;
+			children = (
+				63BCD8AF2D77298D0016950F /* PopView.swift */,
+			);
+			path = AlertPopView;
 			sourceTree = "<group>";
 		};
 		63CD66962D367EB50053C93C /* ViewModel */ = {
@@ -776,6 +795,7 @@
 				635DBBB32D64E89A0050476C /* TaskSectionModel.swift in Sources */,
 				63A5B6642D4937D100B0E408 /* TaskCalendarSelectorView.swift in Sources */,
 				63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */,
+				63BCD8B02D77298D0016950F /* PopView.swift in Sources */,
 				637B9F4E2D295B490010F13B /* MainViewModel.swift in Sources */,
 				63F849462D38145E00E9D5CE /* TaskChecklistView.swift in Sources */,
 				63AE657D2D71F9E6009A3541 /* SettingTaskCreateView.swift in Sources */,
@@ -957,7 +977,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -994,7 +1014,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

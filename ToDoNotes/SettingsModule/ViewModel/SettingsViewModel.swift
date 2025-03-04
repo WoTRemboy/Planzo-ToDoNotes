@@ -54,7 +54,7 @@ final class SettingsViewModel: ObservableObject {
     
     internal func changeTheme(theme: Theme) {
         userTheme = theme
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
                 if let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
                     UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {

@@ -18,22 +18,21 @@ struct CalendarView: View {
         ZStack {
             content
             plusButton
-            
-            if viewModel.showingCalendarSelector {
-                calendarSelector
-            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .popView(isPresented: $viewModel.showingCalendarSelector, onDismiss: {}) {
+            CalendarMonthSelector()
+        }
         
         .onAppear {
             coreDataManager.dayTasks(for: viewModel.selectedDate)
         }
-        .onChange(of: coreDataManager.savedEnities) { _ in
+        .onChange(of: coreDataManager.savedEnities) {
             withAnimation {
                 coreDataManager.dayTasks(for: viewModel.selectedDate)
             }
         }
-        .onChange(of: coreDataManager.dayTasksHasUpdated) { _ in
+        .onChange(of: coreDataManager.dayTasksHasUpdated) {
             withAnimation {
                 coreDataManager.dayTasks(for: viewModel.selectedDate)
             }
@@ -166,24 +165,6 @@ struct CalendarView: View {
             }
         }
         .ignoresSafeArea(.keyboard)
-    }
-    
-    private var calendarSelector: some View {
-        ZStack {
-            Color.black.opacity(0.4)
-                .edgesIgnoringSafeArea(.all)
-                .onTapGesture {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        viewModel.toggleShowingCalendarSelector()
-                    }
-                }
-            VStack {
-                Spacer()
-                CalendarMonthSelector()
-                Spacer()
-            }
-        }
-        .zIndex(1)
     }
 }
 

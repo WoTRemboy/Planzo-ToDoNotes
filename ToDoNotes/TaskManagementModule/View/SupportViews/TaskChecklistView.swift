@@ -57,7 +57,7 @@ struct TaskChecklistView: View {
                         setupDelegate(for: textField, itemID: item.id)
                     }
                 }
-                .onChange(of: item.name) { newValue in
+                .onChange(of: item.name) { _, newValue in
                     if newValue == String() {
                         focusOnPreviousItem(before: item.id)
                         withAnimation(.linear(duration: 0.2)) {

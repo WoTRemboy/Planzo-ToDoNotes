@@ -21,10 +21,9 @@ struct SettingsView: View {
                 paramsButtons
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            
-            if viewModel.showingAppearance {
-                appearanceSelector
-            }
+        }
+        .popView(isPresented: $viewModel.showingAppearance, onDismiss: {}) {
+            SettingAppearanceView()
         }
     }
     
@@ -98,7 +97,7 @@ struct SettingsView: View {
                 image: Image.Settings.appearance,
                 details: viewModel.userTheme.name,
                 chevron: true)
-            .animation(.easeInOut(duration: 0.1), value: viewModel.userTheme)
+            .animation(.easeInOut(duration: 0.2), value: viewModel.userTheme)
         }
     }
     
@@ -120,7 +119,7 @@ struct SettingsView: View {
             .tint(Color.black)
             .scaleEffect(0.8)
         
-        .onChange(of: viewModel.notificationsEnabled) { newValue in
+        .onChange(of: viewModel.notificationsEnabled) { _, newValue in
             setNotificationsStatus(allowed: newValue)
         }
         .alert(isPresented: $viewModel.showingNotificationAlert) {
@@ -203,24 +202,6 @@ struct SettingsView: View {
                 chevron: true,
                 last: true)
         }
-    }
-    
-    private var appearanceSelector: some View {
-        ZStack {
-            Color.black.opacity(0.4)
-                .edgesIgnoringSafeArea(.all)
-                .onTapGesture {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        viewModel.toggleShowingAppearance()
-                    }
-                }
-            VStack {
-                Spacer()
-                SettingAppearanceView()
-                Spacer()
-            }
-        }
-        .zIndex(2)
     }
 }
 

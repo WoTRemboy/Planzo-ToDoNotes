@@ -58,7 +58,7 @@ struct SettingAppearanceView: View {
     private func selectorRow(title: String, isSelected: Bool) -> some View {
         HStack {
             Text(title)
-                .font(.system(size: 17, weight: .medium))
+                .font(.system(size: 17, weight: .regular))
             Spacer()
             
             (isSelected ? Image.Selector.selected :
@@ -79,9 +79,7 @@ struct SettingAppearanceView: View {
     
     private var acceptButton: some View {
         Button {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                viewModel.toggleShowingAppearance()
-            }
+            viewModel.toggleShowingAppearance()
             viewModel.changeTheme(theme: selectedTheme)
         } label: {
             ZStack {
@@ -101,9 +99,7 @@ struct SettingAppearanceView: View {
     
     private var cancelButton: some View {
         Button {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                viewModel.toggleShowingAppearance()
-            }
+            viewModel.toggleShowingAppearance()
         } label: {
             ZStack {
                 Color.white
