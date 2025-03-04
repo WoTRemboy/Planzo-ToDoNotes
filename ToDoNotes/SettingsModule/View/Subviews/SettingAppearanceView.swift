@@ -20,10 +20,12 @@ struct SettingAppearanceView: View {
             themeSelector
             buttons
         }
-        .frame(width: 320, height: 230)
+        .frame(width: 320)
+        
         .background(Color.BackColors.backSecondary)
         .cornerRadius(12)
         .shadow(radius: 10)
+        
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .stroke(Color.gray.opacity(0.2), lineWidth: 1)
@@ -36,6 +38,7 @@ struct SettingAppearanceView: View {
     private var title: some View {
         Text(Texts.Settings.Appearance.title)
             .font(.system(size: 17, weight: .semibold))
+            .padding(.top, 12)
     }
     
     private var themeSelector: some View {
@@ -75,6 +78,7 @@ struct SettingAppearanceView: View {
             cancelButton
             acceptButton
         }
+        .padding([.horizontal, .bottom], 6)
     }
     
     private var acceptButton: some View {
@@ -94,7 +98,6 @@ struct SettingAppearanceView: View {
         }
         .frame(height: 50)
         .frame(maxWidth: .infinity)
-        .padding(.trailing, 6)
     }
     
     private var cancelButton: some View {
@@ -117,7 +120,6 @@ struct SettingAppearanceView: View {
         }
         .frame(height: 50)
         .frame(maxWidth: .infinity)
-        .padding(.leading, 6)
     }
 }
 

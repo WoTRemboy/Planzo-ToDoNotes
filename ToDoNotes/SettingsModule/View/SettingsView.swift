@@ -25,6 +25,15 @@ struct SettingsView: View {
         .popView(isPresented: $viewModel.showingAppearance, onDismiss: {}) {
             SettingAppearanceView()
         }
+        .popView(isPresented: $viewModel.showingLanguageAlert, onDismiss: {}) {
+            languageAlert
+        }
+        .popView(isPresented: $viewModel.showingNotificationAlert, onDismiss: {}) {
+            notificationAlert
+        }
+        .popView(isPresented: $viewModel.showingResetResult, onDismiss: {}) {
+            resetAlert
+        }
     }
     
     private var paramsButtons: some View {
@@ -36,7 +45,7 @@ struct SettingsView: View {
                         viewModel.readNotificationStatus()
                     }
                 languageButton
-                contentSection
+                resetButton
                 taskCreatePageButton
             }
             .clipShape(.rect(cornerRadius: 10))
@@ -70,19 +79,6 @@ struct SettingsView: View {
                 image: Image.Settings.language,
                 details: Texts.Settings.Language.details,
                 chevron: true)
-        }
-        
-        .alert(isPresented: $viewModel.showingLanguageAlert) {
-            // Change language alert
-            Alert(
-                title: Text(Texts.Settings.Language.alertTitle),
-                message: Text(Texts.Settings.Language.alertContent),
-                primaryButton: .default(Text(Texts.Settings.Language.settings)) {
-                    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-                    UIApplication.shared.open(url)
-                },
-                secondaryButton: .cancel(Text(Texts.Settings.cancel))
-            )
         }
     }
     
@@ -119,30 +115,8 @@ struct SettingsView: View {
             .tint(Color.black)
             .scaleEffect(0.8)
         
-        .onChange(of: viewModel.notificationsEnabled) { _, newValue in
-            setNotificationsStatus(allowed: newValue)
-        }
-        .alert(isPresented: $viewModel.showingNotificationAlert) {
-            Alert(
-                title: Text(Texts.Settings.Notification.prohibitedTitle),
-                message: Text(Texts.Settings.Notification.alertContent),
-                primaryButton: .default(Text(Texts.Settings.title)) {
-                    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-                    UIApplication.shared.open(url)
-                },
-                secondaryButton: .cancel(Text(Texts.Settings.cancel))
-            )
-        }
-    }
-    
-    private var contentSection: some View {
-        resetButton
-            .alert(isPresented: $viewModel.showingResetResult) {
-                Alert(
-                    title: Text(viewModel.resetMessage.title),
-                    message: Text(viewModel.resetMessage.message),
-                    dismissButton: .cancel(Text(Texts.Settings.ok))
-                )
+            .onChange(of: viewModel.notificationsEnabled) { _, newValue in
+                setNotificationsStatus(allowed: newValue)
             }
     }
     
@@ -163,13 +137,13 @@ struct SettingsView: View {
                             isPresented: $viewModel.showingResetDialog,
                             titleVisibility: .visible) {
             Button(role: .destructive) {
-                withAnimation {
-                    coreDataManager.deleteAllTasksAndClearNotifications { success in
-                        if success {
-                            viewModel.resetMessage = .success
-                        } else {
-                            viewModel.resetMessage = .failure
-                        }
+                coreDataManager.deleteAllTasksAndClearNotifications { success in
+                    if success {
+                        viewModel.resetMessage = .success
+                    } else {
+                        viewModel.resetMessage = .failure
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         viewModel.showingResetResult.toggle()
                     }
                 }
@@ -202,6 +176,42 @@ struct SettingsView: View {
                 chevron: true,
                 last: true)
         }
+    }
+    
+    private var languageAlert: some View {
+        CustomAlertView(
+            title: Texts.Settings.Language.alertTitle,
+            message: Texts.Settings.Language.alertContent,
+            primaryButtonTitle: Texts.Settings.Language.settings,
+            primaryAction: {
+                guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                UIApplication.shared.open(url)
+            },
+            secondaryButtonTitle: Texts.Settings.cancel,
+            secondaryAction: viewModel.toggleShowingLanguageAlert)
+    }
+    
+    private var notificationAlert: some View {
+        CustomAlertView(
+            title: Texts.Settings.Notification.prohibitedTitle,
+            message: Texts.Settings.Notification.prohibitedContent,
+            primaryButtonTitle: Texts.Settings.title,
+            primaryAction: {
+                guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                UIApplication.shared.open(url)
+            },
+            secondaryButtonTitle: Texts.Settings.cancel,
+            secondaryAction: viewModel.toggleShowingNotificationAlert)
+    }
+    
+    private var resetAlert: some View {
+        CustomAlertView(
+            title: viewModel.resetMessage.title,
+            message: viewModel.resetMessage.message,
+            primaryButtonTitle: Texts.Settings.ok,
+            primaryAction: {
+                viewModel.toggleShowingResetResult()
+            })
     }
 }
 

@@ -48,7 +48,7 @@ struct TaskCalendarSelectorView: View {
             .onAppear {
                 viewModel.readNotificationStatus()
             }
-            .alert(isPresented: $viewModel.showingNotificationAlert) {
+            .popView(isPresented: $viewModel.showingNotificationAlert, onDismiss: {}) {
                 if viewModel.notificationsStatus == .disabled {
                     disabledAlert
                 } else {
@@ -58,24 +58,25 @@ struct TaskCalendarSelectorView: View {
         }
     }
     
-    private var prohibitedAlert: Alert {
-        Alert(
-            title: Text(Texts.Settings.Notification.prohibitedTitle),
-            message: Text(Texts.Settings.Notification.alertContent),
-            primaryButton: .default(Text(Texts.Settings.title)) {
+    private var prohibitedAlert: some View {
+        CustomAlertView(
+            title: Texts.Settings.Notification.prohibitedTitle,
+            message: Texts.Settings.Notification.prohibitedContent,
+            primaryButtonTitle: Texts.Settings.title,
+            primaryAction: {
                 guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
                 UIApplication.shared.open(url)
             },
-            secondaryButton: .cancel(Text(Texts.Settings.cancel))
-        )
+            secondaryButtonTitle: Texts.Settings.cancel,
+            secondaryAction: viewModel.toggleShowingNotificationAlert)
     }
     
-    private var disabledAlert: Alert {
-        Alert(
-            title: Text(Texts.Settings.Notification.disableTitle),
-            message: Text(Texts.Settings.Notification.alertContent),
-            dismissButton: .cancel(Text(Texts.Settings.ok))
-        )
+    private var disabledAlert: some View {
+        CustomAlertView(
+            title: Texts.Settings.Notification.disabledTitle,
+            message: Texts.Settings.Notification.disabledContent,
+            primaryButtonTitle: Texts.Settings.ok,
+            primaryAction: viewModel.toggleShowingNotificationAlert)
     }
     
     private var toolBarButtonCancel: some View {

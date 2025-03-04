@@ -216,6 +216,10 @@ final class TaskManagementViewModel: ObservableObject {
         showingDatePicker.toggle()
     }
     
+    internal func toggleShowingNotificationAlert() {
+        showingNotificationAlert.toggle()
+    }
+    
     internal func showDate(to show: Bool) {
         hasDate = show
     }

@@ -82,7 +82,7 @@ fileprivate struct PopViewHelper<ViewContent: View>: ViewModifier {
                             withAnimation(.snappy(duration: 0.3, extraBounce: 0)) {
                                 self.animateView = false
                             }
-                            try? await Task.sleep(for: .seconds(0.45))
+                            try? await Task.sleep(for: .seconds(0.35))
                             
                             toggleView(false)
                         }

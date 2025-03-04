@@ -87,15 +87,16 @@ final class Texts {
             static let light = "Светлое"
             static let dark = "Темное"
             
-            static let accept = "Применить"
+            static let accept = "Закрыть"
             static let cancel = "Отмена"
         }
         
         enum Notification {
             static let title = "Уведомления"
             static let prohibitedTitle = "Уведомления отключены"
-            static let disableTitle = "Уведомления отключены"
-            static let alertContent = "Пожалуйста, включите параметр в Настройках."
+            static let prohibitedContent = "Пожалуйста, включите параметр в настройках."
+            static let disabledTitle = "Уведомления отключены"
+            static let disabledContent = "Пожалуйста, включите параметр в настройках приложения."
         }
         
         enum Reset {

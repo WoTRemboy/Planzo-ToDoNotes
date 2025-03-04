@@ -52,6 +52,14 @@ final class SettingsViewModel: ObservableObject {
         showingResetDialog.toggle()
     }
     
+    internal func toggleShowingResetResult() {
+        showingResetResult.toggle()
+    }
+    
+    internal func toggleShowingNotificationAlert() {
+        showingNotificationAlert.toggle()
+    }
+    
     internal func changeTheme(theme: Theme) {
         userTheme = theme
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
