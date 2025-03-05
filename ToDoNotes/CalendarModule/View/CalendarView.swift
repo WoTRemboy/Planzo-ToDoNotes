@@ -160,6 +160,8 @@ struct CalendarView: View {
                     .scaledToFit()
                     .frame(width: 58, height: 58)
             }
+            .navigationTransitionSource(id: Texts.NamespaceID.selectedEntity,
+                                        namespace: animation)
             .padding()
             .glow(available: viewModel.addTaskButtonGlow)
         }

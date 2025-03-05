@@ -228,6 +228,7 @@ final class Texts {
         static let selectedTab = "SelectedTab"
         static let selectedCalendarCell = "SelectedCalendarCell"
         static let selectedCalendarDate = "SelectedCalendarDate"
+        static let selectedEntity = "NoSelectedEntity"
     }
     
     enum AccessibilityIdentifier {

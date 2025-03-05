@@ -83,22 +83,12 @@ struct MainView: View {
     private func segmentView(segment: Date?, tasks: [TaskEntity]) -> some View {
         Section(header: segmentHeader(name: segment)) {
             ForEach(tasks) { entity in
-                if #available(iOS 18.0, *) {
-                    Button {
-                        viewModel.selectedTask = entity
-                    } label: {
-                        TaskListRow(entity: entity, isLast: tasks.last == entity)
-                    }
-                    .matchedTransitionSource(
-                        id: "\(String(describing: entity.id))",
-                        in: animation)
-                } else {
-                    Button {
-                        viewModel.selectedTask = entity
-                    } label: {
-                        TaskListRow(entity: entity, isLast: tasks.last == entity)
-                    }
+                Button {
+                    viewModel.selectedTask = entity
+                } label: {
+                    TaskListRow(entity: entity, isLast: tasks.last == entity)
                 }
+                //.navigationTransitionSource(id: entity.id, namespace: animation)
             }
             .onDelete { indexSet in
                 let idsToDelete = indexSet.map { tasks[$0].objectID }
@@ -158,6 +148,8 @@ struct MainView: View {
                 .scaledToFit()
                 .frame(width: 58, height: 58)
         }
+        .navigationTransitionSource(id: Texts.NamespaceID.selectedEntity,
+                                    namespace: animation)
         .padding(.bottom)
         .glow(available: viewModel.addTaskButtonGlow)
     }

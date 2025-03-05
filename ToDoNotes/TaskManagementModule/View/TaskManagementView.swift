@@ -21,6 +21,8 @@ struct TaskManagementView: View {
     private let animation: Namespace.ID
     private let onDismiss: () -> Void
     
+    private var transitionID: String = Texts.NamespaceID.selectedEntity
+    
     init(taskManagementHeight: Binding<CGFloat>,
          selectedDate: Date? = nil,
          entity: TaskEntity? = nil,
@@ -33,6 +35,7 @@ struct TaskManagementView: View {
         
         if let entity {
             self._viewModel = StateObject(wrappedValue: TaskManagementViewModel(entity: entity))
+            self.transitionID = entity.id?.uuidString ?? transitionID
         } else if let selectedDate {
             self._viewModel = StateObject(wrappedValue: TaskManagementViewModel(targetDate: selectedDate))
         }
@@ -72,8 +75,9 @@ struct TaskManagementView: View {
                 .presentationDetents([.height(670)])
         }
         .navigationTransition(
-            id: entity?.id,
-            namespace: animation)
+            id: transitionID,
+            namespace: animation,
+            enable: entity != nil || viewModel.taskCreationFullScreen == .fullScreen)
     }
     
     private var content: some View {
@@ -126,7 +130,7 @@ struct TaskManagementView: View {
             .strikethrough(viewModel.check == .checked)
             
             .focused($titleFocused)
-            .immediateKeyboard(delay: (entity != nil || viewModel.taskCreationFullScreen == .fullScreen) ? 0.3 : 0)
+            .immediateKeyboard(delay: (entity != nil || viewModel.taskCreationFullScreen == .fullScreen) ? 0.4 : 0)
             .onAppear {
                 titleFocused = true
             }

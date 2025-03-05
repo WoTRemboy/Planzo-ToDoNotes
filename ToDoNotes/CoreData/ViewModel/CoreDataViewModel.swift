@@ -53,6 +53,8 @@ final class CoreDataViewModel: ObservableObject {
                           hasTime: Bool,
                           notifications: Set<NotificationItem>,
                           checklist: [ChecklistItem] = []) {
+        guard !name.isEmpty else { return }
+        
         let newTask = TaskEntity(context: container.viewContext)
         
         newTask.id = UUID()
