@@ -10,11 +10,13 @@ import SwiftUI
 final class MainViewModel: ObservableObject {
     
     @AppStorage(Texts.UserDefaults.addTaskButtonGlow) var addTaskButtonGlow: Bool = false
+    @AppStorage(Texts.UserDefaults.taskCreation) private var taskCreationFullScreen: TaskCreation = .popup
     
     @Published private(set) var selectedFilter: Filter = .active
     @Published internal var selectedFolder: Folder = .all
     
     @Published internal var showingTaskCreateView: Bool = false
+    @Published internal var showingTaskCreateViewFullscreen: Bool = false
     @Published internal var selectedTask: TaskEntity? = nil
     @Published internal var taskManagementHeight: CGFloat = 15
     
@@ -23,7 +25,9 @@ final class MainViewModel: ObservableObject {
     }
     
     internal func toggleShowingCreateView() {
-        showingTaskCreateView.toggle()
+        taskCreationFullScreen == .popup ?
+            showingTaskCreateView.toggle() :
+                showingTaskCreateViewFullscreen.toggle()
     }
     
     internal func toggleShowingTaskEditView() {

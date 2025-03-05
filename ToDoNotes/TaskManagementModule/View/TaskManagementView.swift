@@ -41,14 +41,15 @@ struct TaskManagementView: View {
     internal var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                if entity != nil {
+                if viewModel.taskCreationFullScreen == .fullScreen || entity != nil {
                     TaskManagementNavBar(
                         viewModel: viewModel) {
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                updateTask()
+                                entity != nil ? updateTask() : addTask()
                                 onDismiss()
                             }
                         }
+                        .zIndex(1)
                 }
                 content
             }
@@ -80,7 +81,7 @@ struct TaskManagementView: View {
             ScrollView {
                 nameInput
                 
-                if entity != nil {
+                if entity != nil || viewModel.taskCreationFullScreen == .fullScreen {
                     descriptionCoverInput
                     TaskChecklistView(viewModel: viewModel)
                 } else {
@@ -88,13 +89,13 @@ struct TaskManagementView: View {
                         .background(HeightReader(height: $taskManagementHeight))
                 }
             }
-            .scrollDisabled(entity == nil)
+            .scrollDisabled(entity == nil && viewModel.taskCreationFullScreen == .popup)
             
             Spacer()
             buttons
         }
         .padding(.horizontal, 16)
-        .padding(.top, entity == nil ? 8 : 0)
+        .padding(.top, (entity == nil && viewModel.taskCreationFullScreen == .popup) ? 8 : 0)
         .padding(.bottom, 8)
     }
     
@@ -115,7 +116,7 @@ struct TaskManagementView: View {
             
             TextField(Texts.TaskManagement.titlePlaceholder,
                       text: $viewModel.nameText)
-            .font(.system(size: 18, weight: .medium))
+            .font(.system(size: 20, weight: .medium))
             .lineLimit(1)
             
             .foregroundStyle(
@@ -125,7 +126,7 @@ struct TaskManagementView: View {
             .strikethrough(viewModel.check == .checked)
             
             .focused($titleFocused)
-            .immediateKeyboard(delay: entity != nil ? 0.3 : 0)
+            .immediateKeyboard(delay: (entity != nil || viewModel.taskCreationFullScreen == .fullScreen) ? 0.3 : 0)
             .onAppear {
                 titleFocused = true
             }
@@ -147,7 +148,7 @@ struct TaskManagementView: View {
                   axis: .vertical)
         
         .lineLimit(1...5)
-        .font(.system(size: 15, weight: .regular))
+        .font(.system(size: 17, weight: .regular))
         .foregroundStyle(
             viewModel.check == .checked ?
             Color.LabelColors.labelDetails :
@@ -159,7 +160,7 @@ struct TaskManagementView: View {
                   text: $viewModel.descriptionText,
                   axis: .vertical)
         
-        .font(.system(size: 15, weight: .regular))
+        .font(.system(size: 17, weight: .regular))
         .foregroundStyle(
             viewModel.check == .checked ?
             Color.LabelColors.labelDetails :
@@ -170,13 +171,14 @@ struct TaskManagementView: View {
         HStack(alignment: .bottom, spacing: 16) {
             calendarModule
             checkButton
-            moreButton
-            
+
             Spacer()
-            if isKeyboardActive || entity == nil {
+            if isKeyboardActive || (entity == nil && viewModel.taskCreationFullScreen == .popup) {
                 acceptButton
+                    .transition(.scale)
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: isKeyboardActive)
     }
     
     private var calendarModule: some View {
@@ -198,7 +200,7 @@ struct TaskManagementView: View {
     private var calendarImage: some View {
         Image.TaskManagement.EditTask.calendar
             .resizable()
-            .frame(width: 20, height: 20)
+            .frame(width: 24, height: 24)
     }
     
     private var checkButton: some View {
@@ -206,7 +208,7 @@ struct TaskManagementView: View {
          Image.TaskManagement.EditTask.check :
             Image.TaskManagement.EditTask.uncheck)
         .resizable()
-        .frame(width: 20, height: 20)
+        .frame(width: 24, height: 24)
         
         .onTapGesture {
             withAnimation(.easeInOut(duration: 0.2)) {
@@ -229,7 +231,7 @@ struct TaskManagementView: View {
         Button {
             guard !viewModel.nameText.isEmpty else { return }
             withAnimation {
-                if entity != nil {
+                if entity != nil || viewModel.taskCreationFullScreen == .fullScreen {
                     hideKeyboard()
                 } else {
                     addTask()
@@ -237,9 +239,7 @@ struct TaskManagementView: View {
                 }
             }
         } label: {
-            (entity != nil ?
-            Image.TaskManagement.EditTask.ready :
-            Image.TaskManagement.EditTask.accept)
+            Image.TaskManagement.EditTask.ready
                 .resizable()
                 .frame(width: 30, height: 30)
         }
@@ -305,7 +305,8 @@ extension TaskManagementView {
             completeCheck: viewModel.check,
             target: viewModel.saveTargetDate,
             hasTime: viewModel.hasTime,
-            notifications: viewModel.notificationsLocal)
+            notifications: viewModel.notificationsLocal,
+            checklist: viewModel.checklistLocal)
         
         viewModel.setupUserNotifications(remove: nil)
         viewModel.disableButtonGlow()

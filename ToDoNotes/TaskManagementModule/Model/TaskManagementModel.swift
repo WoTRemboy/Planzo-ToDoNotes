@@ -114,7 +114,7 @@ enum TaskNotification: String {
             availableTypes.append(.oneDayBefore)
         }
         
-        return availableTypes
+        return availableTypes.reversed()
     }
 }
 

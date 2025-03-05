@@ -20,42 +20,42 @@ struct TaskCalendarSelectorView: View {
     }
     
     internal var body: some View {
-        NavigationStack {
-            ZStack(alignment: .bottom) {
-                ScrollView {
-                    calendarSection
-                    separator
-                    paramsForm
-                }
-                .scrollIndicators(.hidden)
-                .padding(.bottom, hasNotch() ? 100 : 80)
-
-                removeButton
-                    .zIndex(1)
+        ZStack(alignment: .bottom) {
+            VStack(spacing: 0) {
+                header
+                calendarSection
+                paramsForm
             }
-            .edgesIgnoringSafeArea(.bottom)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             
-            .navigationTitle(Texts.TaskManagement.DatePicker.title)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    toolBarButtonCancel
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    toolBarButtonDone
-                }
-            }
-            .onAppear {
-                viewModel.readNotificationStatus()
-            }
-            .popView(isPresented: $viewModel.showingNotificationAlert, onDismiss: {}) {
-                if viewModel.notificationsStatus == .disabled {
-                    disabledAlert
-                } else {
-                    prohibitedAlert
-                }
+            removeButton
+                .zIndex(1)
+        }
+        .presentationDragIndicator(.visible)
+        
+        .onAppear {
+            viewModel.readNotificationStatus()
+        }
+        .popView(isPresented: $viewModel.showingNotificationAlert, onDismiss: {}) {
+            if viewModel.notificationsStatus == .disabled {
+                disabledAlert
+            } else {
+                prohibitedAlert
             }
         }
+    }
+    
+    private var header: some View {
+        HStack {
+            toolBarButtonCancel
+            Spacer()
+            Text(Texts.TaskManagement.DatePicker.title)
+                .font(.system(size: 20, weight: .medium))
+            
+            Spacer()
+            toolBarButtonDone
+        }
+        .padding([.horizontal, .top], 24)
     }
     
     private var prohibitedAlert: some View {
@@ -83,8 +83,9 @@ struct TaskCalendarSelectorView: View {
         Button {
             viewModel.toggleDatePicker()
         } label: {
-            Text(Texts.TaskManagement.DatePicker.cancel)
-                .font(.system(size: 17, weight: .regular))
+            Image.TaskManagement.DateSelector.close
+                .resizable()
+                .frame(width: 24, height: 24)
         }
     }
     
@@ -95,65 +96,49 @@ struct TaskCalendarSelectorView: View {
                 viewModel.toggleDatePicker()
             }
         } label: {
-            Text(Texts.TaskManagement.DatePicker.done)
-                .font(.system(size: 17, weight: .semibold))
+            Image.TaskManagement.DateSelector.confirm
+                .resizable()
+                .frame(width: 24, height: 24)
         }
     }
     
     private var calendarSection: some View {
         TaskCustomCalendar(viewModel: viewModel,
                            namespace: namespace)
-    }
-    
-    private var separator: some View {
-        Divider()
-            .background(Color.LabelColors.labelTertiary)
-            .frame(height: 0.36)
-            .padding([.top, .horizontal])
+        .padding(.top)
     }
     
     private var paramsForm: some View {
         VStack(spacing: 0) {
             TaskDateParamRow(type: .time,
+                             isLast: false,
                              viewModel: viewModel)
             TaskDateParamRow(type: .notifications,
+                             isLast: true,
                              viewModel: viewModel)
-            TaskDateParamRow(type: .repeating,
-                             viewModel: viewModel)
+//            TaskDateParamRow(type: .repeating,
+//                             viewModel: viewModel)
             
-            if viewModel.selectedRepeating != .none {
-                TaskDateParamRow(type: .endRepeating,
-                                 viewModel: viewModel)
-            }
+//            if viewModel.selectedRepeating != .none {
+//                TaskDateParamRow(type: .endRepeating,
+//                                 viewModel: viewModel)
+//            }
         }
         .clipShape(.rect(cornerRadius: 10))
         .padding()
     }
     
     private var removeButton: some View {
-        ZStack(alignment: hasNotch() ? .top : .center) {
-            Rectangle()
-                .fill(Color.BackColors.backDefault)
-                .frame(maxWidth: .infinity, maxHeight: hasNotch() ? 100 : 80)
-            
-            Button {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    viewModel.allParamRemoveMethod()
-                }
-            } label: {
-                Text(Texts.TaskManagement.DatePicker.removeAll)
-                    .font(.system(size: 15, weight: .medium))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        Button {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.allParamRemoveMethod()
             }
-            .frame(height: 50)
-            .frame(maxWidth: .infinity)
-            .minimumScaleFactor(0.4)
-            
-            .foregroundStyle(Color.ButtonColors.remove)
-            .tint(Color.ButtonColors.remove)
-            .buttonStyle(.bordered)
-            .padding()
+        } label: {
+            Text(Texts.TaskManagement.DatePicker.removeAll)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(Color.ButtonColors.remove)
         }
+        .padding(.bottom)
     }
 }
 

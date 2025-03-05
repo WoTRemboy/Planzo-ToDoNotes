@@ -109,11 +109,13 @@ extension Image {
         }
         
         enum DateSelector {
+            static let close = Image("TaskDateSelectionClose")
+            static let confirm = Image("TaskDateSelectorConfirm")
             static let monthForward = Image("TaskDateSelectorMonthForward")
             static let monthBackward = Image("TaskDateSelectorMonthBackward")
             
             static let time = Image("TaskDateSelectionTime")
-            static let remainder = Image("TaskDateSelectionRemainder")
+            static let reminder = Image("TaskDateSelectionReminder")
             static let cycle = Image("TaskDateSelectionCycle")
             
             static let checked = Image("TaskDateSelectionChecked")

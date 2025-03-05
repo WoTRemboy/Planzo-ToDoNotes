@@ -148,7 +148,7 @@ final class Texts {
             static let done = "Сохранить"
             static let target = "Цель"
             static let time = "Время"
-            static let remainder = "Напоминание"
+            static let reminder = "Напоминание"
             static let cycle = "Повтор"
             static let endCycle = "Завершить повторы"
             static let removeAll = "Очистить всё"

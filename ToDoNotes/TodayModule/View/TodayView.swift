@@ -15,9 +15,12 @@ struct TodayView: View {
     @Namespace private var animation
     
     internal var body: some View {
-        ZStack {
+        ZStack(alignment: .bottomTrailing) {
             content
             plusButton
+            if coreDataManager.dayTasks.isEmpty {
+                placeholderLabel
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         
@@ -53,13 +56,8 @@ struct TodayView: View {
         VStack(spacing: 0) {
             TodayNavBar(date: viewModel.todayDate.shortDate,
                         day: viewModel.todayDate.shortWeekday)
-            .zIndex(1)
-            
-            if coreDataManager.dayTasks.isEmpty {
-                placeholderLabel
-            } else {
-                taskForm
-            }
+                .zIndex(1)
+            taskForm
         }
         .animation(.easeInOut(duration: 0.2),
                    value: coreDataManager.isEmpty)
@@ -115,19 +113,16 @@ struct TodayView: View {
     private var plusButton: some View {
         VStack {
             Spacer()
-            HStack {
-                Spacer()
-                Button {
-                    viewModel.toggleShowingTaskCreateView()
-                } label: {
-                    Image.TaskManagement.plus
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 58, height: 58)
-                }
-                .padding()
-                .glow(available: viewModel.addTaskButtonGlow)
+            Button {
+                viewModel.toggleShowingTaskCreateView()
+            } label: {
+                Image.TaskManagement.plus
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 58, height: 58)
             }
+            .padding()
+            .glow(available: viewModel.addTaskButtonGlow)
         }
         .ignoresSafeArea(.keyboard)
     }

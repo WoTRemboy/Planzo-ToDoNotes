@@ -18,7 +18,12 @@ struct MainView: View {
         ZStack(alignment: .bottomTrailing) {
             content
             floatingButtons
+            if coreDataManager.filteredSegmentedTasks(for: viewModel.selectedFilter).isEmpty {
+                placeholderLabel
+            }
         }
+        .animation(.easeInOut(duration: 0.2),
+                   value: coreDataManager.isEmpty)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
@@ -28,6 +33,13 @@ struct MainView: View {
             }
             .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
             .presentationDragIndicator(.visible)
+        }
+        .fullScreenCover(isPresented: $viewModel.showingTaskCreateViewFullscreen) {
+            TaskManagementView(
+                taskManagementHeight: $viewModel.taskManagementHeight,
+                namespace: animation) {
+                    viewModel.toggleShowingCreateView()
+                }
         }
         .fullScreenCover(item: $viewModel.selectedTask) { task in
             TaskManagementView(
@@ -43,15 +55,8 @@ struct MainView: View {
         VStack(spacing: 0) {
             MainCustomNavBar(title: Texts.MainPage.title)
                 .zIndex(1)
-            
-            if coreDataManager.filteredSegmentedTasks(for: viewModel.selectedFilter).isEmpty {
-                placeholderLabel
-            } else {
-                taskForm
-            }
+            taskForm
         }
-        .animation(.easeInOut(duration: 0.2),
-                   value: coreDataManager.isEmpty)
     }
     
     private var placeholderLabel: some View {

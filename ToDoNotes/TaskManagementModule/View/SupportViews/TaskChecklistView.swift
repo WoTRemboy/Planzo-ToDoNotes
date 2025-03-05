@@ -24,14 +24,14 @@ struct TaskChecklistView: View {
     }
     
     internal var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 6) {
             ForEach($viewModel.checklistLocal) { $item in
                 HStack {
                     (item.completed ? checkedBox : uncheckedBox)
                         .foregroundStyle(
                             (item.completed || item.name.isEmpty) ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
                     
-                        .frame(width: 15, height: 15)
+                        .frame(width: 18, height: 18)
                         .animation(.easeInOut(duration: 0.2), value: item.name)
                         .onTapGesture {
                             if !item.name.isEmpty {
@@ -48,7 +48,7 @@ struct TaskChecklistView: View {
                     
                     TextField(Texts.TaskManagement.point,
                               text: $item.name)
-                    .font(.system(size: 15, weight: .regular))
+                    .font(.system(size: 17, weight: .regular))
                     .foregroundStyle(
                         item.completed ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
                     

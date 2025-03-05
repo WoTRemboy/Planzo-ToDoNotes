@@ -67,7 +67,7 @@ fileprivate struct PopViewHelper<ViewContent: View>: ViewModifier {
                             .presentationBackground(.clear)
                             .task {
                                 guard !animateView else { return }
-                                withAnimation(.bouncy(duration: 0.3, extraBounce: 0.05)) {
+                                withAnimation(.bouncy(duration: 0.3, extraBounce: 0)) {
                                     self.animateView = true
                                 }
                             }

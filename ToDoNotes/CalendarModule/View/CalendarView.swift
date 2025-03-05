@@ -15,7 +15,7 @@ struct CalendarView: View {
     @Namespace private var animation
     
     internal var body: some View {
-        ZStack {
+        ZStack(alignment: .bottomTrailing) {
             content
             plusButton
         }
@@ -152,19 +152,16 @@ struct CalendarView: View {
     private var plusButton: some View {
         VStack {
             Spacer()
-            HStack {
-                Spacer()
-                Button {
-                    viewModel.toggleShowingTaskCreateView()
-                } label: {
-                    Image.TaskManagement.plus
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 58, height: 58)
-                }
-                .padding()
-                .glow(available: viewModel.addTaskButtonGlow)
+            Button {
+                viewModel.toggleShowingTaskCreateView()
+            } label: {
+                Image.TaskManagement.plus
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 58, height: 58)
             }
+            .padding()
+            .glow(available: viewModel.addTaskButtonGlow)
         }
         .ignoresSafeArea(.keyboard)
     }

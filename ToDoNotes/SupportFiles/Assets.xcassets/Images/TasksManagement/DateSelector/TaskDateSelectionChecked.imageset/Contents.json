@@ -1,17 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Frame 246.svg",
-      "idiom" : "universal"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "Frame 246 1.svg",
+      "filename" : "TaskDateSelectorChecked.svg",
       "idiom" : "universal"
     }
   ],

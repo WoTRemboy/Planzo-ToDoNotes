@@ -14,6 +14,7 @@ final class TaskManagementViewModel: ObservableObject {
     private(set) var notificationsStatus: NotificationStatus = .prohibited
     
     @AppStorage(Texts.UserDefaults.addTaskButtonGlow) private var addTaskButtonGlow: Bool = false
+    @AppStorage(Texts.UserDefaults.taskCreation) var taskCreationFullScreen: TaskCreation = .popup
     
     @Published internal var nameText: String
     @Published internal var descriptionText: String
@@ -128,7 +129,8 @@ final class TaskManagementViewModel: ObservableObject {
     init(nameText: String = String(),
          descriptionText: String = String(),
          check: TaskCheck = .none,
-         targetDate: Date = .now.startOfDay) {
+         targetDate: Date = .now.startOfDay,
+         hasEntity: Bool = false) {
         self.nameText = nameText
         self.descriptionText = descriptionText
         self.check = check
@@ -140,14 +142,20 @@ final class TaskManagementViewModel: ObservableObject {
             separateTargetDateToTimeAndDay(targetDate: targetDate)
         }
         
+        if !hasEntity {
+            setupEmptyChecklistLocal()
+        }
+        
         updateDays()
     }
     
     convenience init(entity: TaskEntity) {
-        self.init()
+        self.init(hasEntity: true)
+        
         self.nameText = entity.name ?? String()
         self.descriptionText = entity.details ?? String()
         self.check = TaskCheck(rawValue: entity.completed) ?? .none
+        
         self.targetDate = entity.target ?? .now.startOfDay
         self.hasDate = entity.target != nil
         self.hasTime = entity.hasTargetTime
@@ -405,7 +413,7 @@ final class TaskManagementViewModel: ObservableObject {
         }
     }
     
-    internal func setupChecklistLocal(_ checklist: NSOrderedSet?) {
+    internal func setupChecklistLocal(_ checklist: NSOrderedSet? = []) {
         guard let checklistArray = checklist?.compactMap({ $0 as? ChecklistEntity }) else { return }
         
         for entity in checklistArray {
@@ -414,7 +422,10 @@ final class TaskManagementViewModel: ObservableObject {
                 completed: entity.completed)
             checklistLocal.append(item)
         }
-        
+        setupEmptyChecklistLocal()
+    }
+    
+    private func setupEmptyChecklistLocal() {
         if checklistLocal.isEmpty {
             let emptyItem = ChecklistItem(name: String())
             checklistLocal.append(emptyItem)
