@@ -138,6 +138,7 @@ final class Texts {
             static let complete = "Завершить задачу"
             static let dublicate = "Дублировать заметку"
             static let important = "Сделать избранной"
+            static let importantDeselect = "Снять избранность"
             static let pin = "Закрепить"
             static let delete = "Удалить"
         }

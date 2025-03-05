@@ -14,6 +14,7 @@ final class MainViewModel: ObservableObject {
     
     @Published private(set) var selectedFilter: Filter = .active
     @Published internal var selectedFolder: Folder = .all
+    @Published internal var importance: Bool = false
     
     @Published internal var showingTaskCreateView: Bool = false
     @Published internal var showingTaskCreateViewFullscreen: Bool = false
@@ -52,5 +53,11 @@ final class MainViewModel: ObservableObject {
     
     internal func compareFolders(with folder: Folder) -> Bool {
         folder == selectedFolder
+    }
+    
+    internal func toggleImportance() {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            importance.toggle()
+        }
     }
 }

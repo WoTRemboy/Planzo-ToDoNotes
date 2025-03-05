@@ -15,6 +15,8 @@ final class TodayViewModel: ObservableObject {
     @Published internal var selectedTask: TaskEntity? = nil
     @Published internal var taskManagementHeight: CGFloat = 15
     
+    @Published internal var importance: Bool = false
+    
     private(set) var todayDate: Date = Date.now
     
     internal func toggleShowingTaskCreateView() {
@@ -23,5 +25,11 @@ final class TodayViewModel: ObservableObject {
     
     internal func toggleShowingTaskEditView() {
         selectedTask = nil
+    }
+    
+    internal func toggleImportance() {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            importance.toggle()
+        }
     }
 }

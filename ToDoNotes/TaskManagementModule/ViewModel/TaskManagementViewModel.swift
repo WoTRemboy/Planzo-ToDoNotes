@@ -23,6 +23,8 @@ final class TaskManagementViewModel: ObservableObject {
     
     @Published internal var checkListItemText: String = String()
     
+    @Published internal var importance: Bool = false
+    
     @Published internal var showingShareSheet: Bool = false
     @Published internal var shareSheetHeight: CGFloat = 0
     
@@ -160,6 +162,8 @@ final class TaskManagementViewModel: ObservableObject {
         self.hasDate = entity.target != nil
         self.hasTime = entity.hasTargetTime
         
+        self.importance = entity.important
+        
         separateTargetDateToTimeAndDay(targetDate: entity.target)
         
         setupChecklistLocal(entity.checklist)
@@ -195,6 +199,11 @@ final class TaskManagementViewModel: ObservableObject {
             self.check = .checked
             setChecklistCompletion(to: true)
         }
+    }
+    
+    internal func toggleImportanceCheck() {
+        importance.toggle()
+        print(importance)
     }
     
     internal func setCheckFalse() {

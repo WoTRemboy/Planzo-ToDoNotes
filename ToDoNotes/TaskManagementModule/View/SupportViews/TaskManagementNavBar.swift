@@ -108,12 +108,16 @@ struct TaskManagementNavBar: View {
             
             Section {
                 Button {
-                    // Set Important Action
+                    viewModel.toggleImportanceCheck()
                 } label: {
                     Label {
+                        viewModel.importance ?
+                        Text(Texts.TaskManagement.ContextMenu.importantDeselect) :
                         Text(Texts.TaskManagement.ContextMenu.important)
                     } icon: {
-                        Image.NavigationBar.favorite
+                        viewModel.importance ?
+                        Image.TaskManagement.EditTask.Menu.importantDeselect :
+                        Image.TaskManagement.EditTask.Menu.importantSelect
                             .renderingMode(.template)
                     }
                 }

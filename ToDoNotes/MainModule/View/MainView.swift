@@ -18,7 +18,8 @@ struct MainView: View {
         ZStack(alignment: .bottomTrailing) {
             content
             floatingButtons
-            if coreDataManager.filteredSegmentedTasks(for: viewModel.selectedFilter).isEmpty {
+            if coreDataManager.filteredSegmentedTasks(
+                for: viewModel.selectedFilter, important: viewModel.importance).isEmpty {
                 placeholderLabel
             }
         }
@@ -68,7 +69,9 @@ struct MainView: View {
     
     private var taskForm: some View {
         Form {
-            ForEach(coreDataManager.filteredSegmentedTasks(for: viewModel.selectedFilter), id: \.0) { segment, tasks in
+            ForEach(coreDataManager.filteredSegmentedTasks(
+                for: viewModel.selectedFilter,
+                important: viewModel.importance), id: \.0) { segment, tasks in
                 segmentView(segment: segment, tasks: tasks)
             }
             .listRowSeparator(.hidden)
@@ -89,6 +92,25 @@ struct MainView: View {
                     TaskListRow(entity: entity, isLast: tasks.last == entity)
                 }
                 //.navigationTransitionSource(id: entity.id, namespace: animation)
+                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            coreDataManager.toggleImportant(for: entity)
+                        }
+                    } label: {
+                        coreDataManager.taskCheckImportant(for: entity) ?
+                            Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
+                                Image.TaskManagement.TaskRow.SwipeAction.important
+                    }
+                    .tint(Color.SwipeColors.important)
+                    
+                    Button {
+                        // Pin Action
+                    } label: {
+                        Image.NavigationBar.MainTodayPages.importantSelect
+                    }
+                    .tint(Color.SwipeColors.pin)
+                }
             }
             .onDelete { indexSet in
                 let idsToDelete = indexSet.map { tasks[$0].objectID }

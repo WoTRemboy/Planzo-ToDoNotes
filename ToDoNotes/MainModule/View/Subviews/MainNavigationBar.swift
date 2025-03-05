@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct MainCustomNavBar: View {
+    
+    @EnvironmentObject private var viewModel: MainViewModel
+    
     private let title: String
     
     init(title: String) {
@@ -59,11 +62,15 @@ struct MainCustomNavBar: View {
             
             // Favorites Button
             Button {
-                // Action for favorites button
+                viewModel.toggleImportance()
             } label: {
-                Image.NavigationBar.favorites
+                (viewModel.importance ?
+                Image.NavigationBar.MainTodayPages.importantDeselect :
+                Image.NavigationBar.MainTodayPages.importantSelect)
                     .resizable()
                     .frame(width: 26, height: 26)
+                    .shadow(color: Color.ShadowColors.shadowDefault,
+                            radius: viewModel.importance ? 5 : 0)
             }
         }
         .padding(.horizontal, 16)

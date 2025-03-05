@@ -14,6 +14,11 @@ extension Image {
     }
     
     enum NavigationBar {
+        enum MainTodayPages {
+            static let importantSelect = Image("NavIconSelectImportant")
+            static let importantDeselect = Image("NavIconDeselectImportant")
+        }
+        
         static let search = Image("NavIconSearch")
         static let favorites = Image("NavIconFavorites")
         static let calendar = Image("NavIconCalendar")
@@ -96,16 +101,26 @@ extension Image {
             
             static let checkListCheck = Image("ChecklistItemChecked")
             static let checkListUncheck = Image("ChecklistItemUnchecked")
+            
+            enum Menu {
+                static let importantSelect = Image("EditTaskMakeImportantIcon")
+                static let importantDeselect = Image("EditTaskDeselectImportantIcon")
+            }
         }
         
         enum TaskRow {
             static let uncheckedBox = Image("TaskRowUncheckedBox")
             static let checkedBox = Image("TaskRowCheckedBox")
             
-            static let remainder = Image("TaskRowRemainder")
+            static let reminder = Image("TaskRowRemainder")
             static let content = Image("TaskRowContent")
             static let important = Image("TaskRowImportant")
             static let expired = Image("TaskRowExpired")
+            
+            enum SwipeAction {
+                static let important = Image("TaskRowSwipeSelectImportant")
+                static let importantDeselect = Image("TaskRowSwipeDeselectImportant")
+            }
         }
         
         enum DateSelector {

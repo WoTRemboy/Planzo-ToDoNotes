@@ -51,6 +51,7 @@ final class CoreDataViewModel: ObservableObject {
                           completeCheck: TaskCheck,
                           target: Date?,
                           hasTime: Bool,
+                          importance: Bool,
                           notifications: Set<NotificationItem>,
                           checklist: [ChecklistItem] = []) {
         guard !name.isEmpty else { return }
@@ -61,9 +62,12 @@ final class CoreDataViewModel: ObservableObject {
         newTask.name = name
         newTask.details = description
         newTask.completed = completeCheck.rawValue
+        
         newTask.created = .now
         newTask.target = target
         newTask.hasTargetTime = hasTime
+        
+        newTask.important = importance
         
         var notificationEntities = [NotificationEntity]()
         for item in notifications {
@@ -95,13 +99,17 @@ final class CoreDataViewModel: ObservableObject {
                              completeCheck: TaskCheck,
                              target: Date?,
                              hasTime: Bool,
+                             importance: Bool,
                              notifications: Set<NotificationItem> = [],
                              checklist: [ChecklistItem] = []) {
         entity.name = name
         entity.details = description
         entity.completed = completeCheck.rawValue
+        
         entity.target = target
         entity.hasTargetTime = hasTime
+        
+        entity.important = importance
         
         var notificationEntities = [NotificationEntity]()
         for item in notifications {
@@ -179,10 +187,11 @@ final class CoreDataViewModel: ObservableObject {
             .sorted { $0.0 ?? Date.distantFuture > $1.0 ?? Date.distantFuture }
     }
     
-    internal func filteredSegmentedTasks(for filter: Filter) -> [(Date?, [TaskEntity])] {
+    internal func filteredSegmentedTasks(for filter: Filter, important: Bool) -> [(Date?, [TaskEntity])] {
         let now = Date()
         return segmentedAndSortedTasksArray.compactMap { (date, tasks) in
             let filteredTasks = tasks.filter { task in
+                if important == true, task.important != important { return false }
                 switch filter {
                 case .active:
                     guard task.completed != 2 else { return false }
@@ -250,9 +259,10 @@ final class CoreDataViewModel: ObservableObject {
 
 extension CoreDataViewModel {
     
-    internal func dayTasks(for date: Date) {
+    internal func dayTasks(for date: Date, important: Bool = false) {
         let day = Calendar.current.startOfDay(for: date)
-        let tasksForDay = segmentedAndSortedTasksDict[day] ?? []
+        var tasksForDay = segmentedAndSortedTasksDict[day] ?? []
+        if important { tasksForDay = tasksForDay.filter({ $0.important == important }) }
         dayTasks.removeAll()
         
 //        let pinnedTasks = tasksForDay.filter { $0.isPinned }
@@ -303,6 +313,15 @@ extension CoreDataViewModel {
     
     internal func taskCheckStatus(for entity: TaskEntity) -> Bool {
         entity.completed == 2
+    }
+    
+    internal func taskCheckImportant(for entity: TaskEntity) -> Bool {
+        entity.important
+    }
+    
+    internal func toggleImportant(for entity: TaskEntity) {
+        entity.important.toggle()
+        saveData()
     }
     
     internal func toggleCompleteChecking(for entity: TaskEntity) {

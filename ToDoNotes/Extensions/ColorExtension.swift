@@ -55,6 +55,13 @@ extension Color {
         static let shadowDefault = Color("ShadowDefaultColor")
         static let shadowTaskSection = Color("ShadowTaskSectionColor")
     }
+    
+    enum SwipeColors {
+        static let important = Color("SwipeActionImportant")
+        static let pin = Color("SwipeActionPin")
+        static let delete = Color("SwipeActionDelete")
+        static let restore = Color("SwipeActionRestore")
+    }
 }
 
 

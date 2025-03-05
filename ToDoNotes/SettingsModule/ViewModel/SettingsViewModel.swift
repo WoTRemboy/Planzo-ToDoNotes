@@ -14,6 +14,7 @@ final class SettingsViewModel: ObservableObject {
     @AppStorage(Texts.UserDefaults.theme) var userTheme: Theme = .systemDefault
     @AppStorage(Texts.UserDefaults.taskCreation) var taskCreation: TaskCreation = .popup
     @AppStorage(Texts.UserDefaults.notifications) private var notificationsStatus: NotificationStatus = .prohibited
+    @AppStorage(Texts.UserDefaults.addTaskButtonGlow) private var addTaskButtonGlow: Bool = false
     
     @Published internal var showingLanguageAlert: Bool = false
     @Published internal var showingAppearance: Bool = false
@@ -90,6 +91,7 @@ final class SettingsViewModel: ObservableObject {
     
     internal func taskCreationChange(to mode: TaskCreation) {
         guard taskCreation != mode else { return }
+        addTaskButtonGlow = false
         taskCreation = mode
     }
 }

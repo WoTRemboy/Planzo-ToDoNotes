@@ -25,11 +25,16 @@ struct TodayView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         
         .onAppear {
-            coreDataManager.dayTasks(for: viewModel.todayDate)
+            coreDataManager.dayTasks(for: viewModel.todayDate, important: viewModel.importance)
         }
         .onChange(of: coreDataManager.savedEnities) {
             withAnimation {
-                coreDataManager.dayTasks(for: viewModel.todayDate)
+                coreDataManager.dayTasks(for: viewModel.todayDate, important: viewModel.importance)
+            }
+        }
+        .onChange(of: viewModel.importance) {
+            withAnimation {
+                coreDataManager.dayTasks(for: viewModel.todayDate, important: viewModel.importance)
             }
         }
         
@@ -92,6 +97,25 @@ struct TodayView: View {
                     viewModel.selectedTask = entity
                 } label: {
                     TaskListRow(entity: entity, isLast: tasks.last == entity)
+                }
+                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            coreDataManager.toggleImportant(for: entity)
+                        }
+                    } label: {
+                        coreDataManager.taskCheckImportant(for: entity) ?
+                            Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
+                                Image.TaskManagement.TaskRow.SwipeAction.important
+                    }
+                    .tint(Color.SwipeColors.important)
+                    
+                    Button {
+                        // Pin Action
+                    } label: {
+                        Image.NavigationBar.MainTodayPages.importantSelect
+                    }
+                    .tint(Color.SwipeColors.pin)
                 }
             }
             .onDelete { indexSet in

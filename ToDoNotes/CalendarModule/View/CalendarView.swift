@@ -111,6 +111,25 @@ struct CalendarView: View {
                     } label: {
                         TaskListRow(entity: entity, isLast: tasks.last == entity)
                     }
+                    .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                coreDataManager.toggleImportant(for: entity)
+                            }
+                        } label: {
+                            coreDataManager.taskCheckImportant(for: entity) ?
+                                Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
+                                    Image.TaskManagement.TaskRow.SwipeAction.important
+                        }
+                        .tint(Color.SwipeColors.important)
+                        
+                        Button {
+                            // Pin Action
+                        } label: {
+                            Image.NavigationBar.MainTodayPages.importantSelect
+                        }
+                        .tint(Color.SwipeColors.pin)
+                    }
                 }
                 .onDelete { indexSet in
                     let tasksForToday = coreDataManager.dayTasks[section] ?? []

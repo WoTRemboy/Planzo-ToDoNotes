@@ -208,16 +208,16 @@ struct TaskManagementView: View {
     }
     
     private var checkButton: some View {
-        (viewModel.check != .none ?
-         Image.TaskManagement.EditTask.check :
-            Image.TaskManagement.EditTask.uncheck)
-        .resizable()
-        .frame(width: 24, height: 24)
-        
-        .onTapGesture {
+        Button {
             withAnimation(.easeInOut(duration: 0.2)) {
                 viewModel.toggleBottomCheck()
             }
+        } label: {
+            (viewModel.check != .none ?
+             Image.TaskManagement.EditTask.check :
+                Image.TaskManagement.EditTask.uncheck)
+            .resizable()
+            .frame(width: 24, height: 24)
         }
     }
     
@@ -297,6 +297,7 @@ extension TaskManagementView {
                 completeCheck: viewModel.check,
                 target: viewModel.saveTargetDate,
                 hasTime: viewModel.hasTime,
+                importance: viewModel.importance,
                 notifications: viewModel.notificationsLocal,
                 checklist: viewModel.checklistLocal)
         }
@@ -309,6 +310,7 @@ extension TaskManagementView {
             completeCheck: viewModel.check,
             target: viewModel.saveTargetDate,
             hasTime: viewModel.hasTime,
+            importance: viewModel.importance,
             notifications: viewModel.notificationsLocal,
             checklist: viewModel.checklistLocal)
         

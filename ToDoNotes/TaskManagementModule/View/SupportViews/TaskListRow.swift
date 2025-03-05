@@ -102,12 +102,10 @@ struct TaskListRow: View {
                     textContentImage
                 }
                 if notifications > 0 {
-                    remainderImage
+                    reminderImage
                 }
-                if context || notifications > 0 {
-                    additionalStatus
-                        .frame(width: 15, height: 15)
-                }
+                additionalStatus
+                    .frame(width: 15, height: 15)
             }
         }
         .padding(.leading)
@@ -129,8 +127,8 @@ struct TaskListRow: View {
         }
     }
     
-    private var remainderImage: some View {
-        Image.TaskManagement.TaskRow.remainder
+    private var reminderImage: some View {
+        Image.TaskManagement.TaskRow.reminder
             .resizable()
             .frame(width: 18, height: 18)
     }

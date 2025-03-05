@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct TodayNavBar: View {
+    @EnvironmentObject private var viewModel: TodayViewModel
+    
     private let date: String
     private let day: String
     
@@ -63,11 +65,15 @@ struct TodayNavBar: View {
             
             // Favorites Button
             Button {
-                // Action for favorites button
+                viewModel.toggleImportance()
             } label: {
-                Image.NavigationBar.favorites
+                (viewModel.importance ?
+                Image.NavigationBar.MainTodayPages.importantDeselect :
+                Image.NavigationBar.MainTodayPages.importantSelect)
                     .resizable()
                     .frame(width: 26, height: 26)
+                    .shadow(color: Color.ShadowColors.shadowDefault,
+                            radius: viewModel.importance ? 5 : 0)
             }
         }
         .padding(.horizontal, 16)
