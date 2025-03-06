@@ -140,6 +140,7 @@ final class Texts {
             static let important = "Сделать избранной"
             static let importantDeselect = "Снять избранность"
             static let pin = "Закрепить"
+            static let unpin = "Открепить"
             static let delete = "Удалить"
         }
         

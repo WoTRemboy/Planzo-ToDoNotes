@@ -24,6 +24,7 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var checkListItemText: String = String()
     
     @Published internal var importance: Bool = false
+    @Published internal var pinned: Bool = false
     
     @Published internal var showingShareSheet: Bool = false
     @Published internal var shareSheetHeight: CGFloat = 0
@@ -163,6 +164,7 @@ final class TaskManagementViewModel: ObservableObject {
         self.hasTime = entity.hasTargetTime
         
         self.importance = entity.important
+        self.pinned = entity.pinned
         
         separateTargetDateToTimeAndDay(targetDate: entity.target)
         
@@ -203,7 +205,10 @@ final class TaskManagementViewModel: ObservableObject {
     
     internal func toggleImportanceCheck() {
         importance.toggle()
-        print(importance)
+    }
+    
+    internal func togglePinnedCheck() {
+        pinned.toggle()
     }
     
     internal func setCheckFalse() {

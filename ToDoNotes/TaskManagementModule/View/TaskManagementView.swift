@@ -298,6 +298,7 @@ extension TaskManagementView {
                 target: viewModel.saveTargetDate,
                 hasTime: viewModel.hasTime,
                 importance: viewModel.importance,
+                pinned: viewModel.pinned,
                 notifications: viewModel.notificationsLocal,
                 checklist: viewModel.checklistLocal)
         }
@@ -311,6 +312,7 @@ extension TaskManagementView {
             target: viewModel.saveTargetDate,
             hasTime: viewModel.hasTime,
             importance: viewModel.importance,
+            pinned: viewModel.pinned,
             notifications: viewModel.notificationsLocal,
             checklist: viewModel.checklistLocal)
         

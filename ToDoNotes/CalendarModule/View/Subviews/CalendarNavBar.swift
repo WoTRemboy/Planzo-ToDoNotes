@@ -11,9 +11,9 @@ struct CalendarNavBar: View {
     @EnvironmentObject private var viewModel: CalendarViewModel
 
     private let date: String
-    private let monthYear: String
+    private let monthYear: Date
         
-    init(date: String, monthYear: String) {
+    init(date: String, monthYear: Date) {
         self.date = date
         self.monthYear = monthYear
     }
@@ -51,10 +51,10 @@ struct CalendarNavBar: View {
                     .foregroundStyle(Color.LabelColors.labelPrimary)
             }
             
-            Text(monthYear)
+            Text(monthYear.longMonthYear)
                 .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(Color.LabelColors.labelSecondary)
-                .contentTransition(.numericText())
+                .contentTransition(.numericText(value: monthYear.timeIntervalSince1970))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.leading, 16)
@@ -87,6 +87,6 @@ struct CalendarNavBar: View {
 }
 
 #Preview {
-    CalendarNavBar(date: "Сегодня", monthYear: "декабрь, 2024")
+    CalendarNavBar(date: "Сегодня", monthYear: Date.now)
         .environmentObject(CalendarViewModel())
 }

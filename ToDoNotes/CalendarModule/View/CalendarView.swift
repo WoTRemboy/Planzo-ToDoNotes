@@ -61,7 +61,7 @@ struct CalendarView: View {
     private var content: some View {
         VStack(spacing: 0) {
             CalendarNavBar(date: Texts.CalendarPage.today,
-                           monthYear: viewModel.calendarDate.longMonthYear)
+                           monthYear: viewModel.calendarDate)
             .zIndex(1)
             
             CustomCalendarView(namespace: animation)
@@ -94,6 +94,7 @@ struct CalendarView: View {
                 taskSection(for: section)
             }
             .listRowSeparator(.hidden)
+            .listSectionSpacing(0)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .background(Color.BackColors.backDefault)
@@ -123,10 +124,15 @@ struct CalendarView: View {
                         }
                         .tint(Color.SwipeColors.important)
                         
-                        Button {
-                            // Pin Action
+                        Button(role: .destructive) {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                coreDataManager.togglePinned(for: entity)
+                                coreDataManager.dayTasks(for: viewModel.selectedDate)
+                            }
                         } label: {
-                            Image.NavigationBar.MainTodayPages.importantSelect
+                            coreDataManager.taskCheckPinned(for: entity) ?
+                                Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
+                                    Image.TaskManagement.TaskRow.SwipeAction.pinned
                         }
                         .tint(Color.SwipeColors.pin)
                     }
@@ -146,7 +152,7 @@ struct CalendarView: View {
                 Text(viewModel.selectedDate.longDayMonthWeekday)
                     .font(.system(size: 15, weight: .medium))
                     .textCase(.none)
-                    .contentTransition(.numericText())
+                    .contentTransition(.numericText(value: viewModel.selectedDate.timeIntervalSince1970))
                     .matchedGeometryEffect(
                         id: Texts.NamespaceID.selectedCalendarDate,
                         in: animation)
@@ -161,7 +167,7 @@ struct CalendarView: View {
     private var placeholder: some View {
         ScrollView {
             CalendarTaskFormPlaceholder(
-                date: viewModel.selectedDate.longDayMonthWeekday,
+                date: viewModel.selectedDate,
                 namespace: animation)
                 .padding(.top)
         }

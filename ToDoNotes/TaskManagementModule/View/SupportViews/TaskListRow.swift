@@ -24,6 +24,7 @@ struct TaskListRow: View {
     internal var body: some View {
         HStack(spacing: 0) {
             folderIndicatior
+            pinnedIndicator
             if entity.completed != 0 {
                 checkBoxButton
             }
@@ -48,7 +49,20 @@ struct TaskListRow: View {
         Rectangle()
             .foregroundStyle(Color.FolderColors.lists)
             .frame(maxWidth: 6, maxHeight: .infinity)
-            .padding(.trailing, 10)
+    }
+    
+    private var pinnedIndicator: some View {
+        ZStack(alignment: .topTrailing) {
+            Color.clear
+            
+            if entity.pinned {
+                Image.TaskManagement.TaskRow.pinned
+                    .resizable()
+                    .frame(width: 5, height: 5)
+                    .padding(.top, 5)
+            }
+        }
+        .frame(maxWidth: 10, maxHeight: .infinity)
     }
     
     private var checkBoxButton: some View {

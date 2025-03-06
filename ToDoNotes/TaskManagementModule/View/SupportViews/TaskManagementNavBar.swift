@@ -90,7 +90,7 @@ struct TaskManagementNavBar: View {
                 Label {
                     Text(Texts.TaskManagement.ContextMenu.complete)
                 } icon: {
-                    Image.NavigationBar.uncompleted
+                    Image.TaskManagement.EditTask.Menu.completed
                         .renderingMode(.template)
                 }
             }
@@ -101,7 +101,7 @@ struct TaskManagementNavBar: View {
                 Label {
                     Text(Texts.TaskManagement.ContextMenu.dublicate)
                 } icon: {
-                    Image.NavigationBar.copy
+                    Image.TaskManagement.EditTask.Menu.copy
                         .renderingMode(.template)
                 }
             }
@@ -123,12 +123,16 @@ struct TaskManagementNavBar: View {
                 }
                 
                 Button {
-                    // Pin Task Action
+                    viewModel.togglePinnedCheck()
                 } label: {
                     Label {
+                        viewModel.pinned ?
+                        Text(Texts.TaskManagement.ContextMenu.unpin) :
                         Text(Texts.TaskManagement.ContextMenu.pin)
                     } icon: {
-                        Image.NavigationBar.pin
+                        viewModel.pinned ?
+                        Image.TaskManagement.EditTask.Menu.pinnedDeselect :
+                        Image.TaskManagement.EditTask.Menu.pinnedSelect
                             .renderingMode(.template)
                     }
                 }
@@ -139,7 +143,7 @@ struct TaskManagementNavBar: View {
                     Label {
                         Text(Texts.TaskManagement.ContextMenu.delete)
                     } icon: {
-                        Image.NavigationBar.trash
+                        Image.TaskManagement.EditTask.Menu.trash
                             .renderingMode(.template)
                     }
                 }

@@ -81,6 +81,7 @@ struct TodayView: View {
                 taskFormSection(for: section)
             }
             .listRowSeparator(.hidden)
+            .listSectionSpacing(0)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .background(Color.BackColors.backDefault)
@@ -99,7 +100,7 @@ struct TodayView: View {
                     TaskListRow(entity: entity, isLast: tasks.last == entity)
                 }
                 .swipeActions(edge: .leading, allowsFullSwipe: false) {
-                    Button {
+                    Button(role: (viewModel.importance && tasks.last == entity) ? .destructive : .cancel) {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             coreDataManager.toggleImportant(for: entity)
                         }
@@ -110,10 +111,16 @@ struct TodayView: View {
                     }
                     .tint(Color.SwipeColors.important)
                     
-                    Button {
-                        // Pin Action
+                    Button(role: .destructive) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            coreDataManager.togglePinned(for: entity)
+                            coreDataManager.dayTasks(for: viewModel.todayDate, important: viewModel.importance)
+                        }
+                        
                     } label: {
-                        Image.NavigationBar.MainTodayPages.importantSelect
+                        coreDataManager.taskCheckPinned(for: entity) ?
+                            Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
+                                Image.TaskManagement.TaskRow.SwipeAction.pinned
                     }
                     .tint(Color.SwipeColors.pin)
                 }

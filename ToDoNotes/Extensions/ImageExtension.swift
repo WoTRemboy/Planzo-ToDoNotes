@@ -26,16 +26,6 @@ extension Image {
         static let hide = Image("NavIconHide")
         static let back = Image("NavIconBack")
         static let share = Image("NavIconShare")
-        
-        static let completed = Image("NavIconCompleted")
-        static let uncompleted = Image("NavIconUncompleted")
-        static let pin = Image("NavIconPin")
-        static let unpin = Image("NavIconUnpin")
-        static let favorite = Image("NavIconFavorite")
-        static let unfavorite = Image("NavIconUnfavorite")
-        
-        static let copy = Image("NavIconCopy")
-        static let trash = Image("NavIconTrash")
     }
     
     enum TabBar {
@@ -103,8 +93,17 @@ extension Image {
             static let checkListUncheck = Image("ChecklistItemUnchecked")
             
             enum Menu {
-                static let importantSelect = Image("EditTaskMakeImportantIcon")
-                static let importantDeselect = Image("EditTaskDeselectImportantIcon")
+                static let completed = Image("EditTaskCompletedOffIcon")
+                static let completedDeselect = Image("EditTaskCompletedOnIcon")
+                
+                static let importantSelect = Image("EditTaskImportantOffIcon")
+                static let importantDeselect = Image("EditTaskImportantOnIcon")
+                
+                static let pinnedSelect = Image("EditTaskPinnedOffIcon")
+                static let pinnedDeselect = Image("EditTaskPinnedOnIcon")
+                
+                static let copy = Image("EditTaskCopyIcon")
+                static let trash = Image("EditTaskTrashIcon")
             }
         }
         
@@ -112,14 +111,18 @@ extension Image {
             static let uncheckedBox = Image("TaskRowUncheckedBox")
             static let checkedBox = Image("TaskRowCheckedBox")
             
+            static let pinned = Image("TaskRowPinned")
             static let reminder = Image("TaskRowRemainder")
             static let content = Image("TaskRowContent")
             static let important = Image("TaskRowImportant")
             static let expired = Image("TaskRowExpired")
             
             enum SwipeAction {
-                static let important = Image("TaskRowSwipeSelectImportant")
-                static let importantDeselect = Image("TaskRowSwipeDeselectImportant")
+                static let important = Image("TaskRowSwipeImportantOff")
+                static let importantDeselect = Image("TaskRowSwipeImportantOn")
+                
+                static let pinned = Image("TaskRowSwipePinnedOff")
+                static let pinnedDeselect = Image("TaskRowSwipePinnedOn")
             }
         }
         
@@ -129,8 +132,10 @@ extension Image {
             static let monthForward = Image("TaskDateSelectorMonthForward")
             static let monthBackward = Image("TaskDateSelectorMonthBackward")
             
-            static let time = Image("TaskDateSelectionTime")
-            static let reminder = Image("TaskDateSelectionReminder")
+            static let time = Image("TaskDateSelectionTimeOff")
+            static let timeSelected = Image("TaskDateSelectionTimeOn")
+            static let reminder = Image("TaskDateSelectionReminderOff")
+            static let reminderSelected = Image("TaskDateSelectionReminderOn")
             static let cycle = Image("TaskDateSelectionCycle")
             
             static let checked = Image("TaskDateSelectionChecked")

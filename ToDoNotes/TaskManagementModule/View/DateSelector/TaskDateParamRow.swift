@@ -51,9 +51,13 @@ struct TaskDateParamRow: View {
     private var paramIcon: Image {
         switch type {
         case .time:
-            Image.TaskManagement.DateSelector.time
+            viewModel.hasTime ?
+                Image.TaskManagement.DateSelector.timeSelected :
+                    Image.TaskManagement.DateSelector.time
         case .notifications:
-            Image.TaskManagement.DateSelector.reminder
+            !viewModel.notificationsLocal.isEmpty ?
+                Image.TaskManagement.DateSelector.reminderSelected :
+                    Image.TaskManagement.DateSelector.reminder
         case .repeating:
             Image.TaskManagement.DateSelector.cycle
         case .endRepeating:

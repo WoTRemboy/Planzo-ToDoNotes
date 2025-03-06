@@ -75,6 +75,7 @@ struct MainView: View {
                 segmentView(segment: segment, tasks: tasks)
             }
             .listRowSeparator(.hidden)
+            .listSectionSpacing(0)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
@@ -93,7 +94,7 @@ struct MainView: View {
                 }
                 //.navigationTransitionSource(id: entity.id, namespace: animation)
                 .swipeActions(edge: .leading, allowsFullSwipe: false) {
-                    Button {
+                    Button(role: (viewModel.importance && tasks.last == entity) ? .destructive : .cancel) {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             coreDataManager.toggleImportant(for: entity)
                         }
@@ -105,9 +106,13 @@ struct MainView: View {
                     .tint(Color.SwipeColors.important)
                     
                     Button {
-                        // Pin Action
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            coreDataManager.togglePinned(for: entity)
+                        }
                     } label: {
-                        Image.NavigationBar.MainTodayPages.importantSelect
+                        coreDataManager.taskCheckPinned(for: entity) ?
+                            Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
+                                Image.TaskManagement.TaskRow.SwipeAction.pinned
                     }
                     .tint(Color.SwipeColors.pin)
                 }

@@ -52,6 +52,7 @@ final class CoreDataViewModel: ObservableObject {
                           target: Date?,
                           hasTime: Bool,
                           importance: Bool,
+                          pinned: Bool,
                           notifications: Set<NotificationItem>,
                           checklist: [ChecklistItem] = []) {
         guard !name.isEmpty else { return }
@@ -68,6 +69,7 @@ final class CoreDataViewModel: ObservableObject {
         newTask.hasTargetTime = hasTime
         
         newTask.important = importance
+        newTask.pinned = pinned
         
         var notificationEntities = [NotificationEntity]()
         for item in notifications {
@@ -100,6 +102,7 @@ final class CoreDataViewModel: ObservableObject {
                              target: Date?,
                              hasTime: Bool,
                              importance: Bool,
+                             pinned: Bool,
                              notifications: Set<NotificationItem> = [],
                              checklist: [ChecklistItem] = []) {
         entity.name = name
@@ -110,6 +113,7 @@ final class CoreDataViewModel: ObservableObject {
         entity.hasTargetTime = hasTime
         
         entity.important = importance
+        entity.pinned = pinned
         
         var notificationEntities = [NotificationEntity]()
         for item in notifications {
@@ -265,10 +269,11 @@ extension CoreDataViewModel {
         if important { tasksForDay = tasksForDay.filter({ $0.important == important }) }
         dayTasks.removeAll()
         
-//        let pinnedTasks = tasksForDay.filter { $0.isPinned }
-        let activeTasks = tasksForDay.filter { $0.completed != 2 }
-        let completedTasks = tasksForDay.filter { $0.completed == 2 }
+        let pinnedTasks = tasksForDay.filter { $0.pinned }
+        let activeTasks = tasksForDay.filter { $0.completed != 2 && !$0.pinned }
+        let completedTasks = tasksForDay.filter { $0.completed == 2 && !$0.pinned }
         
+        !pinnedTasks.isEmpty ? dayTasks[.pinned] = pinnedTasks : nil
         !activeTasks.isEmpty ? dayTasks[.active] = activeTasks : nil
         !completedTasks.isEmpty ? dayTasks[.completed] = completedTasks : nil
     }
@@ -321,6 +326,15 @@ extension CoreDataViewModel {
     
     internal func toggleImportant(for entity: TaskEntity) {
         entity.important.toggle()
+        saveData()
+    }
+    
+    internal func taskCheckPinned(for entity: TaskEntity) -> Bool {
+        entity.pinned
+    }
+    
+    internal func togglePinned(for entity: TaskEntity) {
+        entity.pinned.toggle()
         saveData()
     }
     
