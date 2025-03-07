@@ -103,22 +103,24 @@ struct TaskListRow: View {
     }
     
     private var detailsBox: some View {
-        VStack(alignment: .trailing, spacing: 6) {
+        let hasDateLabel = entity.target != nil && entity.hasTargetTime
+        let context = coreDataManager.haveTextContent(for: entity)
+        let notifications = entity.notifications?.count ?? 0 > 0
+        let spacingValue: CGFloat = (hasDateLabel && (context || notifications)) ? 6 : 0
+        
+        return VStack(alignment: .trailing, spacing: spacingValue) {
             if entity.target != nil, entity.hasTargetTime {
                 dateLabel
             }
             
             HStack(spacing: 2) {
-                let context = coreDataManager.haveTextContent(for: entity)
-                let notifications = entity.notifications?.count ?? 0
-                
                 if context {
                     textContentImage
                 }
-                if notifications > 0 {
+                if notifications {
                     reminderImage
                 }
-                if context || notifications > 0 {
+                if context || notifications || !hasDateLabel {
                     additionalStatus
                         .frame(width: 15, height: 15)
                 }

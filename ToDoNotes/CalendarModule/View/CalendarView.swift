@@ -107,46 +107,47 @@ struct CalendarView: View {
         Section {
             let tasks = coreDataManager.dayTasks[section] ?? []
             ForEach(tasks) { entity in
+                Button {
+                    viewModel.selectedTask = entity
+                } label: {
+                    TaskListRow(entity: entity, isLast: tasks.last == entity)
+                }
+                .swipeActions(edge: .leading, allowsFullSwipe: false) {
                     Button {
-                        viewModel.selectedTask = entity
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            coreDataManager.toggleImportant(for: entity)
+                        }
                     } label: {
-                        TaskListRow(entity: entity, isLast: tasks.last == entity)
+                        coreDataManager.taskCheckImportant(for: entity) ?
+                        Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
+                        Image.TaskManagement.TaskRow.SwipeAction.important
                     }
-                    .swipeActions(edge: .leading, allowsFullSwipe: false) {
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                coreDataManager.toggleImportant(for: entity)
-                            }
-                        } label: {
-                            coreDataManager.taskCheckImportant(for: entity) ?
-                                Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
-                                    Image.TaskManagement.TaskRow.SwipeAction.important
-                        }
-                        .tint(Color.SwipeColors.important)
-                        
-                        Button(role: .destructive) {
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                coreDataManager.togglePinned(for: entity)
-                                coreDataManager.dayTasks(for: viewModel.selectedDate)
-                            }
-                        } label: {
-                            coreDataManager.taskCheckPinned(for: entity) ?
-                                Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
-                                    Image.TaskManagement.TaskRow.SwipeAction.pinned
-                        }
-                        .tint(Color.SwipeColors.pin)
-                    }
-                }
-                .onDelete { indexSet in
-                    let tasksForToday = coreDataManager.dayTasks[section] ?? []
-                    let idsToDelete = indexSet.map { tasksForToday[$0].objectID }
+                    .tint(Color.SwipeColors.important)
                     
-                    withAnimation {
-                        coreDataManager.deleteTasks(
-                            with: idsToDelete)
+                    Button(role: .destructive) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            coreDataManager.togglePinned(for: entity)
+                            coreDataManager.dayTasks(for: viewModel.selectedDate)
+                        }
+                    } label: {
+                        coreDataManager.taskCheckPinned(for: entity) ?
+                        Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
+                        Image.TaskManagement.TaskRow.SwipeAction.pinned
                     }
+                    .tint(Color.SwipeColors.pin)
                 }
-                .listRowInsets(EdgeInsets())
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    Button(role: .destructive) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            coreDataManager.toggleRemoved(for: entity)
+                        }
+                    } label: {
+                        Image.TaskManagement.TaskRow.SwipeAction.remove
+                    }
+                    .tint(Color.SwipeColors.remove)
+                }
+            }
+            .listRowInsets(EdgeInsets())
         } header: {
             if section == .active {
                 Text(viewModel.selectedDate.longDayMonthWeekday)
@@ -169,7 +170,7 @@ struct CalendarView: View {
             CalendarTaskFormPlaceholder(
                 date: viewModel.selectedDate,
                 namespace: animation)
-                .padding(.top)
+            .padding(.top)
         }
         .scrollDisabled(true)
     }

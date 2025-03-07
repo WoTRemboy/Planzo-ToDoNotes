@@ -95,7 +95,7 @@ final class Texts {
             static let light = "Светлое"
             static let dark = "Темное"
             
-            static let accept = "Закрыть"
+            static let accept = "Применить"
             static let cancel = "Отмена"
         }
         
@@ -198,6 +198,11 @@ final class Texts {
             static let edit = "Редактирование"
             static let link = "Получение ссылки..."
         }
+    }
+    
+    enum SearchBar {
+        static let placeholder = "Поиск текста, заголовка"
+        static let cancel = "Отмена"
     }
     
     enum Tabbar {

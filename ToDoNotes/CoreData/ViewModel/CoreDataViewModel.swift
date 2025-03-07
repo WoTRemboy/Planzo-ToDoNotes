@@ -297,7 +297,7 @@ extension CoreDataViewModel {
     
     internal func dayTasks(for date: Date, important: Bool = false) {
         let day = Calendar.current.startOfDay(for: date)
-        var tasksForDay = segmentedAndSortedTasksDict[day] ?? []
+        var tasksForDay = (segmentedAndSortedTasksDict[day] ?? []).filter({ !$0.removed })
         if important { tasksForDay = tasksForDay.filter({ $0.important == important }) }
         dayTasks.removeAll()
         

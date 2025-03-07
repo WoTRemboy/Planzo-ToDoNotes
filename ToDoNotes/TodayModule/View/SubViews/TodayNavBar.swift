@@ -27,12 +27,20 @@ struct TodayNavBar: View {
                     .shadow(color: Color.ShadowColors.shadowDefault, radius: 15, x: 0, y: 5)
                 
                 VStack(spacing: 0) {
-                    HStack {
-                        titleLabel
-                        buttons
+                    if viewModel.showingSearchBar {
+                        SearchBar(text: $viewModel.searchText) {
+                            viewModel.toggleShowingSearchBar()
+                        }
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    } else {
+                        HStack {
+                            titleLabel
+                            buttons
+                        }
+                        .transition(.blurReplace)
                     }
                 }
-                .padding(.top, topInset + 9.5)
+                .padding(.top, topInset + (viewModel.showingSearchBar ? 5 : 9.5))
             }
             .ignoresSafeArea(edges: .top)
         }
@@ -56,7 +64,9 @@ struct TodayNavBar: View {
         HStack(spacing: 20) {
             // Search Button
             Button {
-                // Action for search button
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    viewModel.toggleShowingSearchBar()
+                }
             } label: {
                 Image.NavigationBar.search
                     .resizable()

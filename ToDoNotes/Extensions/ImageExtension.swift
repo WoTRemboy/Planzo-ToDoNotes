@@ -20,6 +20,11 @@ extension Image {
             static let deletedFilter = Image("NavIconFilterDeleted")
         }
         
+        enum SearchBar {
+            static let glass = Image("SearchBarGlass")
+            static let clear = Image("SearchBarClear")
+        }
+        
         static let search = Image("NavIconSearch")
         static let favorites = Image("NavIconFavorites")
         static let calendar = Image("NavIconCalendar")

@@ -15,10 +15,12 @@ final class MainViewModel: ObservableObject {
     @Published private(set) var selectedFilter: Filter = .active
     @Published internal var selectedFolder: Folder = .all
     @Published internal var importance: Bool = false
+    @Published internal var searchText: String = String()
     
     @Published internal var showingTaskCreateView: Bool = false
     @Published internal var showingTaskCreateViewFullscreen: Bool = false
     @Published internal var showingTaskRemoveAlert: Bool = false
+    @Published internal var showingSearchBar: Bool = false
     
     @Published internal var selectedTask: TaskEntity? = nil
     @Published internal var taskManagementHeight: CGFloat = 15
@@ -39,6 +41,10 @@ final class MainViewModel: ObservableObject {
     
     internal func toggleShowingTaskRemoveAlert() {
         showingTaskRemoveAlert.toggle()
+    }
+    
+    internal func toggleShowingSearchBar() {
+        showingSearchBar.toggle()
     }
     
     internal func setFilter(to new: Filter) {

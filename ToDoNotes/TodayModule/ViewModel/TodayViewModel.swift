@@ -11,9 +11,12 @@ final class TodayViewModel: ObservableObject {
     
     @AppStorage(Texts.UserDefaults.addTaskButtonGlow) var addTaskButtonGlow: Bool = false
     
-    @Published internal var showingTaskCreateView: Bool = false
     @Published internal var selectedTask: TaskEntity? = nil
+    @Published internal var searchText: String = String()
     @Published internal var taskManagementHeight: CGFloat = 15
+    
+    @Published internal var showingTaskCreateView: Bool = false
+    @Published internal var showingSearchBar: Bool = false
     
     @Published internal var importance: Bool = false
     
@@ -25,6 +28,10 @@ final class TodayViewModel: ObservableObject {
     
     internal func toggleShowingTaskEditView() {
         selectedTask = nil
+    }
+    
+    internal func toggleShowingSearchBar() {
+        showingSearchBar.toggle()
     }
     
     internal func toggleImportance() {

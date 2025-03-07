@@ -26,12 +26,20 @@ struct MainCustomNavBar: View {
                     .shadow(color: Color.ShadowColors.shadowDefault, radius: 15, x: 0, y: 5)
                 
                 VStack(spacing: 0) {
-                    HStack {
-                        titleLabel
-                        buttons
+                    if viewModel.showingSearchBar {
+                        SearchBar(text: $viewModel.searchText) {
+                            viewModel.toggleShowingSearchBar()
+                        }
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    } else {
+                        HStack {
+                            titleLabel
+                            buttons
+                        }
+                        .transition(.blurReplace)
                     }
                     FilterScrollView()
-                        .padding(.top, 10)
+                        .padding(.top, viewModel.showingSearchBar ? 2 : 10)
                     FoldersScrollView()
                         .padding(.top, 10)
                 }
@@ -53,7 +61,9 @@ struct MainCustomNavBar: View {
         HStack(spacing: 20) {
             // Search Button
             Button {
-                // Action for search button
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    viewModel.toggleShowingSearchBar()
+                }
             } label: {
                 Image.NavigationBar.search
                     .resizable()

@@ -124,13 +124,15 @@ struct TodayView: View {
                     }
                     .tint(Color.SwipeColors.pin)
                 }
-            }
-            .onDelete { indexSet in
-                let tasksForToday = coreDataManager.dayTasks[section] ?? []
-                let idsToDelete = indexSet.map { tasksForToday[$0].objectID }
-                
-                withAnimation {
-                    coreDataManager.deleteTasks(with: idsToDelete)
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    Button(role: .destructive) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            coreDataManager.toggleRemoved(for: entity)
+                        }
+                    } label: {
+                        Image.TaskManagement.TaskRow.SwipeAction.remove
+                    }
+                    .tint(Color.SwipeColors.remove)
                 }
             }
             .listRowInsets(EdgeInsets())
