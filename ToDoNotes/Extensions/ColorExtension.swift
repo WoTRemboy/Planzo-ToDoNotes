@@ -59,7 +59,7 @@ extension Color {
     enum SwipeColors {
         static let important = Color("SwipeActionImportant")
         static let pin = Color("SwipeActionPin")
-        static let delete = Color("SwipeActionDelete")
+        static let remove = Color("SwipeActionDelete")
         static let restore = Color("SwipeActionRestore")
     }
 }

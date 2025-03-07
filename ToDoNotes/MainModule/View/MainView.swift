@@ -50,6 +50,9 @@ struct MainView: View {
                     viewModel.toggleShowingTaskEditView()
                 }
         }
+        .popView(isPresented: $viewModel.showingTaskRemoveAlert, onDismiss: {}) {
+            removeAlert
+        }
     }
         
     private var content: some View {
@@ -93,34 +96,54 @@ struct MainView: View {
                     TaskListRow(entity: entity, isLast: tasks.last == entity)
                 }
                 //.navigationTransitionSource(id: entity.id, namespace: animation)
-                .swipeActions(edge: .leading, allowsFullSwipe: false) {
-                    Button(role: (viewModel.importance && tasks.last == entity) ? .destructive : .cancel) {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            coreDataManager.toggleImportant(for: entity)
-                        }
-                    } label: {
-                        coreDataManager.taskCheckImportant(for: entity) ?
+                .swipeActions(edge: .leading, allowsFullSwipe: viewModel.selectedFilter == .deleted) {
+                    if viewModel.selectedFilter != .deleted {
+                        Button(role: (viewModel.importance && tasks.last == entity) ? .destructive : .cancel) {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                coreDataManager.toggleImportant(for: entity)
+                            }
+                        } label: {
+                            coreDataManager.taskCheckImportant(for: entity) ?
                             Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
-                                Image.TaskManagement.TaskRow.SwipeAction.important
+                            Image.TaskManagement.TaskRow.SwipeAction.important
+                        }
+                        .tint(Color.SwipeColors.important)
+                        
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                coreDataManager.togglePinned(for: entity)
+                            }
+                        } label: {
+                            coreDataManager.taskCheckPinned(for: entity) ?
+                            Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
+                            Image.TaskManagement.TaskRow.SwipeAction.pinned
+                        }
+                        .tint(Color.SwipeColors.pin)
+                    } else {
+                        Button(role: .destructive) {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                coreDataManager.toggleRemoved(for: entity)
+                            }
+                        } label: {
+                            Image.TaskManagement.TaskRow.SwipeAction.restore
+                        }
+                        .tint(Color.SwipeColors.restore)
                     }
-                    .tint(Color.SwipeColors.important)
-                    
-                    Button {
+                }
+                
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    Button(role: .destructive) {
                         withAnimation(.easeInOut(duration: 0.2)) {
-                            coreDataManager.togglePinned(for: entity)
+                            if viewModel.selectedFilter != .deleted {
+                                coreDataManager.toggleRemoved(for: entity)
+                            } else {
+                                coreDataManager.deleteTask(for: entity)
+                            }
                         }
                     } label: {
-                        coreDataManager.taskCheckPinned(for: entity) ?
-                            Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
-                                Image.TaskManagement.TaskRow.SwipeAction.pinned
+                        Image.TaskManagement.TaskRow.SwipeAction.remove
                     }
-                    .tint(Color.SwipeColors.pin)
-                }
-            }
-            .onDelete { indexSet in
-                let idsToDelete = indexSet.map { tasks[$0].objectID }
-                withAnimation {
-                    coreDataManager.deleteTasks(with: idsToDelete)
+                    .tint(Color.SwipeColors.remove)
                 }
             }
             .listRowInsets(EdgeInsets())
@@ -138,7 +161,11 @@ struct MainView: View {
         VStack(alignment: .trailing, spacing: 16) {
             Spacer()
 //            scrollToTopButton
-            plusButton
+            if viewModel.selectedFilter != .deleted {
+                plusButton
+            } else {
+                removeAllTasksButton
+            }
         }
         .padding(.horizontal)
         .ignoresSafeArea(.keyboard)
@@ -175,10 +202,43 @@ struct MainView: View {
                 .scaledToFit()
                 .frame(width: 58, height: 58)
         }
+        .matchedGeometryEffect(id: Texts.NamespaceID.floatingButtons, in: animation)
+        .transition(.blurReplace)
         .navigationTransitionSource(id: Texts.NamespaceID.selectedEntity,
                                     namespace: animation)
         .padding(.bottom)
         .glow(available: viewModel.addTaskButtonGlow)
+    }
+    
+    private var removeAllTasksButton: some View {
+        Button {
+            viewModel.toggleShowingTaskRemoveAlert()
+        } label: {
+            Text(Texts.MainPage.RemoveFilter.buttonTitle)
+                .font(.system(size: 17, weight: .regular))
+                .frame(maxWidth: .infinity, maxHeight: 58)
+                .background(Color.black)
+                .foregroundColor(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+        }
+        .matchedGeometryEffect(id: Texts.NamespaceID.floatingButtons, in: animation)
+        .transition(.blurReplace)
+        .padding(.bottom)
+    }
+    
+    private var removeAlert: some View {
+        CustomAlertView(
+            title: Texts.MainPage.RemoveFilter.alertTitle,
+            message: Texts.MainPage.RemoveFilter.alertContent,
+            primaryButtonTitle: Texts.MainPage.RemoveFilter.alertYes,
+            primaryAction: {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    coreDataManager.deleteRemovedTasks()
+                }
+                viewModel.toggleShowingTaskRemoveAlert()
+            },
+            secondaryButtonTitle: Texts.MainPage.RemoveFilter.alertCancel,
+            secondaryAction: viewModel.toggleShowingTaskRemoveAlert)
     }
 }
 

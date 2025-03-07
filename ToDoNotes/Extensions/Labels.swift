@@ -43,6 +43,14 @@ final class Texts {
             static let purchases = "Списки"
             static let passwords = "Скрытые"
         }
+        
+        enum RemoveFilter {
+            static let buttonTitle = "Очистить корзину"
+            static let alertTitle = "Продолжить удаление?"
+            static let alertContent = "Данные будут удалены навсегда."
+            static let alertCancel = "Отмена"
+            static let alertYes = "Да"
+        }
     }
     
     enum TodayPage {
@@ -231,6 +239,7 @@ final class Texts {
         static let selectedCalendarCell = "SelectedCalendarCell"
         static let selectedCalendarDate = "SelectedCalendarDate"
         static let selectedEntity = "NoSelectedEntity"
+        static let floatingButtons = "MainPageFloatingButtons"
     }
     
     enum AccessibilityIdentifier {

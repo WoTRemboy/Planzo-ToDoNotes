@@ -18,6 +18,8 @@ final class MainViewModel: ObservableObject {
     
     @Published internal var showingTaskCreateView: Bool = false
     @Published internal var showingTaskCreateViewFullscreen: Bool = false
+    @Published internal var showingTaskRemoveAlert: Bool = false
+    
     @Published internal var selectedTask: TaskEntity? = nil
     @Published internal var taskManagementHeight: CGFloat = 15
     
@@ -33,6 +35,10 @@ final class MainViewModel: ObservableObject {
     
     internal func toggleShowingTaskEditView() {
         selectedTask = nil
+    }
+    
+    internal func toggleShowingTaskRemoveAlert() {
+        showingTaskRemoveAlert.toggle()
     }
     
     internal func setFilter(to new: Filter) {

@@ -118,8 +118,10 @@ struct TaskListRow: View {
                 if notifications > 0 {
                     reminderImage
                 }
-                additionalStatus
-                    .frame(width: 15, height: 15)
+                if context || notifications > 0 {
+                    additionalStatus
+                        .frame(width: 15, height: 15)
+                }
             }
         }
         .padding(.leading)

@@ -25,6 +25,7 @@ final class TaskManagementViewModel: ObservableObject {
     
     @Published internal var importance: Bool = false
     @Published internal var pinned: Bool = false
+    @Published internal var removed: Bool = false
     
     @Published internal var showingShareSheet: Bool = false
     @Published internal var shareSheetHeight: CGFloat = 0

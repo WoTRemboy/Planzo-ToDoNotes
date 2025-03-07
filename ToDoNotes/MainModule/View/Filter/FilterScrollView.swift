@@ -24,7 +24,7 @@ struct FilterScrollView: View {
     private func scrollTabsContent(proxy: ScrollViewProxy) -> some View {
         HStack(spacing: 8) {
             ForEach(Filter.allCases, id: \.self) { filter in
-                FilterCell(name: filter.name,
+                FilterCell(filter: filter,
                            selected: viewModel.compareFilters(with: filter))
                 .frame(height: 35)
                 .id(filter)

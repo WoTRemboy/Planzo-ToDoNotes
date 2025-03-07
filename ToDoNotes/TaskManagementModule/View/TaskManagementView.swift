@@ -299,6 +299,7 @@ extension TaskManagementView {
                 hasTime: viewModel.hasTime,
                 importance: viewModel.importance,
                 pinned: viewModel.pinned,
+                removed: viewModel.removed,
                 notifications: viewModel.notificationsLocal,
                 checklist: viewModel.checklistLocal)
         }

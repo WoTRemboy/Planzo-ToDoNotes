@@ -103,6 +103,7 @@ final class CoreDataViewModel: ObservableObject {
                              hasTime: Bool,
                              importance: Bool,
                              pinned: Bool,
+                             removed: Bool,
                              notifications: Set<NotificationItem> = [],
                              checklist: [ChecklistItem] = []) {
         entity.name = name
@@ -114,6 +115,7 @@ final class CoreDataViewModel: ObservableObject {
         
         entity.important = importance
         entity.pinned = pinned
+        entity.removed = removed
         
         var notificationEntities = [NotificationEntity]()
         for item in notifications {
@@ -188,7 +190,7 @@ final class CoreDataViewModel: ObservableObject {
                 }
                 return (day, sortedTasks)
             }
-            .sorted { $0.0 ?? Date.distantFuture > $1.0 ?? Date.distantFuture }
+            .sorted { $0.0 ?? Date.distantFuture < $1.0 ?? Date.distantFuture }
     }
     
     internal func filteredSegmentedTasks(for filter: Filter, important: Bool) -> [(Date?, [TaskEntity])] {
@@ -198,6 +200,7 @@ final class CoreDataViewModel: ObservableObject {
                 if important == true, task.important != important { return false }
                 switch filter {
                 case .active:
+                    guard !task.removed else { return false }
                     guard task.completed != 2 else { return false }
                     if let target = task.target, target < (task.hasTargetTime ? now : now.startOfDay) {
                         return false
@@ -206,6 +209,7 @@ final class CoreDataViewModel: ObservableObject {
                     }
                     return true
                 case .outdated:
+                    guard !task.removed else { return false }
                     if task.completed == 1,
                        let target = task.target,
                        task.hasTargetTime,
@@ -214,13 +218,21 @@ final class CoreDataViewModel: ObservableObject {
                     }
                     return false
                 case .completed:
+                    guard !task.removed else { return false }
                     return task.completed == 2
                 case .unsorted:
-                    return true
+                    return !task.removed
+                case .deleted:
+                    return task.removed
                 }
             }
             return filteredTasks.isEmpty ? nil : (date, filteredTasks)
         }
+    }
+    
+    internal func deleteTask(for entity: TaskEntity) {
+        container.viewContext.delete(entity)
+        saveData()
     }
     
     internal func deleteTasks(with ids: [NSManagedObjectID]) {
@@ -232,6 +244,26 @@ final class CoreDataViewModel: ObservableObject {
         }
         saveData()
     }
+    
+    internal func deleteRemovedTasks() {
+            let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Texts.CoreData.entity)
+            fetchRequest.predicate = NSPredicate(format: "removed == %@", NSNumber(value: true))
+            
+            let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+            batchDeleteRequest.resultType = .resultTypeObjectIDs
+            
+            do {
+                if let result = try container.viewContext.execute(batchDeleteRequest) as? NSBatchDeleteResult,
+                   let objectIDs = result.result as? [NSManagedObjectID] {
+                    let changes = [NSDeletedObjectsKey: objectIDs]
+                    NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [container.viewContext])
+                }
+                container.viewContext.reset()
+                fetchTasks()
+            } catch {
+                print("Error deleting removed tasks: \(error.localizedDescription)")
+            }
+        }
     
     internal func deleteAllTasksAndClearNotifications(completion: ((Bool) -> Void)? = nil) {
         let notificationCenter = UNUserNotificationCenter.current()
@@ -338,6 +370,16 @@ extension CoreDataViewModel {
         saveData()
     }
     
+    internal func toggleRemoved(for entity: TaskEntity) {
+        entity.removed.toggle()
+        if entity.removed {
+            UNUserNotificationCenter.current().removeNotifications(for: entity.notifications)
+        } else {
+            restoreNotifications(for: entity)
+        }
+        saveData()
+    }
+    
     internal func toggleCompleteChecking(for entity: TaskEntity) {
         entity.completed = entity.completed == 1 ? 2 : 1
         dayTasksHasUpdated.toggle()
@@ -366,6 +408,32 @@ extension CoreDataViewModel {
 
 
 extension CoreDataViewModel {
+    internal func restoreNotifications(for task: TaskEntity) {
+            let notificationCenter = UNUserNotificationCenter.current()
+            guard let notificationsSet = task.notifications as? Set<NotificationEntity> else { return }
+            
+            for entity in notificationsSet {
+                guard let targetDate = entity.target, targetDate > Date() else { continue }
+                
+                let identifier = entity.id?.uuidString ?? ""
+                let content = UNMutableNotificationContent()
+                content.title = notificationName(for: entity.type ?? TaskNotification.inTime.rawValue)
+                content.body = task.name ?? ""
+                content.sound = .default
+                
+                let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute],
+                                                                       from: targetDate)
+                let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+                
+                let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+                notificationCenter.add(request) { error in
+                    if let error = error {
+                        print("Error scheduling notification with id \(identifier): \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+    
     internal func restoreNotificationsForAllTasks(completion: ((Bool) -> Void)? = nil) {
         // Create a fetch request for tasks that have at least one notification.
         let request: NSFetchRequest<TaskEntity> = NSFetchRequest(entityName: Texts.CoreData.entity)

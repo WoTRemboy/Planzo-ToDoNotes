@@ -10,26 +10,35 @@ import SwiftUI
 struct FilterCell: View {
         
     private let selected: Bool
-    private let name: String
+    private let filter: Filter
     
-    init(name: String, selected: Bool) {
-        self.name = name
+    init(filter: Filter, selected: Bool) {
+        self.filter = filter
         self.selected = selected
     }
     
     internal var body: some View {
         nameLabel
+            .foregroundStyle(selected ? Color.LabelColors.labelPrimary : Color.LabelColors.labelSecondary)
+            .transition(.scale)
+            .frame(maxWidth: .infinity)
     }
     
     private var nameLabel: some View {
-        Text(name)
-            .font(.system(size: 22, weight: selected ? .bold : .medium))
-            .foregroundStyle(selected ? Color.LabelColors.labelPrimary : Color.LabelColors.labelSecondary)
-            .frame(maxWidth: .infinity)
-            .transition(.scale)
+        Group {
+            if filter != .deleted {
+                Text(filter.name)
+                    .font(.system(size: 22, weight: selected ? .bold : .medium))
+            } else {
+                Image.NavigationBar.MainTodayPages.deletedFilter
+                    .resizable()
+                    .renderingMode(.template)
+                    .frame(width: 22, height: 22)
+            }
+        }
     }
 }
 
 #Preview {
-    FilterCell(name: "Active", selected: true)
+    FilterCell(filter: .deleted, selected: true)
 }

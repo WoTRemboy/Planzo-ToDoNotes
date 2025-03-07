@@ -17,6 +17,7 @@ extension Image {
         enum MainTodayPages {
             static let importantSelect = Image("NavIconSelectImportant")
             static let importantDeselect = Image("NavIconDeselectImportant")
+            static let deletedFilter = Image("NavIconFilterDeleted")
         }
         
         static let search = Image("NavIconSearch")
@@ -120,9 +121,10 @@ extension Image {
             enum SwipeAction {
                 static let important = Image("TaskRowSwipeImportantOff")
                 static let importantDeselect = Image("TaskRowSwipeImportantOn")
-                
                 static let pinned = Image("TaskRowSwipePinnedOff")
                 static let pinnedDeselect = Image("TaskRowSwipePinnedOn")
+                static let remove = Image("TaskRowSwipeRemove")
+                static let restore = Image("TaskRowSwipeRestore")
             }
         }
         
