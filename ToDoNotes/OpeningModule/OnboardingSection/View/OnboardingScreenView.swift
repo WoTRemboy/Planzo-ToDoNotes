@@ -23,9 +23,11 @@ struct OnboardingScreenView: View {
     
     internal var body: some View {
         if viewModel.skipOnboarding {
-            RootView()
-                .environmentObject(TabRouter())
-                .environmentObject(CoreDataViewModel())
+            RootView {
+                ContentView()
+                    .environmentObject(TabRouter())
+                    .environmentObject(CoreDataViewModel())
+            }
         } else {
             VStack(spacing: 0) {
                 content

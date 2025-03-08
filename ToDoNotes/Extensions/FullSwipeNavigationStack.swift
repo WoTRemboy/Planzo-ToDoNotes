@@ -34,7 +34,7 @@ struct FullSwipeNavigationStack<Content: View>: View {
 }
 
 #Preview {
-    RootView()
+    ContentView()
         .environmentObject(CoreDataViewModel())
 }
 

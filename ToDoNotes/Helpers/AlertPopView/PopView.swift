@@ -114,6 +114,6 @@ fileprivate struct PopViewHelper<ViewContent: View>: ViewModifier {
 }
 
 #Preview {
-    RootView()
+    ContentView()
         .environmentObject(CoreDataViewModel())
 }
