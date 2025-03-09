@@ -45,7 +45,6 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-//        .environmentObject(CoreDataViewModel())
         .environment(\.managedObjectContext, CoreDataProvider.shared.persistentContainer.viewContext)
 }
 

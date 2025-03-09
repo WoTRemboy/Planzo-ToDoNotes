@@ -26,7 +26,6 @@ struct OnboardingScreenView: View {
             RootView {
                 ContentView()
                     .environmentObject(TabRouter())
-//                    .environmentObject(CoreDataViewModel())
             }
         } else {
             VStack(spacing: 0) {

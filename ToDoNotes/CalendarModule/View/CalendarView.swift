@@ -9,9 +9,10 @@ import SwiftUI
 
 struct CalendarView: View {
     
-    @EnvironmentObject private var viewModel: CalendarViewModel
-//    @EnvironmentObject private var coreDataManager: CoreDataViewModel
+    @FetchRequest(entity: TaskEntity.entity(), sortDescriptors: [])
+    private var tasksResults: FetchedResults<TaskEntity>
     
+    @EnvironmentObject private var viewModel: CalendarViewModel
     @Namespace private var animation
     
     internal var body: some View {
@@ -23,20 +24,6 @@ struct CalendarView: View {
         .popView(isPresented: $viewModel.showingCalendarSelector, onDismiss: {}) {
             CalendarMonthSelector()
         }
-        
-//        .onAppear {
-//            coreDataManager.dayTasks(for: viewModel.selectedDate)
-//        }
-//        .onChange(of: coreDataManager.savedEnities) {
-//            withAnimation {
-//                coreDataManager.dayTasks(for: viewModel.selectedDate)
-//            }
-//        }
-//        .onChange(of: coreDataManager.dayTasksHasUpdated) {
-//            withAnimation {
-//                coreDataManager.dayTasks(for: viewModel.selectedDate)
-//            }
-//        }
         
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
@@ -64,17 +51,18 @@ struct CalendarView: View {
                            monthYear: viewModel.calendarDate)
             .zIndex(1)
             
-            CustomCalendarView(namespace: animation)
+            CustomCalendarView(dates: datesWithTasks,
+                               namespace: animation)
                 .padding(.top)
             
             separator
             
-//            if coreDataManager.dayTasks.isEmpty {
-//                placeholder
-//            } else {
-//                taskForm
-//                    .padding(.top, 1)
-//            }
+            if dayTasks.isEmpty {
+                placeholder
+            } else {
+                taskForm
+                    .padding(.top, 1)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .animation(.easeInOut(duration: 0.15),
@@ -88,82 +76,45 @@ struct CalendarView: View {
             .padding([.top, .horizontal])
     }
     
-//    private var taskForm: some View {
-//        Form {
-//            ForEach(TaskSection.availableRarities(for: coreDataManager.dayTasks.keys), id: \.self) { section in
-//                taskSection(for: section)
-//            }
-//            .listRowSeparator(.hidden)
-//            .listSectionSpacing(0)
-//        }
-//        .padding(.horizontal, hasNotch() ? -4 : 0)
-//        .background(Color.BackColors.backDefault)
-//        .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
-//        .scrollContentBackground(.hidden)
-//    }
+    private var taskForm: some View {
+        Form {
+            ForEach(TaskSection.availableRarities(for: dayTasks.keys), id: \.self) { section in
+                taskSection(for: section)
+            }
+            .listRowSeparator(.hidden)
+            .listSectionSpacing(0)
+        }
+        .padding(.horizontal, hasNotch() ? -4 : 0)
+        .background(Color.BackColors.backDefault)
+        .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
+        .scrollContentBackground(.hidden)
+    }
     
-//    @ViewBuilder
-//    private func taskSection(for section: TaskSection) -> some View {
-//        Section {
-//            let tasks = coreDataManager.dayTasks[section] ?? []
-//            ForEach(tasks) { entity in
-//                Button {
-//                    viewModel.selectedTask = entity
-//                } label: {
-//                    TaskListRow(entity: entity, isLast: tasks.last == entity)
-//                }
-//                .swipeActions(edge: .leading, allowsFullSwipe: false) {
-//                    Button {
-//                        withAnimation(.easeInOut(duration: 0.2)) {
-//                            coreDataManager.toggleImportant(for: entity)
-//                        }
-//                    } label: {
-//                        coreDataManager.taskCheckImportant(for: entity) ?
-//                        Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
-//                        Image.TaskManagement.TaskRow.SwipeAction.important
-//                    }
-//                    .tint(Color.SwipeColors.important)
-//                    
-//                    Button(role: .destructive) {
-//                        withAnimation(.easeInOut(duration: 0.2)) {
-//                            coreDataManager.togglePinned(for: entity)
-//                            coreDataManager.dayTasks(for: viewModel.selectedDate)
-//                        }
-//                    } label: {
-//                        coreDataManager.taskCheckPinned(for: entity) ?
-//                        Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
-//                        Image.TaskManagement.TaskRow.SwipeAction.pinned
-//                    }
-//                    .tint(Color.SwipeColors.pin)
-//                }
-//                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-//                    Button(role: .destructive) {
-//                        withAnimation(.easeInOut(duration: 0.2)) {
-//                            coreDataManager.toggleRemoved(for: entity)
-//                        }
-//                    } label: {
-//                        Image.TaskManagement.TaskRow.SwipeAction.remove
-//                    }
-//                    .tint(Color.SwipeColors.remove)
-//                }
-//            }
-//            .listRowInsets(EdgeInsets())
-//        } header: {
-//            if section == .active {
-//                Text(viewModel.selectedDate.longDayMonthWeekday)
-//                    .font(.system(size: 15, weight: .medium))
-//                    .textCase(.none)
-//                    .contentTransition(.numericText(value: viewModel.selectedDate.timeIntervalSince1970))
-//                    .matchedGeometryEffect(
-//                        id: Texts.NamespaceID.selectedCalendarDate,
-//                        in: animation)
-//            } else {
-//                Text(section.name)
-//                    .font(.system(size: 15, weight: .medium))
-//                    .textCase(.none)
-//            }
-//        }
-//    }
+    @ViewBuilder
+    private func taskSection(for section: TaskSection) -> some View {
+        Section {
+            let tasks = dayTasks[section] ?? []
+            ForEach(tasks) { entity in
+                CalendarTaskRowWithActions(entity: entity,
+                                           isLast: tasks.last == entity)
+            }
+            .listRowInsets(EdgeInsets())
+        } header: {
+            if section == .active {
+                Text(viewModel.selectedDate.longDayMonthWeekday)
+                    .font(.system(size: 15, weight: .medium))
+                    .textCase(.none)
+                    .contentTransition(.numericText(value: viewModel.selectedDate.timeIntervalSince1970))
+                    .matchedGeometryEffect(
+                        id: Texts.NamespaceID.selectedCalendarDate,
+                        in: animation)
+            } else {
+                Text(section.name)
+                    .font(.system(size: 15, weight: .medium))
+                    .textCase(.none)
+            }
+        }
+    }
     
     private var placeholder: some View {
         ScrollView {
@@ -195,8 +146,38 @@ struct CalendarView: View {
     }
 }
 
+extension CalendarView {
+    private var dayTasks: [TaskSection: [TaskEntity]] {
+        let calendar = Calendar.current
+        let day = calendar.startOfDay(for: viewModel.selectedDate)
+        let filteredTasks = tasksResults.filter { task in
+            let taskDate = calendar.startOfDay(for: task.target ?? task.created ?? Date.distantPast)
+            return taskDate == day && !task.removed
+        }
+        var result: [TaskSection: [TaskEntity]] = [:]
+        let pinned = filteredTasks.filter { $0.pinned }
+        let active = filteredTasks.filter { !$0.pinned && $0.completed != 2 }
+        let completed = filteredTasks.filter { !$0.pinned && $0.completed == 2 }
+        
+        if !pinned.isEmpty { result[.pinned] = pinned }
+        if !active.isEmpty { result[.active] = active }
+        if !completed.isEmpty { result[.completed] = completed }
+        return result
+    }
+    
+    private var datesWithTasks: [Date: Int] {
+        var groupedDates: [Date: Int] = [:]
+        
+        for task in tasksResults {
+            let referenceDate = task.target ?? task.created ?? Date.distantPast
+            let day = Calendar.current.startOfDay(for: referenceDate)
+            groupedDates[day, default: 0] += 1
+        }
+        return groupedDates
+    }
+}
+
 #Preview {
     CalendarView()
         .environmentObject(CalendarViewModel())
-//        .environmentObject(CoreDataViewModel())
 }

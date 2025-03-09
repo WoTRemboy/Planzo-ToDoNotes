@@ -35,7 +35,6 @@ struct FullSwipeNavigationStack<Content: View>: View {
 
 #Preview {
     ContentView()
-//        .environmentObject(CoreDataViewModel())
 }
 
 fileprivate struct AttachGestureView: UIViewRepresentable {

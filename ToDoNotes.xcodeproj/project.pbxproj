@@ -11,6 +11,7 @@
 		6303E2C22D3405040096DB64 /* AuthorizationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2C12D3404FD0096DB64 /* AuthorizationViewModel.swift */; };
 		6303E2CA2D346A070096DB64 /* CoreDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2C92D3469FE0096DB64 /* CoreDataViewModel.swift */; };
 		6303E2D22D346BBF0096DB64 /* TaskModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2D02D346BBF0096DB64 /* TaskModel.xcdatamodeld */; };
+		631315BB2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631315BA2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift */; };
 		632D0DD02D36B9760071684D /* TaskManagementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DCF2D36B9700071684D /* TaskManagementModel.swift */; };
 		632D0DD22D36BAF50071684D /* CustomNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD12D36BAEF0071684D /* CustomNavBar.swift */; };
 		632D0DD42D36BB270071684D /* TaskManagementNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */; };
@@ -115,6 +116,7 @@
 		6303E2C12D3404FD0096DB64 /* AuthorizationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationViewModel.swift; sourceTree = "<group>"; };
 		6303E2C92D3469FE0096DB64 /* CoreDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataViewModel.swift; sourceTree = "<group>"; };
 		6303E2D12D346BBF0096DB64 /* TaskModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaskModel.xcdatamodel; sourceTree = "<group>"; };
+		631315BA2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTaskRowWithActions.swift; sourceTree = "<group>"; };
 		632D0DCF2D36B9700071684D /* TaskManagementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementModel.swift; sourceTree = "<group>"; };
 		632D0DD12D36BAEF0071684D /* CustomNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavBar.swift; sourceTree = "<group>"; };
 		632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementNavBar.swift; sourceTree = "<group>"; };
@@ -717,6 +719,7 @@
 			isa = PBXGroup;
 			children = (
 				63F6C7112D2AB71200716AB0 /* CalendarNavBar.swift */,
+				631315BA2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift */,
 				63F6C71E2D2B1E5200716AB0 /* CalendarTaskFormPlaceholder.swift */,
 				63DE01112D567D92002A5C4F /* CalendarMonthSelector.swift */,
 			);
@@ -878,6 +881,7 @@
 				6377871D2D75E99B006DE892 /* FullSwipeNavigationStack.swift in Sources */,
 				63A0928C2D7C5EC80026A64D /* ToastModel.swift in Sources */,
 				63A5B6672D493C4200B0E408 /* TaskCustomCalendar.swift in Sources */,
+				631315BB2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift in Sources */,
 				63F6C6F92D29B78400716AB0 /* FoldersScrollView.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
 				637B9F662D2974E40010F13B /* FilterScrollView.swift in Sources */,
