@@ -21,11 +21,12 @@ struct TodayTaskRowWithSwipeActions: View {
     internal var body: some View {
         Button {
             viewModel.selectedTask = entity
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         } label: {
             TaskListRow(entity: entity, isLast: isLast)
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
-            Button(role: (viewModel.importance && isLast) ? .destructive : .cancel) {
+            Button(role: viewModel.importance ? .destructive : .cancel) {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     try? TaskService.toggleImportant(for: entity)
                 }

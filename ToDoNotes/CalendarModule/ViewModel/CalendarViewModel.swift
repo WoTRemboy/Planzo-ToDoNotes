@@ -10,8 +10,10 @@ import SwiftUI
 final class CalendarViewModel: ObservableObject {
     
     @AppStorage(Texts.UserDefaults.addTaskButtonGlow) var addTaskButtonGlow: Bool = false
+    @AppStorage(Texts.UserDefaults.taskCreation) private var taskCreationFullScreen: TaskCreation = .popup
     
     @Published internal var showingTaskCreateView: Bool = false
+    @Published internal var showingTaskCreateViewFullscreen: Bool = false
     @Published internal var showingCalendarSelector: Bool = false
     
     @Published internal var selectedTask: TaskEntity? = nil
@@ -33,7 +35,9 @@ final class CalendarViewModel: ObservableObject {
     }
     
     internal func toggleShowingTaskCreateView() {
-        showingTaskCreateView.toggle()
+        taskCreationFullScreen == .popup ?
+            showingTaskCreateView.toggle() :
+                showingTaskCreateViewFullscreen.toggle()
     }
     
     internal func toggleShowingCalendarSelector() {

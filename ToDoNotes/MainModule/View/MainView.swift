@@ -26,6 +26,10 @@ struct MainView: View {
         .animation(.easeInOut(duration: 0.2),
                    value: tasksResults.isEmpty)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onChange(of: viewModel.searchText) { _, newValue in
+            tasksResults.nsPredicate = TaskService.getTasksBySearchTerm(viewModel.searchText).predicate
+        }
+        
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
@@ -82,6 +86,7 @@ struct MainView: View {
         .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
+        .animation(.easeInOut(duration: 0.1), value: tasksResults.count)
     }
     
     @ViewBuilder

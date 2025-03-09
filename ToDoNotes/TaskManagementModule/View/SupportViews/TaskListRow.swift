@@ -89,12 +89,13 @@ struct TaskListRow: View {
     }
     
     private var nameLabel: some View {
-        Text(entity.name ?? String())
+        let name = entity.name ?? String()
+        return Text(!name.isEmpty ? name : Texts.TaskManagement.TaskRow.placeholder)
             .font(.system(size: 18, weight: .medium))
             .lineLimit(1)
             .foregroundStyle(
-                TaskService.taskCheckStatus(for: entity)
-                || status == .outdated ?
+                (TaskService.taskCheckStatus(for: entity)
+                 || status == .outdated || name.isEmpty) ?
                 Color.LabelColors.labelDetails :
                     Color.LabelColors.labelPrimary)
             .strikethrough(TaskService.taskCheckStatus(for: entity),

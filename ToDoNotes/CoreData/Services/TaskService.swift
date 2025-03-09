@@ -33,8 +33,9 @@ final class TaskService {
                          notifications: Set<NotificationItem>,
                          checklist: [ChecklistItem] = []) throws {
         
-        let task = entity ?? TaskEntity(context: viewContext)
+        guard !name.isEmpty || !description.isEmpty || checklist.count > 1 else { return }
         
+        let task = entity ?? TaskEntity(context: viewContext)
         if entity == nil {
             task.id = UUID()
             task.created = .now
@@ -127,6 +128,15 @@ final class TaskService {
     static func getNotificationsByTask(task: TaskEntity) -> NSFetchRequest<NotificationEntity> {
         let request = NotificationEntity.fetchRequest()
         request.predicate = NSPredicate(format: "task == %@", task)
+        return request
+    }
+    
+    static func getTasksBySearchTerm(_ searchTerm: String) -> NSFetchRequest<TaskEntity> {
+        let request = TaskEntity.fetchRequest()
+        request.sortDescriptors = []
+        if !searchTerm.isEmpty {
+            request.predicate = NSPredicate(format: "name CONTAINS[cd] %@", searchTerm)
+        }
         return request
     }
 }

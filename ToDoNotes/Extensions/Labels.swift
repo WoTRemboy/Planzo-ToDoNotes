@@ -142,6 +142,10 @@ final class Texts {
         static let today = "Сегодня"
         static let point = "Пункт"
         
+        enum TaskRow {
+            static let placeholder = "Нет заголовка"
+        }
+        
         enum ContextMenu {
             static let complete = "Завершить задачу"
             static let dublicate = "Дублировать заметку"
