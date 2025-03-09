@@ -119,10 +119,15 @@ extension TodayView {
             let taskDate = calendar.startOfDay(for: task.target ?? task.created ?? Date.distantPast)
             return taskDate == day && !task.removed && (!viewModel.importance || task.important)
         }
+        let sortedTasks = filteredTasks.sorted { t1, t2 in
+            let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : t1.created!
+            let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : t2.created!
+            return d1 < d2
+        }
         var result: [TaskSection: [TaskEntity]] = [:]
-        let pinned = filteredTasks.filter { $0.pinned }
-        let active = filteredTasks.filter { !$0.pinned && $0.completed != 2 }
-        let completed = filteredTasks.filter { !$0.pinned && $0.completed == 2 }
+        let pinned = sortedTasks.filter { $0.pinned }
+        let active = sortedTasks.filter { !$0.pinned && $0.completed != 2 }
+        let completed = sortedTasks.filter { !$0.pinned && $0.completed == 2 }
         
         if !pinned.isEmpty { result[.pinned] = pinned }
         if !active.isEmpty { result[.active] = active }

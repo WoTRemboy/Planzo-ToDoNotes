@@ -10,11 +10,11 @@ import SwiftUI
 struct MainTaskRowWithActions: View {
     @EnvironmentObject private var viewModel: MainViewModel
     
-    private let entity: TaskEntity
+    @ObservedObject private var entity: TaskEntity
     private let isLast: Bool
     
     init(entity: TaskEntity, isLast: Bool) {
-        self.entity = entity
+        self._entity = ObservedObject(wrappedValue: entity)
         self.isLast = isLast
     }
     
@@ -37,7 +37,7 @@ struct MainTaskRowWithActions: View {
                 }
                 .tint(Color.SwipeColors.important)
                 
-                Button(role: .destructive) {
+                Button(role: .cancel) {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         try? TaskService.togglePinned(for: entity)
                     }

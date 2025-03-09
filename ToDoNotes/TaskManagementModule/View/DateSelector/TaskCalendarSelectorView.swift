@@ -11,9 +11,6 @@ struct TaskCalendarSelectorView: View {
     
     @ObservedObject private var viewModel: TaskManagementViewModel
     
-    @FetchRequest(sortDescriptors: [])
-    private var notificationResults: FetchedResults<NotificationEntity>
-    
     private let entity: TaskEntity?
     private let namespace: Namespace.ID
     
@@ -23,10 +20,6 @@ struct TaskCalendarSelectorView: View {
         self.entity = entity
         self.viewModel = viewModel
         self.namespace = namespace
-        
-        if let entity {
-            _notificationResults = FetchRequest(fetchRequest: TaskService.getNotificationsByTask(task: entity))
-        }
     }
     
     internal var body: some View {

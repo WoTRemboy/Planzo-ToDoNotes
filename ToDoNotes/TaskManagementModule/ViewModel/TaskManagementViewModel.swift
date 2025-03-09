@@ -397,7 +397,6 @@ final class TaskManagementViewModel: ObservableObject {
         selectedTimeType = .none
         notificationsLocal.removeAll()
         selectedRepeating = .none
-        selectedRepeating = .none
     }
     
     // MARK: - Checklist Methods

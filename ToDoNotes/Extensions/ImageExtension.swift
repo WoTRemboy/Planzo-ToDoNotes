@@ -118,8 +118,10 @@ extension Image {
             static let checkedBox = Image("TaskRowCheckedBox")
             
             static let pinned = Image("TaskRowPinned")
-            static let reminder = Image("TaskRowRemainder")
-            static let content = Image("TaskRowContent")
+            static let reminderOn = Image("TaskRowReminderOn")
+            static let reminderOff = Image("TaskRowReminderOff")
+            static let contentOn = Image("TaskRowContentOn")
+            static let contentOff = Image("TaskRowContentOff")
             static let important = Image("TaskRowImportant")
             static let expired = Image("TaskRowExpired")
             

@@ -21,29 +21,35 @@ final class TaskService {
         }
     }
     
-    static func saveTask(name: String,
+    static func saveTask(entity: TaskEntity? = nil,
+                         name: String,
                          description: String,
                          completeCheck: TaskCheck,
                          target: Date?,
                          hasTime: Bool,
                          importance: Bool,
                          pinned: Bool,
+                         removed: Bool = false,
                          notifications: Set<NotificationItem>,
                          checklist: [ChecklistItem] = []) throws {
         
-        let task = TaskEntity(context: viewContext)
+        let task = entity ?? TaskEntity(context: viewContext)
         
-        task.id = UUID()
+        if entity == nil {
+            task.id = UUID()
+            task.created = .now
+        }
+        
         task.name = name
         task.details = description
         task.completed = completeCheck.rawValue
         
-        task.created = .now
         task.target = target
         task.hasTargetTime = hasTime
         
         task.important = importance
         task.pinned = pinned
+        task.removed = removed
         
         var notificationEntities = [NotificationEntity]()
         for item in notifications {
@@ -54,8 +60,7 @@ final class TaskService {
             notificationEntities.append(entityItem)
         }
         let notificationsSet = NSSet(array: notificationEntities)
-        task.addToNotifications(notificationsSet)
-        //task.notifications = notificationsSet
+        task.notifications = notificationsSet
         
         var checklistEnities = [ChecklistEntity]()
         for item in checklist {
@@ -65,8 +70,7 @@ final class TaskService {
             checklistEnities.append(entityItem)
         }
         let orderedChecklist = NSOrderedSet(array: checklistEnities)
-        task.addToChecklist(orderedChecklist)
-        //task.checklist = orderedChecklist
+        task.checklist = orderedChecklist
         
         try save()
     }
@@ -144,7 +148,22 @@ extension TaskService {
         entity.pinned
     }
     
+    static func haveTextContent(for entity: TaskEntity) -> Bool {
+        let details = entity.details ?? String()
+        
+        let firstChecklistElement = entity.checklist?.compactMap({ $0 as? ChecklistEntity }).first
+        let firstChecklistName = firstChecklistElement?.name ?? String()
+        let checklistCount = entity.checklist?.count ?? 0
+
+        return !details.isEmpty || (!firstChecklistName.isEmpty || checklistCount > 1)
+    }
+    
     // MARK: - Status Change Methods
+    
+    static func toggleCompleteChecking(for task: TaskEntity) throws {
+        task.completed = task.completed == 1 ? 2 : 1
+        try save()
+    }
     
     static func toggleImportant(for task: TaskEntity) throws {
         task.important.toggle()

@@ -10,11 +10,11 @@ import SwiftUI
 struct TodayTaskRowWithSwipeActions: View {
     @EnvironmentObject private var viewModel: TodayViewModel
     
-    private let entity: TaskEntity
+    @ObservedObject private var entity: TaskEntity
     private let isLast: Bool
     
     init(entity: TaskEntity, isLast: Bool) {
-        self.entity = entity
+        self._entity = ObservedObject(wrappedValue: entity)
         self.isLast = isLast
     }
     

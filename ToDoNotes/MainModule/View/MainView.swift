@@ -198,8 +198,12 @@ extension MainView {
         }
         return grouped.map { (key, tasks) in
             let sortedTasks = tasks.sorted { t1, t2 in
-                let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : Date.distantFuture
-                let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : Date.distantFuture
+                if t1.pinned != t2.pinned {
+                    return t1.pinned && !t2.pinned
+                }
+                
+                let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : t1.created!
+                let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : t2.created!
                 return d1 < d2
             }
             return (key, sortedTasks)
@@ -252,5 +256,4 @@ extension MainView {
 #Preview {
     MainView()
         .environmentObject(MainViewModel())
-        .environmentObject(CoreDataViewModel())
 }

@@ -10,11 +10,11 @@ import SwiftUI
 struct CalendarTaskRowWithActions: View {
     @EnvironmentObject private var viewModel: CalendarViewModel
     
-    private let entity: TaskEntity
+    @ObservedObject private var entity: TaskEntity
     private let isLast: Bool
     
     init(entity: TaskEntity, isLast: Bool) {
-        self.entity = entity
+        self._entity = ObservedObject(wrappedValue: entity)
         self.isLast = isLast
     }
     
@@ -61,5 +61,5 @@ struct CalendarTaskRowWithActions: View {
 }
 
 #Preview {
-    CalendarTaskRowWithActions(entity: TaskEntity(), isLast: false)
+    CalendarTaskRowWithActions(entity: PreviewData.taskItem, isLast: false)
 }
