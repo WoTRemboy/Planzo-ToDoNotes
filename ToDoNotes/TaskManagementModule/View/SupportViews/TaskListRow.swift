@@ -10,7 +10,6 @@ import CoreData
 
 struct TaskListRow: View {
     
-    @EnvironmentObject private var coreDataManager: CoreDataViewModel
     private let entity: TaskEntity
     private let status: TaskStatus
     private let isLast: Bool
@@ -26,12 +25,12 @@ struct TaskListRow: View {
             folderIndicatior
             pinnedIndicator
             if entity.completed != 0 {
-                checkBoxButton
+//                checkBoxButton
             }
             nameLabel
             
             Spacer()
-            detailsBox
+//            detailsBox
         }
         .frame(height: 62)
         
@@ -65,85 +64,85 @@ struct TaskListRow: View {
         .frame(maxWidth: 10, maxHeight: .infinity)
     }
     
-    private var checkBoxButton: some View {
-        (coreDataManager.taskCheckStatus(for: entity) ?
-         Image.TaskManagement.TaskRow.checkedBox :
-            Image.TaskManagement.TaskRow.uncheckedBox)
-            .resizable()
-            .renderingMode(.template)
-            .frame(width: 18, height: 18)
-        
-            .foregroundStyle(
-                status == .outdated || coreDataManager.taskCheckStatus(for: entity) ?
-                Color.LabelColors.labelDetails :
-                    Color.LabelColors.labelPrimary
-            )
-        
-            .onTapGesture {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    coreDataManager.toggleCompleteChecking(for: entity)
-                    let impactMed = UIImpactFeedbackGenerator(style: .medium)
-                    impactMed.impactOccurred()
-                }
-            }
-            .padding(.trailing, 8)
-    }
+//    private var checkBoxButton: some View {
+//        (coreDataManager.taskCheckStatus(for: entity) ?
+//         Image.TaskManagement.TaskRow.checkedBox :
+//            Image.TaskManagement.TaskRow.uncheckedBox)
+//            .resizable()
+//            .renderingMode(.template)
+//            .frame(width: 18, height: 18)
+//        
+//            .foregroundStyle(
+//                status == .outdated || coreDataManager.taskCheckStatus(for: entity) ?
+//                Color.LabelColors.labelDetails :
+//                    Color.LabelColors.labelPrimary
+//            )
+//        
+//            .onTapGesture {
+//                withAnimation(.easeInOut(duration: 0.2)) {
+//                    coreDataManager.toggleCompleteChecking(for: entity)
+//                    let impactMed = UIImpactFeedbackGenerator(style: .medium)
+//                    impactMed.impactOccurred()
+//                }
+//            }
+//            .padding(.trailing, 8)
+//    }
     
     private var nameLabel: some View {
         Text(entity.name ?? String())
             .font(.system(size: 18, weight: .medium))
             .lineLimit(1)
             .foregroundStyle(
-                coreDataManager.taskCheckStatus(for: entity)
+                TaskService.taskCheckStatus(for: entity)
                 || status == .outdated ?
                              Color.LabelColors.labelDetails :
                                 Color.LabelColors.labelPrimary)
-            .strikethrough(coreDataManager.taskCheckStatus(for: entity),
+            .strikethrough(TaskService.taskCheckStatus(for: entity),
                            color: Color.LabelColors.labelDetails)
     }
     
-    private var detailsBox: some View {
-        let hasDateLabel = entity.target != nil && entity.hasTargetTime
-        let context = coreDataManager.haveTextContent(for: entity)
-        let notifications = entity.notifications?.count ?? 0 > 0
-        let spacingValue: CGFloat = (hasDateLabel && (context || notifications)) ? 6 : 0
-        
-        return VStack(alignment: .trailing, spacing: spacingValue) {
-            if entity.target != nil, entity.hasTargetTime {
-                dateLabel
-            }
-            
-            HStack(spacing: 2) {
-                if context {
-                    textContentImage
-                }
-                if notifications {
-                    reminderImage
-                }
-                if context || notifications || !hasDateLabel {
-                    additionalStatus
-                        .frame(width: 15, height: 15)
-                }
-            }
-        }
-        .padding(.leading)
-        .padding(.trailing, 4)
-    }
+//    private var detailsBox: some View {
+//        let hasDateLabel = entity.target != nil && entity.hasTargetTime
+//        let context = coreDataManager.haveTextContent(for: entity)
+//        let notifications = entity.notifications?.count ?? 0 > 0
+//        let spacingValue: CGFloat = (hasDateLabel && (context || notifications)) ? 6 : 0
+//        
+//        return VStack(alignment: .trailing, spacing: spacingValue) {
+//            if entity.target != nil, entity.hasTargetTime {
+//                dateLabel
+//            }
+//            
+//            HStack(spacing: 2) {
+//                if context {
+//                    textContentImage
+//                }
+//                if notifications {
+//                    reminderImage
+//                }
+//                if context || notifications || !hasDateLabel {
+//                    additionalStatus
+//                        .frame(width: 15, height: 15)
+//                }
+//            }
+//        }
+//        .padding(.leading)
+//        .padding(.trailing, 4)
+//    }
     
-    private var dateLabel: some View {
-        HStack(spacing: 2) {
-            Text(entity.target?.fullHourMinutes ?? String())
-                .font(.system(size: 14, weight: .regular))
-                .foregroundStyle(
-                    coreDataManager.taskCheckStatus(for: entity)
-                    || status == .outdated ?
-                    Color.LabelColors.labelDetails :
-                        Color.LabelColors.labelPrimary)
-            
-            dateLabelAdditionalIcon
-                .frame(width: 15, height: 15)
-        }
-    }
+//    private var dateLabel: some View {
+//        HStack(spacing: 2) {
+//            Text(entity.target?.fullHourMinutes ?? String())
+//                .font(.system(size: 14, weight: .regular))
+//                .foregroundStyle(
+//                    coreDataManager.taskCheckStatus(for: entity)
+//                    || status == .outdated ?
+//                    Color.LabelColors.labelDetails :
+//                        Color.LabelColors.labelPrimary)
+//            
+//            dateLabelAdditionalIcon
+//                .frame(width: 15, height: 15)
+//        }
+//    }
     
     private var reminderImage: some View {
         Image.TaskManagement.TaskRow.reminder
@@ -198,8 +197,5 @@ struct TaskListRow: View {
 }
 
 #Preview {
-    let coreDataManager = CoreDataViewModel()
-    
-    return TaskListRow(entity: coreDataManager.savedEnities.last!, isLast: false)
-        .environmentObject(coreDataManager)
+    TaskListRow(entity: PreviewData.taskItem, isLast: false)
 }

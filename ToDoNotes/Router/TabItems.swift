@@ -21,6 +21,7 @@ struct TabItems {
     static func todayTab(isSelected: Bool) -> some View {
         TodayView()
             .environmentObject(TodayViewModel())
+            .environment(\.managedObjectContext, CoreDataProvider.shared.persistentContainer.viewContext)
             .tabItem {
                 isSelected ? Image.TabBar.Selected.today : Image.TabBar.Unselected.today
                     .renderingMode(.template)

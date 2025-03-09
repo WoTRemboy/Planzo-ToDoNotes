@@ -111,6 +111,6 @@ private struct ToastView: View {
     RootView {
         ContentView()
             .environmentObject(TabRouter())
-            .environmentObject(CoreDataViewModel())
+//            .environmentObject(CoreDataViewModel())
     }
 }

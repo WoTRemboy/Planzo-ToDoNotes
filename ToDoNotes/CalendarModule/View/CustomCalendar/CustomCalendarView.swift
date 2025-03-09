@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CustomCalendarView: View {
         
-    @EnvironmentObject private var coreDataManager: CoreDataViewModel
+//    @EnvironmentObject private var coreDataManager: CoreDataViewModel
     @EnvironmentObject private var viewModel: CalendarViewModel
     
     private let namespace: Namespace.ID
@@ -23,7 +23,7 @@ struct CustomCalendarView: View {
     internal var body: some View {
         VStack {
             weekdayNames
-            daysGrid
+//            daysGrid
         }
         .padding(.horizontal)
     }
@@ -39,36 +39,36 @@ struct CustomCalendarView: View {
         }
     }
     
-    private var daysGrid: some View {
-        Group {
-            LazyVGrid(columns: columns) {
-                ForEach(viewModel.days, id: \.self) { day in
-                    if day.monthInt != viewModel.calendarDate.monthInt {
-                        Text(String())
-                    } else {
-                        let hasTask = coreDataManager.daysWithTasks.contains(day.startOfDay)
-                        CustomCalendarCell(
-                            day: day.formatted(.dateTime.day()),
-                            selected: viewModel.selectedDate == day.startOfDay,
-                            today: Date.now.startOfDay == day.startOfDay,
-                            task: hasTask,
-                            namespace: namespace)
-                        .onTapGesture {
-                            withAnimation(.easeInOut(duration: 0.15)) {
-                                viewModel.selectedDate = day.startOfDay
-                                coreDataManager.dayTasks(for: viewModel.selectedDate)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        .id(viewModel.calendarDate)
-    }
+//    private var daysGrid: some View {
+//        Group {
+//            LazyVGrid(columns: columns) {
+//                ForEach(viewModel.days, id: \.self) { day in
+//                    if day.monthInt != viewModel.calendarDate.monthInt {
+//                        Text(String())
+//                    } else {
+//                        let hasTask = coreDataManager.daysWithTasks.contains(day.startOfDay)
+//                        CustomCalendarCell(
+//                            day: day.formatted(.dateTime.day()),
+//                            selected: viewModel.selectedDate == day.startOfDay,
+//                            today: Date.now.startOfDay == day.startOfDay,
+//                            task: hasTask,
+//                            namespace: namespace)
+//                        .onTapGesture {
+//                            withAnimation(.easeInOut(duration: 0.15)) {
+//                                viewModel.selectedDate = day.startOfDay
+//                                coreDataManager.dayTasks(for: viewModel.selectedDate)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        .id(viewModel.calendarDate)
+//    }
 }
 
 #Preview {
     CustomCalendarView(namespace: Namespace().wrappedValue)
         .environmentObject(CalendarViewModel())
-        .environmentObject(CoreDataViewModel())
+//        .environmentObject(CoreDataViewModel())
 }

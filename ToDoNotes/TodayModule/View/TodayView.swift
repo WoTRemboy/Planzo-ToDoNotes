@@ -10,33 +10,20 @@ import SwiftUI
 struct TodayView: View {
     
     @EnvironmentObject private var viewModel: TodayViewModel
-    @EnvironmentObject private var coreDataManager: CoreDataViewModel
-    
     @Namespace private var animation
+    
+    @FetchRequest(entity: TaskEntity.entity(), sortDescriptors: [])
+    private var tasksResults: FetchedResults<TaskEntity>
     
     internal var body: some View {
         ZStack(alignment: .bottomTrailing) {
             content
             plusButton
-            if coreDataManager.dayTasks.isEmpty {
+            if dayTasks.isEmpty {
                 placeholderLabel
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        
-        .onAppear {
-            coreDataManager.dayTasks(for: viewModel.todayDate, important: viewModel.importance)
-        }
-        .onChange(of: coreDataManager.savedEnities) {
-            withAnimation {
-                coreDataManager.dayTasks(for: viewModel.todayDate, important: viewModel.importance)
-            }
-        }
-        .onChange(of: viewModel.importance) {
-            withAnimation {
-                coreDataManager.dayTasks(for: viewModel.todayDate, important: viewModel.importance)
-            }
-        }
         
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
@@ -65,7 +52,7 @@ struct TodayView: View {
             taskForm
         }
         .animation(.easeInOut(duration: 0.2),
-                   value: coreDataManager.isEmpty)
+                   value: tasksResults.isEmpty)
     }
     
     private var placeholderLabel: some View {
@@ -77,7 +64,7 @@ struct TodayView: View {
     
     private var taskForm: some View {
         Form {
-            ForEach(TaskSection.availableRarities(for: coreDataManager.dayTasks.keys), id: \.self) { section in
+            ForEach(TaskSection.availableRarities(for: dayTasks.keys), id: \.self) { section in
                 taskFormSection(for: section)
             }
             .listRowSeparator(.hidden)
@@ -92,48 +79,9 @@ struct TodayView: View {
     @ViewBuilder
     private func taskFormSection(for section: TaskSection) -> some View {
         Section {
-            let tasks = coreDataManager.dayTasks[section] ?? []
+            let tasks = dayTasks[section] ?? []
             ForEach(tasks) { entity in
-                Button {
-                    viewModel.selectedTask = entity
-                } label: {
-                    TaskListRow(entity: entity, isLast: tasks.last == entity)
-                }
-                .swipeActions(edge: .leading, allowsFullSwipe: false) {
-                    Button(role: (viewModel.importance && tasks.last == entity) ? .destructive : .cancel) {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            coreDataManager.toggleImportant(for: entity)
-                        }
-                    } label: {
-                        coreDataManager.taskCheckImportant(for: entity) ?
-                            Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
-                                Image.TaskManagement.TaskRow.SwipeAction.important
-                    }
-                    .tint(Color.SwipeColors.important)
-                    
-                    Button(role: .destructive) {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            coreDataManager.togglePinned(for: entity)
-                            coreDataManager.dayTasks(for: viewModel.todayDate, important: viewModel.importance)
-                        }
-                        
-                    } label: {
-                        coreDataManager.taskCheckPinned(for: entity) ?
-                            Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
-                                Image.TaskManagement.TaskRow.SwipeAction.pinned
-                    }
-                    .tint(Color.SwipeColors.pin)
-                }
-                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                    Button(role: .destructive) {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            coreDataManager.toggleRemoved(for: entity)
-                        }
-                    } label: {
-                        Image.TaskManagement.TaskRow.SwipeAction.remove
-                    }
-                    .tint(Color.SwipeColors.remove)
-                }
+                TodayTaskRowWithSwipeActions(entity: entity, isLast: tasks.last == entity)
             }
             .listRowInsets(EdgeInsets())
         } header: {
@@ -163,8 +111,27 @@ struct TodayView: View {
     }
 }
 
+extension TodayView {
+    private var dayTasks: [TaskSection: [TaskEntity]] {
+        let calendar = Calendar.current
+        let day = calendar.startOfDay(for: viewModel.todayDate)
+        let filteredTasks = tasksResults.filter { task in
+            let taskDate = calendar.startOfDay(for: task.target ?? task.created ?? Date.distantPast)
+            return taskDate == day && !task.removed && (!viewModel.importance || task.important)
+        }
+        var result: [TaskSection: [TaskEntity]] = [:]
+        let pinned = filteredTasks.filter { $0.pinned }
+        let active = filteredTasks.filter { !$0.pinned && $0.completed != 2 }
+        let completed = filteredTasks.filter { !$0.pinned && $0.completed == 2 }
+        
+        if !pinned.isEmpty { result[.pinned] = pinned }
+        if !active.isEmpty { result[.active] = active }
+        if !completed.isEmpty { result[.completed] = completed }
+        return result
+    }
+}
+
 #Preview {
     TodayView()
         .environmentObject(TodayViewModel())
-        .environmentObject(CoreDataViewModel())
 }

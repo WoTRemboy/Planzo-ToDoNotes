@@ -11,7 +11,7 @@ struct TaskManagementView: View {
     
     @FocusState private var titleFocused
     
-    @EnvironmentObject private var coreDataManager: CoreDataViewModel
+//    @EnvironmentObject private var coreDataManager: CoreDataViewModel
     @StateObject private var viewModel = TaskManagementViewModel()
     
     @Binding private var taskManagementHeight: CGFloat
@@ -70,6 +70,7 @@ struct TaskManagementView: View {
         }
         .sheet(isPresented: $viewModel.showingDatePicker) {
             TaskCalendarSelectorView(
+                entity: entity,
                 viewModel: viewModel,
                 namespace: animation)
                 .presentationDetents([.height(670)])
@@ -254,7 +255,7 @@ struct TaskManagementView_Previews: PreviewProvider {
     static var previews: some View {
         PreviewWrapper()
             .environmentObject(TaskManagementViewModel())
-            .environmentObject(CoreDataViewModel())
+//            .environmentObject(CoreDataViewModel())
     }
     
     struct PreviewWrapper: View {
@@ -290,32 +291,32 @@ extension TaskManagementView {
             viewModel.setupUserNotifications(remove: entity.notifications)
             viewModel.disableButtonGlow()
             
-            coreDataManager.updateTask(
-                entity: entity,
-                name: viewModel.nameText,
-                description: viewModel.descriptionText,
-                completeCheck: viewModel.check,
-                target: viewModel.saveTargetDate,
-                hasTime: viewModel.hasTime,
-                importance: viewModel.importance,
-                pinned: viewModel.pinned,
-                removed: viewModel.removed,
-                notifications: viewModel.notificationsLocal,
-                checklist: viewModel.checklistLocal)
+//            coreDataManager.updateTask(
+//                entity: entity,
+//                name: viewModel.nameText,
+//                description: viewModel.descriptionText,
+//                completeCheck: viewModel.check,
+//                target: viewModel.saveTargetDate,
+//                hasTime: viewModel.hasTime,
+//                importance: viewModel.importance,
+//                pinned: viewModel.pinned,
+//                removed: viewModel.removed,
+//                notifications: viewModel.notificationsLocal,
+//                checklist: viewModel.checklistLocal)
         }
     }
     
     private func addTask() {
-        coreDataManager.addTask(
-            name: viewModel.nameText,
-            description: viewModel.descriptionText,
-            completeCheck: viewModel.check,
-            target: viewModel.saveTargetDate,
-            hasTime: viewModel.hasTime,
-            importance: viewModel.importance,
-            pinned: viewModel.pinned,
-            notifications: viewModel.notificationsLocal,
-            checklist: viewModel.checklistLocal)
+//        coreDataManager.addTask(
+//            name: viewModel.nameText,
+//            description: viewModel.descriptionText,
+//            completeCheck: viewModel.check,
+//            target: viewModel.saveTargetDate,
+//            hasTime: viewModel.hasTime,
+//            importance: viewModel.importance,
+//            pinned: viewModel.pinned,
+//            notifications: viewModel.notificationsLocal,
+//            checklist: viewModel.checklistLocal)
         
         viewModel.setupUserNotifications(remove: nil)
         viewModel.disableButtonGlow()

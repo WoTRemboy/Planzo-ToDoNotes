@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    @EnvironmentObject private var coreDataManager: CoreDataViewModel
+//    @EnvironmentObject private var coreDataManager: CoreDataViewModel
     @EnvironmentObject private var viewModel: SettingsViewModel
     
     internal var body: some View {
@@ -45,7 +45,7 @@ struct SettingsView: View {
                         viewModel.readNotificationStatus()
                     }
                 languageButton
-                resetButton
+//                resetButton
                 taskCreatePageButton
             }
             .clipShape(.rect(cornerRadius: 10))
@@ -120,38 +120,38 @@ struct SettingsView: View {
             }
     }
     
-    private var resetButton: some View {
-        Button {
-            if !coreDataManager.savedEnities.isEmpty {
-                viewModel.toggleShowingResetDialog()
-            } else {
-                viewModel.resetMessage = .empty
-                viewModel.showingResetResult.toggle()
-            }
-        } label: {
-            SettingFormRow(title: Texts.Settings.Reset.title,
-                           image: Image.Settings.reset,
-                           chevron: true)
-        }
-        .confirmationDialog(Texts.Settings.Reset.warning,
-                            isPresented: $viewModel.showingResetDialog,
-                            titleVisibility: .visible) {
-            Button(role: .destructive) {
-                coreDataManager.deleteAllTasksAndClearNotifications { success in
-                    if success {
-                        viewModel.resetMessage = .success
-                    } else {
-                        viewModel.resetMessage = .failure
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        viewModel.showingResetResult.toggle()
-                    }
-                }
-            } label: {
-                Text(Texts.Settings.Reset.confirm)
-            }
-        }
-    }
+//    private var resetButton: some View {
+//        Button {
+//            if !coreDataManager.savedEnities.isEmpty {
+//                viewModel.toggleShowingResetDialog()
+//            } else {
+//                viewModel.resetMessage = .empty
+//                viewModel.showingResetResult.toggle()
+//            }
+//        } label: {
+//            SettingFormRow(title: Texts.Settings.Reset.title,
+//                           image: Image.Settings.reset,
+//                           chevron: true)
+//        }
+//        .confirmationDialog(Texts.Settings.Reset.warning,
+//                            isPresented: $viewModel.showingResetDialog,
+//                            titleVisibility: .visible) {
+//            Button(role: .destructive) {
+//                coreDataManager.deleteAllTasksAndClearNotifications { success in
+//                    if success {
+//                        viewModel.resetMessage = .success
+//                    } else {
+//                        viewModel.resetMessage = .failure
+//                    }
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+//                        viewModel.showingResetResult.toggle()
+//                    }
+//                }
+//            } label: {
+//                Text(Texts.Settings.Reset.confirm)
+//            }
+//        }
+//    }
     
     private var taskCreatePageButton: some View {
         CustomNavLink(
@@ -227,17 +227,17 @@ extension SettingsView {
             DispatchQueue.main.async {
                 if success {
                     viewModel.setupNotificationStatus(for: allowed)
-                    if allowed {
-                        coreDataManager.restoreNotificationsForAllTasks { complete in
-                            if complete {
-                                print("Restoration complete: Notifications have been restored.")
-                            } else {
-                                print("Restoration failed.")
-                            }
-                        }
-                    } else {
-                        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-                    }
+//                    if allowed {
+//                        coreDataManager.restoreNotificationsForAllTasks { complete in
+//                            if complete {
+//                                print("Restoration complete: Notifications have been restored.")
+//                            } else {
+//                                print("Restoration failed.")
+//                            }
+//                        }
+//                    } else {
+//                        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+//                    }
                     print("Notifications are set to \(allowed).")
                 } else if let error {
                     print(error.localizedDescription)
