@@ -25,10 +25,14 @@ struct CalendarTaskRowWithActions: View {
             TaskListRow(entity: entity, isLast: isLast)
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
-            Button(role: isLast ? .destructive : .cancel) {
+            Button(role: .cancel) {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     try? TaskService.toggleImportant(for: entity)
                 }
+                Toast.shared.present(
+                    title: entity.important ?
+                        Texts.Toasts.importantOn :
+                        Texts.Toasts.importantOff)
             } label: {
                 TaskService.taskCheckImportant(for: entity) ?
                     Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
@@ -40,6 +44,10 @@ struct CalendarTaskRowWithActions: View {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     try? TaskService.togglePinned(for: entity)
                 }
+                Toast.shared.present(
+                    title: entity.pinned ?
+                        Texts.Toasts.pinnedOn :
+                        Texts.Toasts.pinnedOff)
             } label: {
                 TaskService.taskCheckPinned(for: entity) ?
                     Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
@@ -52,6 +60,8 @@ struct CalendarTaskRowWithActions: View {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     try? TaskService.toggleRemoved(for: entity)
                 }
+                Toast.shared.present(
+                    title: Texts.Toasts.removed)
             } label: {
                 Image.TaskManagement.TaskRow.SwipeAction.remove
             }

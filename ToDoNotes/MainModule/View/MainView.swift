@@ -186,6 +186,8 @@ struct MainView: View {
                     TaskService.deleteRemovedTasks()
                 }
                 viewModel.toggleShowingTaskRemoveAlert()
+                Toast.shared.present(
+                    title: Texts.Toasts.deletedAll)
             },
             secondaryButtonTitle: Texts.MainPage.RemoveFilter.alertCancel,
             secondaryAction: viewModel.toggleShowingTaskRemoveAlert)

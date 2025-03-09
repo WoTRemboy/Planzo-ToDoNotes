@@ -10,10 +10,13 @@ import SwiftUI
 struct TaskManagementNavBar: View {
     
     @ObservedObject private var viewModel: TaskManagementViewModel
-    private var onDismiss: () -> Void
+    private let entity: TaskEntity?
+    private let onDismiss: () -> Void
     
     init(viewModel: TaskManagementViewModel,
+         entity: TaskEntity?,
          onDismiss: @escaping () -> Void) {
+        self.entity = entity
         self.viewModel = viewModel
         self.onDismiss = onDismiss
     }
@@ -84,31 +87,35 @@ struct TaskManagementNavBar: View {
     
     private var moreButton: some View {
         Menu {
-            Button {
-                // Complete Status Action
-            } label: {
-                Label {
-                    Text(Texts.TaskManagement.ContextMenu.complete)
-                } icon: {
-                    Image.TaskManagement.EditTask.Menu.completed
-                        .renderingMode(.template)
-                }
-            }
-            
-            Button {
-                // Dublicate Task Action
-            } label: {
-                Label {
-                    Text(Texts.TaskManagement.ContextMenu.dublicate)
-                } icon: {
-                    Image.TaskManagement.EditTask.Menu.copy
-                        .renderingMode(.template)
-                }
-            }
+//            Button {
+//                // Complete Status Action
+//            } label: {
+//                Label {
+//                    Text(Texts.TaskManagement.ContextMenu.complete)
+//                } icon: {
+//                    Image.TaskManagement.EditTask.Menu.completed
+//                        .renderingMode(.template)
+//                }
+//            }
+//            
+//            Button {
+//                // Dublicate Task Action
+//            } label: {
+//                Label {
+//                    Text(Texts.TaskManagement.ContextMenu.dublicate)
+//                } icon: {
+//                    Image.TaskManagement.EditTask.Menu.copy
+//                        .renderingMode(.template)
+//                }
+//            }
             
             Section {
                 Button {
                     viewModel.toggleImportanceCheck()
+                    Toast.shared.present(
+                        title: viewModel.importance ?
+                            Texts.Toasts.importantOn :
+                            Texts.Toasts.importantOff)
                 } label: {
                     Label {
                         viewModel.importance ?
@@ -124,6 +131,10 @@ struct TaskManagementNavBar: View {
                 
                 Button {
                     viewModel.togglePinnedCheck()
+                    Toast.shared.present(
+                        title: viewModel.pinned ?
+                            Texts.Toasts.pinnedOn :
+                            Texts.Toasts.pinnedOff)
                 } label: {
                     Label {
                         viewModel.pinned ?
@@ -137,16 +148,25 @@ struct TaskManagementNavBar: View {
                     }
                 }
                 
-                Button(role: .destructive) {
-                    // Delete Task Action
-                } label: {
-                    Label {
-                        Text(Texts.TaskManagement.ContextMenu.delete)
-                    } icon: {
-                        Image.TaskManagement.EditTask.Menu.trash
-                            .renderingMode(.template)
-                    }
-                }
+//                if let entity {
+//                    Button(role: .destructive) {
+//                        do {
+//                            try TaskService.toggleRemoved(for: entity)
+//                            onDismiss()
+//                            Toast.shared.present(
+//                                title: Texts.Toasts.removed)
+//                        } catch {
+//                            print("Task could not be removed with error: \(error.localizedDescription).")
+//                        }
+//                    } label: {
+//                        Label {
+//                            Text(Texts.TaskManagement.ContextMenu.delete)
+//                        } icon: {
+//                            Image.TaskManagement.EditTask.Menu.trash
+//                                .renderingMode(.template)
+//                        }
+//                    }
+//                }
             }
         } label: {
             Image.NavigationBar.more
@@ -160,5 +180,6 @@ struct TaskManagementNavBar: View {
 #Preview {
     TaskManagementNavBar(
         viewModel: TaskManagementViewModel(),
+        entity: PreviewData.taskItem,
         onDismiss: {})
 }

@@ -44,7 +44,7 @@ struct TaskManagementView: View {
             VStack(spacing: 0) {
                 if viewModel.taskCreationFullScreen == .fullScreen || entity != nil {
                     TaskManagementNavBar(
-                        viewModel: viewModel) {
+                        viewModel: viewModel, entity: entity) {
                             withAnimation(.easeInOut(duration: 0.2)) {
                                 entity != nil ? updateTask() : addTask()
                                 onDismiss()
@@ -235,6 +235,7 @@ struct TaskManagementView: View {
             guard !viewModel.nameText.isEmpty else { return }
             withAnimation {
                 if entity != nil || viewModel.taskCreationFullScreen == .fullScreen {
+                    entity != nil ? updateTask() : addTask()
                     hideKeyboard()
                 } else {
                     addTask()

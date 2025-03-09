@@ -31,6 +31,10 @@ struct MainTaskRowWithActions: View {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         try? TaskService.toggleImportant(for: entity)
                     }
+                    Toast.shared.present(
+                        title: entity.important ?
+                            Texts.Toasts.importantOn :
+                            Texts.Toasts.importantOff)
                 } label: {
                     TaskService.taskCheckImportant(for: entity) ?
                     Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
@@ -42,6 +46,10 @@ struct MainTaskRowWithActions: View {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         try? TaskService.togglePinned(for: entity)
                     }
+                    Toast.shared.present(
+                        title: entity.pinned ?
+                            Texts.Toasts.pinnedOn :
+                            Texts.Toasts.pinnedOff)
                 } label: {
                     TaskService.taskCheckPinned(for: entity) ?
                     Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
@@ -53,6 +61,8 @@ struct MainTaskRowWithActions: View {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         try? TaskService.toggleRemoved(for: entity)
                     }
+                    Toast.shared.present(
+                        title: Texts.Toasts.restored)
                 } label: {
                     Image.TaskManagement.TaskRow.SwipeAction.restore
                 }
@@ -64,8 +74,12 @@ struct MainTaskRowWithActions: View {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     if viewModel.selectedFilter != .deleted {
                         try? TaskService.toggleRemoved(for: entity)
+                        Toast.shared.present(
+                            title: Texts.Toasts.removed)
                     } else {
                         try? TaskService.deleteRemovedTask(for: entity)
+                        Toast.shared.present(
+                            title: Texts.Toasts.deleted)
                     }
                     
                 }

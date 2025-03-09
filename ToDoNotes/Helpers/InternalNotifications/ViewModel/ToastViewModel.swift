@@ -13,7 +13,7 @@ final class Toast {
     internal var toasts: [ToastItem] = []
     
     internal func present(
-        title: String, symbol: Image?,
+        title: String, symbol: Image? = nil,
         tint: Color = .BackColors.backPrimary,
         isUserInteractionEnabled: Bool = false,
         timing: ToastTime = .medium) {

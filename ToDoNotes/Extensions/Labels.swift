@@ -216,8 +216,16 @@ final class Texts {
         static let settings = "Настройки"
     }
     
-    enum Notifications {
-        static let now = "Сейчас"
+    enum Toasts {
+        static let pinnedOn = "Закреплено"
+        static let pinnedOff = "Откреплено"
+        static let importantOn = "Добавлено в избранное"
+        static let importantOff = "Убрано из избранного"
+        
+        static let deleted = "Удалено"
+        static let deletedAll = "Корзина очищена"
+        static let removed = "Перемещено в корзину"
+        static let restored = "Восстановлено"
     }
     
     enum DateParameters {
