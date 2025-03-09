@@ -70,6 +70,31 @@ final class TaskService {
         try save()
     }
     
+    static func deleteRemovedTask(for entity: TaskEntity) throws {
+        viewContext.delete(entity)
+        try save()
+    }
+    
+    static func deleteRemovedTasks() {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Texts.CoreData.entity)
+        fetchRequest.predicate = NSPredicate(format: "removed == %@", NSNumber(value: true))
+        
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        batchDeleteRequest.resultType = .resultTypeObjectIDs
+        
+        do {
+            if let result = try viewContext.execute(batchDeleteRequest) as? NSBatchDeleteResult,
+               let objectIDs = result.result as? [NSManagedObjectID] {
+                let changes = [NSDeletedObjectsKey: objectIDs]
+                NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [viewContext])
+            }
+            viewContext.reset()
+            try save()
+        } catch {
+            print("Error deleting removed tasks: \(error.localizedDescription)")
+        }
+    }
+    
     static func getNotificationsByTask(task: TaskEntity) -> NSFetchRequest<NotificationEntity> {
         let request = NotificationEntity.fetchRequest()
         request.predicate = NSPredicate(format: "task == %@", task)

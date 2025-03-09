@@ -12,6 +12,7 @@
 		6303E2CA2D346A070096DB64 /* CoreDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2C92D3469FE0096DB64 /* CoreDataViewModel.swift */; };
 		6303E2D22D346BBF0096DB64 /* TaskModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2D02D346BBF0096DB64 /* TaskModel.xcdatamodeld */; };
 		631315BB2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631315BA2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift */; };
+		631315BD2D7DE21E0030D446 /* MainTaskRowWithActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631315BC2D7DE21E0030D446 /* MainTaskRowWithActions.swift */; };
 		632D0DD02D36B9760071684D /* TaskManagementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DCF2D36B9700071684D /* TaskManagementModel.swift */; };
 		632D0DD22D36BAF50071684D /* CustomNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD12D36BAEF0071684D /* CustomNavBar.swift */; };
 		632D0DD42D36BB270071684D /* TaskManagementNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */; };
@@ -117,6 +118,7 @@
 		6303E2C92D3469FE0096DB64 /* CoreDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataViewModel.swift; sourceTree = "<group>"; };
 		6303E2D12D346BBF0096DB64 /* TaskModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaskModel.xcdatamodel; sourceTree = "<group>"; };
 		631315BA2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTaskRowWithActions.swift; sourceTree = "<group>"; };
+		631315BC2D7DE21E0030D446 /* MainTaskRowWithActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTaskRowWithActions.swift; sourceTree = "<group>"; };
 		632D0DCF2D36B9700071684D /* TaskManagementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementModel.swift; sourceTree = "<group>"; };
 		632D0DD12D36BAEF0071684D /* CustomNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavBar.swift; sourceTree = "<group>"; };
 		632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementNavBar.swift; sourceTree = "<group>"; };
@@ -465,6 +467,7 @@
 			isa = PBXGroup;
 			children = (
 				637B9F502D295B7F0010F13B /* MainNavigationBar.swift */,
+				631315BC2D7DE21E0030D446 /* MainTaskRowWithActions.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -850,6 +853,7 @@
 				637B9F5F2D296F3D0010F13B /* TabRouter.swift in Sources */,
 				63A5B6692D49446800B0E408 /* TaskDateParamRow.swift in Sources */,
 				63CD66982D367EC50053C93C /* TaskManagementViewModel.swift in Sources */,
+				631315BD2D7DE21E0030D446 /* MainTaskRowWithActions.swift in Sources */,
 				637B9F612D296FA90010F13B /* ContentView.swift in Sources */,
 				637B9F5A2D2969AC0010F13B /* CalendarView.swift in Sources */,
 				63AE65882D73181A009A3541 /* CustomNavLink.swift in Sources */,

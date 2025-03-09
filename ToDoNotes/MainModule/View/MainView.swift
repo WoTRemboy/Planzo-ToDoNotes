@@ -9,31 +9,31 @@ import SwiftUI
 
 struct MainView: View {
     
-    @EnvironmentObject private var viewModel: MainViewModel
-//    @EnvironmentObject private var coreDataManager: CoreDataViewModel
+    @FetchRequest(entity: TaskEntity.entity(), sortDescriptors: [])
+    private var tasksResults: FetchedResults<TaskEntity>
     
+    @EnvironmentObject private var viewModel: MainViewModel
     @Namespace private var animation
     
     internal var body: some View {
         ZStack(alignment: .bottomTrailing) {
             content
             floatingButtons
-//            if coreDataManager.filteredSegmentedTasks(
-//                for: viewModel.selectedFilter, important: viewModel.importance).isEmpty {
-//                placeholderLabel
-//            }
+            if filteredSegmentedTasks.isEmpty {
+                placeholderLabel
+            }
         }
-//        .animation(.easeInOut(duration: 0.2),
-//                   value: coreDataManager.isEmpty)
+        .animation(.easeInOut(duration: 0.2),
+                   value: tasksResults.isEmpty)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
                 namespace: animation) {
                     viewModel.toggleShowingCreateView()
-            }
-            .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
-            .presentationDragIndicator(.visible)
+                }
+                .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
+                .presentationDragIndicator(.visible)
         }
         .fullScreenCover(isPresented: $viewModel.showingTaskCreateViewFullscreen) {
             TaskManagementView(
@@ -54,12 +54,12 @@ struct MainView: View {
             removeAlert
         }
     }
-        
+    
     private var content: some View {
         VStack(spacing: 0) {
             MainCustomNavBar(title: Texts.MainPage.title)
                 .zIndex(1)
-//            taskForm
+            taskForm
         }
     }
     
@@ -70,81 +70,26 @@ struct MainView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
     
-//    private var taskForm: some View {
-//        Form {
-//            ForEach(coreDataManager.filteredSegmentedTasks(
-//                for: viewModel.selectedFilter,
-//                important: viewModel.importance), id: \.0) { segment, tasks in
-//                segmentView(segment: segment, tasks: tasks)
-//            }
-//            .listRowSeparator(.hidden)
-//            .listSectionSpacing(0)
-//        }
-//        .padding(.horizontal, hasNotch() ? -4 : 0)
-//        .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
-//        .background(Color.BackColors.backDefault)
-//        .scrollContentBackground(.hidden)
-//    }
+    private var taskForm: some View {
+        Form {
+            ForEach(filteredSegmentedTasks, id: \.0) { segment, tasks in
+                    segmentView(segment: segment, tasks: tasks)
+                }
+                .listRowSeparator(.hidden)
+                .listSectionSpacing(0)
+        }
+        .padding(.horizontal, hasNotch() ? -4 : 0)
+        .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
+        .background(Color.BackColors.backDefault)
+        .scrollContentBackground(.hidden)
+    }
     
     @ViewBuilder
     private func segmentView(segment: Date?, tasks: [TaskEntity]) -> some View {
         Section(header: segmentHeader(name: segment)) {
             ForEach(tasks) { entity in
-                Button {
-                    viewModel.selectedTask = entity
-                } label: {
-                    TaskListRow(entity: entity, isLast: tasks.last == entity)
-                }
-                //.navigationTransitionSource(id: entity.id, namespace: animation)
-                .swipeActions(edge: .leading, allowsFullSwipe: viewModel.selectedFilter == .deleted) {
-                    if viewModel.selectedFilter != .deleted {
-//                        Button(role: (viewModel.importance && tasks.last == entity) ? .destructive : .cancel) {
-//                            withAnimation(.easeInOut(duration: 0.2)) {
-//                                coreDataManager.toggleImportant(for: entity)
-//                            }
-//                        } label: {
-//                            coreDataManager.taskCheckImportant(for: entity) ?
-//                            Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
-//                            Image.TaskManagement.TaskRow.SwipeAction.important
-//                        }
-//                        .tint(Color.SwipeColors.important)
-                        
-//                        Button {
-//                            withAnimation(.easeInOut(duration: 0.2)) {
-//                                coreDataManager.togglePinned(for: entity)
-//                            }
-//                        } label: {
-//                            coreDataManager.taskCheckPinned(for: entity) ?
-//                            Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
-//                            Image.TaskManagement.TaskRow.SwipeAction.pinned
-//                        }
-//                        .tint(Color.SwipeColors.pin)
-                    } else {
-//                        Button(role: .destructive) {
-//                            withAnimation(.easeInOut(duration: 0.2)) {
-//                                coreDataManager.toggleRemoved(for: entity)
-//                            }
-//                        } label: {
-//                            Image.TaskManagement.TaskRow.SwipeAction.restore
-//                        }
-//                        .tint(Color.SwipeColors.restore)
-                    }
-                }
-                
-                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-//                    Button(role: .destructive) {
-//                        withAnimation(.easeInOut(duration: 0.2)) {
-//                            if viewModel.selectedFilter != .deleted {
-//                                coreDataManager.toggleRemoved(for: entity)
-//                            } else {
-//                                coreDataManager.deleteTask(for: entity)
-//                            }
-//                        }
-//                    } label: {
-//                        Image.TaskManagement.TaskRow.SwipeAction.remove
-//                    }
-//                    .tint(Color.SwipeColors.remove)
-                }
+                MainTaskRowWithActions(entity: entity,
+                                       isLast: tasks.last == entity)
             }
             .listRowInsets(EdgeInsets())
         }
@@ -163,7 +108,7 @@ struct MainView: View {
 //            scrollToTopButton
             if viewModel.selectedFilter != .deleted {
                 plusButton
-            } else {
+            } else if !filteredSegmentedTasks.isEmpty {
                 removeAllTasksButton
             }
         }
@@ -232,9 +177,9 @@ struct MainView: View {
             message: Texts.MainPage.RemoveFilter.alertContent,
             primaryButtonTitle: Texts.MainPage.RemoveFilter.alertYes,
             primaryAction: {
-//                withAnimation(.easeInOut(duration: 0.2)) {
-//                    coreDataManager.deleteRemovedTasks()
-//                }
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    TaskService.deleteRemovedTasks()
+                }
                 viewModel.toggleShowingTaskRemoveAlert()
             },
             secondaryButtonTitle: Texts.MainPage.RemoveFilter.alertCancel,
@@ -242,8 +187,70 @@ struct MainView: View {
     }
 }
 
+extension MainView {
+    private var segmentedAndSortedTasksArray: [(Date?, [TaskEntity])] {
+        let calendar = Calendar.current
+        var grouped: [Date: [TaskEntity]] = [:]
+        for task in tasksResults {
+            let refDate = task.target ?? task.created ?? Date.distantPast
+            let day = calendar.startOfDay(for: refDate)
+            grouped[day, default: []].append(task)
+        }
+        return grouped.map { (key, tasks) in
+            let sortedTasks = tasks.sorted { t1, t2 in
+                let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : Date.distantFuture
+                let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : Date.distantFuture
+                return d1 < d2
+            }
+            return (key, sortedTasks)
+        }
+        .sorted { ($0.0 ?? Date.distantPast) < ($1.0 ?? Date.distantPast) }
+    }
+    
+    private var filteredSegmentedTasks: [(Date?, [TaskEntity])] {
+        let now = Date()
+        return segmentedAndSortedTasksArray.compactMap { (date, tasks) in
+            let filteredTasks = tasks.filter { task in
+                if viewModel.importance && !task.important { return false }
+                switch viewModel.selectedFilter {
+                case .active:
+                    guard !task.removed else { return false }
+                    guard task.completed != 2 else { return false }
+                    if let target = task.target {
+                        if task.hasTargetTime {
+                            if target < now { return false }
+                        } else {
+                            if target < Calendar.current.startOfDay(for: now) { return false }
+                        }
+                    } else if let created = task.created {
+                        if created < Calendar.current.startOfDay(for: now) { return false }
+                    }
+                    return true
+                case .outdated:
+                    guard !task.removed else { return false }
+                    if task.completed == 1,
+                       let target = task.target,
+                       task.hasTargetTime,
+                       target < now {
+                        return true
+                    }
+                    return false
+                case .completed:
+                    guard !task.removed else { return false }
+                    return task.completed == 2
+                case .unsorted:
+                    return !task.removed
+                case .deleted:
+                    return task.removed
+                }
+            }
+            return filteredTasks.isEmpty ? nil : (date, filteredTasks)
+        }
+    }
+}
+
 #Preview {
     MainView()
         .environmentObject(MainViewModel())
-//        .environmentObject(CoreDataViewModel())
+        .environmentObject(CoreDataViewModel())
 }
