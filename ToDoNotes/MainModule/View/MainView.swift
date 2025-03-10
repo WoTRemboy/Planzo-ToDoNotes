@@ -222,6 +222,24 @@ extension MainView {
         let now = Date()
         return segmentedAndSortedTasksArray.compactMap { (date, tasks) in
             let filteredTasks = tasks.filter { task in
+                
+                switch viewModel.selectedFolder {
+                case .all:
+                    break
+                case .reminders:
+                    if task.notifications?.count ?? 0 < 1 {
+                        return false
+                    }
+                case .lists:
+                    if task.checklist?.count ?? 0 < 2 {
+                        return false
+                    }
+                case .noDate:
+                    if task.hasTargetTime {
+                        return false
+                    }
+                }
+                
                 if viewModel.importance && !task.important { return false }
                 switch viewModel.selectedFilter {
                 case .active:

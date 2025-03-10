@@ -45,8 +45,10 @@ struct TaskListRow: View {
     }
     
     private var folderIndicatior: some View {
-        Rectangle()
-            .foregroundStyle(Color.FolderColors.lists)
+        let folder = Folder(rawValue: entity.folder ?? String())
+        let color = folder?.color ?? .clear
+        return Rectangle()
+            .foregroundStyle(color)
             .frame(maxWidth: 6, maxHeight: .infinity)
     }
     

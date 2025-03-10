@@ -16,6 +16,7 @@
         <attribute name="completed" optional="YES" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="details" optional="YES" attributeType="String"/>
+        <attribute name="folder" optional="YES" attributeType="String"/>
         <attribute name="hasTargetTime" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="important" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>

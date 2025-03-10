@@ -73,6 +73,14 @@ final class TaskService {
         let orderedChecklist = NSOrderedSet(array: checklistEnities)
         task.checklist = orderedChecklist
         
+        if !notifications.isEmpty {
+            task.folder = Folder.reminders.rawValue
+        } else if checklist.count > 1 {
+            task.folder = Folder.lists.rawValue
+        } else if !hasTime {
+            task.folder = Folder.noDate.rawValue
+        }
+        
         try save()
     }
     

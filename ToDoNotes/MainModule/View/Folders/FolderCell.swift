@@ -9,15 +9,12 @@ import SwiftUI
 
 struct FolderCell: View {
     
-    private let name: String
-    private let color: Color
+    private let folder: Folder
     private let selected: Bool
     private let namespace: Namespace.ID
     
-    init(name: String, color: Color,
-         selected: Bool, namespace: Namespace.ID) {
-        self.name = name
-        self.color = color
+    init(folder: Folder, selected: Bool, namespace: Namespace.ID) {
+        self.folder = folder
         self.selected = selected
         self.namespace = namespace
     }
@@ -37,9 +34,18 @@ struct FolderCell: View {
     }
     
     private var nameLabel: some View {
-        Text(name)
+        let color: Color
+        if selected && folder == .all {
+            color = Color.white
+        } else if selected {
+            color = Color.LabelColors.labelPrimary
+        } else {
+            color = Color.LabelColors.labelSecondary
+        }
+        
+        return Text(folder.name)
             .font(.system(size: 20, weight: .regular))
-            .foregroundStyle(selected ? Color.white : Color.LabelColors.labelSecondary)
+            .foregroundStyle(color)
             .background(alignment: .bottom) {
                 underline
                     .offset(y: 4)
@@ -48,7 +54,7 @@ struct FolderCell: View {
     
     private var underline: some View {
         Rectangle()
-            .foregroundStyle(selected ? .clear : color)
+            .foregroundStyle(selected ? .clear : folder.color)
         
             .frame(maxWidth: .infinity)
             .frame(height: 4)
@@ -57,7 +63,7 @@ struct FolderCell: View {
     
     private var backgroundRectangle: some View {
         RoundedRectangle(cornerRadius: 16)
-            .foregroundStyle(selected ? color : .clear)
+            .foregroundStyle(selected ? folder.color : .clear)
             .matchedGeometryEffect(id: Texts.NamespaceID.selectedTab, in: namespace)
             .transition(.opacity)
     }
@@ -69,6 +75,5 @@ struct FolderCell: View {
 }
 
 #Preview {
-    FolderCell(name: "Passwords", color: Color.FolderColors.passwords,
-               selected: true, namespace: Namespace().wrappedValue)
+    FolderCell(folder: .lists, selected: true, namespace: Namespace().wrappedValue)
 }

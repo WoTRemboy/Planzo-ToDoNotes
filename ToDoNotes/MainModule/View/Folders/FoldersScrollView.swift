@@ -35,8 +35,7 @@ struct FoldersScrollView: View {
     private func scrollContent(proxy: ScrollViewProxy) -> some View {
         HStack(spacing: 0) {
             ForEach(Folder.allCases, id: \.self) { folder in
-                FolderCell(name: folder.name,
-                           color: folder.color,
+                FolderCell(folder: folder,
                            selected: viewModel.compareFolders(with: folder), namespace: animation)
                 .id(folder)
                 .onTapGesture {
