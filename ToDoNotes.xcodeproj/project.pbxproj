@@ -304,7 +304,6 @@
 		635FEF672D24B71C007FFBBA /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				6338FFA82D7C9FE400E9E4C2 /* PreviewData.swift */,
 				635FEF662D24B71C007FFBBA /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
@@ -424,6 +423,14 @@
 				6377871C2D75E99B006DE892 /* FullSwipeNavigationStack.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		636C53E12D7E79370096F436 /* PreviewData */ = {
+			isa = PBXGroup;
+			children = (
+				6338FFA82D7C9FE400E9E4C2 /* PreviewData.swift */,
+			);
+			path = PreviewData;
 			sourceTree = "<group>";
 		};
 		6378A7512D3EB69D00C1B858 /* Modifiers */ = {
@@ -601,6 +608,7 @@
 		63BCD8AD2D7729460016950F /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				636C53E12D7E79370096F436 /* PreviewData */,
 				63A092872D7BA02C0026A64D /* InternalNotifications */,
 				63BCD8B32D7B665C0016950F /* SearchBar */,
 				63BCD8AE2D7729730016950F /* AlertPopView */,
