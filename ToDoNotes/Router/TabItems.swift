@@ -10,7 +10,6 @@ import SwiftUI
 struct TabItems {
     static func mainTab(isSelected: Bool) -> some View {
         MainView()
-            .environmentObject(MainViewModel())
             .tabItem {
                 isSelected ? Image.TabBar.Selected.home : Image.TabBar.Unselected.home
                     .renderingMode(.template)
@@ -20,8 +19,6 @@ struct TabItems {
     
     static func todayTab(isSelected: Bool) -> some View {
         TodayView()
-            .environmentObject(TodayViewModel())
-            .environment(\.managedObjectContext, CoreDataProvider.shared.persistentContainer.viewContext)
             .tabItem {
                 isSelected ? Image.TabBar.Selected.today : Image.TabBar.Unselected.today
                     .renderingMode(.template)
@@ -31,7 +28,6 @@ struct TabItems {
     
     static func calendarTab(isSelected: Bool) -> some View {
         CalendarView()
-            .environmentObject(CalendarViewModel())
             .tabItem {
                 isSelected ? Image.TabBar.Selected.calendar : Image.TabBar.Unselected.calendar
                     .renderingMode(.template)
@@ -40,13 +36,7 @@ struct TabItems {
     }
     
     static func settingsTab(isSelected: Bool) -> some View {
-        let defaults = UserDefaults.standard
-        let rawValue = defaults.string(forKey: Texts.UserDefaults.notifications) ?? String()
-        let notificationsStatus = NotificationStatus(rawValue: rawValue) ?? .prohibited
-        
-        return SettingsView()
-            .environmentObject(SettingsViewModel(
-                notificationsEnabled: notificationsStatus == .allowed))
+        SettingsView()
             .tabItem {
                 isSelected ? Image.TabBar.Selected.settings : Image.TabBar.Unselected.settings
                     .renderingMode(.template)

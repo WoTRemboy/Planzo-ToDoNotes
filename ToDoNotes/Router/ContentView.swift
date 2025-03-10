@@ -10,7 +10,18 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var router = TabRouter()
     
+    @StateObject private var mainVM = MainViewModel()
+    @StateObject private var todayVM = TodayViewModel()
+    @StateObject private var calendarVM = CalendarViewModel()
+    @StateObject private var settingsVM: SettingsViewModel
+    
     init() {
+        let defaults = UserDefaults.standard
+        let rawValue = defaults.string(forKey: Texts.UserDefaults.notifications) ?? String()
+        let notificationsStatus = NotificationStatus(rawValue: rawValue) ?? .prohibited
+        
+        self._settingsVM = StateObject(wrappedValue: SettingsViewModel(notificationsEnabled: notificationsStatus == .allowed))
+        
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = UIColor(Color.BackColors.backDefault)
@@ -26,15 +37,19 @@ struct ContentView: View {
         FullSwipeNavigationStack {
             TabView(selection: $router.selectedTab) {
                 TabItems.mainTab(isSelected: router.selectedTab == .main)
+                    .environmentObject(mainVM)
                     .tag(TabRouter.Tab.main)
                 
                 TabItems.todayTab(isSelected: router.selectedTab == .today)
+                    .environmentObject(todayVM)
                     .tag(TabRouter.Tab.today)
                 
                 TabItems.calendarTab(isSelected: router.selectedTab == .calendar)
+                    .environmentObject(calendarVM)
                     .tag(TabRouter.Tab.calendar)
                 
                 TabItems.settingsTab(isSelected: router.selectedTab == .settings)
+                    .environmentObject(settingsVM)
                     .tag(TabRouter.Tab.settings)
             }
         }
