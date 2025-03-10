@@ -29,6 +29,7 @@ struct ToDoNotesApp: App {
                 .onAppear {
                     setTheme(style: userTheme.userInterfaceStyle)
                 }
+                .environment(\.managedObjectContext, CoreDataProvider.shared.persistentContainer.viewContext)
         }
     }
     
@@ -76,6 +77,8 @@ extension ToDoNotesApp {
                 // In error case notifications become prohibited
                 self.notificationsEnabled = .prohibited
                 print(error.localizedDescription)
+            } else {
+                print("Notifications are prohibited.")
             }
         }
     }

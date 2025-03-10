@@ -9,7 +9,7 @@ import Foundation
 
 final class Texts {
     enum SplashScreen {
-        static let title = "Splash Screen"
+        static let title = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "ToDo"
     }
     
     enum OnboardingPage {
@@ -39,9 +39,17 @@ final class Texts {
         enum Folders {
             static let title = "Папки"
             static let all = "Все"
-            static let noDate = "Без дат"
+            static let reminders = "Напоминания"
             static let purchases = "Списки"
-            static let passwords = "Пароли"
+            static let noDate = "Без дат"
+        }
+        
+        enum RemoveFilter {
+            static let buttonTitle = "Очистить корзину"
+            static let alertTitle = "Продолжить удаление?"
+            static let alertContent = "Данные будут удалены навсегда."
+            static let alertCancel = "Отмена"
+            static let alertYes = "Да"
         }
     }
     
@@ -56,15 +64,19 @@ final class Texts {
         static let title = "Календарь"
         static let today = "Сегодня"
         static let emptyList = "Свободный день"
+        static let accept = "Принять"
     }
     
     enum Settings {
         static let title = "Настройки"
         static let cancel = "Отмена"
+        static let ok = "Хорошо"
         
         enum About {
             static let title = "О приложении"
             static let release = "release"
+            static let version = "Версия"
+            static let copyright = "2025 Avoqode LTD"
         }
         
         enum Language {
@@ -81,19 +93,46 @@ final class Texts {
             static let title = "Оформление"
             static let system = "Системное"
             static let light = "Светлое"
-            static let dark = "Тёмное"
+            static let dark = "Темное"
+            
+            static let accept = "Применить"
+            static let cancel = "Отмена"
         }
         
         enum Notification {
             static let title = "Уведомления"
-            static let alertTitle = "Требуется доступ"
-            static let alertContent = "Пожалуйста, включите уведомления в настройках."
+            static let prohibitedTitle = "Уведомления отключены"
+            static let prohibitedContent = "Пожалуйста, включите параметр в настройках."
+            static let disabledTitle = "Уведомления отключены"
+            static let disabledContent = "Пожалуйста, включите параметр в настройках приложения."
+        }
+        
+        enum Reset {
+            static let sectionTitle = "Контент"
+            static let title = "Очистка памяти"
+            static let warning = "Вы действительно хотите удалить все существующие задачи? Восстановить их будет невозможно."
+            static let confirm = "Удалить данные"
+            
+            static let success = "Выполнено"
+            static let failure = "Ошибка"
+            static let empty = "Отменено"
+            
+            static let successMessage = "Данные успешно удалены"
+            static let failureMessage = "Не удалось удалить данные"
+            static let emptyMessage = "Данные уже отсутсвуют"
         }
         
         enum Email {
             static let contact = "Контакт"
             static let emailTitle = "Email"
             static let emailContent = "contact@avoqode.com"
+        }
+        
+        enum TaskCreate {
+            static let title = "Окно создания заметки"
+            static let popup = "Всплывающее окно"
+            static let fullScreen = "Страница"
+            static let descriptionContent = "Выберите между стилями «Страница» и «Всплывающее окно» для создания заметок."
         }
     }
     
@@ -103,12 +142,58 @@ final class Texts {
         static let today = "Сегодня"
         static let point = "Пункт"
         
+        enum TaskRow {
+            static let placeholder = "Нет заголовка"
+        }
+        
+        enum ContextMenu {
+            static let complete = "Завершить задачу"
+            static let dublicate = "Дублировать заметку"
+            static let important = "Сделать избранной"
+            static let importantDeselect = "Снять избранность"
+            static let pin = "Закрепить"
+            static let unpin = "Открепить"
+            static let delete = "Удалить"
+        }
+        
         enum DatePicker {
-            static let title = "Выбор даты"
-            static let target = "Цель"
-            static let notification = "Уведомление"
-            static let cancel = "Убрать"
+            static let title = "Дата и время"
+            static let cancel = "Отменить"
             static let done = "Сохранить"
+            static let target = "Цель"
+            static let time = "Время"
+            static let reminder = "Напоминание"
+            static let cycle = "Повтор"
+            static let endCycle = "Завершить повторы"
+            static let removeAll = "Очистить всё"
+            
+            static let noneTime = "Нет"
+            
+            static let noneReminder = "Нет"
+            static let someRemainders = "Несколько"
+            static let errorRemainder = "Ошибка"
+            
+            static let inTime = "Во время"
+            static let fiveMinutesBefore = "За 5 минут"
+            static let thirtyMinutesBefore = "За 30 минут"
+            static let oneHourBefore = "За 1 час"
+            static let oneDayBefore = "За 1 день"
+            
+            static let inTimeNotification = "Сейчас"
+            static let fiveMinutesBeforeNotification = "Через 5 минут"
+            static let thirtyMinutesBeforeNotification = "Через 30 минут"
+            static let oneHourBeforeNotification = "Через 1 час"
+            static let oneDayBeforeNotification = "Через 1 день"
+            
+            static let noneRepeating = "Нет"
+            static let dailyRepeating = "Каждый день"
+            static let weeklyRepeating = "Каждую неделю"
+            static let monthlyRepeating = "Каждый месяц"
+            static let yearlyRepeating = "Каждый год"
+            static let businessRepeating = "По будням"
+            static let weekendRepeating = "По выходным"
+            
+            static let noneEndRepeating = "Никогда"
         }
         
         enum ShareView {
@@ -119,6 +204,11 @@ final class Texts {
         }
     }
     
+    enum SearchBar {
+        static let placeholder = "Поиск текста, заголовка"
+        static let cancel = "Отмена"
+    }
+    
     enum Tabbar {
         static let main = "Главная"
         static let today = "Сегодня"
@@ -126,8 +216,16 @@ final class Texts {
         static let settings = "Настройки"
     }
     
-    enum Notifications {
-        static let now = "Сейчас"
+    enum Toasts {
+        static let pinnedOn = "Закреплено"
+        static let pinnedOff = "Откреплено"
+        static let importantOn = "Добавлено в избранное"
+        static let importantOff = "Убрано из избранного"
+        
+        static let deleted = "Удалено"
+        static let deletedAll = "Корзина очищена"
+        static let removed = "Перемещено в корзину"
+        static let restored = "Восстановлено"
     }
     
     enum DateParameters {
@@ -137,11 +235,31 @@ final class Texts {
     enum CoreData {
         static let container = "TaskModel"
         static let entity = "TaskEntity"
+        
+        enum TaskSection {
+            static let pinned = "Закреплено"
+            static let active = "Активные"
+            static let completed = "Выполнено"
+        }
     }
     
     enum UserDefaults {
-        static let skipOnboarding = "skipOnboarding"
-        static let notifications = "notificationsEnabled"
-        static let theme = "userTheme"
+        static let skipOnboarding = "SkipOnboarding"
+        static let addTaskButtonGlow = "AddTaskButtonGlow"
+        static let notifications = "NotificationsEnabled"
+        static let theme = "UserTheme"
+        static let taskCreation = "TaskCreationPage"
+    }
+    
+    enum NamespaceID {
+        static let selectedTab = "SelectedTab"
+        static let selectedCalendarCell = "SelectedCalendarCell"
+        static let selectedCalendarDate = "SelectedCalendarDate"
+        static let selectedEntity = "NoSelectedEntity"
+        static let floatingButtons = "MainPageFloatingButtons"
+    }
+    
+    enum AccessibilityIdentifier {
+        static let tabBarShadow = "TabBarShadow"
     }
 }

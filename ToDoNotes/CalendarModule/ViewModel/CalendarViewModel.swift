@@ -9,32 +9,55 @@ import SwiftUI
 
 final class CalendarViewModel: ObservableObject {
     
+    @AppStorage(Texts.UserDefaults.addTaskButtonGlow) var addTaskButtonGlow: Bool = false
+    @AppStorage(Texts.UserDefaults.taskCreation) private var taskCreationFullScreen: TaskCreation = .popup
+    
     @Published internal var showingTaskCreateView: Bool = false
+    @Published internal var showingTaskCreateViewFullscreen: Bool = false
+    @Published internal var showingCalendarSelector: Bool = false
+    
     @Published internal var selectedTask: TaskEntity? = nil
-    @Published internal var selectedDate: Date = .now
+    @Published internal var selectedDate: Date = .now.startOfDay
     @Published internal var taskManagementHeight: CGFloat = 15
     
-    internal let daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
-    private(set) var todayDate: Date = Date.now
-    private(set) var days: [Date] = []
-    
-    internal var todayDateString: String {
-        Date.now.longDayMonthWeekday
+    @Published internal var calendarDate: Date = Date.now {
+        didSet {
+            updateDays()
+            selectDay()
+        }
     }
+    
+    private(set) var days: [Date] = []
+    internal let daysOfWeek: [String] = Date.capitalizedFirstLettersOfWeekdays
     
     init() {
         updateDays()
     }
     
     internal func toggleShowingTaskCreateView() {
-        showingTaskCreateView.toggle()
+        taskCreationFullScreen == .popup ?
+            showingTaskCreateView.toggle() :
+                showingTaskCreateViewFullscreen.toggle()
+    }
+    
+    internal func toggleShowingCalendarSelector() {
+        showingCalendarSelector.toggle()
     }
     
     internal func toggleShowingTaskEditView() {
         selectedTask = nil
     }
     
-    internal func updateDays() {
-        days = todayDate.calendarDisplayDays
+    private func updateDays() {
+        days = calendarDate.calendarDisplayDays
+    }
+    
+    private func selectDay() {
+        selectedDate = Calendar.current.startOfDay(for: calendarDate)
+    }
+    
+    internal func restoreTodayDate() {
+        guard selectedDate != .now.startOfDay else { return }
+        calendarDate = .now.startOfDay
     }
 }

@@ -1,17 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "check-oneLight.svg",
-      "idiom" : "universal"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "check-oneDark.svg",
+      "filename" : "TaskCheckboxSelected.svg",
       "idiom" : "universal"
     }
   ],

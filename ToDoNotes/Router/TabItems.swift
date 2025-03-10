@@ -8,41 +8,37 @@
 import SwiftUI
 
 struct TabItems {
-    static func mainTab() -> some View {
+    static func mainTab(isSelected: Bool) -> some View {
         MainView()
-            .environmentObject(MainViewModel())
             .tabItem {
-                Image.Placeholder.tabbarIcon
+                isSelected ? Image.TabBar.Selected.home : Image.TabBar.Unselected.home
                     .renderingMode(.template)
                 Text(Texts.Tabbar.main)
             }
     }
     
-    static func todayTab() -> some View {
+    static func todayTab(isSelected: Bool) -> some View {
         TodayView()
-            .environmentObject(TodayViewModel())
             .tabItem {
-                Image.Placeholder.tabbarIcon
+                isSelected ? Image.TabBar.Selected.today : Image.TabBar.Unselected.today
                     .renderingMode(.template)
                 Text(Texts.Tabbar.today)
             }
     }
     
-    static func calendarTab() -> some View {
+    static func calendarTab(isSelected: Bool) -> some View {
         CalendarView()
-            .environmentObject(CalendarViewModel())
             .tabItem {
-                Image.Placeholder.tabbarIcon
+                isSelected ? Image.TabBar.Selected.calendar : Image.TabBar.Unselected.calendar
                     .renderingMode(.template)
                 Text(Texts.Tabbar.calendar)
             }
     }
     
-    static func settingsTab() -> some View {
+    static func settingsTab(isSelected: Bool) -> some View {
         SettingsView()
-            .environmentObject(SettingsViewModel())
             .tabItem {
-                Image.Placeholder.tabbarIcon
+                isSelected ? Image.TabBar.Selected.settings : Image.TabBar.Unselected.settings
                     .renderingMode(.template)
                 Text(Texts.Tabbar.settings)
             }

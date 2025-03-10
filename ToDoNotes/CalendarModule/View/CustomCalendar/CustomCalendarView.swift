@@ -8,20 +8,25 @@
 import SwiftUI
 
 struct CustomCalendarView: View {
-    
-    @EnvironmentObject private var coreDataManager: CoreDataViewModel
+        
     @EnvironmentObject private var viewModel: CalendarViewModel
+    
+    private let dates: [Date: Int]
+    private let namespace: Namespace.ID
     
     private let columns = Array(repeating: GridItem(.flexible()),
                                 count: 7)
+    
+    init(dates: [Date: Int],
+         namespace: Namespace.ID) {
+        self.dates = dates
+        self.namespace = namespace
+    }
     
     internal var body: some View {
         VStack {
             weekdayNames
             daysGrid
-        }
-        .onChange(of: viewModel.days) { _ in
-            viewModel.updateDays()
         }
         .padding(.horizontal)
     }
@@ -38,30 +43,32 @@ struct CustomCalendarView: View {
     }
     
     private var daysGrid: some View {
-        LazyVGrid(columns: columns) {
-            ForEach(viewModel.days, id: \.self) { day in
-                if day.monthInt != viewModel.todayDate.monthInt {
-                    Text(String())
-                } else {
-                    let hasTask = coreDataManager.daysWithTasks.contains(day.startOfDay)
-                    CustomCalendarCell(
-                        day: day.formatted(.dateTime.day()),
-                        selected: viewModel.selectedDate == day.startOfDay,
-                        today: Date.now.startOfDay == day.startOfDay,
-                        task: hasTask)
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.15)) {
-                            viewModel.selectedDate = day
+        Group {
+            LazyVGrid(columns: columns) {
+                ForEach(viewModel.days, id: \.self) { day in
+                    if day.monthInt != viewModel.calendarDate.monthInt {
+                        Text(String())
+                    } else {
+                        CustomCalendarCell(
+                            day: day.formatted(.dateTime.day()),
+                            selected: viewModel.selectedDate == day.startOfDay,
+                            today: Date.now.startOfDay == day.startOfDay,
+                            task: dates[day] != nil,
+                            namespace: namespace)
+                        .onTapGesture {
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                viewModel.selectedDate = day.startOfDay
+                            }
                         }
                     }
                 }
             }
         }
+        .id(viewModel.calendarDate)
     }
 }
 
 #Preview {
-    CustomCalendarView()
+    CustomCalendarView(dates: [.now: 2], namespace: Namespace().wrappedValue)
         .environmentObject(CalendarViewModel())
-        .environmentObject(CoreDataViewModel())
 }

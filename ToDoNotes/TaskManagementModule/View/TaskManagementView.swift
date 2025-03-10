@@ -10,51 +10,49 @@ import SwiftUI
 struct TaskManagementView: View {
     
     @FocusState private var titleFocused
-    
-    @EnvironmentObject private var coreDataManager: CoreDataViewModel
     @StateObject private var viewModel = TaskManagementViewModel()
     
     @Binding private var taskManagementHeight: CGFloat
     @State private var isKeyboardActive = false
     
-    private let date: Date
     private let entity: TaskEntity?
+    private let animation: Namespace.ID
     private let onDismiss: () -> Void
     
+    private var transitionID: String = Texts.NamespaceID.selectedEntity
+    
     init(taskManagementHeight: Binding<CGFloat>,
-         date: Date,
+         selectedDate: Date? = nil,
          entity: TaskEntity? = nil,
+         namespace: Namespace.ID,
          onDismiss: @escaping () -> Void) {
         self._taskManagementHeight = taskManagementHeight
-        self.date = date
         self.onDismiss = onDismiss
         self.entity = entity
+        self.animation = namespace
         
         if let entity {
             self._viewModel = StateObject(wrappedValue: TaskManagementViewModel(entity: entity))
+            self.transitionID = entity.id?.uuidString ?? transitionID
+        } else if let selectedDate {
+            self._viewModel = StateObject(wrappedValue: TaskManagementViewModel(targetDate: selectedDate))
         }
     }
     
     internal var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                if entity != nil {
+                if viewModel.taskCreationFullScreen == .fullScreen || entity != nil {
                     TaskManagementNavBar(
-                        title: date.shortDate,
-                        dayName: date.shortWeekday,
-                        onDismiss: {
+                        viewModel: viewModel, entity: entity) {
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                updateTask()
+                                entity != nil ? updateTask() : addTask()
                                 onDismiss()
                             }
-                        },
-                        onShare: viewModel.toggleShareSheet)
+                        }
+                        .zIndex(1)
                 }
                 content
-            }
-            
-            if viewModel.showingDatePicker {
-                calendarPicker
             }
         }
         .onAppear {
@@ -68,6 +66,17 @@ struct TaskManagementView: View {
                 .presentationDetents([.height(285)])
                 .presentationDragIndicator(.visible)
         }
+        .sheet(isPresented: $viewModel.showingDatePicker) {
+            TaskCalendarSelectorView(
+                entity: entity,
+                viewModel: viewModel,
+                namespace: animation)
+                .presentationDetents([.height(670)])
+        }
+        .navigationTransition(
+            id: transitionID,
+            namespace: animation,
+            enable: entity != nil || viewModel.taskCreationFullScreen == .fullScreen)
     }
     
     private var content: some View {
@@ -75,7 +84,7 @@ struct TaskManagementView: View {
             ScrollView {
                 nameInput
                 
-                if entity != nil {
+                if entity != nil || viewModel.taskCreationFullScreen == .fullScreen {
                     descriptionCoverInput
                     TaskChecklistView(viewModel: viewModel)
                 } else {
@@ -83,27 +92,56 @@ struct TaskManagementView: View {
                         .background(HeightReader(height: $taskManagementHeight))
                 }
             }
-            .scrollDisabled(entity == nil)
+            .scrollDisabled(entity == nil && viewModel.taskCreationFullScreen == .popup)
             
             Spacer()
             buttons
         }
         .padding(.horizontal, 16)
-        .padding(.top, entity == nil ? 8 : 0)
+        .padding(.top, (entity == nil && viewModel.taskCreationFullScreen == .popup) ? 8 : 0)
         .padding(.bottom, 8)
     }
     
     private var nameInput: some View {
-        TextField(Texts.TaskManagement.titlePlaceholder,
-                  text: $viewModel.nameText)
-        .font(.system(size: 18, weight: .medium))
-        .lineLimit(1)
+        HStack {
+            if viewModel.check != .none {
+                titleCheckbox
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            viewModel.toggleTitleCheck()
+                            let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                            impactMed.impactOccurred()
+                        }
+                    }
+            }
+            
+            TextField(Texts.TaskManagement.titlePlaceholder,
+                      text: $viewModel.nameText)
+            .font(.system(size: 20, weight: .medium))
+            .lineLimit(1)
+            
+            .foregroundStyle(
+                viewModel.check == .checked ?
+                Color.LabelColors.labelDetails :
+                    Color.LabelColors.labelPrimary)
+            .strikethrough(viewModel.check == .checked)
+            
+            .focused($titleFocused)
+            .immediateKeyboard(delay: (entity != nil || viewModel.taskCreationFullScreen == .fullScreen) ? 0.4 : 0)
+            .onAppear {
+                titleFocused = true
+            }
+        }
         .padding(.top, 20)
-        
-        .focused($titleFocused)
-        .immediateKeyboard()
-        .onAppear {
-            titleFocused = true
+    }
+    
+    private var titleCheckbox: Image {
+        if viewModel.check == .unchecked {
+            Image.TaskManagement.EditTask.checkListUncheck
+        } else {
+            Image.TaskManagement.EditTask.checkListCheck
         }
     }
     
@@ -113,7 +151,11 @@ struct TaskManagementView: View {
                   axis: .vertical)
         
         .lineLimit(1...5)
-        .font(.system(size: 15, weight: .regular))
+        .font(.system(size: 17, weight: .regular))
+        .foregroundStyle(
+            viewModel.check == .checked ?
+            Color.LabelColors.labelDetails :
+                Color.LabelColors.labelPrimary)
     }
     
     private var descriptionCoverInput: some View {
@@ -121,39 +163,39 @@ struct TaskManagementView: View {
                   text: $viewModel.descriptionText,
                   axis: .vertical)
         
-        .font(.system(size: 15, weight: .regular))
-        .lineSpacing(2.5)
+        .font(.system(size: 17, weight: .regular))
+        .foregroundStyle(
+            viewModel.check == .checked ?
+            Color.LabelColors.labelDetails :
+                Color.LabelColors.labelPrimary)
     }
     
     private var buttons: some View {
         HStack(alignment: .bottom, spacing: 16) {
-            if entity != nil {
-                calendarModule
-            }
+            calendarModule
             checkButton
-            moreButton
-            
+
             Spacer()
-            if isKeyboardActive || entity == nil {
+            if isKeyboardActive || (entity == nil && viewModel.taskCreationFullScreen == .popup) {
                 acceptButton
+                    .transition(.scale)
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: isKeyboardActive)
     }
     
     private var calendarModule: some View {
-        HStack(spacing: 4) {
+        Button {
+            viewModel.toggleDatePicker()
+        } label: {
             calendarImage
             
             if viewModel.hasDate {
-                Text(viewModel.targetDate.shortDayMonthHourMinutes)
+                Text(viewModel.hasTime ?
+                     viewModel.targetDate.shortDayMonthHourMinutes :
+                        viewModel.targetDate.shortDate)
                     .font(.system(size: 13, weight: .regular))
                     .foregroundStyle(Color.LabelColors.labelPrimary)
-            }
-        }
-        .onTapGesture {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                viewModel.toggleDatePicker()
-                hideKeyboard()
             }
         }
     }
@@ -161,38 +203,20 @@ struct TaskManagementView: View {
     private var calendarImage: some View {
         Image.TaskManagement.EditTask.calendar
             .resizable()
-            .frame(width: 20, height: 20)
-    }
-    
-    private var calendarPicker: some View {
-        ZStack {
-            Color.black.opacity(0.4)
-                .edgesIgnoringSafeArea(.all)
-                .onTapGesture {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        viewModel.showingDatePicker = false
-                    }
-                }
-            VStack {
-                Spacer()
-                TaskDateSelectorView(viewModel: viewModel)
-                Spacer()
-            }
-        }
-        .zIndex(1)
+            .frame(width: 24, height: 24)
     }
     
     private var checkButton: some View {
-        (viewModel.check ?
-         Image.TaskManagement.EditTask.check :
-            Image.TaskManagement.EditTask.uncheck)
-        .resizable()
-        .frame(width: 20, height: 20)
-        
-        .onTapGesture {
+        Button {
             withAnimation(.easeInOut(duration: 0.2)) {
-                viewModel.toggleCheck()
+                viewModel.toggleBottomCheck()
             }
+        } label: {
+            (viewModel.check != .none ?
+             Image.TaskManagement.EditTask.check :
+                Image.TaskManagement.EditTask.uncheck)
+            .resizable()
+            .frame(width: 24, height: 24)
         }
     }
     
@@ -210,8 +234,8 @@ struct TaskManagementView: View {
         Button {
             guard !viewModel.nameText.isEmpty else { return }
             withAnimation {
-                if entity != nil {
-                    updateTask()
+                if entity != nil || viewModel.taskCreationFullScreen == .fullScreen {
+                    entity != nil ? updateTask() : addTask()
                     hideKeyboard()
                 } else {
                     addTask()
@@ -219,9 +243,7 @@ struct TaskManagementView: View {
                 }
             }
         } label: {
-            (entity != nil ?
-            Image.TaskManagement.EditTask.ready :
-            Image.TaskManagement.EditTask.accept)
+            Image.TaskManagement.EditTask.ready
                 .resizable()
                 .frame(width: 30, height: 30)
         }
@@ -232,7 +254,6 @@ struct TaskManagementView_Previews: PreviewProvider {
     static var previews: some View {
         PreviewWrapper()
             .environmentObject(TaskManagementViewModel())
-            .environmentObject(CoreDataViewModel())
     }
     
     struct PreviewWrapper: View {
@@ -241,7 +262,8 @@ struct TaskManagementView_Previews: PreviewProvider {
         var body: some View {
             TaskManagementView(
                 taskManagementHeight: $taskManagementHeight,
-                date: .now) { }
+                namespace: Namespace().wrappedValue)
+            { }
         }
     }
 }
@@ -250,14 +272,10 @@ struct TaskManagementView_Previews: PreviewProvider {
 extension TaskManagementView {
     private func subscribeToKeyboardNotifications() {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { _ in
-            withAnimation(.easeInOut(duration: 0.2)) {
-                isKeyboardActive = true
-            }
+            isKeyboardActive = true
         }
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-            withAnimation(.easeInOut(duration: 0.2)) {
-                isKeyboardActive = false
-            }
+            isKeyboardActive = false
         }
     }
     
@@ -268,29 +286,37 @@ extension TaskManagementView {
     
     private func updateTask() {
         if let entity {
-            coreDataManager.updateTask(
+            viewModel.setupUserNotifications(remove: entity.notifications)
+            viewModel.disableButtonGlow()
+            
+            try? TaskService.saveTask(
                 entity: entity,
                 name: viewModel.nameText,
                 description: viewModel.descriptionText,
                 completeCheck: viewModel.check,
                 target: viewModel.saveTargetDate,
-                notify: viewModel.notificationsCheck,
+                hasTime: viewModel.hasTime,
+                importance: viewModel.importance,
+                pinned: viewModel.pinned,
+                removed: viewModel.removed,
+                notifications: viewModel.notificationsLocal,
                 checklist: viewModel.checklistLocal)
-            
-            if entity.target != nil && entity.notify {
-                viewModel.notificationSetup(for: entity)
-            } else {
-                viewModel.notificationRemove(for: entity.id)
-            }
         }
     }
     
     private func addTask() {
-        coreDataManager.addTask(
+        try? TaskService.saveTask(
             name: viewModel.nameText,
             description: viewModel.descriptionText,
             completeCheck: viewModel.check,
-            target: nil,
-            notify: false)
+            target: viewModel.saveTargetDate,
+            hasTime: viewModel.hasTime,
+            importance: viewModel.importance,
+            pinned: viewModel.pinned,
+            notifications: viewModel.notificationsLocal,
+            checklist: viewModel.checklistLocal)
+        
+        viewModel.setupUserNotifications(remove: nil)
+        viewModel.disableButtonGlow()
     }
 }

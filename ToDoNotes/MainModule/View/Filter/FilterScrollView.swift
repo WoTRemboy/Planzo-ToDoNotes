@@ -12,19 +12,27 @@ struct FilterScrollView: View {
     @EnvironmentObject private var viewModel: MainViewModel
     
     internal var body: some View {
-        ScrollView(.horizontal) {
-            content
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal) {
+                scrollTabsContent(proxy: proxy)
+            }
         }
         .scrollIndicators(.hidden)
     }
     
-    private var content: some View {
+    @ViewBuilder
+    private func scrollTabsContent(proxy: ScrollViewProxy) -> some View {
         HStack(spacing: 8) {
             ForEach(Filter.allCases, id: \.self) { filter in
-                FilterCell(name: filter.name,
+                FilterCell(filter: filter,
                            selected: viewModel.compareFilters(with: filter))
+                .frame(height: 35)
+                .id(filter)
                 .onTapGesture {
                     viewModel.setFilter(to: filter)
+                    withAnimation {
+                        proxy.scrollTo(filter, anchor: .center)
+                    }
                 }
             }
         }

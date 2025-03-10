@@ -20,7 +20,7 @@ struct HeightReader: View {
                 .onAppear {
                     height = geometry.size.height
                 }
-                .onChange(of: geometry.size.height) { newValue in
+                .onChange(of: geometry.size.height) { _, newValue in
                     withAnimation {
                         height = newValue
                     }

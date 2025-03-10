@@ -14,7 +14,7 @@ struct OnboardingScreenView: View {
     @Environment(\.colorScheme) var colorScheme
     
     /// View model controlling the onboarding state.
-    @EnvironmentObject private var viewModel: OnboardingViewModel
+    @StateObject private var viewModel = OnboardingViewModel()
     
     /// Current page tracker for the pager.
     @StateObject private var page: Page = .first()
@@ -23,9 +23,10 @@ struct OnboardingScreenView: View {
     
     internal var body: some View {
         if viewModel.skipOnboarding {
-            RootView()
-                .environmentObject(TabRouter())
-                .environmentObject(CoreDataViewModel())
+            RootView {
+                ContentView()
+                    .environmentObject(TabRouter())
+            }
         } else {
             VStack(spacing: 0) {
                 content
@@ -105,9 +106,7 @@ struct OnboardingScreenView: View {
                 nextPageButton
                     .transition(.move(edge: .leading).combined(with: .opacity))
             } else {
-                signWithAppleButton
-                    .transition(.move(edge: .trailing).combined(with: .opacity))
-                signWithGoogleButton
+                nextPageButton
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             }
         }
@@ -118,11 +117,15 @@ struct OnboardingScreenView: View {
     /// Button for advancing to the next step or completing onboarding.
     private var nextPageButton: some View {
         Button {
-            withAnimation {
-                page.update(.next)
+            if !viewModel.isLastPage(current: page.index) {
+                withAnimation {
+                    page.update(.next)
+                }
+            } else {
+                viewModel.transferToMainPage()
             }
         } label: {
-            Text(Texts.OnboardingPage.next)
+            Text(!viewModel.isLastPage(current: page.index) ? Texts.OnboardingPage.next : Texts.OnboardingPage.start)
                 .font(.system(size: 17, weight: .medium))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
@@ -200,7 +203,10 @@ struct OnboardingScreenView: View {
         Text(!viewModel.isLastPage(current: page.index) ? Texts.OnboardingPage.skip : Texts.OnboardingPage.withoutAuth)
             .font(.system(size: 14))
             .fontWeight(.medium)
-            .foregroundStyle(Color.labelSecondary)
+            .foregroundStyle(
+                !viewModel.isLastPage(current: page.index) ?
+                Color.labelSecondary :
+                    Color.clear)
         
             .padding(.top)
             .padding(.bottom, hasNotch() ? 20 : 16)
@@ -210,8 +216,6 @@ struct OnboardingScreenView: View {
                     withAnimation {
                         page.update(.moveToLast)
                     }
-                } else {
-                    viewModel.transferToMainPage()
                 }
             }
             .animation(.easeInOut, value: page.index)

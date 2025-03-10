@@ -8,40 +8,48 @@
 import SwiftUI
 
 struct TaskManagementNavBar: View {
-        
-    private var title: String
-    private var dayName: String
-    private var onDismiss: () -> Void
-    private var onShare: () -> Void
     
-    init(title: String,
-         dayName: String,
-         onDismiss: @escaping () -> Void,
-         onShare: @escaping () -> Void) {
-        self.title = title
-        self.dayName = dayName
+    @ObservedObject private var viewModel: TaskManagementViewModel
+    private let entity: TaskEntity?
+    private let onDismiss: () -> Void
+    
+    init(viewModel: TaskManagementViewModel,
+         entity: TaskEntity?,
+         onDismiss: @escaping () -> Void) {
+        self.entity = entity
+        self.viewModel = viewModel
         self.onDismiss = onDismiss
-        self.onShare = onShare
     }
     
     internal var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                backButton
-                titleLabel
-                shareButton
+        GeometryReader { proxy in
+            let topInset = proxy.safeAreaInsets.top
+            
+            ZStack(alignment: .top) {
+                Color.BackColors.backDefault
+                    .shadow(color: Color.ShadowColors.shadowDefault, radius: 15, x: 0, y: 5)
+                
+                VStack(spacing: 0) {
+                    HStack {
+                        backButton
+                        titleLabel
+                        moreButton
+                    }
+                }
+                .padding(.top, topInset + 9.5)
             }
+            .ignoresSafeArea(edges: .top)
         }
-        .frame(height: 46.5)
+        .frame(height: 48)
     }
     
     private var backButton: some View {
         Button {
             onDismiss()
         } label: {
-            Image.NavigationBar.back
+            Image.NavigationBar.hide
                 .resizable()
-                .frame(width: 22, height: 22)
+                .frame(width: 24, height: 24)
         }
         .padding(.leading)
     }
@@ -49,27 +57,121 @@ struct TaskManagementNavBar: View {
     private var titleLabel: some View {
         HStack(spacing: 4) {
             Text(Texts.TaskManagement.today)
-                .font(.system(size: 17, weight: .medium))
+                .font(.system(size: 22, weight: .bold))
                 .padding(.leading)
             
-            Text(title)
-                .font(.system(size: 17, weight: .medium))
+            Text(viewModel.todayDate.shortDate)
+                .font(.system(size: 22, weight: .bold))
             
-            Text(dayName)
-                .font(.system(size: 17, weight: .medium))
+            Text(viewModel.todayDate.shortWeekday)
+                .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(Color.LabelColors.labelSecondary)
                 .padding(.trailing)
         }
-        .frame(maxWidth: .infinity, alignment: .center)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     private var shareButton: some View {
         Button {
-            onShare()
+            // Share Action
         } label: {
             Image.NavigationBar.share
                 .resizable()
+                .renderingMode(.template)
+                .foregroundStyle(Color.clear)
                 .frame(width: 22, height: 22)
+        }
+        .disabled(true)
+        .padding(.trailing)
+    }
+    
+    private var moreButton: some View {
+        Menu {
+//            Button {
+//                // Complete Status Action
+//            } label: {
+//                Label {
+//                    Text(Texts.TaskManagement.ContextMenu.complete)
+//                } icon: {
+//                    Image.TaskManagement.EditTask.Menu.completed
+//                        .renderingMode(.template)
+//                }
+//            }
+//            
+//            Button {
+//                // Dublicate Task Action
+//            } label: {
+//                Label {
+//                    Text(Texts.TaskManagement.ContextMenu.dublicate)
+//                } icon: {
+//                    Image.TaskManagement.EditTask.Menu.copy
+//                        .renderingMode(.template)
+//                }
+//            }
+            
+            Section {
+                Button {
+                    viewModel.toggleImportanceCheck()
+                    Toast.shared.present(
+                        title: viewModel.importance ?
+                            Texts.Toasts.importantOn :
+                            Texts.Toasts.importantOff)
+                } label: {
+                    Label {
+                        viewModel.importance ?
+                        Text(Texts.TaskManagement.ContextMenu.importantDeselect) :
+                        Text(Texts.TaskManagement.ContextMenu.important)
+                    } icon: {
+                        viewModel.importance ?
+                        Image.TaskManagement.EditTask.Menu.importantDeselect :
+                        Image.TaskManagement.EditTask.Menu.importantSelect
+                            .renderingMode(.template)
+                    }
+                }
+                
+                Button {
+                    viewModel.togglePinnedCheck()
+                    Toast.shared.present(
+                        title: viewModel.pinned ?
+                            Texts.Toasts.pinnedOn :
+                            Texts.Toasts.pinnedOff)
+                } label: {
+                    Label {
+                        viewModel.pinned ?
+                        Text(Texts.TaskManagement.ContextMenu.unpin) :
+                        Text(Texts.TaskManagement.ContextMenu.pin)
+                    } icon: {
+                        viewModel.pinned ?
+                        Image.TaskManagement.EditTask.Menu.pinnedDeselect :
+                        Image.TaskManagement.EditTask.Menu.pinnedSelect
+                            .renderingMode(.template)
+                    }
+                }
+                
+//                if let entity {
+//                    Button(role: .destructive) {
+//                        do {
+//                            try TaskService.toggleRemoved(for: entity)
+//                            onDismiss()
+//                            Toast.shared.present(
+//                                title: Texts.Toasts.removed)
+//                        } catch {
+//                            print("Task could not be removed with error: \(error.localizedDescription).")
+//                        }
+//                    } label: {
+//                        Label {
+//                            Text(Texts.TaskManagement.ContextMenu.delete)
+//                        } icon: {
+//                            Image.TaskManagement.EditTask.Menu.trash
+//                                .renderingMode(.template)
+//                        }
+//                    }
+//                }
+            }
+        } label: {
+            Image.NavigationBar.more
+                .resizable()
+                .frame(width: 24, height: 24)
         }
         .padding(.trailing)
     }
@@ -77,8 +179,7 @@ struct TaskManagementNavBar: View {
 
 #Preview {
     TaskManagementNavBar(
-        title: "November 18",
-        dayName: "Sun",
-        onDismiss: {},
-        onShare: {})
+        viewModel: TaskManagementViewModel(),
+        entity: PreviewData.taskItem,
+        onDismiss: {})
 }

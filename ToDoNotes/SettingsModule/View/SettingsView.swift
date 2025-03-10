@@ -9,38 +9,55 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    @EnvironmentObject private var coreDataManager: CoreDataViewModel
+    @FetchRequest(entity: TaskEntity.entity(), sortDescriptors: [])
+    private var tasksResults: FetchedResults<TaskEntity>
+    
     @EnvironmentObject private var viewModel: SettingsViewModel
     
     internal var body: some View {
-        NavigationStack {
-            ZStack {
-                content
+        ZStack {
+            VStack(spacing: 0) {
+                SettingsNavBar()
+                    .zIndex(1)
+                
+                paramsButtons
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
-    }
-    
-    private var content: some View {
-        VStack(spacing: 0) {
-            SettingsNavBar()
-            paramsForm
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .fullScreenCover(isPresented: $viewModel.showingAppearance) {
+        .popView(isPresented: $viewModel.showingAppearance, onDismiss: {}) {
             SettingAppearanceView()
-                .transition(.move(edge: .leading))
+        }
+        .popView(isPresented: $viewModel.showingLanguageAlert, onDismiss: {}) {
+            languageAlert
+        }
+        .popView(isPresented: $viewModel.showingNotificationAlert, onDismiss: {}) {
+            notificationAlert
+        }
+        .popView(isPresented: $viewModel.showingResetResult, onDismiss: {}) {
+            resetAlert
         }
     }
     
-    private var paramsForm: some View {
-        Form {
-            aboutAppSection
-            application
-            contact
+    private var paramsButtons: some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                appearanceButton
+                notificationRow
+                    .onAppear {
+                        viewModel.readNotificationStatus()
+                    }
+                languageButton
+                resetButton
+                taskCreatePageButton
+            }
+            .clipShape(.rect(cornerRadius: 10))
+            .padding([.horizontal, .top])
+            
+            
+            aboutAppButton
+                .clipShape(.rect(cornerRadius: 10))
+                .padding(.horizontal)
         }
-        .padding(.horizontal, -10)
-        .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
     }
     
@@ -50,23 +67,6 @@ struct SettingsView: View {
                          version: viewModel.appVersion)
         } header: {
             Text(Texts.Settings.About.title)
-                .font(.system(size: 13, weight: .medium))
-                .textCase(.none)
-        }
-        .listRowBackground(Color.SupportColors.backListRow)
-    }
-    
-    private var application: some View {
-        Section {
-            // Change language button
-            languageButton
-            
-            // Change theme button
-            appearanceButton
-            
-            notificationToggle
-        } header: {
-             Text(Texts.Settings.Language.sectionTitle)
                 .font(.system(size: 13, weight: .medium))
                 .textCase(.none)
         }
@@ -82,77 +82,172 @@ struct SettingsView: View {
                 details: Texts.Settings.Language.details,
                 chevron: true)
         }
-        .listRowBackground(Color.SupportColors.backListRow)
-        
-        .alert(isPresented: $viewModel.showingLanguageAlert) {
-            // Change language alert
-            Alert(
-                title: Text(Texts.Settings.Language.alertTitle),
-                message: Text(Texts.Settings.Language.alertContent),
-                primaryButton: .default(Text(Texts.Settings.Language.settings)) {
-                    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-                    UIApplication.shared.open(url)
-                },
-                secondaryButton: .cancel(Text(Texts.Settings.cancel))
-            )
-        }
     }
     
     private var appearanceButton: some View {
         Button {
-            viewModel.toggleShowingAppearance()
+            withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.toggleShowingAppearance()
+            }
         } label: {
             SettingFormRow(
                 title: Texts.Settings.Appearance.title,
                 image: Image.Settings.appearance,
                 details: viewModel.userTheme.name,
                 chevron: true)
+            .animation(.easeInOut(duration: 0.2), value: viewModel.userTheme)
         }
-        .listRowBackground(Color.SupportColors.backListRow)
     }
     
-    private var notificationToggle: some View {
-        Toggle(isOn: $viewModel.notificationsEnabled) {
+    private var notificationRow: some View {
+        ZStack(alignment: .trailing) {
             SettingFormRow(
                 title: Texts.Settings.Notification.title,
                 image: Image.Settings.notifications)
+            
+            notificationToggle
+                .padding(.trailing, 14)
         }
-        .onChange(of: viewModel.notificationsEnabled) { newValue in
-            viewModel.setNotificationsStatus(allowed: newValue, items: coreDataManager.savedEnities)
-        }
-        .alert(isPresented: $viewModel.showingNotificationAlert) {
-            Alert(
-                title: Text(Texts.Settings.Notification.alertTitle),
-                message: Text(Texts.Settings.Notification.alertContent),
-                primaryButton: .default(Text(Texts.Settings.title)) {
-                    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-                    UIApplication.shared.open(url)
-                },
-                secondaryButton: .cancel(Text(Texts.Settings.cancel))
-            )
-        }
-        .listRowBackground(Color.SupportColors.backListRow)
     }
     
-    private var contact: some View {
-        Section {
-            Link(destination: URL(string: "mailto:\(Texts.Settings.Email.emailContent)")!, label: {
-                SettingFormRow(
-                    title: Texts.Settings.Email.emailTitle,
-                    image: Image.Settings.email,
-                    details: Texts.Settings.Email.emailContent,
-                    chevron: true)
-            })
-        } header: {
-            Text(Texts.Settings.Email.contact)
-                .font(.system(size: 13, weight: .medium))
-                .textCase(.none)
+    private var notificationToggle: some View {
+        Toggle(isOn: $viewModel.notificationsEnabled) {}
+            .fixedSize()
+            .background(Color.BackColors.backFormCell)
+            .tint(Color.black)
+            .scaleEffect(0.8)
+        
+            .onChange(of: viewModel.notificationsEnabled) { _, newValue in
+                setNotificationsStatus(allowed: newValue)
+            }
+    }
+    
+    private var resetButton: some View {
+        Button {
+            if !tasksResults.isEmpty {
+                viewModel.toggleShowingResetDialog()
+            } else {
+                viewModel.resetMessage = .empty
+                viewModel.showingResetResult.toggle()
+            }
+        } label: {
+            SettingFormRow(title: Texts.Settings.Reset.title,
+                           image: Image.Settings.reset,
+                           chevron: true)
         }
-        .listRowBackground(Color.SupportColors.backListRow)
+        .confirmationDialog(Texts.Settings.Reset.warning,
+                            isPresented: $viewModel.showingResetDialog,
+                            titleVisibility: .visible) {
+            Button(role: .destructive) {
+                TaskService.deleteAllTasksAndClearNotifications { success in
+                    if success {
+                        viewModel.resetMessage = .success
+                    } else {
+                        viewModel.resetMessage = .failure
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        viewModel.showingResetResult.toggle()
+                    }
+                }
+            } label: {
+                Text(Texts.Settings.Reset.confirm)
+            }
+        }
+    }
+    
+    private var taskCreatePageButton: some View {
+        CustomNavLink(
+            destination: SettingTaskCreateView()
+                .environmentObject(viewModel),
+        label: {
+            SettingFormRow(
+                title: Texts.Settings.TaskCreate.title,
+                image: Image.Settings.taskCreate,
+                chevron: true,
+                last: true)
+        })
+    }
+    
+    private var aboutAppButton: some View {
+        CustomNavLink(
+            destination: SettingAboutPageView()
+                .environmentObject(viewModel)) {
+            SettingFormRow(
+                title: Texts.Settings.About.title,
+                image: Image.Settings.about,
+                chevron: true,
+                last: true)
+        }
+    }
+    
+    private var languageAlert: some View {
+        CustomAlertView(
+            title: Texts.Settings.Language.alertTitle,
+            message: Texts.Settings.Language.alertContent,
+            primaryButtonTitle: Texts.Settings.Language.settings,
+            primaryAction: {
+                guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                UIApplication.shared.open(url)
+            },
+            secondaryButtonTitle: Texts.Settings.cancel,
+            secondaryAction: viewModel.toggleShowingLanguageAlert)
+    }
+    
+    private var notificationAlert: some View {
+        CustomAlertView(
+            title: Texts.Settings.Notification.prohibitedTitle,
+            message: Texts.Settings.Notification.prohibitedContent,
+            primaryButtonTitle: Texts.Settings.title,
+            primaryAction: {
+                guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                UIApplication.shared.open(url)
+            },
+            secondaryButtonTitle: Texts.Settings.cancel,
+            secondaryAction: viewModel.toggleShowingNotificationAlert)
+    }
+    
+    private var resetAlert: some View {
+        CustomAlertView(
+            title: viewModel.resetMessage.title,
+            message: viewModel.resetMessage.message,
+            primaryButtonTitle: Texts.Settings.ok,
+            primaryAction: {
+                viewModel.toggleShowingResetResult()
+            })
     }
 }
 
 #Preview {
     SettingsView()
-        .environmentObject(SettingsViewModel())
+        .environmentObject(SettingsViewModel(notificationsEnabled: false))
+}
+
+
+extension SettingsView {
+    private func setNotificationsStatus(allowed: Bool) {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { success, error in
+            DispatchQueue.main.async {
+                if success {
+                    viewModel.setupNotificationStatus(for: allowed)
+                    if allowed {
+                        TaskService.restoreNotificationsForAllTasks { complete in
+                            if complete {
+                                print("Restoration complete: Notifications have been restored.")
+                            } else {
+                                print("Restoration failed.")
+                            }
+                        }
+                    } else {
+                        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+                    }
+                    print("Notifications are set to \(allowed).")
+                } else if let error {
+                    print(error.localizedDescription)
+                } else {
+                    viewModel.notificationsProhibited()
+                    print("Notifications are prohibited.")
+                }
+            }
+        }
+        }
 }

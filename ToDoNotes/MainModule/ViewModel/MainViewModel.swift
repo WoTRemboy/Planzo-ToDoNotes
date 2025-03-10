@@ -9,10 +9,19 @@ import SwiftUI
 
 final class MainViewModel: ObservableObject {
     
+    @AppStorage(Texts.UserDefaults.addTaskButtonGlow) var addTaskButtonGlow: Bool = false
+    @AppStorage(Texts.UserDefaults.taskCreation) private var taskCreationFullScreen: TaskCreation = .popup
+    
     @Published private(set) var selectedFilter: Filter = .active
     @Published internal var selectedFolder: Folder = .all
+    @Published internal var importance: Bool = false
+    @Published internal var searchText: String = String()
     
     @Published internal var showingTaskCreateView: Bool = false
+    @Published internal var showingTaskCreateViewFullscreen: Bool = false
+    @Published internal var showingTaskRemoveAlert: Bool = false
+    @Published internal var showingSearchBar: Bool = false
+    
     @Published internal var selectedTask: TaskEntity? = nil
     @Published internal var taskManagementHeight: CGFloat = 15
     
@@ -21,11 +30,21 @@ final class MainViewModel: ObservableObject {
     }
     
     internal func toggleShowingCreateView() {
-        showingTaskCreateView.toggle()
+        taskCreationFullScreen == .popup ?
+            showingTaskCreateView.toggle() :
+                showingTaskCreateViewFullscreen.toggle()
     }
     
     internal func toggleShowingTaskEditView() {
         selectedTask = nil
+    }
+    
+    internal func toggleShowingTaskRemoveAlert() {
+        showingTaskRemoveAlert.toggle()
+    }
+    
+    internal func toggleShowingSearchBar() {
+        showingSearchBar.toggle()
     }
     
     internal func setFilter(to new: Filter) {
@@ -46,5 +65,11 @@ final class MainViewModel: ObservableObject {
     
     internal func compareFolders(with folder: Folder) -> Bool {
         folder == selectedFolder
+    }
+    
+    internal func toggleImportance() {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            importance.toggle()
+        }
     }
 }
