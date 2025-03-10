@@ -9,10 +9,10 @@ import SwiftUI
 
 struct CalendarTaskFormPlaceholder: View {
     
-    private let date: String
+    private let date: Date
     private let namespace: Namespace.ID
     
-    init(date: String, namespace: Namespace.ID) {
+    init(date: Date, namespace: Namespace.ID) {
         self.date = date
         self.namespace = namespace
     }
@@ -28,10 +28,10 @@ struct CalendarTaskFormPlaceholder: View {
     }
     
     private var dateLabel: some View {
-        Text(date)
-            .font(.system(size: 13, weight: .medium))
+        Text(date.longDayMonthWeekday)
+            .font(.system(size: 15, weight: .medium))
             .foregroundStyle(Color.LabelColors.labelSecondary)
-            .contentTransition(.numericText())
+            .contentTransition(.numericText(value: date.timeIntervalSince1970))
             .matchedGeometryEffect(
                 id: Texts.NamespaceID.selectedCalendarDate,
                 in: namespace)
@@ -53,6 +53,6 @@ struct CalendarTaskFormPlaceholder: View {
 
 #Preview {
     CalendarTaskFormPlaceholder(
-        date: "30 декабря, пн",
+        date: Date.now,
         namespace: Namespace().wrappedValue)
 }

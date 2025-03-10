@@ -14,13 +14,18 @@ final class TaskManagementViewModel: ObservableObject {
     private(set) var notificationsStatus: NotificationStatus = .prohibited
     
     @AppStorage(Texts.UserDefaults.addTaskButtonGlow) private var addTaskButtonGlow: Bool = false
+    @AppStorage(Texts.UserDefaults.taskCreation) var taskCreationFullScreen: TaskCreation = .popup
     
     @Published internal var nameText: String
     @Published internal var descriptionText: String
-    @Published internal var check: Bool
+    @Published internal var check: TaskCheck
     @Published internal var checklistLocal: [ChecklistItem] = []
     
     @Published internal var checkListItemText: String = String()
+    
+    @Published internal var importance: Bool = false
+    @Published internal var pinned: Bool = false
+    @Published internal var removed: Bool = false
     
     @Published internal var showingShareSheet: Bool = false
     @Published internal var shareSheetHeight: CGFloat = 0
@@ -110,7 +115,6 @@ final class TaskManagementViewModel: ObservableObject {
         }
         hasTime = true
         hasDate = true
-        check = true
 
         let calendar = Calendar.current
         let dayComponents = calendar.dateComponents([.year, .month, .day], from: selectedDay)
@@ -128,8 +132,9 @@ final class TaskManagementViewModel: ObservableObject {
     
     init(nameText: String = String(),
          descriptionText: String = String(),
-         check: Bool = false,
-         targetDate: Date = .now.startOfDay) {
+         check: TaskCheck = .none,
+         targetDate: Date = .now.startOfDay,
+         hasEntity: Bool = false) {
         self.nameText = nameText
         self.descriptionText = descriptionText
         self.check = check
@@ -141,17 +146,26 @@ final class TaskManagementViewModel: ObservableObject {
             separateTargetDateToTimeAndDay(targetDate: targetDate)
         }
         
+        if !hasEntity {
+            setupEmptyChecklistLocal()
+        }
+        
         updateDays()
     }
     
     convenience init(entity: TaskEntity) {
-        self.init()
+        self.init(hasEntity: true)
+        
         self.nameText = entity.name ?? String()
         self.descriptionText = entity.details ?? String()
-        self.check = entity.completed != 0
+        self.check = TaskCheck(rawValue: entity.completed) ?? .none
+        
         self.targetDate = entity.target ?? .now.startOfDay
         self.hasDate = entity.target != nil
         self.hasTime = entity.hasTargetTime
+        
+        self.importance = entity.important
+        self.pinned = entity.pinned
         
         separateTargetDateToTimeAndDay(targetDate: entity.target)
         
@@ -179,8 +193,42 @@ final class TaskManagementViewModel: ObservableObject {
         }
     }
     
-    internal func toggleCheck() {
-        check.toggle()
+    internal func toggleTitleCheck() {
+        switch check {
+        case .none, .checked:
+            self.check = .unchecked
+            setChecklistCompletion(to: false)
+        case .unchecked:
+            self.check = .checked
+            setChecklistCompletion(to: true)
+        }
+    }
+    
+    internal func toggleImportanceCheck() {
+        importance.toggle()
+    }
+    
+    internal func togglePinnedCheck() {
+        pinned.toggle()
+    }
+    
+    internal func setCheckFalse() {
+        check = .unchecked
+    }
+    
+    internal func toggleBottomCheck() {
+        switch check {
+        case .none:
+            self.check = .unchecked
+        case .unchecked, .checked:
+            self.check = .none
+        }
+    }
+    
+    private func setChecklistCompletion(to active: Bool) {
+        for index in checklistLocal.indices {
+            checklistLocal[index].toggleCompleted(to: active)
+        }
     }
     
     internal func toggleShareSheet() {
@@ -191,12 +239,15 @@ final class TaskManagementViewModel: ObservableObject {
         showingDatePicker.toggle()
     }
     
+    internal func toggleShowingNotificationAlert() {
+        showingNotificationAlert.toggle()
+    }
+    
     internal func showDate(to show: Bool) {
         hasDate = show
     }
     
     internal func doneDatePicker() {
-        check = true
         showingDatePicker = false
     }
     
@@ -346,7 +397,6 @@ final class TaskManagementViewModel: ObservableObject {
         selectedTimeType = .none
         notificationsLocal.removeAll()
         selectedRepeating = .none
-        selectedRepeating = .none
     }
     
     // MARK: - Checklist Methods
@@ -377,7 +427,7 @@ final class TaskManagementViewModel: ObservableObject {
         }
     }
     
-    internal func setupChecklistLocal(_ checklist: NSOrderedSet?) {
+    internal func setupChecklistLocal(_ checklist: NSOrderedSet? = []) {
         guard let checklistArray = checklist?.compactMap({ $0 as? ChecklistEntity }) else { return }
         
         for entity in checklistArray {
@@ -386,7 +436,10 @@ final class TaskManagementViewModel: ObservableObject {
                 completed: entity.completed)
             checklistLocal.append(item)
         }
-        
+        setupEmptyChecklistLocal()
+    }
+    
+    private func setupEmptyChecklistLocal() {
         if checklistLocal.isEmpty {
             let emptyItem = ChecklistItem(name: String())
             checklistLocal.append(emptyItem)

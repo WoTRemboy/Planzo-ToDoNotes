@@ -10,12 +10,21 @@ import UIKit
 
 struct ImmediateKeyboardModifier: ViewModifier {
     @State private var isFirstResponder: Bool = false
+    private let delay: Double
+    
+    init(delay: Double) {
+        self.delay = delay
+    }
     
     internal func body(content: Content) -> some View {
         content
-            .background(ImmediateKeyboardHelper(isFirstResponder: $isFirstResponder))
+            .background(ImmediateKeyboardHelper(
+                isFirstResponder: $isFirstResponder,
+                delay: delay))
             .onAppear {
-                isFirstResponder = true
+                withAnimation {
+                    isFirstResponder = true
+                }
             }
     }
 }
@@ -23,14 +32,18 @@ struct ImmediateKeyboardModifier: ViewModifier {
 struct ImmediateKeyboardHelper: UIViewRepresentable {
     
     @Binding private var isFirstResponder: Bool
+    private let delay: Double
     
-    init(isFirstResponder: Binding<Bool>) {
+    init(isFirstResponder: Binding<Bool>, delay: Double) {
         self._isFirstResponder = isFirstResponder
+        self.delay = delay
     }
     
     internal func updateUIView(_ uiView: UIViewType, context: Context) {
         if isFirstResponder {
-            uiView.becomeFirstResponder()
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                uiView.becomeFirstResponder()
+            }
         }
     }
     
@@ -42,7 +55,7 @@ struct ImmediateKeyboardHelper: UIViewRepresentable {
 }
 
 extension View {
-    internal func immediateKeyboard() -> some View {
-        self.modifier(ImmediateKeyboardModifier())
+    internal func immediateKeyboard(delay: Double) -> some View {
+        self.modifier(ImmediateKeyboardModifier(delay: delay))
     }
 }

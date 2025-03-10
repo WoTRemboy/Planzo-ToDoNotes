@@ -24,14 +24,14 @@ struct TaskChecklistView: View {
     }
     
     internal var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 6) {
             ForEach($viewModel.checklistLocal) { $item in
                 HStack {
                     (item.completed ? checkedBox : uncheckedBox)
                         .foregroundStyle(
                             (item.completed || item.name.isEmpty) ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
                     
-                        .frame(width: 15, height: 15)
+                        .frame(width: 18, height: 18)
                         .animation(.easeInOut(duration: 0.2), value: item.name)
                         .onTapGesture {
                             if !item.name.isEmpty {
@@ -40,20 +40,24 @@ struct TaskChecklistView: View {
                                 }
                             }
                         }
+                        .onAppear {
+                            if !item.name.isEmpty, viewModel.check == .checked {
+                                item.completed = true
+                            }
+                        }
                     
                     TextField(Texts.TaskManagement.point,
                               text: $item.name)
-                    .font(.system(size: 15, weight: .regular))
+                    .font(.system(size: 17, weight: .regular))
                     .foregroundStyle(
                         item.completed ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
-                    .strikethrough(item.completed)
                     
                     .focused($focusedItemID, equals: item.id)
                     .introspect(.textField, on: .iOS(.v16, .v17, .v18)) { textField in
                         setupDelegate(for: textField, itemID: item.id)
                     }
                 }
-                .onChange(of: item.name) { newValue in
+                .onChange(of: item.name) { _, newValue in
                     if newValue == String() {
                         focusOnPreviousItem(before: item.id)
                         withAnimation(.linear(duration: 0.2)) {

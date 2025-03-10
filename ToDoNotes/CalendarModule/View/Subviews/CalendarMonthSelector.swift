@@ -31,14 +31,12 @@ struct CalendarMonthSelector: View {
     /// Shows the label & progress view.
     private var content: some View {
         HStack {
-            Spacer()
             DatePicker(selection: $viewModel.calendarDate.animation(.easeInOut(duration: 0.2)),
                        displayedComponents: .date) {
                 EmptyView()
             }
             .labelsHidden()
             .datePickerStyle(.wheel)
-            Spacer()
         }
     }
     
@@ -51,16 +49,19 @@ struct CalendarMonthSelector: View {
                 viewModel.toggleShowingCalendarSelector()
             }
         } label: {
-            Text(Texts.CalendarPage.accept)
-                .font(.system(size: 17, weight: .medium))
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            ZStack {
+                Color.black
+                
+                Text(Texts.Settings.Appearance.accept)
+                    .font(.system(size: 17, weight: .regular))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .foregroundColor(Color.white)
+            }
+            .clipShape(.rect(cornerRadius: 10))
         }
-        .frame(height: 40)
+        .frame(height: 50)
         .frame(maxWidth: .infinity)
-        
-        .foregroundColor(Color.blue)
-        .buttonStyle(.bordered)
-        .padding([.horizontal, .bottom])
+        .padding([.horizontal, .bottom], 6)
     }
 }
 

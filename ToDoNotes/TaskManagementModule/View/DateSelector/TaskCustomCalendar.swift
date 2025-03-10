@@ -39,13 +39,15 @@ struct TaskCustomCalendar: View {
                 }
             } label: {
                 Image.TaskManagement.DateSelector.monthBackward
+                    .resizable()
+                    .frame(width: 20, height: 20)
             }
             
             Spacer()
             Text(viewModel.calendarDate.longMonthYearWithoutComma)
                 .font(.system(size: 17, weight: .medium))
                 .contentTransition(
-                    .numericText(countsDown: viewModel.calendarSwapDirection == .backward))
+                    .numericText(value: viewModel.calendarDate.timeIntervalSince1970))
             
             Spacer()
             Button {
@@ -54,11 +56,13 @@ struct TaskCustomCalendar: View {
                 }
             } label: {
                 Image.TaskManagement.DateSelector.monthForward
+                    .resizable()
+                    .frame(width: 20, height: 20)
             }
         }
         .padding(.top, 10)
         .padding(.bottom, 12)
-        .padding(.horizontal)
+        .padding(.horizontal, 6)
     }
     
     private var weekdayNames: some View {

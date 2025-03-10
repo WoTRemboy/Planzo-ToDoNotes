@@ -11,37 +11,50 @@ struct CalendarNavBar: View {
     @EnvironmentObject private var viewModel: CalendarViewModel
 
     private let date: String
-    private let monthYear: String
+    private let monthYear: Date
         
-    init(date: String, monthYear: String) {
+    init(date: String, monthYear: Date) {
         self.date = date
         self.monthYear = monthYear
     }
     
     internal var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                titleLabel
-                buttons
+        GeometryReader { proxy in
+            let topInset = proxy.safeAreaInsets.top
+            
+            ZStack(alignment: .top) {
+                Color.BackColors.backDefault
+                    .shadow(color: Color.ShadowColors.shadowDefault, radius: 15, x: 0, y: 5)
+                
+                VStack(spacing: 0) {
+                    HStack {
+                        titleLabel
+                        buttons
+                    }
+                }
+                .padding(.top, topInset + 9.5)
             }
+            .ignoresSafeArea(edges: .top)
         }
-        .frame(height: 46.5)
+        .frame(height: 48)
     }
     
     private var titleLabel: some View {
         HStack(spacing: 8) {
-            Text(date)
-                .font(.system(size: 20, weight: .medium))
-                .onTapGesture {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        viewModel.restoreTodayDate()
-                    }
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    viewModel.restoreTodayDate()
                 }
+            } label: {
+                Text(date)
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundStyle(Color.LabelColors.labelPrimary)
+            }
             
-            Text(monthYear)
-                .font(.system(size: 20, weight: .medium))
+            Text(monthYear.longMonthYear)
+                .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(Color.LabelColors.labelSecondary)
-                .contentTransition(.numericText())
+                .contentTransition(.numericText(value: monthYear.timeIntervalSince1970))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.leading, 16)
@@ -56,20 +69,24 @@ struct CalendarNavBar: View {
                 }
             } label: {
                 Image.NavigationBar.calendar
+                    .resizable()
+                    .frame(width: 26, height: 26)
             }
             
             // More options Button
-            Button {
+//            Button {
                 // Action for more options button
-            } label: {
-                Image.NavigationBar.more
-            }
+//            } label: {
+//                Image.NavigationBar.more
+//                    .resizable()
+//                    .frame(width: 26, height: 26)
+//            }
         }
         .padding(.horizontal, 16)
     }
 }
 
 #Preview {
-    CalendarNavBar(date: "Сегодня", monthYear: "декабрь, 2024")
+    CalendarNavBar(date: "Сегодня", monthYear: Date.now)
         .environmentObject(CalendarViewModel())
 }

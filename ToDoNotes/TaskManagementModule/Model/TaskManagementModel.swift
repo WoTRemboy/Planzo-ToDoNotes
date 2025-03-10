@@ -11,6 +11,11 @@ struct ChecklistItem: Identifiable, Equatable {
     var id = UUID()
     var name: String
     var completed: Bool = false
+    
+    mutating internal func toggleCompleted(to active: Bool) {
+        guard completed != active, !name.isEmpty else { return }
+        self.completed = active
+    }
 }
 
 struct NotificationItem: Identifiable, Equatable, Hashable {
@@ -109,7 +114,7 @@ enum TaskNotification: String {
             availableTypes.append(.oneDayBefore)
         }
         
-        return availableTypes
+        return availableTypes.reversed()
     }
 }
 
@@ -165,4 +170,35 @@ enum TaskEndRepeating {
 enum CalendarMovement {
     case forward
     case backward
+}
+
+enum TaskStatus {
+    case none
+    case outdated
+    case important
+    case outdatedImportant
+    
+    static internal func setupStatus(for entity: TaskEntity) -> Self {
+        let isOutdated = (entity.completed == 1) &&
+        entity.hasTargetTime &&
+        ((entity.target ?? .distantPast) < Date.now)
+        let isImportant = entity.important
+        
+        if isOutdated && isImportant {
+            return .outdatedImportant
+        } else if isOutdated {
+            return .outdated
+        } else if isImportant {
+            return .important
+        } else {
+            return .none
+        }
+    }
+}
+
+
+enum TaskCheck: Int16 {
+    case none = 0
+    case unchecked = 1
+    case checked = 2
 }

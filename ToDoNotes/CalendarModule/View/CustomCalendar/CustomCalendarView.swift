@@ -9,14 +9,17 @@ import SwiftUI
 
 struct CustomCalendarView: View {
         
-    @EnvironmentObject private var coreDataManager: CoreDataViewModel
     @EnvironmentObject private var viewModel: CalendarViewModel
     
+    private let dates: [Date: Int]
     private let namespace: Namespace.ID
+    
     private let columns = Array(repeating: GridItem(.flexible()),
                                 count: 7)
     
-    init(namespace: Namespace.ID) {
+    init(dates: [Date: Int],
+         namespace: Namespace.ID) {
+        self.dates = dates
         self.namespace = namespace
     }
     
@@ -46,12 +49,11 @@ struct CustomCalendarView: View {
                     if day.monthInt != viewModel.calendarDate.monthInt {
                         Text(String())
                     } else {
-                        let hasTask = coreDataManager.daysWithTasks.contains(day.startOfDay)
                         CustomCalendarCell(
                             day: day.formatted(.dateTime.day()),
                             selected: viewModel.selectedDate == day.startOfDay,
                             today: Date.now.startOfDay == day.startOfDay,
-                            task: hasTask,
+                            task: dates[day] != nil,
                             namespace: namespace)
                         .onTapGesture {
                             withAnimation(.easeInOut(duration: 0.15)) {
@@ -67,7 +69,6 @@ struct CustomCalendarView: View {
 }
 
 #Preview {
-    CustomCalendarView(namespace: Namespace().wrappedValue)
+    CustomCalendarView(dates: [.now: 2], namespace: Namespace().wrappedValue)
         .environmentObject(CalendarViewModel())
-        .environmentObject(CoreDataViewModel())
 }

@@ -29,6 +29,7 @@ struct ToDoNotesApp: App {
                 .onAppear {
                     setTheme(style: userTheme.userInterfaceStyle)
                 }
+                .environment(\.managedObjectContext, CoreDataProvider.shared.persistentContainer.viewContext)
         }
     }
     

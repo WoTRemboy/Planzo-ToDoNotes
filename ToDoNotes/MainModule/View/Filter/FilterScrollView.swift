@@ -9,12 +9,11 @@ import SwiftUI
 
 struct FilterScrollView: View {
     
-    @Namespace private var animation
     @EnvironmentObject private var viewModel: MainViewModel
     
     internal var body: some View {
-        ScrollView(.horizontal) {
-            ScrollViewReader { proxy in
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal) {
                 scrollTabsContent(proxy: proxy)
             }
         }
@@ -25,9 +24,8 @@ struct FilterScrollView: View {
     private func scrollTabsContent(proxy: ScrollViewProxy) -> some View {
         HStack(spacing: 8) {
             ForEach(Filter.allCases, id: \.self) { filter in
-                FilterCell(name: filter.name,
-                           selected: viewModel.compareFilters(with: filter),
-                           namespace: animation)
+                FilterCell(filter: filter,
+                           selected: viewModel.compareFilters(with: filter))
                 .frame(height: 35)
                 .id(filter)
                 .onTapGesture {

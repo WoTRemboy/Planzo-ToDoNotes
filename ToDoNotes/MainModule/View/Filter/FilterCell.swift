@@ -10,41 +10,35 @@ import SwiftUI
 struct FilterCell: View {
         
     private let selected: Bool
-    private let name: String
-    private let namespace: Namespace.ID
+    private let filter: Filter
     
-    init(name: String, selected: Bool, namespace: Namespace.ID) {
-        self.name = name
+    init(filter: Filter, selected: Bool) {
+        self.filter = filter
         self.selected = selected
-        self.namespace = namespace
     }
     
     internal var body: some View {
         nameLabel
-            .background(alignment: .bottom) {
-                if selected {
-                    underline
-                        .offset(y: 5)
-                }
-            }
+            .foregroundStyle(selected ? Color.LabelColors.labelPrimary : Color.LabelColors.labelSecondary)
+            .transition(.scale)
+            .frame(maxWidth: .infinity)
     }
     
     private var nameLabel: some View {
-        Text(name)
-            .font(.system(size: 18, weight: .medium))
-            .foregroundStyle(selected ? Color.LabelColors.labelPrimary : Color.LabelColors.labelSecondary)
-            .frame(maxWidth: .infinity)
-    }
-    
-    private var underline: some View {
-        Rectangle()
-            .foregroundStyle(Color.LabelColors.labelPrimary)
-            .frame(maxWidth: .infinity)
-            .frame(height: 2)
-            .matchedGeometryEffect(id: Texts.NamespaceID.selectedTab, in: namespace)
+        Group {
+            if filter != .deleted {
+                Text(filter.name)
+                    .font(.system(size: 22, weight: selected ? .bold : .medium))
+            } else {
+                Image.NavigationBar.MainTodayPages.deletedFilter
+                    .resizable()
+                    .renderingMode(.template)
+                    .frame(width: 22, height: 22)
+            }
+        }
     }
 }
 
 #Preview {
-    FilterCell(name: "Active", selected: true, namespace: Namespace().wrappedValue)
+    FilterCell(filter: .deleted, selected: true)
 }

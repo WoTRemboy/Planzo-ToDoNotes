@@ -12,9 +12,11 @@ struct TaskDateParamRow: View {
     @ObservedObject private var viewModel: TaskManagementViewModel
     
     private let type: TaskDateParam
+    private let isLast: Bool
     
-    init(type: TaskDateParam, viewModel: TaskManagementViewModel) {
+    init(type: TaskDateParam, isLast: Bool, viewModel: TaskManagementViewModel) {
         self.type = type
+        self.isLast = isLast
         self.viewModel = viewModel
     }
     
@@ -22,16 +24,24 @@ struct TaskDateParamRow: View {
         HStack(spacing: 0) {
             paramIcon
                 .resizable()
-                .frame(width: 15, height: 15)
+                .frame(width: 18, height: 18)
                 .padding(.leading, 14)
             titleLabel
-                .font(.system(size: 15, weight: .regular))
+                .font(.system(size: 17, weight: .regular))
                 .lineLimit(1)
                 .padding(.leading, 6)
             Spacer()
             selector
         }
-        .frame(height: 44)
+        .frame(height: 56)
+        .overlay(alignment: .bottom) {
+            if !isLast {
+                Rectangle()
+                    .foregroundStyle(Color.LabelColors.labelDetails)
+                    .frame(height: 0.5)
+                    .padding(.horizontal, 14)
+            }
+        }
         .background(
             Rectangle()
                 .foregroundStyle(Color.SupportColors.backListRow)
@@ -41,9 +51,13 @@ struct TaskDateParamRow: View {
     private var paramIcon: Image {
         switch type {
         case .time:
-            Image.TaskManagement.DateSelector.time
+            viewModel.hasTime ?
+                Image.TaskManagement.DateSelector.timeSelected :
+                    Image.TaskManagement.DateSelector.time
         case .notifications:
-            Image.TaskManagement.DateSelector.remainder
+            !viewModel.notificationsLocal.isEmpty ?
+                Image.TaskManagement.DateSelector.reminderSelected :
+                    Image.TaskManagement.DateSelector.reminder
         case .repeating:
             Image.TaskManagement.DateSelector.cycle
         case .endRepeating:
@@ -56,7 +70,7 @@ struct TaskDateParamRow: View {
         case .time:
             Text(Texts.TaskManagement.DatePicker.time)
         case .notifications:
-            Text(Texts.TaskManagement.DatePicker.remainder)
+            Text(Texts.TaskManagement.DatePicker.reminder)
         case .repeating:
             Text(Texts.TaskManagement.DatePicker.cycle)
         case .endRepeating:
@@ -70,7 +84,7 @@ struct TaskDateParamRow: View {
             case .time:
                 timeSelector
             case .notifications:
-                remainderSelector
+                reminderSelector
             case .repeating:
                 repeatingSelector
             case .endRepeating:
@@ -85,7 +99,7 @@ struct TaskDateParamRow: View {
                 DatePicker(String(),
                            selection: $viewModel.selectedTime,
                            displayedComponents: [.hourAndMinute])
-                .onChange(of: viewModel.selectedTime) { newValue in
+                .onChange(of: viewModel.selectedTime) { _, newValue in
                     withAnimation(.easeInOut(duration: 0.2)) {
                         viewModel.selectedTimeType = .value(newValue)
                         viewModel.setupNotificationAvailability()
@@ -99,20 +113,10 @@ struct TaskDateParamRow: View {
             .animation(.easeInOut(duration: 0.2), value: viewModel.selectedTime)
     }
     
-    private var remainderSelector: some View {
+    private var reminderSelector: some View {
         menuLabel
             .overlay {
                 Menu {
-                    // "None" remainder button
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            viewModel.toggleNotificationSelection(
-                                for: TaskNotification.none)
-                        }
-                    } label: {
-                        remainderMenuContent(type: TaskNotification.none)
-                    }
-                    
                     ForEach(viewModel.availableNotifications, id: \.self) { notificationType in
                         Button {
                             withAnimation(.easeInOut(duration: 0.2)) {
@@ -120,8 +124,17 @@ struct TaskDateParamRow: View {
                                     for: notificationType)
                             }
                         } label: {
-                            remainderMenuContent(type: notificationType)
+                            reminderMenuContent(type: notificationType)
                         }
+                    }
+                    // "None" reminder button
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            viewModel.toggleNotificationSelection(
+                                for: TaskNotification.none)
+                        }
+                    } label: {
+                        reminderMenuContent(type: TaskNotification.none)
                     }
                 } label: {
                     Rectangle()
@@ -134,12 +147,12 @@ struct TaskDateParamRow: View {
             .onAppear {
                 viewModel.setupNotificationAvailability()
             }
-            .onChange(of: viewModel.selectedDay) { _ in
+            .onChange(of: viewModel.selectedDay) {
                 viewModel.setupNotificationAvailability()
             }
     }
     
-    private func remainderMenuContent(type: TaskNotification) -> some View {
+    private func reminderMenuContent(type: TaskNotification) -> some View {
         return HStack {
             Text(type.selectorName)
             Spacer()
@@ -228,7 +241,7 @@ struct TaskDateParamRow: View {
     private var menuLabel: some View {
         HStack(spacing: 0) {
             Text(viewModel.menuLabel(for: type))
-                .font(.system(size: 12, weight: .regular))
+                .font(.system(size: 14, weight: .regular))
                 .lineLimit(1)
                 .foregroundStyle(
                     viewModel.showingMenuIcon(for: type) ?
@@ -267,6 +280,7 @@ struct TaskDateParamRow: View {
 }
 
 #Preview {
-    TaskDateParamRow(type: .endRepeating,
+    TaskDateParamRow(type: .notifications,
+                     isLast: false,
                      viewModel: TaskManagementViewModel())
 }

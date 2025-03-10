@@ -14,12 +14,40 @@ extension Image {
     }
     
     enum NavigationBar {
-        static let search = Image("SearchNavIcon")
-        static let favorites = Image("FavoritesNavIcon")
-        static let calendar = Image("CalendarNavIcon")
-        static let more = Image("MoreNavIcon")
-        static let back = Image("BackNavIcon")
-        static let share = Image("ShareNavIcon")
+        enum MainTodayPages {
+            static let importantSelect = Image("NavIconSelectImportant")
+            static let importantDeselect = Image("NavIconDeselectImportant")
+            static let deletedFilter = Image("NavIconFilterDeleted")
+        }
+        
+        enum SearchBar {
+            static let glass = Image("SearchBarGlass")
+            static let clear = Image("SearchBarClear")
+        }
+        
+        static let search = Image("NavIconSearch")
+        static let favorites = Image("NavIconFavorites")
+        static let calendar = Image("NavIconCalendar")
+        static let more = Image("NavIconMore")
+        static let hide = Image("NavIconHide")
+        static let back = Image("NavIconBack")
+        static let share = Image("NavIconShare")
+    }
+    
+    enum TabBar {
+        enum Selected {
+            static let home = Image("TabBarIconSelectedHome")
+            static let today = Image("TabBarIconSelectedToday")
+            static let calendar = Image("TabBarIconSelectedCalendar")
+            static let settings = Image("TabBarIconSelectedSettings")
+        }
+        
+        enum Unselected {
+            static let home = Image("TabBarIconHome")
+            static let today = Image("TabBarIconToday")
+            static let calendar = Image("TabBarIconCalendar")
+            static let settings = Image("TabBarIconSettings")
+        }
     }
     
     enum Folder {
@@ -30,19 +58,33 @@ extension Image {
     
     enum Settings {
         static let about = Image("SettingsAboutApp")
+        static let aboutLogo = Image("SettingsAboutAppLogo")
         static let appearance = Image("SettingsAppearance")
         static let language = Image("SettingsLanguage")
         static let notifications = Image("SettingsNotification")
         static let reset = Image("SettingsReset")
         static let email = Image("SettingsEmail")
+        static let taskCreate = Image("SettingsTaskCreate")
         
-        static let chevron = Image(systemName: "chevron.right")
+        static let chevron = Image("SettingsChevron")
         static let check = Image(systemName: "checkmark")
+        
+        enum TaskCreate {
+            static let popup = Image("TaskCreationPopup")
+            static let fullScreen = Image("TaskCreationFullScreen")
+        }
+    }
+    
+    enum Selector {
+        static let selected = Image("SelectorSelected")
+        static let unselected = Image("SelectorUnselected")
     }
     
     enum TaskManagement {
         static let plus = Image("AddPlusIcon")
         static let emptyList = Image("EmptyTaskList")
+        static let scrollToTop = Image("ScrollToTopIcon")
+        static let scrollToBottom = Image("ScrollToBottomIcon")
         
         enum EditTask {
             static let calendar = Image("EditTaskCalendar")
@@ -55,30 +97,54 @@ extension Image {
             
             static let checkListCheck = Image("ChecklistItemChecked")
             static let checkListUncheck = Image("ChecklistItemUnchecked")
+            
+            enum Menu {
+                static let completed = Image("EditTaskCompletedOffIcon")
+                static let completedDeselect = Image("EditTaskCompletedOnIcon")
+                
+                static let importantSelect = Image("EditTaskImportantOffIcon")
+                static let importantDeselect = Image("EditTaskImportantOnIcon")
+                
+                static let pinnedSelect = Image("EditTaskPinnedOffIcon")
+                static let pinnedDeselect = Image("EditTaskPinnedOnIcon")
+                
+                static let copy = Image("EditTaskCopyIcon")
+                static let trash = Image("EditTaskTrashIcon")
+            }
         }
         
         enum TaskRow {
             static let uncheckedBox = Image("TaskRowUncheckedBox")
             static let checkedBox = Image("TaskRowCheckedBox")
             
-            static let uncheckedRemainder = Image("TaskRowUncheckedRemainder")
-            static let checkedRemainder = Image("TaskRowCheckedRemainder")
+            static let pinned = Image("TaskRowPinned")
+            static let reminderOn = Image("TaskRowReminderOn")
+            static let reminderOff = Image("TaskRowReminderOff")
+            static let contentOn = Image("TaskRowContentOn")
+            static let contentOff = Image("TaskRowContentOff")
+            static let important = Image("TaskRowImportant")
+            static let expired = Image("TaskRowExpired")
             
-            static let uncheckedContent = Image("TaskRowUncheckedContent")
-            static let checkedContent = Image("TaskRowCheckedContent")
-            
-            static let uncheckedImportant = Image("TaskRowUncheckedImportant")
-            static let checkedImportant = Image("TaskRowCheckedImportant")
-            
-            static let uncheckedExpired = Image("TaskRowUncheckedExpired")
+            enum SwipeAction {
+                static let important = Image("TaskRowSwipeImportantOff")
+                static let importantDeselect = Image("TaskRowSwipeImportantOn")
+                static let pinned = Image("TaskRowSwipePinnedOff")
+                static let pinnedDeselect = Image("TaskRowSwipePinnedOn")
+                static let remove = Image("TaskRowSwipeRemove")
+                static let restore = Image("TaskRowSwipeRestore")
+            }
         }
         
         enum DateSelector {
+            static let close = Image("TaskDateSelectionClose")
+            static let confirm = Image("TaskDateSelectorConfirm")
             static let monthForward = Image("TaskDateSelectorMonthForward")
             static let monthBackward = Image("TaskDateSelectorMonthBackward")
             
-            static let time = Image("TaskDateSelectionTime")
-            static let remainder = Image("TaskDateSelectionRemainder")
+            static let time = Image("TaskDateSelectionTimeOff")
+            static let timeSelected = Image("TaskDateSelectionTimeOn")
+            static let reminder = Image("TaskDateSelectionReminderOff")
+            static let reminderSelected = Image("TaskDateSelectionReminderOn")
             static let cycle = Image("TaskDateSelectionCycle")
             
             static let checked = Image("TaskDateSelectionChecked")

@@ -10,6 +10,7 @@ enum Filter: CaseIterable {
     case outdated
     case unsorted
     case completed
+    case deleted
     
     internal var name: String {
         switch self {
@@ -21,6 +22,8 @@ enum Filter: CaseIterable {
             return Texts.MainPage.Filter.unsorted
         case .completed:
             return Texts.MainPage.Filter.completed
+        case .deleted:
+            return String()
         }
     }
 }

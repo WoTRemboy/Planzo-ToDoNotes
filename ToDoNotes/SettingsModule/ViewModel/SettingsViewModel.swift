@@ -12,7 +12,9 @@ import UserNotifications
 final class SettingsViewModel: ObservableObject {
         
     @AppStorage(Texts.UserDefaults.theme) var userTheme: Theme = .systemDefault
+    @AppStorage(Texts.UserDefaults.taskCreation) var taskCreation: TaskCreation = .popup
     @AppStorage(Texts.UserDefaults.notifications) private var notificationsStatus: NotificationStatus = .prohibited
+    @AppStorage(Texts.UserDefaults.addTaskButtonGlow) private var addTaskButtonGlow: Bool = false
     
     @Published internal var showingLanguageAlert: Bool = false
     @Published internal var showingAppearance: Bool = false
@@ -33,9 +35,8 @@ final class SettingsViewModel: ObservableObject {
     }
     
     internal var appVersion: String {
-        if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
-           let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-            return "\(appVersion) \(Texts.Settings.About.release) \(buildVersion)"
+        if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            return appVersion
         }
         return String()
     }
@@ -52,9 +53,17 @@ final class SettingsViewModel: ObservableObject {
         showingResetDialog.toggle()
     }
     
+    internal func toggleShowingResetResult() {
+        showingResetResult.toggle()
+    }
+    
+    internal func toggleShowingNotificationAlert() {
+        showingNotificationAlert.toggle()
+    }
+    
     internal func changeTheme(theme: Theme) {
         userTheme = theme
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
                 if let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
                     UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
@@ -78,5 +87,11 @@ final class SettingsViewModel: ObservableObject {
         self.notificationsStatus = .prohibited
         self.notificationsEnabled = false
         self.showingNotificationAlert = true
+    }
+    
+    internal func taskCreationChange(to mode: TaskCreation) {
+        guard taskCreation != mode else { return }
+        addTaskButtonGlow = false
+        taskCreation = mode
     }
 }

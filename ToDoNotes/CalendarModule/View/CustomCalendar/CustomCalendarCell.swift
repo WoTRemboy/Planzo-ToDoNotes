@@ -26,40 +26,60 @@ struct CustomCalendarCell: View {
     }
     
     internal var body: some View {
-        VStack(spacing: 0) {
-            taskMark
-            Spacer()
-            dayNumber
-            Spacer()
-            underline
-        }
-        .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 44)
+        dayNumber
+            .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 44)
+            .overlay(alignment: .top) {
+                taskMark
+            }
+            .overlay(alignment: .bottom) {
+                underline
+            }
     }
     
     private var taskMark: some View {
-        Circle()
+        let color: Color
+        if today && task {
+            color = Color.LabelColors.labelPrimary
+        } else if selected && task {
+            color = Color.LabelColors.labelReversed
+        } else if task {
+            color = Color.LabelColors.labelSecondary
+        } else {
+            color = Color.clear
+        }
+        
+        return Circle()
             .frame(width: 5, height: 5)
-            .foregroundStyle(task ?
-                             Color.LabelColors.labelSecondary:
-                                Color.clear)
+            .foregroundStyle(color)
+            .padding(.top, 2)
+            .zIndex(1)
     }
     
     private var dayNumber: some View {
-        Text(day)
+        let color: Color
+        if today {
+            color = Color.LabelColors.labelPrimary
+        } else if selected {
+            color = Color.LabelColors.labelReversed
+        } else {
+            color = Color.LabelColors.labelSecondary
+        }
+        
+        return Text(day)
             .font(.system(size: 20, weight: .regular))
-            .foregroundStyle(today ? Color.LabelColors.labelPrimary : Color.LabelColors.labelSecondary)
+            .foregroundStyle(color)
         
             .background {
                 if selected && !today {
-                    selectedCircle
+                    selectedBackground
                 }
             }
     }
     
-    private var selectedCircle: some View {
-        Circle()
-            .frame(width: 50, height: 50)
-            .foregroundStyle(Color.LabelColors.labelDisable)
+    private var selectedBackground: some View {
+        RoundedRectangle(cornerRadius: 10)
+            .frame(width: 44, height: 44)
+            .foregroundStyle(Color.LabelColors.labelPrimary)
             .matchedGeometryEffect(
                 id: Texts.NamespaceID.selectedCalendarCell,
                 in: namespace)
@@ -76,7 +96,7 @@ struct CustomCalendarCell: View {
 #Preview {
     CustomCalendarCell(day: "5",
                        selected: true,
-                       today: true,
+                       today: false,
                        task: true,
                        namespace: Namespace().wrappedValue)
 }

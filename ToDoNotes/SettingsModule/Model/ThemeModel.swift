@@ -12,6 +12,10 @@ enum Theme: String, CaseIterable {
     case light = "Light"
     case dark = "Dark"
     
+    static internal var allCases: [Theme] {
+        [.light, .dark, .systemDefault]
+    }
+    
     internal var name: String {
         switch self {
         case .systemDefault:
