@@ -10,6 +10,7 @@ import SwiftUI
 enum Folder: String, CaseIterable {
     case all = "TaskFoldersAll"
     case reminders = "TaskFoldersReminders"
+    case tasks = "TaskFoldersTasks"
     case lists = "TaskFoldersLists"
     case noDate = "TaskFoldersNoDate"
     
@@ -19,6 +20,8 @@ enum Folder: String, CaseIterable {
             return Texts.MainPage.Folders.all
         case .reminders:
             return Texts.MainPage.Folders.reminders
+        case .tasks:
+            return Texts.MainPage.Folders.tasks
         case .lists:
             return Texts.MainPage.Folders.purchases
         case .noDate:
@@ -28,13 +31,7 @@ enum Folder: String, CaseIterable {
     
     internal var lockedIcon: Image {
         switch self {
-        case .all:
-            Image.Folder.unlocked
-        case .reminders:
-            Image.Folder.unlocked
-        case .lists:
-            Image.Folder.unlocked
-        case .noDate:
+        case .all, .reminders, .tasks, .lists, .noDate:
             Image.Folder.unlocked
         }
     }
@@ -45,6 +42,8 @@ enum Folder: String, CaseIterable {
             Color.FolderColors.all
         case .reminders:
             Color.FolderColors.reminders
+        case .tasks:
+            Color.FolderColors.tasks
         case .lists:
             Color.FolderColors.lists
         case .noDate:

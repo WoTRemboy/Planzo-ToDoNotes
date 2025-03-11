@@ -235,6 +235,10 @@ extension MainView {
                     if task.notifications?.count ?? 0 < 1 {
                         return false
                     }
+                case .tasks:
+                    if task.completed == 0 {
+                        return false
+                    }
                 case .lists:
                     if task.checklist?.count ?? 0 < 2 {
                         return false

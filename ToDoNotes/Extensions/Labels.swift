@@ -40,6 +40,7 @@ final class Texts {
             static let title = "Папки"
             static let all = "Все"
             static let reminders = "Напоминания"
+            static let tasks = "Задачи"
             static let purchases = "Списки"
             static let noDate = "Без дат"
         }

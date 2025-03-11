@@ -75,6 +75,8 @@ final class TaskService {
         
         if !notifications.isEmpty {
             task.folder = Folder.reminders.rawValue
+        } else if completeCheck != .none {
+            task.folder = Folder.tasks.rawValue
         } else if checklist.count > 1 {
             task.folder = Folder.lists.rawValue
         } else if !hasTime {
