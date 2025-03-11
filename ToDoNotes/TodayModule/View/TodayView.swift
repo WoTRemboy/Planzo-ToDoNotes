@@ -24,9 +24,6 @@ struct TodayView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onChange(of: viewModel.searchText) { _, newValue in
-            tasksResults.nsPredicate = TaskService.getTasksBySearchTerm(viewModel.searchText).predicate
-        }
         
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
@@ -84,7 +81,7 @@ struct TodayView: View {
         .background(Color.BackColors.backDefault)
         .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
         .scrollContentBackground(.hidden)
-        .animation(.easeInOut(duration: 0.1), value: tasksResults.count)
+//        .animation(.easeInOut(duration: 0.1), value: tasksResults.count)
     }
     
     @ViewBuilder
@@ -127,6 +124,15 @@ extension TodayView {
         let calendar = Calendar.current
         let day = calendar.startOfDay(for: viewModel.todayDate)
         let filteredTasks = tasksResults.filter { task in
+            if !viewModel.searchText.isEmpty {
+                let searchTerm = viewModel.searchText
+                let nameMatches = task.name?.localizedCaseInsensitiveContains(searchTerm) ?? false
+                let detailsMatches = task.details?.localizedCaseInsensitiveContains(searchTerm) ?? false
+                if !nameMatches && !detailsMatches {
+                    return false
+                }
+            }
+            
             let taskDate = calendar.startOfDay(for: task.target ?? task.created ?? Date.distantPast)
             return taskDate == day && !task.removed && (!viewModel.importance || task.important)
         }

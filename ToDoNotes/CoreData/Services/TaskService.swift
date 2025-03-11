@@ -144,6 +144,8 @@ final class TaskService {
         request.sortDescriptors = []
         if !searchTerm.isEmpty {
             request.predicate = NSPredicate(format: "name CONTAINS[cd] %@", searchTerm)
+        } else {
+            request.predicate = nil
         }
         return request
     }
@@ -180,6 +182,11 @@ extension TaskService {
     
     static func toggleCompleteChecking(for task: TaskEntity) throws {
         task.completed = task.completed == 1 ? 2 : 1
+        if task.completed == 2 {
+            UNUserNotificationCenter.current().removeNotifications(for: task.notifications)
+        } else {
+            restoreNotifications(for: task)
+        }
         try save()
     }
     
@@ -208,6 +215,7 @@ extension TaskService {
 extension TaskService {
     static func restoreNotifications(for task: TaskEntity) {
         let notificationCenter = UNUserNotificationCenter.current()
+        notificationCenter.removeNotifications(for: task.notifications)
         guard let notificationsSet = task.notifications as? Set<NotificationEntity> else { return }
         
         for entity in notificationsSet {
