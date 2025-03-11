@@ -10,16 +10,14 @@ import SwiftUI
 struct TaskCalendarSelectorView: View {
     
     @ObservedObject private var viewModel: TaskManagementViewModel
+    @Namespace private var namespace
     
     private let entity: TaskEntity?
-    private let namespace: Namespace.ID
     
     init(entity: TaskEntity?,
-         viewModel: TaskManagementViewModel,
-         namespace: Namespace.ID) {
+         viewModel: TaskManagementViewModel) {
         self.entity = entity
         self.viewModel = viewModel
-        self.namespace = namespace
     }
     
     internal var body: some View {
@@ -148,6 +146,5 @@ struct TaskCalendarSelectorView: View {
 #Preview {
     TaskCalendarSelectorView(
         entity: TaskEntity(),
-        viewModel: TaskManagementViewModel(),
-        namespace: Namespace().wrappedValue)
+        viewModel: TaskManagementViewModel())
 }
