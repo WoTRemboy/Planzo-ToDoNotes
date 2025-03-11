@@ -38,6 +38,7 @@ struct CalendarView: View {
         .fullScreenCover(isPresented: $viewModel.showingTaskCreateViewFullscreen) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
+                selectedDate: viewModel.selectedDate,
                 namespace: animation) {
                     viewModel.toggleShowingTaskCreateView()
                 }

@@ -46,7 +46,7 @@ struct TaskManagementView: View {
                     TaskManagementNavBar(
                         viewModel: viewModel, entity: entity) {
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                entity != nil ? updateTask() : addTask()
+                                entity != nil ? updateTask() : nil
                                 onDismiss()
                             }
                         }
@@ -60,6 +60,17 @@ struct TaskManagementView: View {
         }
         .onDisappear {
             unsubscribeFromKeyboardNotifications()
+            withAnimation(.easeInOut(duration: 0.2)) {
+                entity != nil ? updateTask() : nil
+            }
+        }
+        .onChange(of: isKeyboardActive) { _, newValue in
+            if newValue == false, entity != nil {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    updateTask()
+                }
+            }
+            entity != nil && !newValue ? updateTask() : nil
         }
         .sheet(isPresented: $viewModel.showingShareSheet) {
             TaskManagementShareView()
@@ -69,8 +80,7 @@ struct TaskManagementView: View {
         .sheet(isPresented: $viewModel.showingDatePicker) {
             TaskCalendarSelectorView(
                 entity: entity,
-                viewModel: viewModel,
-                namespace: animation)
+                viewModel: viewModel)
                 .presentationDetents([.height(670)])
         }
         .navigationTransition(
@@ -234,8 +244,8 @@ struct TaskManagementView: View {
         Button {
             guard !viewModel.nameText.isEmpty else { return }
             withAnimation {
-                if entity != nil || viewModel.taskCreationFullScreen == .fullScreen {
-                    entity != nil ? updateTask() : addTask()
+                if entity != nil /*|| viewModel.taskCreationFullScreen == .fullScreen*/ {
+                    updateTask()
                     hideKeyboard()
                 } else {
                     addTask()
@@ -243,7 +253,9 @@ struct TaskManagementView: View {
                 }
             }
         } label: {
-            Image.TaskManagement.EditTask.ready
+            (entity != nil ?
+            Image.TaskManagement.EditTask.ready :
+            Image.TaskManagement.EditTask.accept)
                 .resizable()
                 .frame(width: 30, height: 30)
         }
