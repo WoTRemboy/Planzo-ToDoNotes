@@ -26,9 +26,6 @@ struct MainView: View {
         .animation(.easeInOut(duration: 0.2),
                    value: tasksResults.isEmpty)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onChange(of: viewModel.searchText) { _, newValue in
-            tasksResults.nsPredicate = TaskService.getTasksBySearchTerm(viewModel.searchText).predicate
-        }
         
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
@@ -86,7 +83,7 @@ struct MainView: View {
         .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
-        .animation(.easeInOut(duration: 0.1), value: tasksResults.count)
+//        .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
     }
     
     @ViewBuilder
@@ -222,12 +219,24 @@ extension MainView {
         let now = Date()
         return segmentedAndSortedTasksArray.compactMap { (date, tasks) in
             let filteredTasks = tasks.filter { task in
+                if !viewModel.searchText.isEmpty {
+                    let searchTerm = viewModel.searchText
+                    let nameMatches = task.name?.localizedCaseInsensitiveContains(searchTerm) ?? false
+                    let detailsMatches = task.details?.localizedCaseInsensitiveContains(searchTerm) ?? false
+                    if !nameMatches && !detailsMatches {
+                        return false
+                    }
+                }
                 
                 switch viewModel.selectedFolder {
                 case .all:
                     break
                 case .reminders:
                     if task.notifications?.count ?? 0 < 1 {
+                        return false
+                    }
+                case .tasks:
+                    if task.completed == 0 {
                         return false
                     }
                 case .lists:
