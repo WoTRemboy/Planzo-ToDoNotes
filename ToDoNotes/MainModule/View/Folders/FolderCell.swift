@@ -36,11 +36,11 @@ struct FolderCell: View {
     private var nameLabel: some View {
         let color: Color
         if selected && folder == .all {
-            color = Color.white
+            color = Color.LabelColors.labelReversed
         } else if selected {
-            color = Color.LabelColors.labelPrimary
+            color = Color.LabelColors.labelBlack
         } else {
-            color = Color.LabelColors.labelSecondary
+            color = Color.LabelColors.labelDetails
         }
         
         return Text(folder.name)

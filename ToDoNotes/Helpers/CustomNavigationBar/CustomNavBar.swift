@@ -23,8 +23,8 @@ struct CustomNavBar: View {
             let topInset = proxy.safeAreaInsets.top
             
             ZStack(alignment: .top) {
-                Color.BackColors.backDefault
-                    .shadow(color: Color.ShadowColors.shadowDefault, radius: 15, x: 0, y: 5)
+                Color.SupportColors.supportNavBar
+                    .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
                 
                 content
                     .padding(.top, topInset + 9.5)

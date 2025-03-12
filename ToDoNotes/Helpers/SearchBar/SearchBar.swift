@@ -40,7 +40,7 @@ struct SearchBar: View {
         
             .padding(8)
             .padding(.horizontal, 25)
-            .background(Color(.systemGray6))
+            .background(Color.BackColors.backTextField)
             .cornerRadius(10)
         
             .overlay(
@@ -76,7 +76,7 @@ struct SearchBar: View {
         } label: {
             Text(Texts.SearchBar.cancel)
                 .font(.system(size: 15, weight: .regular))
-                .foregroundColor(.blue)
+                .foregroundColor(Color.LabelColors.Special.labelSearchBarCancel)
         }
         .transition(.move(edge: .trailing))
         .padding(.leading)

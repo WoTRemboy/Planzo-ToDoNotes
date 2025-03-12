@@ -80,7 +80,7 @@ struct MainView: View {
                 .listSectionSpacing(0)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
-        .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
+        .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
 //        .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)

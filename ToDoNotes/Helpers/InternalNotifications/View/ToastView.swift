@@ -65,9 +65,8 @@ private struct ToastView: View {
         .padding(.vertical, 14)
         .background(
             .background
-                .shadow(.drop(color: .ShadowColors.shadowDefault,
-                              radius: 10,
-                              x: 2, y: 2)),
+                .shadow(.drop(color: .ShadowColors.popup,
+                              radius: 32)),
             in: .rect(cornerRadius: 12)
         )
         .contentShape(.rect(cornerRadius: 12))

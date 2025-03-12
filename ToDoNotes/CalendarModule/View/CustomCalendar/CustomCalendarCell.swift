@@ -80,6 +80,7 @@ struct CustomCalendarCell: View {
         RoundedRectangle(cornerRadius: 10)
             .frame(width: 44, height: 44)
             .foregroundStyle(Color.LabelColors.labelPrimary)
+            .animation(.easeInOut(duration: 0.1), value: selected)
             .transition(.blurReplace)
 //            .matchedGeometryEffect(
 //                id: Texts.NamespaceID.selectedCalendarCell,
