@@ -65,8 +65,8 @@ struct FolderCell: View {
         RoundedRectangle(cornerRadius: 16)
             .foregroundStyle(selected ? folder.color : .clear)
             .animation(.easeInOut(duration: 0.2), value: selected)
-            .matchedGeometryEffect(id: Texts.NamespaceID.selectedTab, in: namespace)
-            .transition(.opacity)
+//            .matchedGeometryEffect(id: Texts.NamespaceID.selectedTab, in: namespace)
+            .transition(.blurReplace)
     }
     
     private var emptyRectangle: some View {

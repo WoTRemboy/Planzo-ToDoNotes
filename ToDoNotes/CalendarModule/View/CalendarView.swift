@@ -113,9 +113,9 @@ struct CalendarView: View {
                     .font(.system(size: 15, weight: .medium))
                     .textCase(.none)
                     .contentTransition(.numericText(value: viewModel.selectedDate.timeIntervalSince1970))
-                    .matchedGeometryEffect(
-                        id: Texts.NamespaceID.selectedCalendarDate,
-                        in: animation)
+//                    .matchedGeometryEffect(
+//                        id: Texts.NamespaceID.selectedCalendarDate,
+//                        in: animation)
             } else {
                 Text(section.name)
                     .font(.system(size: 15, weight: .medium))

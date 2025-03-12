@@ -89,7 +89,9 @@ struct SearchBar: View {
 
 extension SearchBar {
     private func clearTextField() {
-        text = String()
+        withAnimation(.easeInOut(duration: 0.2)) {
+            text = String()
+        }
     }
     
     private func dismissKeyboard() {
