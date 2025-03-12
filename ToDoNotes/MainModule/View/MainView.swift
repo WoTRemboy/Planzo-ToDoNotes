@@ -101,6 +101,7 @@ struct MainView: View {
     private func segmentHeader(name: Date?) -> some View {
         Text(name?.longDayMonthWeekday ?? String())
             .font(.system(size: 15, weight: .medium))
+            .foregroundStyle(Color.LabelColors.labelDetails)
             .textCase(.none)
     }
     
@@ -164,8 +165,8 @@ struct MainView: View {
             Text(Texts.MainPage.RemoveFilter.buttonTitle)
                 .font(.system(size: 17, weight: .regular))
                 .frame(maxWidth: .infinity, maxHeight: 58)
-                .background(Color.black)
-                .foregroundColor(.white)
+                .background(Color.LabelColors.labelPrimary)
+                .foregroundColor(Color.LabelColors.labelReversed)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
         }
         .matchedGeometryEffect(id: Texts.NamespaceID.floatingButtons, in: animation)
