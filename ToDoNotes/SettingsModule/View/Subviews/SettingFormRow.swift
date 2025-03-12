@@ -65,7 +65,7 @@ struct SettingFormRow: View {
             }
         }
         .background {
-            Color.BackColors.backFormCell
+            Color.SupportColors.supportButton
         }
         
     }

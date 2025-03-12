@@ -16,7 +16,6 @@ extension Color {
         static let backDefault = Color("BackDefault")
         static let backSheetView = Color("BackSheetView")
         static let backFormCell = Color("BackFormCell")
-        static let backTextField = Color("BackTextField")
     }
     
     enum ButtonColors {
@@ -33,6 +32,8 @@ extension Color {
         static let labelTertiary = Color("LabelTertiary")
         static let labelReversed = Color("LabelReversed")
         static let labelBlack = Color("LabelBlack")
+        static let labelGreyLight = Color("LabelGreyLight")
+        static let labelGreyDark = Color("LabelGreyDark")
         
         enum Special {
             static let labelFilterUnselected = Color("LabelFilterUnselected")
@@ -46,6 +47,8 @@ extension Color {
         static let supportSegmented = Color("SupportSegmented")
         static let supportTextField = Color("SupportTextField")
         static let backListRow = Color("SupportListRow")
+        static let supportButton = Color("SupportButton")
+        static let supportToggle = Color("SupportToggle")
     }
     
     enum FolderColors {

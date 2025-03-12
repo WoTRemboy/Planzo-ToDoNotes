@@ -87,12 +87,12 @@ struct SettingAppearanceView: View {
             viewModel.changeTheme(theme: selectedTheme)
         } label: {
             ZStack {
-                Color.black
+                Color.LabelColors.labelPrimary
                 
                 Text(Texts.Settings.Appearance.accept)
                     .font(.system(size: 17, weight: .regular))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                    .foregroundColor(Color.white)
+                    .foregroundColor(Color.LabelColors.labelReversed)
             }
             .clipShape(.rect(cornerRadius: 10))
         }
@@ -105,12 +105,12 @@ struct SettingAppearanceView: View {
             viewModel.toggleShowingAppearance()
         } label: {
             ZStack {
-                Color.white
+                Color.clear
                 
                 Text(Texts.Settings.Appearance.cancel)
                     .font(.system(size: 17, weight: .regular))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                    .foregroundColor(Color.labelPrimary)
+                    .foregroundColor(Color.LabelColors.labelPrimary)
             }
             .clipShape(.rect(cornerRadius: 10))
             .overlay(

@@ -40,7 +40,7 @@ struct SearchBar: View {
         
             .padding(8)
             .padding(.horizontal, 25)
-            .background(Color.BackColors.backTextField)
+            .background(Color.SupportColors.supportTextField)
             .cornerRadius(10)
         
             .overlay(

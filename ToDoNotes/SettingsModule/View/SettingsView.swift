@@ -113,8 +113,8 @@ struct SettingsView: View {
     private var notificationToggle: some View {
         Toggle(isOn: $viewModel.notificationsEnabled) {}
             .fixedSize()
-            .background(Color.BackColors.backFormCell)
-            .tint(Color.black)
+            .background(Color.SupportColors.supportButton)
+            .tint(Color.SupportColors.supportToggle)
             .scaleEffect(0.8)
         
             .onChange(of: viewModel.notificationsEnabled) { _, newValue in
