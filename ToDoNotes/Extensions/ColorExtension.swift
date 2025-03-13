@@ -80,4 +80,8 @@ extension UIColor {
     enum ShadowColors {
         static let navBar = UIColor(named: "ShadowNavBarColor")
     }
+    
+    enum TabBar {
+        static let background = UIColor(named: "SupportNavBar")
+    }
 }

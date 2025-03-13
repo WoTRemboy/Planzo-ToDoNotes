@@ -24,7 +24,7 @@ struct ContentView: View {
         
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(Color.SupportColors.supportNavBar)
+        appearance.backgroundColor = UIColor.TabBar.background
         
         appearance.shadowImage = nil
         appearance.shadowColor = nil
@@ -74,7 +74,7 @@ extension UITabBarController {
             let shadowView = UIView(frame: .zero)
             shadowView.frame = tabBar.frame
             shadowView.accessibilityIdentifier = Texts.AccessibilityIdentifier.tabBarShadow
-            shadowView.backgroundColor = UIColor.white
+            shadowView.backgroundColor = UIColor.backDefault
             
             shadowView.layer.shadowColor = UIColor.ShadowColors.navBar?.cgColor
             shadowView.layer.shadowOffset = CGSize(width: 0, height: -5)
