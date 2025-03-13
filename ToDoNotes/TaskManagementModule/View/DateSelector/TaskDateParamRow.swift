@@ -44,7 +44,7 @@ struct TaskDateParamRow: View {
         }
         .background(
             Rectangle()
-                .foregroundStyle(Color.SupportColors.backListRow)
+                .foregroundStyle(Color.SupportColors.supportParamRow)
         )
     }
     

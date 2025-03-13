@@ -3,6 +3,16 @@
     {
       "filename" : "TaskManagerCalendarIcon.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "EditTaskCalendarDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

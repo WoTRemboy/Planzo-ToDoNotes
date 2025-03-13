@@ -14,7 +14,7 @@ final class Toast {
     
     internal func present(
         title: String, symbol: Image? = nil,
-        tint: Color = .BackColors.backPrimary,
+        tint: Color = Color.SupportColors.supportPopup,
         isUserInteractionEnabled: Bool = false,
         timing: ToastTime = .medium) {
             

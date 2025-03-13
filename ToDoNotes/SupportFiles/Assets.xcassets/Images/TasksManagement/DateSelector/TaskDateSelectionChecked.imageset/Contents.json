@@ -3,6 +3,16 @@
     {
       "filename" : "TaskDateSelectorChecked.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "TaskDateSelectionCheckedDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

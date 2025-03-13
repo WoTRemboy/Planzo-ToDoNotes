@@ -22,7 +22,7 @@ struct TaskManagementShareView: View {
             .zIndex(1)
             
             Rectangle()
-                .foregroundStyle(Color.BackColors.backSheetView)
+                .foregroundStyle(Color.BackColors.backSheet)
                 .ignoresSafeArea()
         }
     }

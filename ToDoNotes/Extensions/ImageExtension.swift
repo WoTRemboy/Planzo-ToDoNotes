@@ -88,6 +88,8 @@ extension Image {
         
         enum EditTask {
             static let calendar = Image("EditTaskCalendar")
+            static let calendarUnselected = Image("EditTaskCalendarUnselected")
+            
             static let check = Image("EditTaskCheck")
             static let uncheck = Image("EditTaskUncheck")
             static let more = Image("EditTaskMore")

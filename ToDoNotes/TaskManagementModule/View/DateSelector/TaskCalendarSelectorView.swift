@@ -22,6 +22,9 @@ struct TaskCalendarSelectorView: View {
     
     internal var body: some View {
         ZStack(alignment: .bottom) {
+            Color.BackColors.backSheet
+                .ignoresSafeArea()
+            
             VStack(spacing: 0) {
                 header
                 calendarSection

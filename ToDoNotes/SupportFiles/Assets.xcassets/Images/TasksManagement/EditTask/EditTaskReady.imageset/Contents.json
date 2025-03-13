@@ -3,6 +3,16 @@
     {
       "filename" : "CompleteTaskButton.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "EditTaskReadyDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

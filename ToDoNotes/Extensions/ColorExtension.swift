@@ -14,7 +14,7 @@ extension Color {
         static let backPrimary = Color("BackPrimary")
         static let backSecondary = Color("BackSecondary")
         static let backDefault = Color("BackDefault")
-        static let backSheetView = Color("BackSheetView")
+        static let backSheet = Color("BackSheet")
         static let backFormCell = Color("BackFormCell")
     }
     
@@ -49,6 +49,8 @@ extension Color {
         static let backListRow = Color("SupportListRow")
         static let supportButton = Color("SupportButton")
         static let supportToggle = Color("SupportToggle")
+        static let supportPopup = Color("SupportPopup")
+        static let supportParamRow = Color("SupportParamRow")
     }
     
     enum FolderColors {
