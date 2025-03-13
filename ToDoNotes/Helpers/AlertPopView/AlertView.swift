@@ -45,11 +45,13 @@ struct CustomAlertView: View {
         VStack(spacing: 6) {
             Text(title)
                 .font(.system(size: 17, weight: .medium))
+                .foregroundStyle(Color.LabelColors.labelPrimary)
                 .multilineTextAlignment(.center)
             
             if let message = message {
                 Text(message)
                     .font(.system(size: 15, weight: .regular))
+                    .foregroundStyle(Color.LabelColors.labelPrimary)
                     .multilineTextAlignment(.center)
             }
         }
@@ -74,8 +76,8 @@ struct CustomAlertView: View {
             Text(primaryButtonTitle)
                 .font(.system(size: 17, weight: .regular))
                 .frame(maxWidth: .infinity, maxHeight: 50)
-                .background(Color.black)
-                .foregroundColor(.white)
+                .foregroundColor(Color.LabelColors.labelReversed)
+                .background(Color.LabelColors.labelPrimary)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
         }
     }
@@ -88,8 +90,8 @@ struct CustomAlertView: View {
             Text(title)
                 .font(.system(size: 17, weight: .regular))
                 .frame(maxWidth: .infinity, maxHeight: 50)
-                .background(Color.white)
-                .foregroundColor(Color.labelPrimary)
+                .background(Color.clear)
+                .foregroundColor(Color.LabelColors.labelPrimary)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)

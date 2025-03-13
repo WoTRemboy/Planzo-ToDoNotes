@@ -3,6 +3,16 @@
     {
       "filename" : "TaskDateSelectionTimeOff.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "TaskDateSelectionTimeOffDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

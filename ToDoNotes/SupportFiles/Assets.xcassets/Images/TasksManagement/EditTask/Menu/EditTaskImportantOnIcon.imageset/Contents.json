@@ -3,6 +3,16 @@
     {
       "filename" : "TaskDeselectImportant.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "NavIconDeselectImportant.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

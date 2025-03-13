@@ -94,7 +94,7 @@ struct CalendarView: View {
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .background(Color.BackColors.backDefault)
-        .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
+        .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)
         .scrollContentBackground(.hidden)
     }
     
@@ -113,9 +113,9 @@ struct CalendarView: View {
                     .font(.system(size: 15, weight: .medium))
                     .textCase(.none)
                     .contentTransition(.numericText(value: viewModel.selectedDate.timeIntervalSince1970))
-                    .matchedGeometryEffect(
-                        id: Texts.NamespaceID.selectedCalendarDate,
-                        in: animation)
+//                    .matchedGeometryEffect(
+//                        id: Texts.NamespaceID.selectedCalendarDate,
+//                        in: animation)
             } else {
                 Text(section.name)
                     .font(.system(size: 15, weight: .medium))

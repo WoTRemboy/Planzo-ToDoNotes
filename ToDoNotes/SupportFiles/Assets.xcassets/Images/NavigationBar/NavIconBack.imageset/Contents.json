@@ -3,6 +3,16 @@
     {
       "filename" : "NavBarBackIcon.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "NavBarBackDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

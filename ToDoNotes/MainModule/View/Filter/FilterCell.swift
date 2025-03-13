@@ -19,8 +19,7 @@ struct FilterCell: View {
     
     internal var body: some View {
         nameLabel
-            .foregroundStyle(selected ? Color.LabelColors.labelPrimary : Color.LabelColors.labelSecondary)
-            .transition(.scale)
+            .foregroundStyle(selected ? Color.LabelColors.labelPrimary : Color.LabelColors.Special.labelFilterUnselected)
             .frame(maxWidth: .infinity)
     }
     

@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "FullScreenPage.svg",
+      "filename" : "TaskCreationFullScreen.svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "TaskCreationFullScreenDark 1.svg",
       "idiom" : "universal"
     }
   ],

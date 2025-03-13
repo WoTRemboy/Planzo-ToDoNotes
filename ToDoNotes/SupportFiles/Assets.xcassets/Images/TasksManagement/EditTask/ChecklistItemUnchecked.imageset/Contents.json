@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "checkboxLight.svg",
+      "filename" : "ChecklistItemUncheckedLight.svg",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "checkboxDark.svg",
+      "filename" : "ChecklistItemUnchecked.svg",
       "idiom" : "universal"
     }
   ],

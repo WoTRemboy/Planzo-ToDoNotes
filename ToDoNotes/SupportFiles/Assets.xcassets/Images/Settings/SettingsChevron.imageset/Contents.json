@@ -3,6 +3,16 @@
     {
       "filename" : "ChevronIcon.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "chevron-forward-outline.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

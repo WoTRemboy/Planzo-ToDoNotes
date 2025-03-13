@@ -80,7 +80,7 @@ struct MainView: View {
                 .listSectionSpacing(0)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
-        .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
+        .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
 //        .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
@@ -101,6 +101,7 @@ struct MainView: View {
     private func segmentHeader(name: Date?) -> some View {
         Text(name?.longDayMonthWeekday ?? String())
             .font(.system(size: 15, weight: .medium))
+            .foregroundStyle(Color.LabelColors.labelDetails)
             .textCase(.none)
     }
     
@@ -164,8 +165,8 @@ struct MainView: View {
             Text(Texts.MainPage.RemoveFilter.buttonTitle)
                 .font(.system(size: 17, weight: .regular))
                 .frame(maxWidth: .infinity, maxHeight: 58)
-                .background(Color.black)
-                .foregroundColor(.white)
+                .background(Color.LabelColors.labelPrimary)
+                .foregroundColor(Color.LabelColors.labelReversed)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
         }
         .matchedGeometryEffect(id: Texts.NamespaceID.floatingButtons, in: animation)

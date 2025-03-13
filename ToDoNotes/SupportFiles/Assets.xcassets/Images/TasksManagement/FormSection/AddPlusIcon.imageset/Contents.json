@@ -3,6 +3,16 @@
     {
       "filename" : "AddPlusButtonIcon.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "AddPlusButtonDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

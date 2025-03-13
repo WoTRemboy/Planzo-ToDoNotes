@@ -3,6 +3,16 @@
     {
       "filename" : "EditTaskDeselectPinnedIcon.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "EditTaskDeselectPinnedIconDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

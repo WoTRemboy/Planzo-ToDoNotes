@@ -22,8 +22,8 @@ struct MainCustomNavBar: View {
             let topInset = proxy.safeAreaInsets.top
             
             ZStack(alignment: .top) {
-                Color.BackColors.backDefault
-                    .shadow(color: Color.ShadowColors.shadowDefault, radius: 15, x: 0, y: 5)
+                Color.SupportColors.supportNavBar
+                    .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
                 
                 VStack(spacing: 0) {
                     if viewModel.showingSearchBar {
@@ -79,7 +79,7 @@ struct MainCustomNavBar: View {
                 Image.NavigationBar.MainTodayPages.importantSelect)
                     .resizable()
                     .frame(width: 26, height: 26)
-                    .shadow(color: Color.ShadowColors.shadowDefault,
+                    .shadow(color: Color.ShadowColors.navBar,
                             radius: viewModel.importance ? 5 : 0)
             }
         }

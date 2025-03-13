@@ -128,14 +128,13 @@ struct TaskListRow: View {
                 }
             }
         }
-        .padding(.leading)
         .padding(.trailing, 4)
     }
     
     private var dateLabel: some View {
         HStack(spacing: 2) {
             Text(entity.target?.fullHourMinutes ?? String())
-                .font(.system(size: 14, weight: .regular))
+                .font(.system(size: 15, weight: .regular))
                 .foregroundStyle(
                     TaskService.taskCheckStatus(for: entity)
                     || status == .outdated ?

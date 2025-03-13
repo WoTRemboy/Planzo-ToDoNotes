@@ -35,7 +35,7 @@ struct SettingTaskCreateView: View {
             fullScreenPageButton
         }
         .padding(32)
-        .background(Color.BackColors.backFormCell)
+        .background(Color.SupportColors.supportButton)
         .clipShape(.rect(cornerRadius: 10))
 
     }
@@ -50,6 +50,7 @@ struct SettingTaskCreateView: View {
             HStack(spacing: 4) {
                 Text(Texts.Settings.TaskCreate.popup)
                     .font(.system(size: 13, weight: .regular))
+                    .foregroundStyle(Color.LabelColors.labelPrimary)
                 
                 (viewModel.taskCreation == .popup ?
                  Image.Selector.selected :
@@ -75,6 +76,7 @@ struct SettingTaskCreateView: View {
             HStack(spacing: 4) {
                 Text(Texts.Settings.TaskCreate.fullScreen)
                     .font(.system(size: 13, weight: .regular))
+                    .foregroundStyle(Color.LabelColors.labelPrimary)
                 
                 (viewModel.taskCreation == .fullScreen ?
                  Image.Selector.selected :
@@ -93,6 +95,7 @@ struct SettingTaskCreateView: View {
     private var descriptionLabel: some View {
         Text(Texts.Settings.TaskCreate.descriptionContent)
             .font(.system(size: 15, weight: .regular))
+            .foregroundStyle(Color.LabelColors.labelPrimary)
             .padding(.horizontal)
     }
 }

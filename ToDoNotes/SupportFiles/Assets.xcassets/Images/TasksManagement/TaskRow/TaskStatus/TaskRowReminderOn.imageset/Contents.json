@@ -3,6 +3,16 @@
     {
       "filename" : "NotificationStatusIcon.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "TaskRowReminderOnDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

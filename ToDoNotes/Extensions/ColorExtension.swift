@@ -13,11 +13,8 @@ extension Color {
         static let backiOSPrimary = Color("BackiOSPrimary")
         static let backPrimary = Color("BackPrimary")
         static let backSecondary = Color("BackSecondary")
-        static let backSplash = Color("BackSplash")
-        static let backPopup = Color("BackPopup")
         static let backDefault = Color("BackDefault")
-        static let backTableView = Color("BackTableView")
-        static let backSheetView = Color("BackSheetView")
+        static let backSheet = Color("BackSheet")
         static let backFormCell = Color("BackFormCell")
     }
     
@@ -34,6 +31,14 @@ extension Color {
         static let labelSecondary = Color("LabelSecondary")
         static let labelTertiary = Color("LabelTertiary")
         static let labelReversed = Color("LabelReversed")
+        static let labelBlack = Color("LabelBlack")
+        static let labelGreyLight = Color("LabelGreyLight")
+        static let labelGreyDark = Color("LabelGreyDark")
+        
+        enum Special {
+            static let labelFilterUnselected = Color("LabelFilterUnselected")
+            static let labelSearchBarCancel = Color("LabelSearchBarCancel")
+        }
     }
     
     enum SupportColors {
@@ -42,6 +47,10 @@ extension Color {
         static let supportSegmented = Color("SupportSegmented")
         static let supportTextField = Color("SupportTextField")
         static let backListRow = Color("SupportListRow")
+        static let supportButton = Color("SupportButton")
+        static let supportToggle = Color("SupportToggle")
+        static let supportPopup = Color("SupportPopup")
+        static let supportParamRow = Color("SupportParamRow")
     }
     
     enum FolderColors {
@@ -53,8 +62,9 @@ extension Color {
     }
     
     enum ShadowColors {
-        static let shadowDefault = Color("ShadowDefaultColor")
-        static let shadowTaskSection = Color("ShadowTaskSectionColor")
+        static let navBar = Color("ShadowNavBarColor")
+        static let popup = Color("ShadowPopupColor")
+        static let taskSection = Color("ShadowTaskSectionColor")
     }
     
     enum SwipeColors {
@@ -68,6 +78,6 @@ extension Color {
 
 extension UIColor {
     enum ShadowColors {
-        static let defaultShadow = UIColor(named: "ShadowDefaultColor")
+        static let navBar = UIColor(named: "ShadowNavBarColor")
     }
 }

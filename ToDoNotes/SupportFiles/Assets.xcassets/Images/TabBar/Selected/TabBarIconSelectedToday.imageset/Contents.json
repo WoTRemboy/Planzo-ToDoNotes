@@ -3,6 +3,16 @@
     {
       "filename" : "TodayTabBarSelected.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "TodayTabBarDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

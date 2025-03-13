@@ -61,8 +61,6 @@ struct MainTaskRowWithActions: View {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         try? TaskService.toggleRemoved(for: entity)
                     }
-                    Toast.shared.present(
-                        title: Texts.Toasts.restored)
                 } label: {
                     Image.TaskManagement.TaskRow.SwipeAction.restore
                 }
@@ -78,8 +76,6 @@ struct MainTaskRowWithActions: View {
                             title: Texts.Toasts.removed)
                     } else {
                         try? TaskService.deleteRemovedTask(for: entity)
-                        Toast.shared.present(
-                            title: Texts.Toasts.deleted)
                     }
                     
                 }
