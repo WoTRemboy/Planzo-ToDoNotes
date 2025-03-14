@@ -50,12 +50,12 @@ struct CalendarMonthSelector: View {
             }
         } label: {
             ZStack {
-                Color.black
+                Color.LabelColors.labelPrimary
                 
-                Text(Texts.Settings.Appearance.accept)
+                Text(Texts.CalendarPage.close)
                     .font(.system(size: 17, weight: .regular))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                    .foregroundColor(Color.white)
+                    .foregroundColor(Color.LabelColors.labelReversed)
             }
             .clipShape(.rect(cornerRadius: 10))
         }

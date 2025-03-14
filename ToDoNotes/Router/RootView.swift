@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct RootView<Content: View>: View {
-    @Environment(\.colorScheme) private var scheme
+    
+    @AppStorage(Texts.UserDefaults.theme) private var userTheme: Theme = .systemDefault
     @ViewBuilder internal var content: Content
     @State private var overlayWindow: UIWindow?
     
@@ -20,7 +21,7 @@ struct RootView<Content: View>: View {
                     window.backgroundColor = .clear
                     
                     let rootController = UIHostingController(rootView: ToastGroup()
-                        .preferredColorScheme(scheme))
+                        .preferredColorScheme(userTheme.colorScheme))
                     rootController.view.frame = windowScene.keyWindow?.frame ?? .zero
                     rootController.view.backgroundColor = .clear
                     window.rootViewController = rootController

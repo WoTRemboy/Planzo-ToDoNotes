@@ -32,9 +32,9 @@ struct CalendarTaskFormPlaceholder: View {
             .font(.system(size: 15, weight: .medium))
             .foregroundStyle(Color.LabelColors.labelSecondary)
             .contentTransition(.numericText(value: date.timeIntervalSince1970))
-            .matchedGeometryEffect(
-                id: Texts.NamespaceID.selectedCalendarDate,
-                in: namespace)
+//            .matchedGeometryEffect(
+//                id: Texts.NamespaceID.selectedCalendarDate,
+//                in: namespace)
     }
     
     private var emptyListImage: some View {

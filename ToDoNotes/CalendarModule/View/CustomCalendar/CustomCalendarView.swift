@@ -36,7 +36,7 @@ struct CustomCalendarView: View {
             ForEach(viewModel.daysOfWeek.indices, id: \.self) { index in
                 Text(viewModel.daysOfWeek[index])
                     .font(.system(size: 13, weight: .regular))
-                    .foregroundStyle(Color.LabelColors.labelTertiary)
+                    .foregroundStyle(Color.LabelColors.labelGreyLight)
                     .frame(maxWidth: .infinity)
             }
         }

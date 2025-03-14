@@ -3,6 +3,16 @@
     {
       "filename" : "SelectorUnselected.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "SelectorUnselectedDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

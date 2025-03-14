@@ -80,9 +80,11 @@ struct CustomCalendarCell: View {
         RoundedRectangle(cornerRadius: 10)
             .frame(width: 44, height: 44)
             .foregroundStyle(Color.LabelColors.labelPrimary)
-            .matchedGeometryEffect(
-                id: Texts.NamespaceID.selectedCalendarCell,
-                in: namespace)
+            .animation(.easeInOut(duration: 0.1), value: selected)
+            .transition(.blurReplace)
+//            .matchedGeometryEffect(
+//                id: Texts.NamespaceID.selectedCalendarCell,
+//                in: namespace)
     }
     
     private var underline: some View {

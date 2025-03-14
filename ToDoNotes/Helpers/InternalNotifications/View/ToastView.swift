@@ -60,17 +60,18 @@ private struct ToastView: View {
                 .foregroundStyle(Color.LabelColors.labelPrimary)
                 .lineLimit(1)
         }
-        .foregroundStyle(item.tint)
         .padding(.horizontal, 20)
         .padding(.vertical, 14)
+        
+        .background(item.tint)
         .background(
             .background
-                .shadow(.drop(color: .ShadowColors.shadowDefault,
-                              radius: 10,
-                              x: 2, y: 2)),
+                .shadow(.drop(color: .ShadowColors.popup,
+                              radius: 32)),
             in: .rect(cornerRadius: 12)
         )
         .contentShape(.rect(cornerRadius: 12))
+        
         .gesture(
             DragGesture(minimumDistance: 0)
                 .onEnded { value in

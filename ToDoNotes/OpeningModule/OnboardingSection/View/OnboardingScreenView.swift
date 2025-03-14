@@ -53,14 +53,14 @@ struct OnboardingScreenView: View {
                         .clipShape(.rect(cornerRadius: 16))
                     
                     Text(viewModel.steps[index].name)
-                        .font(.system(size: 18))
-                        .fontWeight(.medium)
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundStyle(Color.LabelColors.labelPrimary)
                         .multilineTextAlignment(.center)
                         .padding(.top)
                     
                     Text(viewModel.steps[index].description)
-                        .font(.system(size: 14))
-                        .fontWeight(.regular)
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundStyle(Color.LabelColors.labelPrimary)
                         .multilineTextAlignment(.center)
                         .padding(.top, 3)
                         .frame(width: 238)
@@ -86,7 +86,7 @@ struct OnboardingScreenView: View {
                 if step == page.index {
                     Circle()
                         .frame(width: 15, height: 15)
-                        .foregroundStyle(Color.gray)
+                        .foregroundStyle(Color.LabelColors.labelPrimary)
                         .transition(.scale)
                 } else {
                     Circle()
@@ -104,10 +104,12 @@ struct OnboardingScreenView: View {
         VStack(spacing: 16) {
             if !viewModel.isLastPage(current: page.index) {
                 nextPageButton
-                    .transition(.move(edge: .leading).combined(with: .opacity))
+//                    .transition(.move(edge: .leading).combined(with: .opacity))
+                    .transition(.blurReplace)
             } else {
                 nextPageButton
-                    .transition(.move(edge: .trailing).combined(with: .opacity))
+//                    .transition(.move(edge: .trailing).combined(with: .opacity))
+                    .transition(.blurReplace)
             }
         }
     }
@@ -128,14 +130,14 @@ struct OnboardingScreenView: View {
             Text(!viewModel.isLastPage(current: page.index) ? Texts.OnboardingPage.next : Texts.OnboardingPage.start)
                 .font(.system(size: 17, weight: .medium))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            
+                .foregroundColor(Color.LabelColors.labelReversed)
+                .background(Color.LabelColors.labelPrimary)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
         }
         .frame(height: 50)
         .frame(maxWidth: .infinity)
         .minimumScaleFactor(0.4)
-        
-        .foregroundStyle(Color.white)
-        .tint(Color.LabelColors.labelPrimary)
-        .buttonStyle(.bordered)
         
         .padding(.horizontal)
         .padding(.top, 30)
@@ -205,7 +207,7 @@ struct OnboardingScreenView: View {
             .fontWeight(.medium)
             .foregroundStyle(
                 !viewModel.isLastPage(current: page.index) ?
-                Color.labelSecondary :
+                Color.LabelColors.labelPrimary :
                     Color.clear)
         
             .padding(.top)

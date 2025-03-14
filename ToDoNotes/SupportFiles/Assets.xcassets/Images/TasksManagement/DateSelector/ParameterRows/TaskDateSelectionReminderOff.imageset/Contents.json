@@ -3,6 +3,16 @@
     {
       "filename" : "TaskDateReminderOff.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "TaskDateReminderOffDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

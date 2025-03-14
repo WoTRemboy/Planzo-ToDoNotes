@@ -3,6 +3,16 @@
     {
       "filename" : "TaskCheckboxSelected.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "EditTaskCheckDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

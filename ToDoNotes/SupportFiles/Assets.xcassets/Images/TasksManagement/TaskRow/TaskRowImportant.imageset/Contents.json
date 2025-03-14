@@ -3,6 +3,16 @@
     {
       "filename" : "TaskRowImportant.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "TaskRowImportantDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

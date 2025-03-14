@@ -3,6 +3,16 @@
     {
       "filename" : "HomeTabBarSelected.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "HomeTabBarDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

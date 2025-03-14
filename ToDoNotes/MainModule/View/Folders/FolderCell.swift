@@ -36,11 +36,11 @@ struct FolderCell: View {
     private var nameLabel: some View {
         let color: Color
         if selected && folder == .all {
-            color = Color.white
+            color = Color.LabelColors.labelReversed
         } else if selected {
-            color = Color.LabelColors.labelPrimary
+            color = Color.LabelColors.labelBlack
         } else {
-            color = Color.LabelColors.labelSecondary
+            color = Color.LabelColors.labelDetails
         }
         
         return Text(folder.name)
@@ -65,8 +65,8 @@ struct FolderCell: View {
         RoundedRectangle(cornerRadius: 16)
             .foregroundStyle(selected ? folder.color : .clear)
             .animation(.easeInOut(duration: 0.2), value: selected)
-            .matchedGeometryEffect(id: Texts.NamespaceID.selectedTab, in: namespace)
-            .transition(.opacity)
+//            .matchedGeometryEffect(id: Texts.NamespaceID.selectedTab, in: namespace)
+            .transition(.blurReplace)
     }
     
     private var emptyRectangle: some View {

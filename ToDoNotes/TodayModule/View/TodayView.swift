@@ -79,7 +79,7 @@ struct TodayView: View {
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .background(Color.BackColors.backDefault)
-        .shadow(color: Color.ShadowColors.shadowTaskSection, radius: 10, x: 2, y: 2)
+        .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)
         .scrollContentBackground(.hidden)
 //        .animation(.easeInOut(duration: 0.1), value: tasksResults.count)
     }

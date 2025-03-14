@@ -3,6 +3,16 @@
     {
       "filename" : "CalendarTabBarSelected.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "CalendarTabBarDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

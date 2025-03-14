@@ -199,6 +199,8 @@ struct TaskManagementView: View {
             viewModel.toggleDatePicker()
         } label: {
             calendarImage
+                .resizable()
+                .frame(width: 24, height: 24)
             
             if viewModel.hasDate {
                 Text(viewModel.hasTime ?
@@ -210,10 +212,12 @@ struct TaskManagementView: View {
         }
     }
     
-    private var calendarImage: some View {
-        Image.TaskManagement.EditTask.calendar
-            .resizable()
-            .frame(width: 24, height: 24)
+    private var calendarImage: Image {
+        if viewModel.hasDate {
+            Image.TaskManagement.EditTask.calendar
+        } else {
+            Image.TaskManagement.EditTask.calendarUnselected
+        }
     }
     
     private var checkButton: some View {

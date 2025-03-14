@@ -3,6 +3,16 @@
     {
       "filename" : "TaskRowPinned.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "TaskRowPinnedDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

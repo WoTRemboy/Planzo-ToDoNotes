@@ -66,6 +66,7 @@ final class Texts {
         static let today = "Сегодня"
         static let emptyList = "Свободный день"
         static let accept = "Принять"
+        static let close = "Закрыть"
     }
     
     enum Settings {
