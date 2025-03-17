@@ -55,86 +55,79 @@ final class Texts {
     }
     
     enum TodayPage {
-        static let title = "Сегодня"
-        static let placeholder = "У вас пока нет заметок"
-        static let notCompleted = "Не выполнено"
-        static let completed = "Выполнено"
+        static let title = NSLocalizedString("TodayPageTitle", comment: "Today")
+        static let placeholder = NSLocalizedString("TodayPagePlaceholder", comment: "No notes for today")
+        static let notCompleted = NSLocalizedString("TodayPageActive", comment: "Active")
+        static let completed = NSLocalizedString("TodayPageCompleted", comment: "Completed")
     }
     
     enum CalendarPage {
-        static let title = "Календарь"
-        static let today = "Сегодня"
-        static let emptyList = "Свободный день"
-        static let accept = "Принять"
-        static let close = "Закрыть"
+        static let title = NSLocalizedString("CalendarPageCalendarTitle", comment: "Calendar")
+        static let today = NSLocalizedString("CalendarPageCalendarToday", comment: "Today")
+        static let emptyList = NSLocalizedString("CalendarPageCalendarEmptyList", comment: "Free day")
+        static let accept = NSLocalizedString("CalendarPageCalendarAccept", comment: "Accept")
+        static let close = NSLocalizedString("CalendarPageCalendarClose", comment: "Close")
     }
     
     enum Settings {
-        static let title = "Настройки"
-        static let cancel = "Отмена"
-        static let ok = "Хорошо"
+        static let title = NSLocalizedString("SettingsPageTitle", comment: "Settings")
+        static let cancel = NSLocalizedString("SettingsPageCancel", comment: "Cancel")
+        static let ok = NSLocalizedString("SettingsPageOk", comment: "OK")
         
         enum About {
-            static let title = "О приложении"
+            static let title = NSLocalizedString("SettingsPageAboutTitle", comment: "About")
             static let release = "release"
-            static let version = "Версия"
+            static let version = NSLocalizedString("SettingsPageAboutVersion", comment: "Version")
             static let copyright = "2025 Avoqode LTD"
         }
         
         enum Language {
-            static let sectionTitle = "Основные"
-            static let title = "Язык"
-            static let details = "Русский"
+            static let sectionTitle = NSLocalizedString("SettingsPageLanguageSectionTitle", comment: "General")
+            static let title = NSLocalizedString("SettignsPageLanguageTitle", comment: "Language")
+            static let details = NSLocalizedString("SettingsPageLanguageTitle", comment: "English")
             
-            static let alertTitle = "Сменить язык"
-            static let alertContent = "Выберите нужный язык в настройках."
-            static let settings = "Настройки"
+            static let alertTitle = NSLocalizedString("SettingsPageLanguageAlertTitle", comment: "Change Language")
+            static let alertContent = NSLocalizedString("SettingsPageLanguageAlertContent", comment: "Select the required language in the settings.")
+            static let settings = NSLocalizedString("SettingsPageLanguageSettings", comment: "Settings")
         }
         
         enum Appearance {
-            static let title = "Оформление"
-            static let system = "Системное"
-            static let light = "Светлое"
-            static let dark = "Темное"
+            static let title = NSLocalizedString("SettingsPageAppearanceTitle", comment: "Appearance")
+            static let system = NSLocalizedString("SettingsPageAppearanceSystem", comment: "System")
+            static let light = NSLocalizedString("SettingsPageAppearanceLight", comment: "Light")
+            static let dark = NSLocalizedString("SettingsPageAppearanceDark", comment: "Dark")
             
-            static let accept = "Применить"
-            static let cancel = "Отмена"
+            static let accept = NSLocalizedString("SettingsPageAppearanceAccept", comment: "Accept")
+            static let cancel = NSLocalizedString("SettingsPageAppearanceCancel", comment: "Cancel")
         }
         
         enum Notification {
-            static let title = "Уведомления"
-            static let prohibitedTitle = "Уведомления отключены"
-            static let prohibitedContent = "Пожалуйста, включите параметр в настройках."
-            static let disabledTitle = "Уведомления отключены"
-            static let disabledContent = "Пожалуйста, включите параметр в настройках приложения."
+            static let title = NSLocalizedString("SettingsPageNotificationsTitle", comment: "Notifications")
+            static let prohibitedTitle = NSLocalizedString("SettingsPageNotificationsProhibitedTitle", comment: "Notifications are prohibited")
+            static let prohibitedContent = NSLocalizedString("SettingsPageNotificationsProhibitedContent", comment: "Please enable this option in Settings.")
+            static let disabledTitle = NSLocalizedString("SettingsPageNotificationsDisabledTitle", comment: "Notifications are disabled")
+            static let disabledContent = NSLocalizedString("SettingsPageNotificationsDisabledContent", comment: "Please enable this option in the App Settings.")
         }
         
         enum Reset {
-            static let sectionTitle = "Контент"
-            static let title = "Очистка памяти"
-            static let warning = "Вы действительно хотите удалить все существующие задачи? Восстановить их будет невозможно."
-            static let confirm = "Удалить данные"
+            static let title = NSLocalizedString("SettingsPageResetTitle", comment: "Reset")
+            static let warning = NSLocalizedString("SettingsPageResetWarning", comment: "Are you sure you want to delete all existing tasks? They cannot be restored.")
+            static let confirm = NSLocalizedString("SettingsPageResetConfirm", comment: "Confirm")
             
-            static let success = "Выполнено"
-            static let failure = "Ошибка"
-            static let empty = "Отменено"
+            static let success = NSLocalizedString("SettingsPageResetSuccess", comment: "Success")
+            static let failure = NSLocalizedString("SettingsPageResetFailure", comment: "Failure")
+            static let empty = NSLocalizedString("SettingsPageResetEmpty", comment: "Canceled")
             
-            static let successMessage = "Данные успешно удалены"
-            static let failureMessage = "Не удалось удалить данные"
-            static let emptyMessage = "Данные уже отсутсвуют"
-        }
-        
-        enum Email {
-            static let contact = "Контакт"
-            static let emailTitle = "Email"
-            static let emailContent = "contact@avoqode.com"
+            static let successMessage = NSLocalizedString("SettingsPageResetSuccessMessage", comment: "Data deleted successfully")
+            static let failureMessage = NSLocalizedString("SettingsPageResetFailureMessage", comment: "Failed to delete data")
+            static let emptyMessage = NSLocalizedString("SettingsPageResetEmptyMessage", comment: "The data is no longer available")
         }
         
         enum TaskCreate {
-            static let title = "Окно создания заметки"
-            static let popup = "Всплывающее окно"
-            static let fullScreen = "Страница"
-            static let descriptionContent = "Выберите между стилями «Страница» и «Всплывающее окно» для создания заметок."
+            static let title = NSLocalizedString("SettingsPageTaskCreateTitle", comment: "Create note window")
+            static let popup = NSLocalizedString("SettingsPageTaskCreatePopup", comment: "Pop-up Window")
+            static let fullScreen = NSLocalizedString("SettingsPageTaskCreateFullscreen", comment: "Full Screen")
+            static let descriptionContent = NSLocalizedString("SettingsPageTaskCreateDescriptionContent", comment: "Choose between Page and Pop-up styles for taking notes.")
         }
     }
     
