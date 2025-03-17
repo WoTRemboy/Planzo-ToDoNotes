@@ -13,44 +13,44 @@ final class Texts {
     }
     
     enum OnboardingPage {
-        static let skip = "Пропустить"
-        static let next = "Продолжить"
-        static let start = "Начать"
+        static let skip = NSLocalizedString("OnboardingPageSkip", comment: "Skip")
+        static let next = NSLocalizedString("OnboardingPageNext", comment: "Next")
+        static let start = NSLocalizedString("OnboardingPageStart", comment: "Start")
         
-        static let appleLogin = "Войти с помощью Apple"
-        static let googleLogin = "Войти с помощью Google"
-        static let withoutAuth = "Без авторизации"
+        static let appleLogin = NSLocalizedString("OnboardingPageAppleLogin", comment: "Sign in with Apple")
+        static let googleLogin = NSLocalizedString("OnboardingPageGoogleLogin", comment: "Sign in with Google")
+        static let withoutAuth = NSLocalizedString("OnboardingPageWithoutAuth", comment: "Without Authorization")
         
-        static let placeholderTitle = "Добро пожаловать\nв Список дел"
-        static let placeholderContent = "Вот небольшое руководство, чтобы помочь вам начать."
+        static let placeholderTitle = NSLocalizedString("OnboardingPagePlaceholderTitle", comment: "Welcome to the ToDoNotes")
+        static let placeholderContent = NSLocalizedString("OnboardingPagePlaceholderContent", comment: "Here's a little guide to help you get started.")
     }
     
     enum MainPage {
-        static let title = "Список дел"
-        static let placeholder = "У вас пока нет заметок"
+        static let title = NSLocalizedString("MainPageTitle", comment: "To Do List")
+        static let placeholder = NSLocalizedString("MainPagePlaceholder", comment: "No notes")
         
         enum Filter {
-            static let active = "Активные"
-            static let outdate = "Просроченные"
-            static let unsorted = "Несортированные"
-            static let completed = "Выполненные"
+            static let active = NSLocalizedString("MainPageFilterActive", comment: "Active")
+            static let outdate = NSLocalizedString("MainPageFilterOutdate", comment: "Overdue")
+            static let unsorted = NSLocalizedString("MainPageFilterUnsorted", comment: "Unsorted")
+            static let completed = NSLocalizedString("MainPageFilterCompleted", comment: "Completed")
+            
+            enum RemoveFilter {
+                static let buttonTitle = NSLocalizedString("MainPageRemoveFilterButtonTitle", comment: "Empty Trash")
+                static let alertTitle = NSLocalizedString("MainPageRemoveFilterAlertTitle", comment: "Are you sure?")
+                static let alertContent = NSLocalizedString("MainPageRemoveFilterAlertContent", comment: "The data will be deleted permanently.")
+                static let alertCancel = NSLocalizedString("MainPageRemoveFilterAlertCancel", comment: "Cancel")
+                static let alertYes = NSLocalizedString("MainPageRemoveFilterAlertYes", comment: "Yes")
+            }
         }
         
         enum Folders {
-            static let title = "Папки"
-            static let all = "Все"
-            static let reminders = "Напоминания"
-            static let tasks = "Задачи"
-            static let purchases = "Списки"
-            static let noDate = "Без дат"
-        }
-        
-        enum RemoveFilter {
-            static let buttonTitle = "Очистить корзину"
-            static let alertTitle = "Продолжить удаление?"
-            static let alertContent = "Данные будут удалены навсегда."
-            static let alertCancel = "Отмена"
-            static let alertYes = "Да"
+            static let title = NSLocalizedString("MainPageFolderTitle", comment: "Folders")
+            static let all = NSLocalizedString("MainPageFolderAll", comment: "All")
+            static let reminders = NSLocalizedString("MainPageFolderReminders", comment: "Reminders")
+            static let tasks = NSLocalizedString("MainPageFolderTasks", comment: "Tasks")
+            static let purchases = NSLocalizedString("MainPageFolderLists", comment: "Lists")
+            static let noDate = NSLocalizedString("MainPageFolderNoDates", comment: "No Dates")
         }
     }
     
