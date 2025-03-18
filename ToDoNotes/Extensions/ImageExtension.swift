@@ -13,6 +13,10 @@ extension Image {
         static let tabbarIcon = Image("PlaceholderTabbarIcon")
     }
     
+    enum Onboarding {
+        static let splashScreenLogo = Image("SplashScreenLogo")
+    }
+    
     enum NavigationBar {
         enum MainTodayPages {
             static let importantSelect = Image("NavIconSelectImportant")

@@ -162,7 +162,7 @@ struct MainView: View {
         Button {
             viewModel.toggleShowingTaskRemoveAlert()
         } label: {
-            Text(Texts.MainPage.RemoveFilter.buttonTitle)
+            Text(Texts.MainPage.Filter.RemoveFilter.buttonTitle)
                 .font(.system(size: 17, weight: .regular))
                 .frame(maxWidth: .infinity, maxHeight: 58)
                 .background(Color.LabelColors.labelPrimary)
@@ -176,9 +176,9 @@ struct MainView: View {
     
     private var removeAlert: some View {
         CustomAlertView(
-            title: Texts.MainPage.RemoveFilter.alertTitle,
-            message: Texts.MainPage.RemoveFilter.alertContent,
-            primaryButtonTitle: Texts.MainPage.RemoveFilter.alertYes,
+            title: Texts.MainPage.Filter.RemoveFilter.alertTitle,
+            message: Texts.MainPage.Filter.RemoveFilter.alertContent,
+            primaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertYes,
             primaryAction: {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     TaskService.deleteRemovedTasks()
@@ -187,7 +187,7 @@ struct MainView: View {
                 Toast.shared.present(
                     title: Texts.Toasts.deletedAll)
             },
-            secondaryButtonTitle: Texts.MainPage.RemoveFilter.alertCancel,
+            secondaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertCancel,
             secondaryAction: viewModel.toggleShowingTaskRemoveAlert)
     }
 }

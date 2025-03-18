@@ -68,13 +68,13 @@ struct TaskDateParamRow: View {
     private var titleLabel: Text {
         switch type {
         case .time:
-            Text(Texts.TaskManagement.DatePicker.time)
+            Text(Texts.TaskManagement.DatePicker.Time.title)
         case .notifications:
-            Text(Texts.TaskManagement.DatePicker.reminder)
+            Text(Texts.TaskManagement.DatePicker.Reminder.title)
         case .repeating:
-            Text(Texts.TaskManagement.DatePicker.cycle)
+            Text(Texts.TaskManagement.DatePicker.Repeat.title)
         case .endRepeating:
-            Text(Texts.TaskManagement.DatePicker.endCycle)
+            Text(Texts.TaskManagement.DatePicker.Repeat.endTitle)
         }
     }
     
