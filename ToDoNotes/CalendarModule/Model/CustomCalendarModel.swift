@@ -32,7 +32,7 @@ extension Date {
     
     static var fullMonthNames: [String] {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: Texts.DateParameters.locale)
+        formatter.locale = Locale.autoupdatingCurrent
         
         return (1...12).compactMap { month in
             formatter.setLocalizedDateFormatFromTemplate("MMMM")
