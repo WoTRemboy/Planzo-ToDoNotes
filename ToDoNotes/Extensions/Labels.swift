@@ -132,63 +132,69 @@ final class Texts {
     }
     
     enum TaskManagement {
-        static let titlePlaceholder = "Что бы вы хотели сделать?"
-        static let descriprionPlaceholder = "Описание"
-        static let today = "Сегодня"
-        static let point = "Пункт"
+        static let titlePlaceholder = NSLocalizedString("TaskManagementTitlePlaceholder", comment: "What would you like to do?")
+        static let descriprionPlaceholder = NSLocalizedString("TaskManagementDescriptionPlaceholder", comment: "Description")
+        static let today = NSLocalizedString("TaskManagementToday", comment: "Today")
+        static let point = NSLocalizedString("TaskManagementPoint", comment: "Poin")
         
         enum TaskRow {
-            static let placeholder = "Нет заголовка"
+            static let placeholder = NSLocalizedString("TaskManagementTaskRowPlaceholder", comment: "No Title")
         }
         
         enum ContextMenu {
-            static let complete = "Завершить задачу"
-            static let dublicate = "Дублировать заметку"
-            static let important = "Сделать избранной"
-            static let importantDeselect = "Снять избранность"
-            static let pin = "Закрепить"
-            static let unpin = "Открепить"
-            static let delete = "Удалить"
+            static let complete = NSLocalizedString("TaskManagementContextMenuComplete", comment: "Complete the Task")
+            static let dublicate = NSLocalizedString("TaskManagementContextMenuDublicate", comment: "Duplicate the Note")
+            static let important = NSLocalizedString("TaskManagementContextMenuImportant", comment: "Make Favorite")
+            static let importantDeselect = NSLocalizedString("TaskManagementContextMenuImportantDeselect", comment: "Remove Favorite")
+            static let pin = NSLocalizedString("TaskManagementContextMenuPin", comment: "Pin")
+            static let unpin = NSLocalizedString("TaskManagementContextMenuUnpit", comment: "Unpin")
+            static let delete = NSLocalizedString("TaskManagementContextMenuDelete", comment: "Remove")
         }
         
         enum DatePicker {
-            static let title = "Дата и время"
-            static let cancel = "Отменить"
-            static let done = "Сохранить"
-            static let target = "Цель"
-            static let time = "Время"
-            static let reminder = "Напоминание"
-            static let cycle = "Повтор"
-            static let endCycle = "Завершить повторы"
-            static let removeAll = "Очистить всё"
+            static let title = NSLocalizedString("TaskManagementDatePickerTitle", comment: "Date & Time")
+            static let cancel = NSLocalizedString("TaskManagementDatePickerCancel", comment: "Cancel")
+            static let done = NSLocalizedString("TaskManagementDatePickerDone", comment: "Dane")
+            static let target = NSLocalizedString("TaskManagementDatePickerTarget", comment: "Target")
+            static let removeAll = NSLocalizedString("TaskManagementDatePickerRemoveAll", comment: "Clear All")
             
-            static let noneTime = "Нет"
+            enum Time {
+                static let title = NSLocalizedString("TaskManagementDatePickerTime", comment: "Time")
+                static let none = NSLocalizedString("TaskManagementDatePickerNoneTime", comment: "None")
+            }
             
-            static let noneReminder = "Нет"
-            static let someRemainders = "Несколько"
-            static let errorRemainder = "Ошибка"
+            enum Reminder {
+                static let title = NSLocalizedString("TaskManagementDatePickerReminder", comment: "Reminder")
+                static let none = NSLocalizedString("TaskManagementDatePickerNoneReminder", comment: "None")
+                static let some = NSLocalizedString("TaskManagementDatePickerSomeReminder", comment: "Some")
+                static let error = NSLocalizedString("TaskManagementDatePickerErrorReminder", comment: "Error")
+                
+                static let inTime = NSLocalizedString("TaskManagementDatePickerOnTime", comment: "On time")
+                static let fiveMinutesBefore = NSLocalizedString("TaskManagementDatePickerFiveMinutesBefore", comment: "5 minutes before")
+                static let thirtyMinutesBefore = NSLocalizedString("TaskManagementDatePickerThirtyMinutesBefore", comment: "30 minutes before")
+                static let oneHourBefore = NSLocalizedString("TaskManagementDatePickerOneHourBefore", comment: "1 hour before")
+                static let oneDayBefore = NSLocalizedString("TaskManagementDatePickerOneDayBefore", comment: "1 day before")
+                
+                static let inTimeNotification = NSLocalizedString("TaskManagementDatePickerNowNotification", comment: "Now")
+                static let fiveMinutesBeforeNotification = NSLocalizedString("TaskManagementDatePickerInFiveMinutesNotification", comment: "In 5 minutes")
+                static let thirtyMinutesBeforeNotification = NSLocalizedString("TaskManagementDatePickerInThiryMinutesNotification", comment: "In 30 minutes")
+                static let oneHourBeforeNotification = NSLocalizedString("TaskManagementDatePickerInOneHourNotification", comment: "In 1 hour")
+                static let oneDayBeforeNotification = NSLocalizedString("TaskManagementDatePickerInOneDayNotification", comment: "In 1 day")
+            }
             
-            static let inTime = "Во время"
-            static let fiveMinutesBefore = "За 5 минут"
-            static let thirtyMinutesBefore = "За 30 минут"
-            static let oneHourBefore = "За 1 час"
-            static let oneDayBefore = "За 1 день"
-            
-            static let inTimeNotification = "Сейчас"
-            static let fiveMinutesBeforeNotification = "Через 5 минут"
-            static let thirtyMinutesBeforeNotification = "Через 30 минут"
-            static let oneHourBeforeNotification = "Через 1 час"
-            static let oneDayBeforeNotification = "Через 1 день"
-            
-            static let noneRepeating = "Нет"
-            static let dailyRepeating = "Каждый день"
-            static let weeklyRepeating = "Каждую неделю"
-            static let monthlyRepeating = "Каждый месяц"
-            static let yearlyRepeating = "Каждый год"
-            static let businessRepeating = "По будням"
-            static let weekendRepeating = "По выходным"
-            
-            static let noneEndRepeating = "Никогда"
+            enum Repeat {
+                static let title = NSLocalizedString("TaskManagementDatePickerRepeatTitle", comment: "Repeat")
+                static let none = NSLocalizedString("TaskManagementDatePickerRepeatNone", comment: "None")
+                static let daily = NSLocalizedString("TaskManagementDatePickerRepeatEveryday", comment: "Daily")
+                static let weekly = NSLocalizedString("TaskManagementDatePickerRepeatWeekly", comment: "Weekly")
+                static let monthly = NSLocalizedString("TaskManagementDatePickerRepeatMonthly", comment: "Monthly")
+                static let yearly = NSLocalizedString("TaskManagementDatePickerRepeatYearly", comment: "Yearly")
+                static let business = NSLocalizedString("TaskManagementDatePickerRepeatBusiness", comment: "Every weekdays")
+                static let weekend = NSLocalizedString("TaskManagementDatePickerRepeatWeekend", comment: "Every weekends")
+                
+                static let endTitle = NSLocalizedString("TaskManagementDatePickerEndRepeatTitle", comment: "End Repeat")
+                static let noneEnd = NSLocalizedString("TaskManagementDatePickerEndRepeatNone", comment: "Never")
+            }
         }
         
         enum ShareView {
@@ -200,31 +206,31 @@ final class Texts {
     }
     
     enum SearchBar {
-        static let placeholder = "Поиск текста, заголовка"
-        static let cancel = "Отмена"
+        static let placeholder = NSLocalizedString("SearchBarPlaceholder", comment: "Search by text, title")
+        static let cancel = NSLocalizedString("SearchBarCancel", comment: "Cancel")
     }
     
     enum Tabbar {
-        static let main = "Главная"
-        static let today = "Сегодня"
-        static let calendar = "Календарь"
-        static let settings = "Настройки"
+        static let main = NSLocalizedString("TabbarMainTitle", comment: "Home")
+        static let today = NSLocalizedString("TabbarTodayTitle", comment: "Today")
+        static let calendar = NSLocalizedString("TabbarCalendarTitle", comment: "Calendar")
+        static let settings = NSLocalizedString("TabbarSettingsTitle", comment: "Settings")
     }
     
     enum Toasts {
-        static let pinnedOn = "Закреплено"
-        static let pinnedOff = "Откреплено"
-        static let importantOn = "Добавлено в избранное"
-        static let importantOff = "Убрано из избранного"
+        static let pinnedOn = NSLocalizedString("ToastsPinnedOn", comment: "Pinned")
+        static let pinnedOff = NSLocalizedString("ToastsPinnedOff", comment: "Unpinned")
+        static let importantOn = NSLocalizedString("ToastsImportantOn", comment: "Added to Favorites")
+        static let importantOff = NSLocalizedString("ToastsImportantOff", comment: "Removed from Favorites")
         
-        static let deleted = "Удалено"
-        static let deletedAll = "Корзина очищена"
-        static let removed = "Перемещено в корзину"
-        static let restored = "Восстановлено"
+        static let deleted = NSLocalizedString("ToastsDeleted", comment: "Deleted")
+        static let deletedAll = NSLocalizedString("ToastsDeletedAll", comment: "Trash is clear")
+        static let removed = NSLocalizedString("ToastsRemoved", comment: "Moved to Trash")
+        static let restored = NSLocalizedString("ToastsRestored", comment: "Restored")
     }
     
     enum DateParameters {
-        static let locale = "ru_RU"
+        static let locale = NSLocalizedString("DateParametersLocale", comment: "en_US")
     }
     
     enum CoreData {
@@ -232,9 +238,9 @@ final class Texts {
         static let entity = "TaskEntity"
         
         enum TaskSection {
-            static let pinned = "Закреплено"
-            static let active = "Активные"
-            static let completed = "Выполнено"
+            static let pinned = NSLocalizedString("CoreDataTaskSelectionPinned", comment: "Pinned")
+            static let active = NSLocalizedString("CoreDataTaskSelectionActive", comment: "Active")
+            static let completed = NSLocalizedString("CoreDataTaskSelectionCompleted", comment: "Completed")
         }
     }
     

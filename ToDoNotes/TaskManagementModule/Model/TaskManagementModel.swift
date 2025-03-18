@@ -60,17 +60,17 @@ enum TaskNotification: String {
     internal var selectorName: String {
         switch self {
         case .none:
-            Texts.TaskManagement.DatePicker.noneReminder
+            Texts.TaskManagement.DatePicker.Reminder.none
         case .inTime:
-            Texts.TaskManagement.DatePicker.inTime
+            Texts.TaskManagement.DatePicker.Reminder.inTime
         case .fiveMinutesBefore:
-            Texts.TaskManagement.DatePicker.fiveMinutesBefore
+            Texts.TaskManagement.DatePicker.Reminder.fiveMinutesBefore
         case .thirtyMinutesBefore:
-            Texts.TaskManagement.DatePicker.thirtyMinutesBefore
+            Texts.TaskManagement.DatePicker.Reminder.thirtyMinutesBefore
         case .oneHourBefore:
-            Texts.TaskManagement.DatePicker.oneHourBefore
+            Texts.TaskManagement.DatePicker.Reminder.oneHourBefore
         case .oneDayBefore:
-            Texts.TaskManagement.DatePicker.oneDayBefore
+            Texts.TaskManagement.DatePicker.Reminder.oneDayBefore
         }
     }
     
@@ -79,15 +79,15 @@ enum TaskNotification: String {
         case .none:
             String()
         case .inTime:
-            Texts.TaskManagement.DatePicker.inTimeNotification
+            Texts.TaskManagement.DatePicker.Reminder.inTimeNotification
         case .fiveMinutesBefore:
-            Texts.TaskManagement.DatePicker.fiveMinutesBeforeNotification
+            Texts.TaskManagement.DatePicker.Reminder.fiveMinutesBeforeNotification
         case .thirtyMinutesBefore:
-            Texts.TaskManagement.DatePicker.thirtyMinutesBeforeNotification
+            Texts.TaskManagement.DatePicker.Reminder.thirtyMinutesBeforeNotification
         case .oneHourBefore:
-            Texts.TaskManagement.DatePicker.oneHourBeforeNotification
+            Texts.TaskManagement.DatePicker.Reminder.oneHourBeforeNotification
         case .oneDayBefore:
-            Texts.TaskManagement.DatePicker.oneDayBeforeNotification
+            Texts.TaskManagement.DatePicker.Reminder.oneDayBeforeNotification
         }
     }
     
@@ -138,19 +138,19 @@ enum TaskRepeating {
     internal var name: String {
         switch self {
         case .none:
-            Texts.TaskManagement.DatePicker.noneRepeating
+            Texts.TaskManagement.DatePicker.Repeat.none
         case .daily:
-            Texts.TaskManagement.DatePicker.dailyRepeating
+            Texts.TaskManagement.DatePicker.Repeat.daily
         case .weekly:
-            Texts.TaskManagement.DatePicker.weeklyRepeating
+            Texts.TaskManagement.DatePicker.Repeat.weekly
         case .monthly:
-            Texts.TaskManagement.DatePicker.monthlyRepeating
+            Texts.TaskManagement.DatePicker.Repeat.monthly
         case .yearly:
-            Texts.TaskManagement.DatePicker.yearlyRepeating
+            Texts.TaskManagement.DatePicker.Repeat.yearly
         case .businessDays:
-            Texts.TaskManagement.DatePicker.businessRepeating
+            Texts.TaskManagement.DatePicker.Repeat.business
         case .weekendDays:
-            Texts.TaskManagement.DatePicker.weekendRepeating
+            Texts.TaskManagement.DatePicker.Repeat.weekend
         }
     }
 }
@@ -162,7 +162,7 @@ enum TaskEndRepeating {
     internal var name: String {
         switch self {
         case .none:
-            Texts.TaskManagement.DatePicker.noneEndRepeating
+            Texts.TaskManagement.DatePicker.Repeat.noneEnd
         }
     }
 }

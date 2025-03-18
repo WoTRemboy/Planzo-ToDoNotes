@@ -100,6 +100,74 @@
         }
       }
     },
+    "CoreDataTaskSelectionActive" : {
+      "comment" : "Active",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Active"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Активные"
+          }
+        }
+      }
+    },
+    "CoreDataTaskSelectionCompleted" : {
+      "comment" : "Completed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Completed"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Завершенные"
+          }
+        }
+      }
+    },
+    "CoreDataTaskSelectionPinned" : {
+      "comment" : "Pinned",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pinned"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Закрепленные"
+          }
+        }
+      }
+    },
+    "DateParametersLocale" : {
+      "comment" : "en_US",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "en_US"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ru_RU"
+          }
+        }
+      }
+    },
     "MainPageFilterActive" : {
       "comment" : "Active",
       "localizations" : {
@@ -378,7 +446,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "To Do List"
+            "value" : "To Do Notes"
           }
         },
         "ru" : {
@@ -521,6 +589,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Без авторизации"
+          }
+        }
+      }
+    },
+    "SearchBarCancel" : {
+      "comment" : "Cancel",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отмена"
+          }
+        }
+      }
+    },
+    "SearchBarPlaceholder" : {
+      "comment" : "Search by text, title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search by text, title"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск по тексту, заголовку"
           }
         }
       }
@@ -1075,7 +1177,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pop-up Window"
+            "value" : "Dialog"
           }
         },
         "ru" : {
@@ -1116,6 +1218,941 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Настройки"
+          }
+        }
+      }
+    },
+    "TabbarCalendarTitle" : {
+      "comment" : "Calendar",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Календарь"
+          }
+        }
+      }
+    },
+    "TabbarMainTitle" : {
+      "comment" : "Home",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Главная"
+          }
+        }
+      }
+    },
+    "TabbarSettingsTitle" : {
+      "comment" : "Settings",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настройки"
+          }
+        }
+      }
+    },
+    "TabbarTodayTitle" : {
+      "comment" : "Today",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сегодня"
+          }
+        }
+      }
+    },
+    "TaskManagementContextMenuComplete" : {
+      "comment" : "Complete the Task",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Complete the Task"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Завершить задачу"
+          }
+        }
+      }
+    },
+    "TaskManagementContextMenuDelete" : {
+      "comment" : "Remove",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удалить"
+          }
+        }
+      }
+    },
+    "TaskManagementContextMenuDublicate" : {
+      "comment" : "Duplicate the Note",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplicate the Note"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дублировать заметку"
+          }
+        }
+      }
+    },
+    "TaskManagementContextMenuImportant" : {
+      "comment" : "Make Favorite",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorite"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сделать избранной"
+          }
+        }
+      }
+    },
+    "TaskManagementContextMenuImportantDeselect" : {
+      "comment" : "Remove Favorite",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unfavorite"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Снять избранность"
+          }
+        }
+      }
+    },
+    "TaskManagementContextMenuPin" : {
+      "comment" : "Pin",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Закрепить"
+          }
+        }
+      }
+    },
+    "TaskManagementContextMenuUnpit" : {
+      "comment" : "Unpin",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unpin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Открепить"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerCancel" : {
+      "comment" : "Cancel",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отменить"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerDone" : {
+      "comment" : "Dane",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сохранить"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerEndRepeatNone" : {
+      "comment" : "Never",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Never"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Никогда"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerEndRepeatTitle" : {
+      "comment" : "End Repeat",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End Repeat"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Завершить повторы"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerErrorReminder" : {
+      "comment" : "Error",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ошибка"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerFiveMinutesBefore" : {
+      "comment" : "5 minutes before",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5 minutes before"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "За 5 минут"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerInFiveMinutesNotification" : {
+      "comment" : "In 5 minutes",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In 5 minutes"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Через 5 минут"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerInOneDayNotification" : {
+      "comment" : "In 1 day",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In 1 day"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Через 1 день"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerInOneHourNotification" : {
+      "comment" : "In 1 hour",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In 1 hour"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Через 1 час"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerInThiryMinutesNotification" : {
+      "comment" : "In 30 minutes",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In 30 minutes"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Через 30 минут"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerNoneReminder" : {
+      "comment" : "None",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerNoneTime" : {
+      "comment" : "None",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerNowNotification" : {
+      "comment" : "Now",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сейчас"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerOneDayBefore" : {
+      "comment" : "1 day before",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 day before"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "За 1 день"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerOneHourBefore" : {
+      "comment" : "1 hour before",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 hour before"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "За 1 час"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerOnTime" : {
+      "comment" : "On time",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On time"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Во время"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerReminder" : {
+      "comment" : "Reminder",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminder"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Напоминание"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerRemoveAll" : {
+      "comment" : "Clear All",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear All"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Очистить всё"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerRepeatBusiness" : {
+      "comment" : "Every weekdays",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every weekdays"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "По будням"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerRepeatEveryday" : {
+      "comment" : "Daily",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Каждый день"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerRepeatMonthly" : {
+      "comment" : "Monthly",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monthly"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Каждый месяц"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerRepeatNone" : {
+      "comment" : "None",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerRepeatTitle" : {
+      "comment" : "Repeat",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repeat"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повтор"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerRepeatWeekend" : {
+      "comment" : "Every weekends",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every weekends"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Каждые выходные"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerRepeatWeekly" : {
+      "comment" : "Weekly",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekly"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Каждую неделю"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerRepeatYearly" : {
+      "comment" : "Yearly",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yearly"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Каждый год"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerSomeReminder" : {
+      "comment" : "Some",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Some"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Несколько"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerTarget" : {
+      "comment" : "Target",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Target"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цель"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerThirtyMinutesBefore" : {
+      "comment" : "30 minutes before",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minutes before"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "За 30 минут"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerTime" : {
+      "comment" : "Time",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Время"
+          }
+        }
+      }
+    },
+    "TaskManagementDatePickerTitle" : {
+      "comment" : "Date & Time",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date & Time"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дата и время"
+          }
+        }
+      }
+    },
+    "TaskManagementDescriptionPlaceholder" : {
+      "comment" : "Description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Описание"
+          }
+        }
+      }
+    },
+    "TaskManagementPoint" : {
+      "comment" : "Poin",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пункт"
+          }
+        }
+      }
+    },
+    "TaskManagementTaskRowPlaceholder" : {
+      "comment" : "No Title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Title"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет заголовка"
+          }
+        }
+      }
+    },
+    "TaskManagementTitlePlaceholder" : {
+      "comment" : "What would you like to do?",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What would you like to do?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Что бы вы хотели сделать?"
+          }
+        }
+      }
+    },
+    "TaskManagementToday" : {
+      "comment" : "Today",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сегодня"
+          }
+        }
+      }
+    },
+    "ToastsDeleted" : {
+      "comment" : "Deleted",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удалено"
+          }
+        }
+      }
+    },
+    "ToastsDeletedAll" : {
+      "comment" : "Trash is clear",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trash is clear"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Корзина очищена"
+          }
+        }
+      }
+    },
+    "ToastsImportantOff" : {
+      "comment" : "Removed from Favorites",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removed from Favorites"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Убрано из избранных"
+          }
+        }
+      }
+    },
+    "ToastsImportantOn" : {
+      "comment" : "Added to Favorites",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Added to Favorites"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добавлено в избранные"
+          }
+        }
+      }
+    },
+    "ToastsPinnedOff" : {
+      "comment" : "Unpinned",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unpinned"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Откреплено"
+          }
+        }
+      }
+    },
+    "ToastsPinnedOn" : {
+      "comment" : "Pinned",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pinned"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Закреплено"
+          }
+        }
+      }
+    },
+    "ToastsRemoved" : {
+      "comment" : "Moved to Trash",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moved to Trash"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Перемещено в корзину"
+          }
+        }
+      }
+    },
+    "ToastsRestored" : {
+      "comment" : "Restored",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restored"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Восстановлено"
           }
         }
       }
