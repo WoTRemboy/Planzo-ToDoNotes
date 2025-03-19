@@ -27,11 +27,11 @@ struct SettingAboutPageView: View {
             Image.Settings.aboutLogo
                 .resizable()
                 .frame(width: 185, height: 185)
-                .clipShape(.rect(cornerRadius: 16))
+                .clipShape(.buttonBorder)
             
             Text(viewModel.appName)
                 .font(.system(size: 25, weight: .bold))
-                .padding(.top)
+                .padding(.top, 24)
             
             version
                 .padding(.top, 50)

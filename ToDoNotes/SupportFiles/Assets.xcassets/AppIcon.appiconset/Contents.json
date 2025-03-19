@@ -1,7 +1,31 @@
 {
   "images" : [
     {
-      "filename" : "ToDoNotesLogo.png",
+      "filename" : "1024x1024-.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "1024x1024.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "tinted"
+        }
+      ],
+      "filename" : "AppIconTinted1.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

@@ -30,9 +30,11 @@ struct FilterScrollView: View {
                 .id(filter)
                 .onTapGesture {
                     viewModel.setFilter(to: filter)
-                    withAnimation {
-                        proxy.scrollTo(filter, anchor: .center)
-                    }
+                }
+            }
+            .onChange(of: viewModel.selectedFilter) { _, newValue in
+                withAnimation {
+                    proxy.scrollTo(newValue, anchor: .center)
                 }
             }
         }

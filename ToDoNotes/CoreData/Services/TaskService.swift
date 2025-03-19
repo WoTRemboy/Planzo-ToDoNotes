@@ -27,6 +27,7 @@ final class TaskService {
                          completeCheck: TaskCheck,
                          target: Date?,
                          hasTime: Bool,
+                         folder: Folder? = nil,
                          importance: Bool,
                          pinned: Bool,
                          removed: Bool = false,
@@ -73,14 +74,16 @@ final class TaskService {
         let orderedChecklist = NSOrderedSet(array: checklistEnities)
         task.checklist = orderedChecklist
         
-        if !notifications.isEmpty {
+        if let folder {
+            task.folder = folder.rawValue
+        } else if !notifications.isEmpty {
             task.folder = Folder.reminders.rawValue
         } else if completeCheck != .none {
             task.folder = Folder.tasks.rawValue
         } else if checklist.count > 1 {
             task.folder = Folder.lists.rawValue
-        } else if !hasTime {
-            task.folder = Folder.noDate.rawValue
+        } else {
+            task.folder = Folder.other.rawValue
         }
         
         try save()
@@ -238,6 +241,8 @@ extension TaskService {
             notificationCenter.add(request) { error in
                 if let error = error {
                     print("Error scheduling notification with id \(identifier): \(error.localizedDescription)")
+                } else {
+                    print("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error")")
                 }
             }
         }

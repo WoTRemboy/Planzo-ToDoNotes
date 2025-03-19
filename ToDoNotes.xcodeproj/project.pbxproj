@@ -1085,7 +1085,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.3;
+				MARKETING_VERSION = 0.3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1122,7 +1122,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.3;
+				MARKETING_VERSION = 0.3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
