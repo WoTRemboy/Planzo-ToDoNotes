@@ -63,7 +63,7 @@ struct TodayView: View {
     }
     
     private var placeholderLabel: some View {
-        Text(Texts.MainPage.placeholder)
+        Text(Texts.TodayPage.placeholder)
             .foregroundStyle(Color.LabelColors.labelSecondary)
             .font(.system(size: 18, weight: .medium))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)

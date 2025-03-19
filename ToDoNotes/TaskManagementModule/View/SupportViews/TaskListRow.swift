@@ -82,9 +82,20 @@ struct TaskListRow: View {
         
         .onTapGesture {
             withAnimation(.easeInOut(duration: 0.2)) {
-                try? TaskService.toggleCompleteChecking(for: entity)
-                let impactMed = UIImpactFeedbackGenerator(style: .medium)
-                impactMed.impactOccurred()
+                do {
+                    try TaskService.toggleCompleteChecking(for: entity)
+                    let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                    impactMed.impactOccurred()
+                    
+                    if entity.completed == 2 {
+                        Toast.shared.present(
+                            title: Texts.Toasts.completedOn)
+                    }
+                } catch {
+                    print("Task checkbox toggle error: \(error.localizedDescription)")
+                    Toast.shared.present(
+                        title: Texts.Toasts.completedError)
+                }
             }
         }
         .padding(.trailing, 8)

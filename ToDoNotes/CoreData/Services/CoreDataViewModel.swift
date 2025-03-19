@@ -393,15 +393,15 @@ extension CoreDataViewModel {
         case .none:
             return String()
         case .inTime:
-            return Texts.TaskManagement.DatePicker.inTimeNotification
+            return Texts.TaskManagement.DatePicker.Reminder.inTimeNotification
         case .fiveMinutesBefore:
-            return Texts.TaskManagement.DatePicker.fiveMinutesBeforeNotification
+            return Texts.TaskManagement.DatePicker.Reminder.fiveMinutesBeforeNotification
         case .thirtyMinutesBefore:
-            return Texts.TaskManagement.DatePicker.thirtyMinutesBeforeNotification
+            return Texts.TaskManagement.DatePicker.Reminder.thirtyMinutesBeforeNotification
         case .oneHourBefore:
-            return Texts.TaskManagement.DatePicker.oneHourBeforeNotification
+            return Texts.TaskManagement.DatePicker.Reminder.oneHourBeforeNotification
         case .oneDayBefore:
-            return Texts.TaskManagement.DatePicker.oneDayBeforeNotification
+            return Texts.TaskManagement.DatePicker.Reminder.oneDayBeforeNotification
         }
     }
 }

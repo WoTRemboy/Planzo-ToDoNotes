@@ -58,7 +58,7 @@ extension Color {
         static let reminders = Color("FolderReminders")
         static let tasks = Color("FolderTasks")
         static let lists = Color("FolderLists")
-        static let noDate = Color("FolderNoDate")
+        static let other = Color("FolderOther")
     }
     
     enum ShadowColors {

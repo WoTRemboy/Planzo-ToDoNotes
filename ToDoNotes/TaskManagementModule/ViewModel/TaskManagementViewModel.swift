@@ -70,7 +70,7 @@ final class TaskManagementViewModel: ObservableObject {
     internal var selectedTimeDescription: String {
         switch selectedTimeType {
         case .none:
-            Texts.TaskManagement.DatePicker.noneTime
+            Texts.TaskManagement.DatePicker.Time.none
         case .value(_):
             selectedTime.formatted(date: .omitted, time: .shortened)
         }
@@ -93,12 +93,12 @@ final class TaskManagementViewModel: ObservableObject {
     
     internal var selectedNotificationDescription: String {
         if notificationsLocal.isEmpty {
-            return Texts.TaskManagement.DatePicker.noneReminder
+            return Texts.TaskManagement.DatePicker.Reminder.none
         } else {
             if notificationsLocal.count > 1 {
-                return Texts.TaskManagement.DatePicker.someRemainders
+                return Texts.TaskManagement.DatePicker.Reminder.some
             } else {
-                return notificationsLocal.first?.type.selectorName ?? Texts.TaskManagement.DatePicker.errorRemainder
+                return notificationsLocal.first?.type.selectorName ?? Texts.TaskManagement.DatePicker.Reminder.error
             }
         }
     }
@@ -360,7 +360,7 @@ final class TaskManagementViewModel: ObservableObject {
         case .repeating:
             selectedRepeatingDescription
         case .endRepeating:
-            Texts.TaskManagement.DatePicker.noneEndRepeating
+            Texts.TaskManagement.DatePicker.Repeat.noneEnd
         }
     }
     
