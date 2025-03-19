@@ -202,6 +202,23 @@
         }
       }
     },
+    "MainPageFilterDeleted" : {
+      "comment" : "Deleted",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удаленные"
+          }
+        }
+      }
+    },
     "MainPageFilterOutdate" : {
       "comment" : "Overdue",
       "localizations" : {
