@@ -16,6 +16,7 @@ struct TaskManagementView: View {
     @State private var isKeyboardActive = false
     
     private let entity: TaskEntity?
+    private let folder: Folder?
     private let animation: Namespace.ID
     private let onDismiss: () -> Void
     
@@ -24,11 +25,13 @@ struct TaskManagementView: View {
     init(taskManagementHeight: Binding<CGFloat>,
          selectedDate: Date? = nil,
          entity: TaskEntity? = nil,
+         folder: Folder? = nil,
          namespace: Namespace.ID,
          onDismiss: @escaping () -> Void) {
         self._taskManagementHeight = taskManagementHeight
         self.onDismiss = onDismiss
         self.entity = entity
+        self.folder = folder
         self.animation = namespace
         
         if let entity {
@@ -57,20 +60,9 @@ struct TaskManagementView: View {
         }
         .onAppear {
             subscribeToKeyboardNotifications()
-        }
-        .onDisappear {
-            unsubscribeFromKeyboardNotifications()
-            withAnimation(.easeInOut(duration: 0.2)) {
-                entity != nil ? updateTask() : nil
+            if entity == nil, folder == .tasks {
+                viewModel.check = .unchecked
             }
-        }
-        .onChange(of: isKeyboardActive) { _, newValue in
-            if newValue == false, entity != nil {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    updateTask()
-                }
-            }
-            entity != nil && !newValue ? updateTask() : nil
         }
         .sheet(isPresented: $viewModel.showingShareSheet) {
             TaskManagementShareView()
@@ -186,10 +178,8 @@ struct TaskManagementView: View {
             checkButton
 
             Spacer()
-            if isKeyboardActive || (entity == nil && viewModel.taskCreationFullScreen == .popup) {
-                acceptButton
-                    .transition(.scale)
-            }
+            acceptButton
+                .transition(.scale)
         }
         .animation(.easeInOut(duration: 0.2), value: isKeyboardActive)
     }
@@ -246,11 +236,11 @@ struct TaskManagementView: View {
     
     private var acceptButton: some View {
         Button {
-            guard !viewModel.nameText.isEmpty else { return }
+//            guard !viewModel.nameText.isEmpty else { return }
             withAnimation {
                 if entity != nil /*|| viewModel.taskCreationFullScreen == .fullScreen*/ {
                     updateTask()
-                    hideKeyboard()
+                    onDismiss()
                 } else {
                     addTask()
                     onDismiss()
@@ -327,6 +317,7 @@ extension TaskManagementView {
             completeCheck: viewModel.check,
             target: viewModel.saveTargetDate,
             hasTime: viewModel.hasTime,
+            folder: folder,
             importance: viewModel.importance,
             pinned: viewModel.pinned,
             notifications: viewModel.notificationsLocal,

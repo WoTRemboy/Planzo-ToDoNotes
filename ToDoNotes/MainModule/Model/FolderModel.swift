@@ -12,7 +12,7 @@ enum Folder: String, CaseIterable {
     case reminders = "TaskFoldersReminders"
     case tasks = "TaskFoldersTasks"
     case lists = "TaskFoldersLists"
-    case noDate = "TaskFoldersNoDate"
+    case other = "TaskFoldersNoDate"
     
     internal var name: String {
         switch self {
@@ -24,14 +24,14 @@ enum Folder: String, CaseIterable {
             return Texts.MainPage.Folders.tasks
         case .lists:
             return Texts.MainPage.Folders.purchases
-        case .noDate:
-            return Texts.MainPage.Folders.noDate
+        case .other:
+            return Texts.MainPage.Folders.other
         }
     }
     
     internal var lockedIcon: Image {
         switch self {
-        case .all, .reminders, .tasks, .lists, .noDate:
+        case .all, .reminders, .tasks, .lists, .other:
             Image.Folder.unlocked
         }
     }
@@ -46,8 +46,8 @@ enum Folder: String, CaseIterable {
             Color.FolderColors.tasks
         case .lists:
             Color.FolderColors.lists
-        case .noDate:
-            Color.FolderColors.noDate
+        case .other:
+            Color.FolderColors.other
         }
     }
 }

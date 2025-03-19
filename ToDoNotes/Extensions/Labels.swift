@@ -50,7 +50,7 @@ final class Texts {
             static let reminders = NSLocalizedString("MainPageFolderReminders", comment: "Reminders")
             static let tasks = NSLocalizedString("MainPageFolderTasks", comment: "Tasks")
             static let purchases = NSLocalizedString("MainPageFolderLists", comment: "Lists")
-            static let noDate = NSLocalizedString("MainPageFolderNoDates", comment: "No Dates")
+            static let other = NSLocalizedString("MainPageFolderOther", comment: "Other")
         }
     }
     
@@ -218,6 +218,9 @@ final class Texts {
     }
     
     enum Toasts {
+        static let completedOn = NSLocalizedString("ToastsCompletedOn", comment: "Moved to Completed")
+        static let completedError = NSLocalizedString("ToastsCompletedError", comment: "Failed to Complete")
+        
         static let pinnedOn = NSLocalizedString("ToastsPinnedOn", comment: "Pinned")
         static let pinnedOff = NSLocalizedString("ToastsPinnedOff", comment: "Unpinned")
         static let importantOn = NSLocalizedString("ToastsImportantOn", comment: "Added to Favorites")

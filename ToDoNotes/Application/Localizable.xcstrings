@@ -270,19 +270,19 @@
         }
       }
     },
-    "MainPageFolderNoDates" : {
-      "comment" : "No Dates",
+    "MainPageFolderOther" : {
+      "comment" : "Other",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No Dates"
+            "value" : "Other"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Без дат"
+            "value" : "Остальные"
           }
         }
       }
@@ -1143,7 +1143,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose between Full Screen and Pop-up styles for taking notes."
+            "value" : "Choose between Full Screen and Dialog styles for taking notes."
           }
         },
         "ru" : {
@@ -1194,7 +1194,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create Note Window"
+            "value" : "Note Creation Window"
           }
         },
         "ru" : {
@@ -2017,6 +2017,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Сегодня"
+          }
+        }
+      }
+    },
+    "ToastsCompletedError" : {
+      "comment" : "Failed to Complete",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to Complete"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Возникла ошибка"
+          }
+        }
+      }
+    },
+    "ToastsCompletedOn" : {
+      "comment" : "Moved to Completed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moved to Completed"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Перемещено в Выполненные"
           }
         }
       }

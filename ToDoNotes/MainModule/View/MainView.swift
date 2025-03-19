@@ -30,8 +30,10 @@ struct MainView: View {
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
+                folder: viewModel.selectedFolder != .all ? viewModel.selectedFolder : nil,
                 namespace: animation) {
                     viewModel.toggleShowingCreateView()
+                    viewModel.setFilter(to: .active)
                 }
                 .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
                 .presentationDragIndicator(.visible)
@@ -39,8 +41,10 @@ struct MainView: View {
         .fullScreenCover(isPresented: $viewModel.showingTaskCreateViewFullscreen) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
+                folder: viewModel.selectedFolder != .all ? viewModel.selectedFolder : nil,
                 namespace: animation) {
                     viewModel.toggleShowingCreateView()
+                    viewModel.setFilter(to: .active)
                 }
         }
         .fullScreenCover(item: $viewModel.selectedTask) { task in
@@ -233,19 +237,19 @@ extension MainView {
                 case .all:
                     break
                 case .reminders:
-                    if task.notifications?.count ?? 0 < 1 {
+                    if task.folder != Folder.reminders.rawValue {
                         return false
                     }
                 case .tasks:
-                    if task.completed == 0 {
+                    if task.folder != Folder.tasks.rawValue {
                         return false
                     }
                 case .lists:
-                    if task.checklist?.count ?? 0 < 2 {
+                    if task.folder != Folder.lists.rawValue {
                         return false
                     }
-                case .noDate:
-                    if task.hasTargetTime {
+                case .other:
+                    if task.folder != Folder.other.rawValue {
                         return false
                     }
                 }
@@ -255,14 +259,8 @@ extension MainView {
                 case .active:
                     guard !task.removed else { return false }
                     guard task.completed != 2 else { return false }
-                    if let target = task.target {
-                        if task.hasTargetTime {
-                            if target < now { return false }
-                        } else {
-                            if target < Calendar.current.startOfDay(for: now) { return false }
-                        }
-                    } else if let created = task.created {
-                        if created < Calendar.current.startOfDay(for: now) { return false }
+                    if let target = task.target, task.hasTargetTime, target < now {
+                        return false
                     }
                     return true
                 case .outdated:
