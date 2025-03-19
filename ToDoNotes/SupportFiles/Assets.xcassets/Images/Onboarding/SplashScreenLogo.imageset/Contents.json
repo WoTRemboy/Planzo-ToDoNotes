@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "IMG_0019 1.png",
+      "filename" : "SplashScreenLogo.png",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "SplashScreenLogoDark.png",
       "idiom" : "universal"
     }
   ],
