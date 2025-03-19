@@ -74,6 +74,10 @@ final class TaskService {
         let orderedChecklist = NSOrderedSet(array: checklistEnities)
         task.checklist = orderedChecklist
         
+        guard entity == nil else {
+            try save()
+            return
+        }
         if let folder {
             task.folder = folder.rawValue
         } else if !notifications.isEmpty {
