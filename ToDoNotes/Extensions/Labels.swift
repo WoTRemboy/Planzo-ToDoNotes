@@ -9,7 +9,8 @@ import Foundation
 
 final class Texts {
     enum SplashScreen {
-        static let title = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "ToDo"
+//        static let title = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "ToDo"
+        static let title = "Notes"
     }
     
     enum OnboardingPage {
@@ -34,6 +35,7 @@ final class Texts {
             static let outdate = NSLocalizedString("MainPageFilterOutdate", comment: "Overdue")
             static let unsorted = NSLocalizedString("MainPageFilterUnsorted", comment: "Unsorted")
             static let completed = NSLocalizedString("MainPageFilterCompleted", comment: "Completed")
+            static let deleted = NSLocalizedString("MainPageFilterDeleted", comment: "Deleted")
             
             enum RemoveFilter {
                 static let buttonTitle = NSLocalizedString("MainPageRemoveFilterButtonTitle", comment: "Empty Trash")
