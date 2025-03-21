@@ -97,72 +97,73 @@ struct TaskManagementNavBar: View {
 //                        .renderingMode(.template)
 //                }
 //            }
-//            
-//            Button {
-//                // Dublicate Task Action
-//            } label: {
-//                Label {
-//                    Text(Texts.TaskManagement.ContextMenu.dublicate)
-//                } icon: {
-//                    Image.TaskManagement.EditTask.Menu.copy
-//                        .renderingMode(.template)
-//                }
-//            }
-            
+//
             Section {
-                Button {
-                    viewModel.toggleImportanceCheck()
-                    Toast.shared.present(
-                        title: viewModel.importance ?
+                ControlGroup {
+                    Button {
+                        viewModel.toggleImportanceCheck()
+                        Toast.shared.present(
+                            title: viewModel.importance ?
                             Texts.Toasts.importantOn :
-                            Texts.Toasts.importantOff)
-                } label: {
-                    Label {
-                        viewModel.importance ?
-                        Text(Texts.TaskManagement.ContextMenu.importantDeselect) :
-                        Text(Texts.TaskManagement.ContextMenu.important)
-                    } icon: {
-                        viewModel.importance ?
-                        Image.TaskManagement.EditTask.Menu.importantDeselect :
-                        Image.TaskManagement.EditTask.Menu.importantSelect
-                            .renderingMode(.template)
+                                Texts.Toasts.importantOff)
+                    } label: {
+                        Label {
+                            viewModel.importance ?
+                            Text(Texts.TaskManagement.ContextMenu.importantDeselect) :
+                            Text(Texts.TaskManagement.ContextMenu.important)
+                        } icon: {
+                            viewModel.importance ?
+                            Image.TaskManagement.EditTask.Menu.importantDeselect :
+                            Image.TaskManagement.EditTask.Menu.importantSelect
+                                .renderingMode(.template)
+                        }
                     }
-                }
-                
-                Button {
-                    viewModel.togglePinnedCheck()
-                    Toast.shared.present(
-                        title: viewModel.pinned ?
+                    
+                    Button {
+                        viewModel.togglePinnedCheck()
+                        Toast.shared.present(
+                            title: viewModel.pinned ?
                             Texts.Toasts.pinnedOn :
-                            Texts.Toasts.pinnedOff)
-                } label: {
-                    Label {
-                        viewModel.pinned ?
-                        Text(Texts.TaskManagement.ContextMenu.unpin) :
-                        Text(Texts.TaskManagement.ContextMenu.pin)
-                    } icon: {
-                        viewModel.pinned ?
-                        Image.TaskManagement.EditTask.Menu.pinnedDeselect :
-                        Image.TaskManagement.EditTask.Menu.pinnedSelect
-                            .renderingMode(.template)
+                                Texts.Toasts.pinnedOff)
+                    } label: {
+                        Label {
+                            viewModel.pinned ?
+                            Text(Texts.TaskManagement.ContextMenu.unpin) :
+                            Text(Texts.TaskManagement.ContextMenu.pin)
+                        } icon: {
+                            viewModel.pinned ?
+                            Image.TaskManagement.EditTask.Menu.pinnedDeselect :
+                            Image.TaskManagement.EditTask.Menu.pinnedSelect
+                                .renderingMode(.template)
+                        }
+                    }
+                    
+                    if entity != nil {
+                        Button(role: .destructive) {
+                            viewModel.toggleRemoved()
+                            onDismiss()
+                            Toast.shared.present(
+                                title: Texts.Toasts.removed)
+                        } label: {
+                            Label {
+                                Text(Texts.TaskManagement.ContextMenu.delete)
+                            } icon: {
+                                Image.TaskManagement.EditTask.Menu.trash
+                                    .renderingMode(.template)
+                            }
+                        }
                     }
                 }
+                .controlGroupStyle(.compactMenu)
                 
-//                if let entity {
-//                    Button(role: .destructive) {
-//                        do {
-//                            try TaskService.toggleRemoved(for: entity)
-//                            onDismiss()
-//                            Toast.shared.present(
-//                                title: Texts.Toasts.removed)
-//                        } catch {
-//                            print("Task could not be removed with error: \(error.localizedDescription).")
-//                        }
+//                if entity != nil {
+//                    Button {
+//                        // Dublicate Task Action
 //                    } label: {
 //                        Label {
-//                            Text(Texts.TaskManagement.ContextMenu.delete)
+//                            Text(Texts.TaskManagement.ContextMenu.dublicate)
 //                        } icon: {
-//                            Image.TaskManagement.EditTask.Menu.trash
+//                            Image.TaskManagement.EditTask.Menu.copy
 //                                .renderingMode(.template)
 //                        }
 //                    }

@@ -45,7 +45,7 @@ struct TaskManagementView: View {
     internal var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                if viewModel.taskCreationFullScreen == .fullScreen || entity != nil {
+                if viewModel.taskCreationFullScreen == .fullScreen || folder == .lists || entity != nil {
                     TaskManagementNavBar(
                         viewModel: viewModel, entity: entity) {
                             withAnimation(.easeInOut(duration: 0.2)) {
@@ -78,7 +78,7 @@ struct TaskManagementView: View {
         .navigationTransition(
             id: transitionID,
             namespace: animation,
-            enable: entity != nil || viewModel.taskCreationFullScreen == .fullScreen)
+            enable: entity != nil || folder == .lists || viewModel.taskCreationFullScreen == .fullScreen)
     }
     
     private var content: some View {
@@ -86,7 +86,7 @@ struct TaskManagementView: View {
             ScrollView {
                 nameInput
                 
-                if entity != nil || viewModel.taskCreationFullScreen == .fullScreen {
+                if entity != nil || folder == .lists || viewModel.taskCreationFullScreen == .fullScreen {
                     descriptionCoverInput
                     TaskChecklistView(viewModel: viewModel)
                 } else {
@@ -131,7 +131,7 @@ struct TaskManagementView: View {
             .strikethrough(viewModel.check == .checked)
             
             .focused($titleFocused)
-            .immediateKeyboard(delay: (entity != nil || viewModel.taskCreationFullScreen == .fullScreen) ? 0.4 : 0)
+            .immediateKeyboard(delay: (entity != nil || folder == .lists || viewModel.taskCreationFullScreen == .fullScreen) ? 0.4 : 0)
             .onAppear {
                 titleFocused = true
             }

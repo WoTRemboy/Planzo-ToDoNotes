@@ -41,8 +41,13 @@ final class Texts {
                 static let buttonTitle = NSLocalizedString("MainPageRemoveFilterButtonTitle", comment: "Empty Trash")
                 static let alertTitle = NSLocalizedString("MainPageRemoveFilterAlertTitle", comment: "Are you sure?")
                 static let alertContent = NSLocalizedString("MainPageRemoveFilterAlertContent", comment: "The data will be deleted permanently.")
+                
+                static let recoverAlertTitle = NSLocalizedString("MainPageRecoverFilterAlertTitle", comment: "Recently Deleted")
+                static let recoverAlertContent = NSLocalizedString("MainPageRecoverFilterAlertContent", comment: "To edit a deleted item, you'll need to recover it.")
+                
                 static let alertCancel = NSLocalizedString("MainPageRemoveFilterAlertCancel", comment: "Cancel")
                 static let alertYes = NSLocalizedString("MainPageRemoveFilterAlertYes", comment: "Yes")
+                static let alertRecover = NSLocalizedString("MainPageRemoveFilterAlertRecover", comment: "Recover")
             }
         }
         

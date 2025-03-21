@@ -212,6 +212,10 @@ final class TaskManagementViewModel: ObservableObject {
         pinned.toggle()
     }
     
+    internal func toggleRemoved() {
+        removed.toggle()
+    }
+    
     internal func setCheckFalse() {
         check = .unchecked
     }

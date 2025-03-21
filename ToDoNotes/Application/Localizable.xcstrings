@@ -372,6 +372,40 @@
         }
       }
     },
+    "MainPageRecoverFilterAlertContent" : {
+      "comment" : "To edit a deleted item, you'll need to recover it.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To edit a deleted note, you'll need to recover it."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Чтобы отредактировать удаленную заметку, необходимо её восстановить."
+          }
+        }
+      }
+    },
+    "MainPageRecoverFilterAlertTitle" : {
+      "comment" : "Recently Deleted",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently Deleted"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Недавно удаленная"
+          }
+        }
+      }
+    },
     "MainPageRemoveFilterAlertCancel" : {
       "comment" : "Cancel",
       "localizations" : {
@@ -402,6 +436,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Данные будут удалены навсегда"
+          }
+        }
+      }
+    },
+    "MainPageRemoveFilterAlertRecover" : {
+      "comment" : "Recover",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recover"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Восстановить"
           }
         }
       }
@@ -1347,7 +1398,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Duplicate the Note"
+            "value" : "Duplicate Note"
           }
         },
         "ru" : {
