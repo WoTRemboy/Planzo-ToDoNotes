@@ -2157,6 +2157,40 @@
         }
       }
     },
+    "ToastsDuplicated" : {
+      "comment" : "Duplicated",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplicated"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Продублировано"
+          }
+        }
+      }
+    },
+    "ToastsDuplicatedError" : {
+      "comment" : "Failed to Duplicate",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to Duplicate"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ошибка при дублировании"
+          }
+        }
+      }
+    },
     "ToastsImportantOff" : {
       "comment" : "Removed from Favorites",
       "localizations" : {
@@ -2231,13 +2265,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Moved to Trash"
+            "value" : "Moved to Deleted"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Перемещено в корзину"
+            "value" : "Перемещено в удаленные"
           }
         }
       }

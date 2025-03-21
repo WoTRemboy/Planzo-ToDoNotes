@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Config {
-    var backgroundColor: Color = .black.opacity(0.25)
+    var backgroundColor: Color = .black.opacity(0.3)
 }
 
 extension View {

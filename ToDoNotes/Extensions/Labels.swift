@@ -237,6 +237,9 @@ final class Texts {
         static let deletedAll = NSLocalizedString("ToastsDeletedAll", comment: "Trash is clear")
         static let removed = NSLocalizedString("ToastsRemoved", comment: "Moved to Trash")
         static let restored = NSLocalizedString("ToastsRestored", comment: "Restored")
+        
+        static let duplicated = NSLocalizedString("ToastsDuplicated", comment: "Duplicated")
+        static let duplicatedError = NSLocalizedString("ToastsDuplicatedError", comment: "Failed to Duplicate")
     }
     
     enum DateParameters {
