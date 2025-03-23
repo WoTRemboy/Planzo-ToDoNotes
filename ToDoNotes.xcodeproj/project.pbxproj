@@ -72,6 +72,8 @@
 		63BCD8B02D77298D0016950F /* PopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD8AF2D77298D0016950F /* PopView.swift */; };
 		63BCD8B22D77400D0016950F /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD8B12D77400D0016950F /* AlertView.swift */; };
 		63BCD8B52D7B666B0016950F /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD8B42D7B66680016950F /* SearchBar.swift */; };
+		63C2DC772D8C47BA00E6E0A0 /* CustomContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C2DC762D8C47BA00E6E0A0 /* CustomContextMenu.swift */; };
+		63C2DC792D8C4ABD00E6E0A0 /* ContextMenuHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C2DC782D8C4AB600E6E0A0 /* ContextMenuHelper.swift */; };
 		63C5A8CF2D31BECD00154101 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 63C5A8CE2D31BECD00154101 /* GoogleSignIn */; };
 		63C5A8D12D31BECD00154101 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 63C5A8D02D31BECD00154101 /* GoogleSignInSwift */; };
 		63CD66982D367EC50053C93C /* TaskManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD66972D367EBD0053C93C /* TaskManagementViewModel.swift */; };
@@ -178,6 +180,8 @@
 		63BCD8AF2D77298D0016950F /* PopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopView.swift; sourceTree = "<group>"; };
 		63BCD8B12D77400D0016950F /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		63BCD8B42D7B66680016950F /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		63C2DC762D8C47BA00E6E0A0 /* CustomContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomContextMenu.swift; sourceTree = "<group>"; };
+		63C2DC782D8C4AB600E6E0A0 /* ContextMenuHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuHelper.swift; sourceTree = "<group>"; };
 		63CD66972D367EBD0053C93C /* TaskManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementViewModel.swift; sourceTree = "<group>"; };
 		63D9A1B92D50F2F2008454E9 /* UserNotificationCenterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationCenterExtension.swift; sourceTree = "<group>"; };
 		63DA81012D24C822005CEECB /* OnboardingScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenView.swift; sourceTree = "<group>"; };
@@ -318,12 +322,7 @@
 				635FEF712D24B72E007FFBBA /* Application */,
 				6303E2C82D3469DC0096DB64 /* CoreData */,
 				637B9F5D2D296F290010F13B /* Router */,
-				635FEF732D24BAA1007FFBBA /* OpeningModule */,
-				635FEF742D24BAC2007FFBBA /* MainModule */,
-				637B9F522D29695D0010F13B /* TodayModule */,
-				637B9F532D29696B0010F13B /* CalendarModule */,
-				637B9F542D2969750010F13B /* SettingsModule */,
-				638E21932D2C206400FB1464 /* TaskManagementModule */,
+				63C2DC742D8C474000E6E0A0 /* Modules */,
 				63BCD8AD2D7729460016950F /* Helpers */,
 				632D0DD82D37E0990071684D /* Modifiers */,
 				635FEF7E2D24BCDE007FFBBA /* Extensions */,
@@ -615,6 +614,7 @@
 				63A092872D7BA02C0026A64D /* InternalNotifications */,
 				63BCD8B32D7B665C0016950F /* SearchBar */,
 				63BCD8AE2D7729730016950F /* AlertPopView */,
+				63C2DC752D8C477A00E6E0A0 /* CustomContextMenu */,
 				63AE658E2D73291F009A3541 /* CustomNavigationBar */,
 			);
 			path = Helpers;
@@ -635,6 +635,28 @@
 				63BCD8B42D7B66680016950F /* SearchBar.swift */,
 			);
 			path = SearchBar;
+			sourceTree = "<group>";
+		};
+		63C2DC742D8C474000E6E0A0 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				635FEF732D24BAA1007FFBBA /* OpeningModule */,
+				635FEF742D24BAC2007FFBBA /* MainModule */,
+				637B9F522D29695D0010F13B /* TodayModule */,
+				637B9F532D29696B0010F13B /* CalendarModule */,
+				637B9F542D2969750010F13B /* SettingsModule */,
+				638E21932D2C206400FB1464 /* TaskManagementModule */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		63C2DC752D8C477A00E6E0A0 /* CustomContextMenu */ = {
+			isa = PBXGroup;
+			children = (
+				63C2DC762D8C47BA00E6E0A0 /* CustomContextMenu.swift */,
+				63C2DC782D8C4AB600E6E0A0 /* ContextMenuHelper.swift */,
+			);
+			path = CustomContextMenu;
 			sourceTree = "<group>";
 		};
 		63CD66962D367EB50053C93C /* ViewModel */ = {
@@ -868,6 +890,7 @@
 				63CD66982D367EC50053C93C /* TaskManagementViewModel.swift in Sources */,
 				631315BD2D7DE21E0030D446 /* MainTaskRowWithActions.swift in Sources */,
 				637B9F612D296FA90010F13B /* ContentView.swift in Sources */,
+				63C2DC792D8C4ABD00E6E0A0 /* ContextMenuHelper.swift in Sources */,
 				637B9F5A2D2969AC0010F13B /* CalendarView.swift in Sources */,
 				63AE65882D73181A009A3541 /* CustomNavLink.swift in Sources */,
 				632D0DD42D36BB270071684D /* TaskManagementNavBar.swift in Sources */,
@@ -915,6 +938,7 @@
 				63F6C7172D2ABE6700716AB0 /* CustomCalendarView.swift in Sources */,
 				63E890CA2D347655003D7370 /* TaskListRow.swift in Sources */,
 				63645A5E2D383897000095D3 /* TextFieldDelegate.swift in Sources */,
+				63C2DC772D8C47BA00E6E0A0 /* CustomContextMenu.swift in Sources */,
 				637B9F692D29754F0010F13B /* FilterCell.swift in Sources */,
 				63F6C7002D2AA01700716AB0 /* TodayViewModel.swift in Sources */,
 				635FEF842D24C17B007FFBBA /* Labels.swift in Sources */,
@@ -1085,7 +1109,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.4;
+				MARKETING_VERSION = 0.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1122,7 +1146,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.4;
+				MARKETING_VERSION = 0.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

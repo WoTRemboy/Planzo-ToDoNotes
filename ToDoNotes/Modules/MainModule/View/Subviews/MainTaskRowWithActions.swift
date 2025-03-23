@@ -20,8 +20,13 @@ struct MainTaskRowWithActions: View {
     
     internal var body: some View {
         Button {
-            viewModel.selectedTask = entity
-            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            if viewModel.selectedFilter == .deleted {
+                viewModel.removedTask = entity
+                viewModel.toggleShowingEditRemovedAlert()
+            } else {
+                viewModel.selectedTask = entity
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            }
         } label: {
             TaskListRow(entity: entity, isLast: isLast)
         }

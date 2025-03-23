@@ -45,9 +45,11 @@ struct TaskManagementView: View {
     internal var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                if viewModel.taskCreationFullScreen == .fullScreen || entity != nil {
+                if viewModel.taskCreationFullScreen == .fullScreen || folder == .lists || entity != nil {
                     TaskManagementNavBar(
                         viewModel: viewModel, entity: entity) {
+                            duplicateTask()
+                        } onDismiss: {
                             withAnimation(.easeInOut(duration: 0.2)) {
                                 entity != nil ? updateTask() : nil
                                 onDismiss()
@@ -78,7 +80,7 @@ struct TaskManagementView: View {
         .navigationTransition(
             id: transitionID,
             namespace: animation,
-            enable: entity != nil || viewModel.taskCreationFullScreen == .fullScreen)
+            enable: entity != nil || folder == .lists || viewModel.taskCreationFullScreen == .fullScreen)
     }
     
     private var content: some View {
@@ -86,7 +88,7 @@ struct TaskManagementView: View {
             ScrollView {
                 nameInput
                 
-                if entity != nil || viewModel.taskCreationFullScreen == .fullScreen {
+                if entity != nil || folder == .lists || viewModel.taskCreationFullScreen == .fullScreen {
                     descriptionCoverInput
                     TaskChecklistView(viewModel: viewModel)
                 } else {
@@ -131,12 +133,12 @@ struct TaskManagementView: View {
             .strikethrough(viewModel.check == .checked)
             
             .focused($titleFocused)
-            .immediateKeyboard(delay: (entity != nil || viewModel.taskCreationFullScreen == .fullScreen) ? 0.4 : 0)
+            .immediateKeyboard(delay: (entity != nil || folder == .lists || viewModel.taskCreationFullScreen == .fullScreen) ? 0.4 : 0)
             .onAppear {
                 titleFocused = true
             }
         }
-        .padding(.top, 20)
+        .padding(.top, 16)
     }
     
     private var titleCheckbox: Image {
@@ -325,5 +327,20 @@ extension TaskManagementView {
         
         viewModel.setupUserNotifications(remove: nil)
         viewModel.disableButtonGlow()
+    }
+    
+    private func duplicateTask() {
+        do {
+            try TaskService.duplicate(task: entity)
+            if let entity, entity.completed != 2 {
+                viewModel.setupUserNotifications(remove: nil)
+            }
+            Toast.shared.present(
+                title: Texts.Toasts.duplicated)
+        } catch {
+            print("Task duplicate Error: \(error.localizedDescription)")
+            Toast.shared.present(
+                title: Texts.Toasts.duplicatedError)
+        }
     }
 }

@@ -81,6 +81,7 @@ struct TaskListRow: View {
         )
         
         .onTapGesture {
+            guard !entity.removed else { return }
             withAnimation(.easeInOut(duration: 0.2)) {
                 do {
                     try TaskService.toggleCompleteChecking(for: entity)

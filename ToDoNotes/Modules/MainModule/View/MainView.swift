@@ -58,6 +58,9 @@ struct MainView: View {
         .popView(isPresented: $viewModel.showingTaskRemoveAlert, onDismiss: {}) {
             removeAlert
         }
+        .popView(isPresented: $viewModel.showingTaskEditRemovedAlert, onDismiss: {}) {
+            editAlert
+        }
     }
     
     private var content: some View {
@@ -94,8 +97,9 @@ struct MainView: View {
     private func segmentView(segment: Date?, tasks: [TaskEntity]) -> some View {
         Section(header: segmentHeader(name: segment)) {
             ForEach(tasks) { entity in
-                MainTaskRowWithActions(entity: entity,
-                                       isLast: tasks.last == entity)
+                MainTaskRowWithActions(
+                    entity: entity,
+                    isLast: tasks.last == entity)
             }
             .listRowInsets(EdgeInsets())
         }
@@ -193,6 +197,22 @@ struct MainView: View {
             },
             secondaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertCancel,
             secondaryAction: viewModel.toggleShowingTaskRemoveAlert)
+    }
+    
+    private var editAlert: some View {
+        CustomAlertView(
+            title: Texts.MainPage.Filter.RemoveFilter.recoverAlertTitle,
+            message: Texts.MainPage.Filter.RemoveFilter.recoverAlertContent,
+            primaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertRecover,
+            primaryAction: {
+                guard let task = viewModel.removedTask else { return }
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    try? TaskService.toggleRemoved(for: task)
+                }
+                viewModel.toggleShowingEditRemovedAlert()
+            },
+            secondaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertCancel,
+            secondaryAction: viewModel.toggleShowingEditRemovedAlert)
     }
 }
 

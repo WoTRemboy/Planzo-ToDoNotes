@@ -93,6 +93,49 @@ final class TaskService {
         try save()
     }
     
+    static func duplicate(task: TaskEntity?) throws {
+        guard let task else { return }
+        
+        let newTask = TaskEntity(context: viewContext)
+        newTask.id = UUID()
+        newTask.created = task.created
+        
+        newTask.name = task.name
+        newTask.details = task.details
+        newTask.completed = task.completed
+        newTask.target = task.target
+        newTask.hasTargetTime = task.hasTargetTime
+        newTask.important = task.important
+        newTask.pinned = task.pinned
+        newTask.removed = task.removed
+        newTask.folder = task.folder
+        
+        if let notificationsSet = task.notifications as? Set<NotificationEntity> {
+            var newNotifications = [NotificationEntity]()
+            for notification in notificationsSet {
+                let newNotification = NotificationEntity(context: viewContext)
+                newNotification.id = UUID()
+                newNotification.type = notification.type
+                newNotification.target = notification.target
+                newNotifications.append(newNotification)
+            }
+            newTask.notifications = NSSet(array: newNotifications)
+        }
+        
+        if let checklistArray = task.checklist?.array as? [ChecklistEntity] {
+            var newChecklist = [ChecklistEntity]()
+            for checklistItem in checklistArray {
+                let newItem = ChecklistEntity(context: viewContext)
+                newItem.name = checklistItem.name
+                newItem.completed = checklistItem.completed
+                newChecklist.append(newItem)
+            }
+            newTask.checklist = NSOrderedSet(array: newChecklist)
+        }
+        
+        try save()
+    }
+    
     static func deleteRemovedTask(for entity: TaskEntity) throws {
         viewContext.delete(entity)
         try save()
