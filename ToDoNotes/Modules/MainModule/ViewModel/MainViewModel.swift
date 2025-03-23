@@ -20,9 +20,11 @@ final class MainViewModel: ObservableObject {
     @Published internal var showingTaskCreateView: Bool = false
     @Published internal var showingTaskCreateViewFullscreen: Bool = false
     @Published internal var showingTaskRemoveAlert: Bool = false
+    @Published internal var showingTaskEditRemovedAlert: Bool = false
     @Published internal var showingSearchBar: Bool = false
     
     @Published internal var selectedTask: TaskEntity? = nil
+    @Published internal var removedTask: TaskEntity? = nil
     @Published internal var taskManagementHeight: CGFloat = 15
     
     internal var todayDateString: String {
@@ -30,9 +32,9 @@ final class MainViewModel: ObservableObject {
     }
     
     internal func toggleShowingCreateView() {
-        taskCreationFullScreen == .popup ?
-            showingTaskCreateView.toggle() :
-                showingTaskCreateViewFullscreen.toggle()
+        taskCreationFullScreen == .fullScreen || selectedFolder == .lists ?
+            showingTaskCreateViewFullscreen.toggle() :
+                showingTaskCreateView.toggle()
     }
     
     internal func toggleShowingTaskEditView() {
@@ -41,6 +43,10 @@ final class MainViewModel: ObservableObject {
     
     internal func toggleShowingTaskRemoveAlert() {
         showingTaskRemoveAlert.toggle()
+    }
+    
+    internal func toggleShowingEditRemovedAlert() {
+        showingTaskEditRemovedAlert.toggle()
     }
     
     internal func toggleShowingSearchBar() {

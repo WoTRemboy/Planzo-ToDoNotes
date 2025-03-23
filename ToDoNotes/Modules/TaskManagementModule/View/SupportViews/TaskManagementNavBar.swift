@@ -11,13 +11,16 @@ struct TaskManagementNavBar: View {
     
     @ObservedObject private var viewModel: TaskManagementViewModel
     private let entity: TaskEntity?
+    private let onDuplicate: () -> Void
     private let onDismiss: () -> Void
     
     init(viewModel: TaskManagementViewModel,
          entity: TaskEntity?,
+         onDuplicate: @escaping () -> Void,
          onDismiss: @escaping () -> Void) {
         self.entity = entity
         self.viewModel = viewModel
+        self.onDuplicate = onDuplicate
         self.onDismiss = onDismiss
     }
     
@@ -87,34 +90,24 @@ struct TaskManagementNavBar: View {
     
     private var moreButton: some View {
         Menu {
-//            Button {
-//                // Complete Status Action
-//            } label: {
-//                Label {
-//                    Text(Texts.TaskManagement.ContextMenu.complete)
-//                } icon: {
-//                    Image.TaskManagement.EditTask.Menu.completed
-//                        .renderingMode(.template)
-//                }
-//            }
-//            
-//            Button {
-//                // Dublicate Task Action
-//            } label: {
-//                Label {
-//                    Text(Texts.TaskManagement.ContextMenu.dublicate)
-//                } icon: {
-//                    Image.TaskManagement.EditTask.Menu.copy
-//                        .renderingMode(.template)
-//                }
-//            }
+            //            Button {
+            //                // Complete Status Action
+            //            } label: {
+            //                Label {
+            //                    Text(Texts.TaskManagement.ContextMenu.complete)
+            //                } icon: {
+            //                    Image.TaskManagement.EditTask.Menu.completed
+            //                        .renderingMode(.template)
+            //                }
+            //            }
+            //
             
-            Section {
+            ControlGroup {
                 Button {
                     viewModel.toggleImportanceCheck()
                     Toast.shared.present(
                         title: viewModel.importance ?
-                            Texts.Toasts.importantOn :
+                        Texts.Toasts.importantOn :
                             Texts.Toasts.importantOff)
                 } label: {
                     Label {
@@ -133,7 +126,7 @@ struct TaskManagementNavBar: View {
                     viewModel.togglePinnedCheck()
                     Toast.shared.present(
                         title: viewModel.pinned ?
-                            Texts.Toasts.pinnedOn :
+                        Texts.Toasts.pinnedOn :
                             Texts.Toasts.pinnedOff)
                 } label: {
                     Label {
@@ -148,26 +141,38 @@ struct TaskManagementNavBar: View {
                     }
                 }
                 
-//                if let entity {
-//                    Button(role: .destructive) {
-//                        do {
-//                            try TaskService.toggleRemoved(for: entity)
-//                            onDismiss()
-//                            Toast.shared.present(
-//                                title: Texts.Toasts.removed)
-//                        } catch {
-//                            print("Task could not be removed with error: \(error.localizedDescription).")
-//                        }
-//                    } label: {
-//                        Label {
-//                            Text(Texts.TaskManagement.ContextMenu.delete)
-//                        } icon: {
-//                            Image.TaskManagement.EditTask.Menu.trash
-//                                .renderingMode(.template)
-//                        }
-//                    }
-//                }
+                if entity != nil {
+                    Button(role: .destructive) {
+                        viewModel.toggleRemoved()
+                        onDismiss()
+                        Toast.shared.present(
+                            title: Texts.Toasts.removed)
+                    } label: {
+                        Label {
+                            Text(Texts.TaskManagement.ContextMenu.delete)
+                        } icon: {
+                            Image.TaskManagement.EditTask.Menu.trash
+                                .renderingMode(.template)
+                        }
+                    }
+                }
             }
+            .controlGroupStyle(.compactMenu)
+            
+            if entity != nil {
+                Button {
+                    onDuplicate()
+                    onDismiss()
+                } label: {
+                    Label {
+                        Text(Texts.TaskManagement.ContextMenu.dublicate)
+                    } icon: {
+                        Image.TaskManagement.EditTask.Menu.copy
+                            .renderingMode(.template)
+                    }
+                }
+            }
+            
         } label: {
             Image.NavigationBar.more
                 .resizable()
@@ -181,5 +186,6 @@ struct TaskManagementNavBar: View {
     TaskManagementNavBar(
         viewModel: TaskManagementViewModel(),
         entity: PreviewData.taskItem,
+        onDuplicate: {},
         onDismiss: {})
 }
