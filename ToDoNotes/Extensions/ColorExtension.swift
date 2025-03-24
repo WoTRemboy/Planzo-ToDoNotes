@@ -46,7 +46,7 @@ extension Color {
         static let supportOverlay = Color("SupportOverlay")
         static let supportSegmented = Color("SupportSegmented")
         static let supportTextField = Color("SupportTextField")
-        static let backListRow = Color("SupportListRow")
+        static let supportListRow = Color("SupportListRow")
         static let supportButton = Color("SupportButton")
         static let supportToggle = Color("SupportToggle")
         static let supportPopup = Color("SupportPopup")

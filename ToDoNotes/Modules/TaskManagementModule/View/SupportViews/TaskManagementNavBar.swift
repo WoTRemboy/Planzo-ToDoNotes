@@ -90,18 +90,6 @@ struct TaskManagementNavBar: View {
     
     private var moreButton: some View {
         Menu {
-            //            Button {
-            //                // Complete Status Action
-            //            } label: {
-            //                Label {
-            //                    Text(Texts.TaskManagement.ContextMenu.complete)
-            //                } icon: {
-            //                    Image.TaskManagement.EditTask.Menu.completed
-            //                        .renderingMode(.template)
-            //                }
-            //            }
-            //
-            
             ControlGroup {
                 Button {
                     viewModel.toggleImportanceCheck()

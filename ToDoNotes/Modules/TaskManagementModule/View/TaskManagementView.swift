@@ -44,6 +44,11 @@ struct TaskManagementView: View {
     
     internal var body: some View {
         ZStack {
+            if entity == nil && viewModel.taskCreationFullScreen == .popup && folder != .lists {
+                Color.BackColors.backSheet
+                    .ignoresSafeArea()
+            }
+            
             VStack(spacing: 0) {
                 if viewModel.taskCreationFullScreen == .fullScreen || folder == .lists || entity != nil {
                     TaskManagementNavBar(
@@ -96,7 +101,7 @@ struct TaskManagementView: View {
                         .background(HeightReader(height: $taskManagementHeight))
                 }
             }
-            .scrollDisabled(entity == nil && viewModel.taskCreationFullScreen == .popup)
+            .scrollDisabled(entity == nil && viewModel.taskCreationFullScreen == .popup && folder != .lists)
             
             Spacer()
             buttons
@@ -167,6 +172,7 @@ struct TaskManagementView: View {
                   text: $viewModel.descriptionText,
                   axis: .vertical)
         
+        .fixedSize(horizontal: false, vertical: true)
         .font(.system(size: 17, weight: .regular))
         .foregroundStyle(
             viewModel.check == .checked ?
