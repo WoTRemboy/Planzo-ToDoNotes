@@ -3,6 +3,16 @@
     {
       "filename" : "TaskMakeImportant.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "MakeImportantDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

@@ -62,7 +62,12 @@ struct ContextMenuHelper<Content: View, Preview: View>: UIViewRepresentable {
         func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
             
             return UIContextMenuConfiguration(identifier: nil) {
-                UIHostingController(rootView: self.parent.preview)
+                let hostingController = UIHostingController(rootView: self.parent.preview)
+                hostingController.preferredContentSize = CGSize(
+                    width: UIScreen.main.bounds.width,
+                    height: UIScreen.main.bounds.height / 2
+                )
+                return hostingController
             } actionProvider: { _ in
                 self.parent.actions
             }

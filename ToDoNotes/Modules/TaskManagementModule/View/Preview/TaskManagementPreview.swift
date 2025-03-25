@@ -77,7 +77,7 @@ struct TaskManagementPreview: View {
     }
     
     private var descriptionCoverInput: some View {
-        TextField(Texts.TaskManagement.descriprionPlaceholder,
+        TextField(Texts.TaskManagement.previewDescriprionPlaceholder,
                   text: $viewModel.descriptionText,
                   axis: .vertical)
         

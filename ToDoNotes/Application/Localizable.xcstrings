@@ -1398,13 +1398,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Duplicate Note"
+            "value" : "Duplicate"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Дублировать заметку"
+            "value" : "Дублировать"
           }
         }
       }
@@ -2095,7 +2095,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No Title"
+            "value" : "No title"
           }
         },
         "ru" : {

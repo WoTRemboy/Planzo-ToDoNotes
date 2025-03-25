@@ -166,3 +166,17 @@ extension Image {
         static let googleLogo = Image("GoogleLogo")
     }
 }
+
+
+extension UIImage {
+    enum TaskManagement {
+        static let importantSelect = UIImage(named: "EditTaskImportantOffIcon")
+        static let importantDeselect = UIImage(named: "EditTaskImportantOnIcon")
+        
+        static let pinnedSelect = UIImage(named: "EditTaskPinnedOffIcon")
+        static let pinnedDeselect = UIImage(named: "EditTaskPinnedOnIcon")
+        
+        static let copy = UIImage(named: "EditTaskCopyIcon")
+        static let trash = UIImage(named: "EditTaskTrashIcon")
+    }
+}
