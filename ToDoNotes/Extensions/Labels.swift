@@ -140,9 +140,13 @@ final class Texts {
     
     enum TaskManagement {
         static let titlePlaceholder = NSLocalizedString("TaskManagementTitlePlaceholder", comment: "What would you like to do?")
+        static let previewTitlePlaceholder = NSLocalizedString("TaskManagementTitlePlaceholderPreview", comment: "No title")
         static let descriprionPlaceholder = NSLocalizedString("TaskManagementDescriptionPlaceholder", comment: "Description")
+        static let previewDescriprionPlaceholder = NSLocalizedString("TaskManagementDescriptionPlaceholderPreview", comment: "No description")
         static let today = NSLocalizedString("TaskManagementToday", comment: "Today")
-        static let point = NSLocalizedString("TaskManagementPoint", comment: "Poin")
+        static let target = NSLocalizedString("TaskManagementTarget", comment: "Target")
+        static let created = NSLocalizedString("TaskManagementCreated", comment: "Created")
+        static let point = NSLocalizedString("TaskManagementPoint", comment: "Point")
         
         enum TaskRow {
             static let placeholder = NSLocalizedString("TaskManagementTaskRowPlaceholder", comment: "No Title")

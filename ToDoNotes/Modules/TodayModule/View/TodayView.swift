@@ -89,7 +89,10 @@ struct TodayView: View {
         Section {
             let tasks = dayTasks[section] ?? []
             ForEach(tasks) { entity in
-                TodayTaskRowWithSwipeActions(entity: entity, isLast: tasks.last == entity)
+                TodayTaskRowWithSwipeActions(
+                    entity: entity,
+                    isLast: tasks.last == entity,
+                    namespace: animation)
             }
             .listRowInsets(EdgeInsets())
         } header: {

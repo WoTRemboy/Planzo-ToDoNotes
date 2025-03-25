@@ -1477,6 +1477,23 @@
         }
       }
     },
+    "TaskManagementCreated" : {
+      "comment" : "Created",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Created"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создано"
+          }
+        }
+      }
+    },
     "TaskManagementDatePickerCancel" : {
       "comment" : "Cancel",
       "localizations" : {
@@ -2021,8 +2038,25 @@
         }
       }
     },
+    "TaskManagementDescriptionPlaceholderPreview" : {
+      "comment" : "No description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No description"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет описания"
+          }
+        }
+      }
+    },
     "TaskManagementPoint" : {
-      "comment" : "Poin",
+      "comment" : "Point",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2034,6 +2068,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Пункт"
+          }
+        }
+      }
+    },
+    "TaskManagementTarget" : {
+      "comment" : "Target",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Target"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цель"
           }
         }
       }
@@ -2068,6 +2119,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Что бы вы хотели сделать?"
+          }
+        }
+      }
+    },
+    "TaskManagementTitlePlaceholderPreview" : {
+      "comment" : "No title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No title"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет заголовка"
           }
         }
       }

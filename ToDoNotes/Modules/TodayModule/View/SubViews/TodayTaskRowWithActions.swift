@@ -12,10 +12,12 @@ struct TodayTaskRowWithSwipeActions: View {
     
     @ObservedObject private var entity: TaskEntity
     private let isLast: Bool
+    private let namespace: Namespace.ID
     
-    init(entity: TaskEntity, isLast: Bool) {
+    init(entity: TaskEntity, isLast: Bool, namespace: Namespace.ID) {
         self._entity = ObservedObject(wrappedValue: entity)
         self.isLast = isLast
+        self.namespace = namespace
     }
     
     internal var body: some View {
@@ -23,11 +25,64 @@ struct TodayTaskRowWithSwipeActions: View {
             viewModel.selectedTask = entity
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         } label: {
-            TaskListRow(entity: entity, isLast: isLast)
+            CustomContextMenu {
+                TaskListRow(entity: entity, isLast: isLast)
+                    .background(Color.SupportColors.supportListRow)
+            } preview: {
+                TaskManagementPreview(
+                    entity: entity)
+            } actions: {
+                uiContextMenu
+            } onEnd: {
+                
+            }
         }
 //        .contextMenu { contextMenuContent }
         .swipeActions(edge: .leading, allowsFullSwipe: false) { leadingSwipeActions }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) { trailingSwipeActions }
+    }
+    
+    private var uiContextMenu: UIMenu {
+        let toggleImportantAction = UIAction(
+            title: TaskService.taskCheckImportant(for: entity)
+                ? Texts.TaskManagement.ContextMenu.importantDeselect
+                : Texts.TaskManagement.ContextMenu.important,
+            image: TaskService.taskCheckImportant(for: entity)
+                ? UIImage(named: "importantDeselect")
+                : UIImage(named: "important")
+        ) { _ in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                try? TaskService.toggleImportant(for: entity)
+            }
+            Toast.shared.present(
+                title: entity.important ? Texts.Toasts.importantOn : Texts.Toasts.importantOff)
+        }
+        
+        let togglePinnedAction = UIAction(
+            title: "Toggle Pinned",
+            image: TaskService.taskCheckPinned(for: entity)
+                ? UIImage(named: "pinnedDeselect")
+                : UIImage(named: "pinned")
+        ) { _ in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                try? TaskService.togglePinned(for: entity)
+            }
+            Toast.shared.present(
+                title: entity.pinned ? Texts.Toasts.pinnedOn : Texts.Toasts.pinnedOff)
+        }
+        
+        let removeAction = UIAction(
+            title: "Remove Task",
+            image: UIImage(systemName: "trash"),
+            attributes: .destructive
+        ) { _ in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                try? TaskService.toggleRemoved(for: entity)
+            }
+            Toast.shared.present(title: Texts.Toasts.removed)
+        }
+        
+        return UIMenu(title: "", children: [toggleImportantAction, togglePinnedAction, removeAction])
     }
     
     private var contextMenuContent: some View {
@@ -134,5 +189,8 @@ struct TodayTaskRowWithSwipeActions: View {
 
 
 #Preview {
-    TodayTaskRowWithSwipeActions(entity: TaskEntity(), isLast: false)
+    TodayTaskRowWithSwipeActions(entity: PreviewData.taskItem,
+                                 isLast: false,
+                                 namespace: Namespace().wrappedValue)
+    .environmentObject(TodayViewModel())
 }
