@@ -72,6 +72,7 @@ extension Color {
         static let pin = Color("SwipeActionPin")
         static let remove = Color("SwipeActionDelete")
         static let restore = Color("SwipeActionRestore")
+        static let duplicate = Color("SwipeActionDuplicate")
     }
 }
 

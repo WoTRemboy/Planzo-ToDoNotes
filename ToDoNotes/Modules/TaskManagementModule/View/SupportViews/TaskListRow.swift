@@ -263,15 +263,15 @@ struct TaskListRow: View {
             title: Texts.TaskManagement.ContextMenu.dublicate,
             image: UIImage.TaskManagement.copy
         ) { _ in
-            withAnimation(.easeInOut(duration: 0.2)) {
-                do {
+//            withAnimation(.easeInOut(duration: 0.2)) {
+//                do {
 //                    try TaskService.toggleRemoved(for: entity)
-                    Toast.shared.present(
-                        title: Texts.Toasts.removed)
-                } catch {
-                    print("Task could not be removed with error: \(error.localizedDescription).")
-                }
-            }
+//                    Toast.shared.present(
+//                        title: Texts.Toasts.removed)
+//                } catch {
+//                    print("Task could not be removed with error: \(error.localizedDescription).")
+//                }
+//            }
         }
         
         let removeAction = UIAction(
@@ -291,9 +291,9 @@ struct TaskListRow: View {
         }
         
         return UIMenu(title: String(), children: [
-            toggleImportantAction,
-            togglePinnedAction,
-            duplicateAction,
+//            toggleImportantAction,
+//            togglePinnedAction,
+//            duplicateAction,
             removeAction
         ])
     }

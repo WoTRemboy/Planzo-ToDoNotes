@@ -85,6 +85,10 @@ struct MainView: View {
                 }
                 .listRowSeparator(.hidden)
                 .listSectionSpacing(0)
+            
+            Color.clear
+                .frame(height: 50)
+                .listRowBackground(Color.clear)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)

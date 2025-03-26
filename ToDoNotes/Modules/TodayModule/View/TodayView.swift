@@ -76,6 +76,10 @@ struct TodayView: View {
             }
             .listRowSeparator(.hidden)
             .listSectionSpacing(0)
+            
+            Color.clear
+                .frame(height: 50)
+                .listRowBackground(Color.clear)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .background(Color.BackColors.backDefault)
