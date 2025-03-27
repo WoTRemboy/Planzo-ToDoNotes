@@ -11,6 +11,7 @@ extension Image {
     enum Placeholder {
         static let previewIcon = Image("PlaceholderPreviewIcon")
         static let tabbarIcon = Image("PlaceholderTabbarIcon")
+        static let calendarFreeDay = Image("CalendarFreeDay")
     }
     
     enum Onboarding {

@@ -129,13 +129,16 @@ struct CalendarView: View {
     }
     
     private var placeholder: some View {
-        ScrollView {
+        ZStack(alignment: .top) {
+//            Color.BackColors.backDefault
+//                .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
             CalendarTaskFormPlaceholder(
                 date: viewModel.selectedDate,
                 namespace: animation)
             .padding(.top)
         }
-        .scrollDisabled(true)
     }
     
     private var plusButton: some View {
