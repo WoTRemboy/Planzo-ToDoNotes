@@ -226,7 +226,7 @@ struct TaskListRow: View {
     }
     
     private var uiContextMenu: UIMenu {
-        let toggleImportantAction = UIAction(
+        let _/*toggleImportantAction*/ = UIAction(
             title:
                 (entity.important ?
                 Texts.TaskManagement.ContextMenu.importantDeselect :
@@ -243,7 +243,7 @@ struct TaskListRow: View {
                 title: entity.important ? Texts.Toasts.importantOn : Texts.Toasts.importantOff)
         }
         
-        let togglePinnedAction = UIAction(
+        let _/*togglePinnedAction*/ = UIAction(
             title: (entity.pinned ?
                     Texts.TaskManagement.ContextMenu.unpin :
                         Texts.TaskManagement.ContextMenu.pin),
@@ -259,7 +259,7 @@ struct TaskListRow: View {
                 title: entity.pinned ? Texts.Toasts.pinnedOn : Texts.Toasts.pinnedOff)
         }
         
-        let duplicateAction = UIAction(
+        let _/*duplicateAction*/ = UIAction(
             title: Texts.TaskManagement.ContextMenu.dublicate,
             image: UIImage.TaskManagement.copy
         ) { _ in

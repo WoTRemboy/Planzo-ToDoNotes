@@ -37,18 +37,15 @@ struct TaskManagementPreviewNavBar: View {
         HStack(spacing: 4) {
             let target = entity?.target ?? entity?.created ?? .distantPast
             
-            Text(entity?.target != nil ? Texts.TaskManagement.target : Texts.TaskManagement.created)
-                .font(.system(size: 22, weight: .bold))
-                .padding(.leading)
-            
             Text(target.shortDate)
                 .font(.system(size: 22, weight: .bold))
             
             Text(target.shortWeekday)
                 .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(Color.LabelColors.labelSecondary)
-                .padding(.trailing)
+                
         }
+        .padding([.leading, .trailing])
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

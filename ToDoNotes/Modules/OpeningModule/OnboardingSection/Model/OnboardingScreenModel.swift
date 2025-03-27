@@ -22,21 +22,21 @@ extension OnboardingStep {
     /// Configures and returns the list of onboarding steps.
     /// - Returns: An array of `OnboardingStep` instances, each representing a step in the onboarding process.
     static func stepsSetup() -> [OnboardingStep] {
-        let first = OnboardingStep(name: Texts.OnboardingPage.placeholderTitle,
+        let first = OnboardingStep(name: Texts.OnboardingPage.firstTitle,
                                    description: Texts.OnboardingPage.placeholderContent,
-                                   image: .Placeholder.previewIcon)
+                                   image: .Onboarding.first)
         
-        let second = OnboardingStep(name: Texts.OnboardingPage.placeholderTitle,
+        let second = OnboardingStep(name: Texts.OnboardingPage.secondTitle,
                                     description: Texts.OnboardingPage.placeholderContent,
-                                    image: .Placeholder.previewIcon)
+                                    image: .Onboarding.second)
         
-        let third = OnboardingStep(name: Texts.OnboardingPage.placeholderTitle,
+        let third = OnboardingStep(name: Texts.OnboardingPage.thirdTitle,
                                    description: Texts.OnboardingPage.placeholderContent,
-                                   image: .Placeholder.previewIcon)
+                                   image: .Onboarding.third)
         
-        let fourth = OnboardingStep(name: Texts.OnboardingPage.placeholderTitle,
+        let fourth = OnboardingStep(name: Texts.OnboardingPage.fourthTitle,
                                     description: Texts.OnboardingPage.placeholderContent,
-                                    image: .Placeholder.previewIcon)
+                                    image: .Onboarding.fourth)
         
         return [first, second, third, fourth]
     }

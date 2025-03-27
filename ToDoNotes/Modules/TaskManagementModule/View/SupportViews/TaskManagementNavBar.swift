@@ -33,7 +33,7 @@ struct TaskManagementNavBar: View {
                     .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
                 
                 VStack(spacing: 0) {
-                    HStack {
+                    HStack(spacing: 0) {
                         backButton
                         titleLabel
                         moreButton

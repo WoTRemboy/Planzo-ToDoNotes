@@ -102,11 +102,12 @@ struct TaskManagementView: View {
                 }
             }
             .scrollDisabled(entity == nil && viewModel.taskCreationFullScreen == .popup && folder != .lists)
+            .padding(.horizontal, 24)
             
             Spacer()
             buttons
+                .padding(.horizontal, 16)
         }
-        .padding(.horizontal, 16)
         .padding(.top, (entity == nil && viewModel.taskCreationFullScreen == .popup) ? 8 : 0)
         .padding(.bottom, 8)
     }

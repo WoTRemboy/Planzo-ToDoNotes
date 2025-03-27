@@ -15,6 +15,12 @@ extension Image {
     
     enum Onboarding {
         static let splashScreenLogo = Image("SplashScreenLogo")
+        static let first = Image("OnboardingFirst")
+        static let second = Image("OnboardingSecond")
+        static let third = Image("OnboardingThird")
+        static let fourth = Image("OnboardingFourth")
+        static let fifth = Image("OnboardingFifth")
+        static let sixth = Image("OnboardingSixth")
     }
     
     enum NavigationBar {
