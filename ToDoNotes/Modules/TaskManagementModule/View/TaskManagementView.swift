@@ -81,6 +81,7 @@ struct TaskManagementView: View {
                 entity: entity,
                 viewModel: viewModel)
                 .presentationDetents([.height(670)])
+                .interactiveDismissDisabled()
         }
         .navigationTransition(
             id: transitionID,
