@@ -44,6 +44,11 @@ struct TaskManagementView: View {
     
     internal var body: some View {
         ZStack {
+            if entity == nil && viewModel.taskCreationFullScreen == .popup && folder != .lists {
+                Color.BackColors.backSheet
+                    .ignoresSafeArea()
+            }
+            
             VStack(spacing: 0) {
                 if viewModel.taskCreationFullScreen == .fullScreen || folder == .lists || entity != nil {
                     TaskManagementNavBar(
@@ -76,6 +81,7 @@ struct TaskManagementView: View {
                 entity: entity,
                 viewModel: viewModel)
                 .presentationDetents([.height(670)])
+                .interactiveDismissDisabled()
         }
         .navigationTransition(
             id: transitionID,
@@ -96,12 +102,13 @@ struct TaskManagementView: View {
                         .background(HeightReader(height: $taskManagementHeight))
                 }
             }
-            .scrollDisabled(entity == nil && viewModel.taskCreationFullScreen == .popup)
+            .scrollDisabled(entity == nil && viewModel.taskCreationFullScreen == .popup && folder != .lists)
+            .padding(.horizontal, entity == nil && viewModel.taskCreationFullScreen == .popup && folder != .lists ? 16 : 24)
             
             Spacer()
             buttons
+                .padding(.horizontal, 16)
         }
-        .padding(.horizontal, 16)
         .padding(.top, (entity == nil && viewModel.taskCreationFullScreen == .popup) ? 8 : 0)
         .padding(.bottom, 8)
     }
@@ -167,6 +174,7 @@ struct TaskManagementView: View {
                   text: $viewModel.descriptionText,
                   axis: .vertical)
         
+        .fixedSize(horizontal: false, vertical: true)
         .font(.system(size: 17, weight: .regular))
         .foregroundStyle(
             viewModel.check == .checked ?

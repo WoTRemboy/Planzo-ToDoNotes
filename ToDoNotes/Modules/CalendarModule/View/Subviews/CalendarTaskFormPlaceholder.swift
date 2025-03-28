@@ -38,16 +38,17 @@ struct CalendarTaskFormPlaceholder: View {
     }
     
     private var emptyListImage: some View {
-        Image.TaskManagement.emptyList
+        Image.Placeholder.calendarFreeDay
             .resizable()
-            .frame(width: 150, height: 150)
-            .padding(.top, 16)
+            .scaledToFit()
+            .padding([.top, .horizontal])
     }
     
     private var emptyListLabel: some View {
         Text(Texts.CalendarPage.emptyList)
             .font(.system(size: 18, weight: .medium))
             .foregroundStyle(Color.LabelColors.labelPrimary)
+            .padding([.top, .bottom])
     }
 }
 

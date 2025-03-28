@@ -74,7 +74,7 @@ struct MainView: View {
     private var placeholderLabel: some View {
         Text(Texts.MainPage.placeholder)
             .foregroundStyle(Color.LabelColors.labelSecondary)
-            .font(.system(size: 18, weight: .medium))
+            .font(.system(size: 22, weight: .bold))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
     
@@ -85,6 +85,10 @@ struct MainView: View {
                 }
                 .listRowSeparator(.hidden)
                 .listSectionSpacing(0)
+            
+            Color.clear
+                .frame(height: 50)
+                .listRowBackground(Color.clear)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)
@@ -231,8 +235,8 @@ extension MainView {
                     return t1.pinned && !t2.pinned
                 }
                 
-                let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : t1.created!
-                let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : t2.created!
+                let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : (Date.distantFuture + t1.created!.timeIntervalSinceNow)
+                let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : (Date.distantFuture + t2.created!.timeIntervalSinceNow)
                 return d1 < d2
             }
             return (key, sortedTasks)

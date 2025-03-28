@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "EditTaskPinnedOffIcon.svg",
+      "filename" : "OnboardingFirst.png",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "EditTaskPinnedOffIconDark.svg",
+      "filename" : "OnboardingFirstDark.png",
       "idiom" : "universal"
     }
   ],

@@ -11,10 +11,17 @@ extension Image {
     enum Placeholder {
         static let previewIcon = Image("PlaceholderPreviewIcon")
         static let tabbarIcon = Image("PlaceholderTabbarIcon")
+        static let calendarFreeDay = Image("CalendarFreeDay")
     }
     
     enum Onboarding {
         static let splashScreenLogo = Image("SplashScreenLogo")
+        static let first = Image("OnboardingFirst")
+        static let second = Image("OnboardingSecond")
+        static let third = Image("OnboardingThird")
+        static let fourth = Image("OnboardingFourth")
+        static let fifth = Image("OnboardingFifth")
+        static let sixth = Image("OnboardingSixth")
     }
     
     enum NavigationBar {
@@ -164,5 +171,19 @@ extension Image {
     enum LoginPage {
         static let appleLogo = Image("AppleLogo")
         static let googleLogo = Image("GoogleLogo")
+    }
+}
+
+
+extension UIImage {
+    enum TaskManagement {
+        static let importantSelect = UIImage(named: "EditTaskImportantOffIcon")
+        static let importantDeselect = UIImage(named: "EditTaskImportantOnIcon")
+        
+        static let pinnedSelect = UIImage(named: "EditTaskPinnedOffIcon")
+        static let pinnedDeselect = UIImage(named: "EditTaskPinnedOnIcon")
+        
+        static let copy = UIImage(named: "EditTaskCopyIcon")
+        static let trash = UIImage(named: "EditTaskTrashIcon")
     }
 }

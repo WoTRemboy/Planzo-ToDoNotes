@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "copy.svg",
+      "filename" : "Duplicate.svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "DuplicateDark.svg",
       "idiom" : "universal"
     }
   ],

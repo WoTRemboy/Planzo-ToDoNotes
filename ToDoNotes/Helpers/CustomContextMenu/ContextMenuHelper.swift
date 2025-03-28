@@ -8,13 +8,12 @@
 import SwiftUI
 
 struct ContextMenuHelper<Content: View, Preview: View>: UIViewRepresentable {
-    
     private var content: Content
     private var preview: Preview
     private var actions: UIMenu
     private var onEnd: () -> ()
     
-    init(content: Content, preview: Preview, actions: UIMenu, onEnd: @escaping () -> ()) {
+    init(content: Content, preview: Preview, actions: UIMenu, onEnd: @escaping () -> Void) {
         self.content = content
         self.preview = preview
         self.actions = actions
@@ -22,40 +21,39 @@ struct ContextMenuHelper<Content: View, Preview: View>: UIViewRepresentable {
     }
     
     internal func makeCoordinator() -> Coordinator {
-        return Coordinator(parent: self)
+        Coordinator(parent: self)
     }
     
-    internal func makeUIView(context: Context) -> some UIView {
+    internal func makeUIView(context: Context) -> UIView {
         let view = UIView()
         view.backgroundColor = .clear
         
-        let hostView = UIHostingController(rootView: content)
-        hostView.view.translatesAutoresizingMaskIntoConstraints = false
+        context.coordinator.hostingController = UIHostingController(rootView: content)
+        guard let hostView = context.coordinator.hostingController?.view else { return view }
         
-        let constraints = [
-            hostView.view.topAnchor.constraint(equalTo: view.topAnchor),
-            hostView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            hostView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            hostView.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            hostView.view.widthAnchor.constraint(equalTo: view.widthAnchor),
-            hostView.view.heightAnchor.constraint(equalTo: view.heightAnchor)
-        ]
-        view.addSubview(hostView.view)
-        view.addConstraints(constraints)
+        view.addSubview(hostView)
+        hostView.translatesAutoresizingMaskIntoConstraints = false
         
+        NSLayoutConstraint.activate([
+            hostView.topAnchor.constraint(equalTo: view.topAnchor),
+            hostView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            hostView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+
         let interaction = UIContextMenuInteraction(delegate: context.coordinator)
         view.addInteraction(interaction)
         return view
     }
     
-    internal func updateUIView(_ uiView: UIViewType, context: Context) {
-        
+    internal func updateUIView(_ uiView: UIView, context: Context) {
+        context.coordinator.hostingController?.rootView = content
     }
     
     final class Coordinator: NSObject, UIContextMenuInteractionDelegate {
         
         var parent: ContextMenuHelper
+        var hostingController: UIHostingController<Content>?
         
         init(parent: ContextMenuHelper) {
             self.parent = parent
@@ -64,19 +62,21 @@ struct ContextMenuHelper<Content: View, Preview: View>: UIViewRepresentable {
         func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
             
             return UIContextMenuConfiguration(identifier: nil) {
-                let previewController = UIHostingController(rootView: self.parent.preview)
-                return previewController
-            } actionProvider: { items in
-                return self.parent.actions
+                let hostingController = UIHostingController(rootView: self.parent.preview)
+                hostingController.preferredContentSize = CGSize(
+                    width: UIScreen.main.bounds.width,
+                    height: UIScreen.main.bounds.height / 2
+                )
+                return hostingController
+            } actionProvider: { _ in
+                self.parent.actions
             }
         }
         
         func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: any UIContextMenuInteractionCommitAnimating) {
-            
 //            animator.addCompletion {
 //                self.parent.onEnd()
 //            }
         }
     }
-    
 }
