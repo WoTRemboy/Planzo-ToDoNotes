@@ -49,28 +49,24 @@ struct OnboardingScreenView: View {
                     viewModel.steps[index].image
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 300, height: 300)
-                        .clipShape(.rect(cornerRadius: 16))
+                        .clipShape(.rect(cornerRadius: 10))
+                        .padding(.horizontal)
                     
                     Text(viewModel.steps[index].name)
                         .font(.system(size: 18, weight: .medium))
                         .foregroundStyle(Color.LabelColors.labelPrimary)
                         .multilineTextAlignment(.center)
-                        .padding(.top)
-                    
-                    Text(viewModel.steps[index].description)
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundStyle(Color.LabelColors.labelPrimary)
-                        .multilineTextAlignment(.center)
-                        .padding(.top, 3)
-                        .frame(width: 238)
+                        .minimumScaleFactor(0.5)
+                        .frame(width: index == 1 ? 350 : 270)
+                        .padding(.top, hasNotch() ? 24 : 16)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .tag(index)
         }
               .interactive(scale: 0.8)
               .itemSpacing(10)
               .itemAspectRatio(1.0)
+              .expandPageToEdges()
         
               .swipeInteractionArea(.allAvailable)
               .multiplePagination()
@@ -85,17 +81,18 @@ struct OnboardingScreenView: View {
             ForEach(viewModel.pages, id: \.self) { step in
                 if step == page.index {
                     Circle()
-                        .frame(width: 15, height: 15)
+                        .frame(width: 12, height: 12)
                         .foregroundStyle(Color.LabelColors.labelPrimary)
                         .transition(.scale)
                 } else {
                     Circle()
-                        .frame(width: 10, height: 10)
+                        .frame(width: 8, height: 8)
                         .foregroundStyle(Color.labelDisable)
                         .transition(.scale)
                 }
             }
         }
+        .padding(.top)
     }
     
     // MARK: - Page Buttons
@@ -140,7 +137,7 @@ struct OnboardingScreenView: View {
         .minimumScaleFactor(0.4)
         
         .padding(.horizontal)
-        .padding(.top, 30)
+        .padding(.top)
     }
     
     // MARK: - Sign with Apple Button

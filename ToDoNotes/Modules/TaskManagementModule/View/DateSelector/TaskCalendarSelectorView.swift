@@ -84,13 +84,17 @@ struct TaskCalendarSelectorView: View {
     }
     
     private var toolBarButtonCancel: some View {
-        Button {
-            viewModel.toggleDatePicker()
-        } label: {
-            Image.TaskManagement.DateSelector.close
-                .resizable()
-                .frame(width: 24, height: 24)
-        }
+//        Button {
+//            viewModel.cancelTaskDateParams()
+//            viewModel.toggleDatePicker()
+//        } label: {
+//            Image.TaskManagement.DateSelector.close
+//                .resizable()
+//                .frame(width: 24, height: 24)
+//        }
+        Rectangle()
+            .foregroundStyle(Color.clear)
+            .frame(width: 24, height: 24)
     }
     
     private var toolBarButtonDone: some View {

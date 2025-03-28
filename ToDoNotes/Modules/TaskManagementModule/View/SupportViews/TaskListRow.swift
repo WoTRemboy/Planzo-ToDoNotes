@@ -21,6 +21,20 @@ struct TaskListRow: View {
     }
     
     internal var body: some View {
+        CustomContextMenu {
+            content
+                .background(Color.SupportColors.supportListRow)
+        } preview: {
+            TaskManagementPreview(
+                entity: entity)
+        } actions: {
+            uiContextMenu
+        } onEnd: {
+            
+        }
+    }
+    
+    private var content: some View {
         HStack(spacing: 0) {
             folderIndicatior
             pinnedIndicator
@@ -210,6 +224,80 @@ struct TaskListRow: View {
         Rectangle()
             .foregroundStyle(.clear)
     }
+    
+    private var uiContextMenu: UIMenu {
+        let _/*toggleImportantAction*/ = UIAction(
+            title:
+                (entity.important ?
+                Texts.TaskManagement.ContextMenu.importantDeselect :
+                Texts.TaskManagement.ContextMenu.important),
+            image:
+                (entity.important ?
+                 UIImage.TaskManagement.importantDeselect :
+                    UIImage.TaskManagement.importantSelect)
+        ) { _ in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                try? TaskService.toggleImportant(for: entity)
+            }
+            Toast.shared.present(
+                title: entity.important ? Texts.Toasts.importantOn : Texts.Toasts.importantOff)
+        }
+        
+        let _/*togglePinnedAction*/ = UIAction(
+            title: (entity.pinned ?
+                    Texts.TaskManagement.ContextMenu.unpin :
+                        Texts.TaskManagement.ContextMenu.pin),
+            
+            image: (entity.pinned ?
+                    UIImage.TaskManagement.pinnedDeselect :
+                        UIImage.TaskManagement.pinnedSelect)
+        ) { _ in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                try? TaskService.togglePinned(for: entity)
+            }
+            Toast.shared.present(
+                title: entity.pinned ? Texts.Toasts.pinnedOn : Texts.Toasts.pinnedOff)
+        }
+        
+        let _/*duplicateAction*/ = UIAction(
+            title: Texts.TaskManagement.ContextMenu.dublicate,
+            image: UIImage.TaskManagement.copy
+        ) { _ in
+//            withAnimation(.easeInOut(duration: 0.2)) {
+//                do {
+//                    try TaskService.toggleRemoved(for: entity)
+//                    Toast.shared.present(
+//                        title: Texts.Toasts.removed)
+//                } catch {
+//                    print("Task could not be removed with error: \(error.localizedDescription).")
+//                }
+//            }
+        }
+        
+        let removeAction = UIAction(
+            title: Texts.TaskManagement.ContextMenu.delete,
+            image: UIImage.TaskManagement.trash,
+            attributes: .destructive
+        ) { _ in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                do {
+                    try TaskService.toggleRemoved(for: entity)
+                    Toast.shared.present(
+                        title: Texts.Toasts.removed)
+                } catch {
+                    print("Task could not be removed with error: \(error.localizedDescription).")
+                }
+            }
+        }
+        
+        return UIMenu(title: String(), children: [
+//            toggleImportantAction,
+//            togglePinnedAction,
+//            duplicateAction,
+            removeAction
+        ])
+    }
+    
 }
 
 #Preview {

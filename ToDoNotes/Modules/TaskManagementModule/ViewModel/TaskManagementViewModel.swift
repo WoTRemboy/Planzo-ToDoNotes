@@ -46,6 +46,8 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var showingDatePicker: Bool = false
     @Published internal var showingNotificationAlert: Bool = false
     
+    private var entity: TaskEntity? = nil
+    
     @Published internal var calendarDate: Date = Date.now {
         didSet {
             updateDays()
@@ -156,6 +158,7 @@ final class TaskManagementViewModel: ObservableObject {
     convenience init(entity: TaskEntity) {
         self.init(hasEntity: true)
         
+        self.entity = entity
         self.nameText = entity.name ?? String()
         self.descriptionText = entity.details ?? String()
         self.check = TaskCheck(rawValue: entity.completed) ?? .none
@@ -253,6 +256,12 @@ final class TaskManagementViewModel: ObservableObject {
     
     internal func doneDatePicker() {
         showingDatePicker = false
+    }
+    
+    internal func cancelTaskDateParams() {
+        targetDate = entity?.target ?? .now.startOfDay
+        hasDate = entity?.target != nil
+        setupNotificationsLocal(entity?.notifications)
     }
     
     internal func saveTaskDateParams() {
@@ -398,9 +407,8 @@ final class TaskManagementViewModel: ObservableObject {
     internal func allParamRemoveMethod() {
         selectedDay = .now.startOfDay
         calendarDate = .now.startOfDay
-        selectedTimeType = .none
-        notificationsLocal.removeAll()
-        selectedRepeating = .none
+        paramRemoveMethod(for: .time)
+        paramRemoveMethod(for: .notifications)
     }
     
     // MARK: - Checklist Methods

@@ -16,7 +16,7 @@ struct SplashScreenView: View {
     @State private var isActive = false
     @State private var id = 0
     
-    private let texts = [String(), Texts.SplashScreen.title]
+    private let texts = [String(), Texts.AppInfo.title]
     
     // MARK: - Body view
     

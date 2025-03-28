@@ -356,12 +356,12 @@
       }
     },
     "MainPagePlaceholder" : {
-      "comment" : "No notes",
+      "comment" : "No Notes",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No notes"
+            "value" : "No Notes"
           }
         },
         "ru" : {
@@ -514,13 +514,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "To Do Notes"
+            "value" : "Planzo"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Список дел"
+            "value" : "Planzo"
           }
         }
       }
@@ -538,6 +538,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Войти с помощью Apple"
+          }
+        }
+      }
+    },
+    "OnboardingPageFirstTitle" : {
+      "comment" : "Here's a short guide to help you get started",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Here's a short guide to help you get started"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вот краткое руководство, которое поможет вам начать"
+          }
+        }
+      }
+    },
+    "OnboardingPageFourthTitle" : {
+      "comment" : "Swipe tasks left or right for quick actions",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Swipe tasks left or right for quick actions"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Свайп задачи влево или вправо для быстрого доступа к действиям"
           }
         }
       }
@@ -565,7 +599,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Next"
+            "value" : "Continue"
           }
         },
         "ru" : {
@@ -593,19 +627,19 @@
         }
       }
     },
-    "OnboardingPagePlaceholderTitle" : {
-      "comment" : "Welcome to the ToDoNotes",
+    "OnboardingPageSecondTitle" : {
+      "comment" : "Check tasks by status. Create folders to sort things your way. Notes match folder colors",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Welcome\nto the ToDoNotes"
+            "value" : "Check tasks by status.\nUse folders to sort things your way.\n\nNotes match folder colors"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Добро пожаловать\nв Список дел"
+            "value" : "Проверяйте задачи по статусу.\nИспользуйте папки для сортировки.\n\nЗаметки соответствуют цвету папок"
           }
         }
       }
@@ -640,6 +674,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Начать"
+          }
+        }
+      }
+    },
+    "OnboardingPageThirdTitle" : {
+      "comment" : "Create notes or tasks with due dates and reminders",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create notes or tasks with due dates and reminders"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создавайте заметки или задачи с датами выполнения и напоминаниями"
           }
         }
       }
@@ -1398,13 +1449,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Duplicate Note"
+            "value" : "Duplicate"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Дублировать заметку"
+            "value" : "Дублировать"
           }
         }
       }
@@ -1473,6 +1524,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Открепить"
+          }
+        }
+      }
+    },
+    "TaskManagementCreated" : {
+      "comment" : "Created",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Created"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создано"
           }
         }
       }
@@ -2021,8 +2089,25 @@
         }
       }
     },
+    "TaskManagementDescriptionPlaceholderPreview" : {
+      "comment" : "No description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No description"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет описания"
+          }
+        }
+      }
+    },
     "TaskManagementPoint" : {
-      "comment" : "Poin",
+      "comment" : "Point",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2038,13 +2123,30 @@
         }
       }
     },
+    "TaskManagementTarget" : {
+      "comment" : "Target",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Target"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цель"
+          }
+        }
+      }
+    },
     "TaskManagementTaskRowPlaceholder" : {
       "comment" : "No Title",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No Title"
+            "value" : "No title"
           }
         },
         "ru" : {
@@ -2068,6 +2170,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Что бы вы хотели сделать?"
+          }
+        }
+      }
+    },
+    "TaskManagementTitlePlaceholderPreview" : {
+      "comment" : "No title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No title"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет заголовка"
           }
         }
       }
@@ -2333,13 +2452,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No notes for today"
+            "value" : "No Notes"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Нет заметок на сегодня"
+            "value" : "Нет заметок"
           }
         }
       }

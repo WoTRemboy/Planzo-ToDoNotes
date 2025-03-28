@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "EditTaskPinnedOffIcon.svg",
+      "filename" : "FreeDay.png",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "EditTaskPinnedOffIconDark.svg",
+      "filename" : "FreeDayDark.png",
       "idiom" : "universal"
     }
   ],

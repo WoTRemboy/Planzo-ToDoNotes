@@ -8,9 +8,8 @@
 import Foundation
 
 final class Texts {
-    enum SplashScreen {
-//        static let title = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "ToDo"
-        static let title = "Notes"
+    enum AppInfo {
+        static let title = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "Planzo"
     }
     
     enum OnboardingPage {
@@ -22,13 +21,16 @@ final class Texts {
         static let googleLogin = NSLocalizedString("OnboardingPageGoogleLogin", comment: "Sign in with Google")
         static let withoutAuth = NSLocalizedString("OnboardingPageWithoutAuth", comment: "Without Authorization")
         
-        static let placeholderTitle = NSLocalizedString("OnboardingPagePlaceholderTitle", comment: "Welcome to the ToDoNotes")
+        static let firstTitle = NSLocalizedString("OnboardingPageFirstTitle", comment: "Here's a short guide to help you get started")
+        static let secondTitle = NSLocalizedString("OnboardingPageSecondTitle", comment: "Check tasks by status. Create folders to sort things your way. Notes match folder colors")
+        static let thirdTitle = NSLocalizedString("OnboardingPageThirdTitle", comment: "Create notes or tasks with due dates and reminders")
+        static let fourthTitle = NSLocalizedString("OnboardingPageFourthTitle", comment: "Swipe tasks left or right for quick actions")
         static let placeholderContent = NSLocalizedString("OnboardingPagePlaceholderContent", comment: "Here's a little guide to help you get started.")
     }
     
     enum MainPage {
         static let title = NSLocalizedString("MainPageTitle", comment: "To Do List")
-        static let placeholder = NSLocalizedString("MainPagePlaceholder", comment: "No notes")
+        static let placeholder = NSLocalizedString("MainPagePlaceholder", comment: "No Notes")
         
         enum Filter {
             static let active = NSLocalizedString("MainPageFilterActive", comment: "Active")
@@ -140,9 +142,13 @@ final class Texts {
     
     enum TaskManagement {
         static let titlePlaceholder = NSLocalizedString("TaskManagementTitlePlaceholder", comment: "What would you like to do?")
+        static let previewTitlePlaceholder = NSLocalizedString("TaskManagementTitlePlaceholderPreview", comment: "No title")
         static let descriprionPlaceholder = NSLocalizedString("TaskManagementDescriptionPlaceholder", comment: "Description")
+        static let previewDescriprionPlaceholder = NSLocalizedString("TaskManagementDescriptionPlaceholderPreview", comment: "No description")
         static let today = NSLocalizedString("TaskManagementToday", comment: "Today")
-        static let point = NSLocalizedString("TaskManagementPoint", comment: "Poin")
+        static let target = NSLocalizedString("TaskManagementTarget", comment: "Target")
+        static let created = NSLocalizedString("TaskManagementCreated", comment: "Created")
+        static let point = NSLocalizedString("TaskManagementPoint", comment: "Point")
         
         enum TaskRow {
             static let placeholder = NSLocalizedString("TaskManagementTaskRowPlaceholder", comment: "No Title")

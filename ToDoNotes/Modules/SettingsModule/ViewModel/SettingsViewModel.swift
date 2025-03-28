@@ -31,7 +31,7 @@ final class SettingsViewModel: ObservableObject {
     }
         
     internal var appName: String {
-        Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? "Unknown App"
+        Texts.AppInfo.title
     }
     
     internal var appVersion: String {
