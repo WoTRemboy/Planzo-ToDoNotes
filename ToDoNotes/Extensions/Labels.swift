@@ -30,7 +30,7 @@ final class Texts {
     
     enum MainPage {
         static let title = NSLocalizedString("MainPageTitle", comment: "To Do List")
-        static let placeholder = NSLocalizedString("MainPagePlaceholder", comment: "No notes")
+        static let placeholder = NSLocalizedString("MainPagePlaceholder", comment: "No Notes")
         
         enum Filter {
             static let active = NSLocalizedString("MainPageFilterActive", comment: "Active")

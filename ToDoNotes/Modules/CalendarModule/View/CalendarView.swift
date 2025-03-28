@@ -129,7 +129,7 @@ struct CalendarView: View {
     }
     
     private var placeholder: some View {
-        ZStack(alignment: .top) {
+        ScrollView {
 //            Color.BackColors.backDefault
 //                .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)
 //                .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -139,6 +139,7 @@ struct CalendarView: View {
                 namespace: animation)
             .padding(.top)
         }
+        .scrollDisabled(hasNotch())
     }
     
     private var plusButton: some View {
@@ -170,8 +171,8 @@ extension CalendarView {
             return taskDate == day && !task.removed
         }
         let sortedTasks = filteredTasks.sorted { t1, t2 in
-            let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : t1.created!
-            let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : t2.created!
+            let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : (Date.distantFuture + t1.created!.timeIntervalSinceNow)
+            let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : (Date.distantFuture + t2.created!.timeIntervalSinceNow)
             return d1 < d2
         }
         var result: [TaskSection: [TaskEntity]] = [:]
@@ -189,6 +190,7 @@ extension CalendarView {
         var groupedDates: [Date: Int] = [:]
         
         for task in tasksResults {
+            guard !task.removed else { continue }
             let referenceDate = task.target ?? task.created ?? Date.distantPast
             let day = Calendar.current.startOfDay(for: referenceDate)
             groupedDates[day, default: 0] += 1

@@ -356,12 +356,12 @@
       }
     },
     "MainPagePlaceholder" : {
-      "comment" : "No notes",
+      "comment" : "No Notes",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No notes"
+            "value" : "No Notes"
           }
         },
         "ru" : {
@@ -2452,13 +2452,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No notes for today"
+            "value" : "No Notes"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Нет заметок на сегодня"
+            "value" : "Нет заметок"
           }
         }
       }
