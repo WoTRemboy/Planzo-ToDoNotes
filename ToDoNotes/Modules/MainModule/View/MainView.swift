@@ -283,7 +283,7 @@ extension MainView {
                 case .active:
                     guard !task.removed else { return false }
                     guard task.completed != 2 else { return false }
-                    if let target = task.target, task.hasTargetTime, target < now {
+                    if task.completed == 1, let target = task.target, task.hasTargetTime, target < now {
                         return false
                     }
                     return true
