@@ -24,38 +24,11 @@ struct TaskChecklistView: View {
     }
     
     internal var body: some View {
-        VStack(spacing: 6) {
+        List {
             ForEach($viewModel.checklistLocal) { $item in
                 HStack {
-                    (item.completed ? checkedBox : uncheckedBox)
-                        .foregroundStyle(
-                            (item.completed || item.name.isEmpty) ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
-                    
-                        .frame(width: 18, height: 18)
-                        .animation(.easeInOut(duration: 0.2), value: item.name)
-                        .onTapGesture {
-                            if !item.name.isEmpty {
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    item.completed.toggle()
-                                }
-                            }
-                        }
-                        .onAppear {
-                            if !item.name.isEmpty, viewModel.check == .checked {
-                                item.completed = true
-                            }
-                        }
-                    
-                    TextField(Texts.TaskManagement.point,
-                              text: $item.name)
-                    .font(.system(size: 17, weight: .regular))
-                    .foregroundStyle(
-                        item.completed ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
-                    
-                    .focused($focusedItemID, equals: item.id)
-                    .introspect(.textField, on: .iOS(.v16, .v17, .v18)) { textField in
-                        setupDelegate(for: textField, itemID: item.id)
-                    }
+                    checkbox(item: $item)
+                    textField(item: $item)
                 }
                 .onChange(of: item.name) { _, newValue in
                     if newValue == String() {
@@ -68,6 +41,44 @@ struct TaskChecklistView: View {
             }
         }
         .padding(.vertical, 4)
+    }
+    
+    @ViewBuilder
+    private func checkbox(item: Binding<ChecklistItem>) -> some View {
+        (item.wrappedValue.completed ? checkedBox : uncheckedBox)
+            .foregroundStyle(
+                (item.wrappedValue.completed || item.wrappedValue.name.isEmpty) ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
+        
+            .frame(width: 18, height: 18)
+            .animation(.easeInOut(duration: 0.2), value: item.wrappedValue.name)
+        
+            .onTapGesture {
+                if !item.wrappedValue.name.isEmpty {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        item.wrappedValue.completed.toggle()
+                    }
+                }
+            }
+            .onAppear {
+                if !item.wrappedValue.name.isEmpty, viewModel.check == .checked {
+                    item.wrappedValue.completed = true
+                }
+            }
+    }
+    
+    @ViewBuilder
+    private func textField(item: Binding<ChecklistItem>) -> some View {
+        TextField(Texts.TaskManagement.point,
+                  text: item.name)
+        .font(.system(size: 17, weight: .regular))
+        .foregroundStyle(
+            item.wrappedValue.completed ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
+        
+        .submitLabel(.next)
+        .focused($focusedItemID, equals: item.id)
+        .introspect(.textField, on: .iOS(.v16, .v17, .v18)) { textField in
+            setupDelegate(for: textField, itemID: item.id)
+        }
     }
     
     private var uncheckedBox: Image {
