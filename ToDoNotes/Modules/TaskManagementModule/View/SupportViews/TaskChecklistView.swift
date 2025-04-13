@@ -24,7 +24,7 @@ struct TaskChecklistView: View {
     }
     
     internal var body: some View {
-        List {
+        VStack(spacing: 6) {
             ForEach($viewModel.checklistLocal) { $item in
                 HStack {
                     checkbox(item: $item)
