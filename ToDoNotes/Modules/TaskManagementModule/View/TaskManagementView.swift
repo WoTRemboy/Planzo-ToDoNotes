@@ -116,16 +116,17 @@ struct TaskManagementView: View {
     private var nameInput: some View {
         HStack {
             if viewModel.check != .none {
-                titleCheckbox
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            viewModel.toggleTitleCheck()
-                            let impactMed = UIImpactFeedbackGenerator(style: .medium)
-                            impactMed.impactOccurred()
-                        }
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        viewModel.toggleTitleCheck()
+                        let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                        impactMed.impactOccurred()
                     }
+                } label: {
+                    titleCheckbox
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                }
             }
             
             TextField(Texts.TaskManagement.titlePlaceholder,

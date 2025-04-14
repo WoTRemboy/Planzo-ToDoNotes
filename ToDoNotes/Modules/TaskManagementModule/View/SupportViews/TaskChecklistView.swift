@@ -63,25 +63,27 @@ struct TaskChecklistView: View {
     
     @ViewBuilder
     private func checkbox(item: Binding<ChecklistItem>) -> some View {
-        (item.wrappedValue.completed ? checkedBox : uncheckedBox)
-            .foregroundStyle(
-                (item.wrappedValue.completed || item.wrappedValue.name.isEmpty) ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
-        
-            .frame(width: 18, height: 18)
-            .animation(.easeInOut(duration: 0.2), value: item.wrappedValue.name)
-        
-            .onTapGesture {
-                if !item.wrappedValue.name.isEmpty {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        item.wrappedValue.completed.toggle()
-                    }
+        Button {
+            if !item.wrappedValue.name.isEmpty {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    item.wrappedValue.completed.toggle()
                 }
+                let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                impactMed.impactOccurred()
             }
-            .onAppear {
-                if !item.wrappedValue.name.isEmpty, viewModel.check == .checked {
-                    item.wrappedValue.completed = true
-                }
+        } label: {
+            (item.wrappedValue.completed ? checkedBox : uncheckedBox)
+                .foregroundStyle(
+                    (item.wrappedValue.completed || item.wrappedValue.name.isEmpty) ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
+            
+                .frame(width: 18, height: 18)
+                .animation(.easeInOut(duration: 0.2), value: item.wrappedValue.name)
+        }
+        .onAppear {
+            if !item.wrappedValue.name.isEmpty, viewModel.check == .checked {
+                item.wrappedValue.completed = true
             }
+        }
     }
     
     @ViewBuilder
