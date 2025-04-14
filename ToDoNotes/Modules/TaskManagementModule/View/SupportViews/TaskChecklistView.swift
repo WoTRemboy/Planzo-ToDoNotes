@@ -14,9 +14,11 @@ struct TaskChecklistView: View {
     @FocusState private var focusedItemID: UUID?
     
     private var textFieldDelegates: [UUID: TextFieldDelegate]
+    private let preview: Bool
     
-    init(viewModel: TaskManagementViewModel) {
+    init(viewModel: TaskManagementViewModel, preview: Bool = false) {
         self.viewModel = viewModel
+        self.preview = preview
         
         self.textFieldDelegates = Dictionary(uniqueKeysWithValues: viewModel.checklistLocal.map {
             ($0.id, TextFieldDelegate())
@@ -33,7 +35,10 @@ struct TaskChecklistView: View {
                 HStack {
                     checkbox(item: $item)
                     textField(item: $item)
-                    removeButton(item: $item)
+                    
+                    if !preview {
+                        removeButton(item: $item)
+                    }
                 }
                 .padding(.vertical, 3)
                 .padding(.horizontal, 8)

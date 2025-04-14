@@ -38,9 +38,9 @@ struct TaskManagementPreview: View {
         VStack(spacing: 0) {
             ScrollView {
                 nameInput
-                
                 descriptionCoverInput
-                TaskChecklistView(viewModel: viewModel)
+                TaskChecklistView(viewModel: viewModel, preview: true)
+                    .padding(.horizontal, -8)
             }
         }
         .padding(.horizontal, 16)

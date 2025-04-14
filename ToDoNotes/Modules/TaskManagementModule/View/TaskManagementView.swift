@@ -103,6 +103,7 @@ struct TaskManagementView: View {
                         .background(HeightReader(height: $taskManagementHeight))
                 }
             }
+            .scrollIndicators(.hidden)
             .scrollDisabled(entity == nil && viewModel.taskCreationFullScreen == .popup && folder != .lists)
             .padding(.horizontal, entity == nil && viewModel.taskCreationFullScreen == .popup && folder != .lists ? 16 : 24)
             
