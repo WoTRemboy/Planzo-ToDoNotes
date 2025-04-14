@@ -34,9 +34,19 @@ struct TaskChecklistView: View {
                     checkbox(item: $item)
                     textField(item: $item)
                 }
-                .draggable(item)
+                .draggable(item) {
+                    Rectangle()
+                        .fill(.ultraThinMaterial)
+                        .frame(width: 1, height: 1)
+                        .onAppear {
+                            viewModel.setDraggingItem(for: item)
+                        }
+                }
                 .dropDestination(for: ChecklistItem.self) { item, location in
+                    viewModel.setDraggingItem(for: nil)
                     return false
+                } isTargeted: { status in
+                    viewModel.setDraggingTargetResult(for: item, status: status)
                 }
                 .onChange(of: item.name) { _, newValue in
                     if newValue == String() {

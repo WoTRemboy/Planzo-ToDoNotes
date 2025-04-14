@@ -20,6 +20,7 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var descriptionText: String
     @Published internal var check: TaskCheck
     @Published internal var checklistLocal: [ChecklistItem] = []
+    @Published internal var draggingItem: ChecklistItem? = nil
     
     @Published internal var checkListItemText: String = String()
     
@@ -455,6 +456,22 @@ final class TaskManagementViewModel: ObservableObject {
         if checklistLocal.isEmpty {
             let emptyItem = ChecklistItem(name: String())
             checklistLocal.append(emptyItem)
+        }
+    }
+    
+    internal func setDraggingItem(for item: ChecklistItem?) {
+        draggingItem = item
+    }
+    
+    internal func setDraggingTargetResult(for item: ChecklistItem, status: Bool) {
+        if let draggingItem = draggingItem, status, draggingItem != item {
+            if let sourceIndex = checklistLocal.firstIndex(of: draggingItem),
+               let destinationIndex = checklistLocal.firstIndex(of: item) {
+                withAnimation(.bouncy(duration: 0.2)) {
+                    let sourceItem = checklistLocal.remove(at: sourceIndex)
+                    checklistLocal.insert(sourceItem, at: destinationIndex)
+                }
+            }
         }
     }
 }
