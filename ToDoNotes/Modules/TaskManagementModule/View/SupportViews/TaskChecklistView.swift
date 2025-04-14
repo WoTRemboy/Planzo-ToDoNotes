@@ -24,11 +24,19 @@ struct TaskChecklistView: View {
     }
     
     internal var body: some View {
-        VStack(spacing: 6) {
+        let columns = Array(
+            repeating: GridItem(.flexible(), spacing: 6),
+            count: 1)
+        
+        LazyVGrid(columns: columns, spacing: 6) {
             ForEach($viewModel.checklistLocal) { $item in
                 HStack {
                     checkbox(item: $item)
                     textField(item: $item)
+                }
+                .draggable(item)
+                .dropDestination(for: ChecklistItem.self) { item, location in
+                    return false
                 }
                 .onChange(of: item.name) { _, newValue in
                     if newValue == String() {
