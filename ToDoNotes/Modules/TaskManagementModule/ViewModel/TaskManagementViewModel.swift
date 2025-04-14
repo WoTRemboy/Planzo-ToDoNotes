@@ -459,6 +459,12 @@ final class TaskManagementViewModel: ObservableObject {
         }
     }
     
+    internal func removeChecklistItem(_ item: ChecklistItem) {
+        if let sourceIndex = checklistLocal.firstIndex(of: item) {
+            checklistLocal.remove(at: sourceIndex)
+        }
+    }
+    
     internal func setDraggingItem(for item: ChecklistItem?) {
         draggingItem = item
     }

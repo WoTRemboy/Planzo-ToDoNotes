@@ -28,12 +28,16 @@ struct TaskChecklistView: View {
             repeating: GridItem(.flexible(), spacing: 6),
             count: 1)
         
-        LazyVGrid(columns: columns, spacing: 6) {
+        LazyVGrid(columns: columns, spacing: 0) {
             ForEach($viewModel.checklistLocal) { $item in
                 HStack {
                     checkbox(item: $item)
                     textField(item: $item)
+                    removeButton(item: $item)
                 }
+                .padding(.vertical, 3)
+                .padding(.horizontal, 8)
+                
                 .draggable(item) {
                     Rectangle()
                         .fill(.ultraThinMaterial)
@@ -98,6 +102,24 @@ struct TaskChecklistView: View {
         .focused($focusedItemID, equals: item.id)
         .introspect(.textField, on: .iOS(.v16, .v17, .v18)) { textField in
             setupDelegate(for: textField, itemID: item.id)
+        }
+    }
+    
+    @ViewBuilder
+    private func removeButton(item: Binding<ChecklistItem>) -> some View {
+        Button {
+            withAnimation(.bouncy(duration: 0.2)) {
+                viewModel.removeChecklistItem(item.wrappedValue)
+            }
+        } label: {
+            Rectangle()
+                .foregroundStyle(Color.BackColors.backDefault)
+                .frame(width: 20, height: 20)
+                .overlay {
+                    Image.TaskManagement.EditTask.checkListRemove
+                        .resizable()
+                        .frame(width: 15, height: 15)
+                }
         }
     }
     

@@ -97,6 +97,7 @@ struct TaskManagementView: View {
                 if entity != nil || folder == .lists || viewModel.taskCreationFullScreen == .fullScreen {
                     descriptionCoverInput
                     TaskChecklistView(viewModel: viewModel)
+                        .padding(.horizontal, -8)
                 } else {
                     descriptionSheetInput
                         .background(HeightReader(height: $taskManagementHeight))

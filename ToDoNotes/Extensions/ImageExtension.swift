@@ -110,6 +110,7 @@ extension Image {
             
             static let checkListCheck = Image("ChecklistItemChecked")
             static let checkListUncheck = Image("ChecklistItemUnchecked")
+            static let checkListRemove = Image("ChecklistItemRemove")
             
             enum Menu {
                 static let completed = Image("EditTaskCompletedOffIcon")
