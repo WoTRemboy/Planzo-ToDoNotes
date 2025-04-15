@@ -91,7 +91,8 @@ struct TaskChecklistView: View {
     @ViewBuilder
     private func textField(item: Binding<ChecklistItem>) -> some View {
         TextField(Texts.TaskManagement.point,
-                  text: item.name)
+                  text: item.name,
+                  axis: preview ? .vertical : .horizontal)
         .font(.system(size: 17, weight: .regular))
         .foregroundStyle(
             item.wrappedValue.completed ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
