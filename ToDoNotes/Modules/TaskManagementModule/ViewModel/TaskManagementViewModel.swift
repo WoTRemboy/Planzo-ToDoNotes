@@ -459,6 +459,17 @@ final class TaskManagementViewModel: ObservableObject {
         }
     }
     
+    internal func toggleChecklistComplete(for item: Binding<ChecklistItem>) {
+        item.wrappedValue.completed.toggle()
+        if let index = checklistLocal.firstIndex(of: item.wrappedValue),
+           item.wrappedValue.completed {
+            withAnimation(.bouncy(duration: 0.2)) {
+                let sourceItem = checklistLocal.remove(at: index)
+                checklistLocal.insert(sourceItem, at: 0)
+            }
+        }
+    }
+    
     internal func removeChecklistItem(_ item: ChecklistItem) {
         if let sourceIndex = checklistLocal.firstIndex(of: item) {
             checklistLocal.remove(at: sourceIndex)

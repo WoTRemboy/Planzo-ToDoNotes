@@ -68,7 +68,7 @@ struct TaskChecklistView: View {
         Button {
             if !item.wrappedValue.name.isEmpty {
                 withAnimation(.easeInOut(duration: 0.2)) {
-                    item.wrappedValue.completed.toggle()
+                    viewModel.toggleChecklistComplete(for: item)
                 }
                 let impactMed = UIImpactFeedbackGenerator(style: .medium)
                 impactMed.impactOccurred()
