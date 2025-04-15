@@ -428,7 +428,7 @@ final class TaskManagementViewModel: ObservableObject {
             }
         }
         
-        withAnimation(.easeInOut(duration: 0.2)) {
+        withAnimation(.bouncy(duration: 0.2)) {
             checklistLocal.insert(newItem, at: index)
         }
     }

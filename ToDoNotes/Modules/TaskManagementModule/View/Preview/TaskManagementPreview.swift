@@ -70,9 +70,9 @@ struct TaskManagementPreview: View {
     
     private var titleCheckbox: Image {
         if viewModel.check == .unchecked {
-            Image.TaskManagement.EditTask.checkListUncheck
+            Image.TaskManagement.EditTask.Checklist.uncheck
         } else {
-            Image.TaskManagement.EditTask.checkListCheck
+            Image.TaskManagement.EditTask.Checklist.check
         }
     }
     

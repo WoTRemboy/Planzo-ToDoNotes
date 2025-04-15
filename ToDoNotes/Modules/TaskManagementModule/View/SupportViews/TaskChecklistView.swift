@@ -38,19 +38,12 @@ struct TaskChecklistView: View {
                     
                     if !preview {
                         removeButton(item: $item)
+                        dragHandle(for: $item)
                     }
                 }
                 .padding(.vertical, 3)
                 .padding(.horizontal, 8)
                 
-                .draggable(item) {
-                    Rectangle()
-                        .fill(.ultraThinMaterial)
-                        .frame(width: 1, height: 1)
-                        .onAppear {
-                            viewModel.setDraggingItem(for: item)
-                        }
-                }
                 .dropDestination(for: ChecklistItem.self) { item, location in
                     viewModel.setDraggingItem(for: nil)
                     return false
@@ -121,21 +114,35 @@ struct TaskChecklistView: View {
                 .foregroundStyle(Color.BackColors.backDefault)
                 .frame(width: 20, height: 20)
                 .overlay {
-                    Image.TaskManagement.EditTask.checkListRemove
+                    Image.TaskManagement.EditTask.Checklist.remove
                         .resizable()
                         .frame(width: 15, height: 15)
                 }
         }
     }
     
+    @ViewBuilder
+    private func dragHandle(for item: Binding<ChecklistItem>) -> some View {
+        Image.TaskManagement.EditTask.Checklist.move
+            .contentShape(Rectangle())
+            .draggable(item.wrappedValue) {
+                Color.clear
+                    .frame(width: 1, height: 1)
+                    .onAppear {
+                        viewModel.setDraggingItem(for: item.wrappedValue)
+                        let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                        impactMed.impactOccurred()
+                    }
+            }
+    }
+    
     private var uncheckedBox: Image {
-        Image.TaskManagement.EditTask.checkListUncheck
+        Image.TaskManagement.EditTask.Checklist.uncheck
             .renderingMode(.template)
-            
     }
     
     private var checkedBox: Image {
-        Image.TaskManagement.EditTask.checkListCheck
+        Image.TaskManagement.EditTask.Checklist.check
     }
 }
 

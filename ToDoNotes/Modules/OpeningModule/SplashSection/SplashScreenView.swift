@@ -28,8 +28,8 @@ struct SplashScreenView: View {
             // Shows splash screen
             content
                 .onAppear {
-                    // Then hides view after 0.5s
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    // Then hides view after 1s
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         withAnimation {
                             self.isActive = true
                         }
@@ -56,7 +56,7 @@ struct SplashScreenView: View {
                 
                 Text(texts[id])
                     .foregroundStyle(Color.LabelColors.labelPrimary)
-                    .font(.system(size: 55, weight: .medium))
+                    .font(.system(size: 80, weight: .medium))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .padding(.horizontal, 30)
@@ -65,7 +65,7 @@ struct SplashScreenView: View {
             .onAppear {
                 Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { timer in
                     withAnimation {
-//                        id += 1
+                        id += 1
                     }
                 }
             }
