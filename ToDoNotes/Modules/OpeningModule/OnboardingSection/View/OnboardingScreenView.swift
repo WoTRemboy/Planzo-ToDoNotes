@@ -32,7 +32,13 @@ struct OnboardingScreenView: View {
                 content
                 progressCircles
                 selectPageButtons
-                skipButton
+                if viewModel.isLastPage(current: page.index) {
+                    termsPolicyLabel
+                        .padding([.top, .horizontal])
+                        .padding(.bottom, hasNotch() ? 4 : 0)
+                } else {
+                    skipButton
+                }
             }
             .padding(.vertical)
         }
@@ -101,11 +107,9 @@ struct OnboardingScreenView: View {
         VStack(spacing: 16) {
             if !viewModel.isLastPage(current: page.index) {
                 nextPageButton
-//                    .transition(.move(edge: .leading).combined(with: .opacity))
                     .transition(.blurReplace)
             } else {
                 nextPageButton
-//                    .transition(.move(edge: .trailing).combined(with: .opacity))
                     .transition(.blurReplace)
             }
         }
@@ -202,10 +206,7 @@ struct OnboardingScreenView: View {
         Text(!viewModel.isLastPage(current: page.index) ? Texts.OnboardingPage.skip : Texts.OnboardingPage.withoutAuth)
             .font(.system(size: 14))
             .fontWeight(.medium)
-            .foregroundStyle(
-                !viewModel.isLastPage(current: page.index) ?
-                Color.LabelColors.labelPrimary :
-                    Color.clear)
+            .foregroundStyle(Color.LabelColors.labelPrimary)
         
             .padding(.top)
             .padding(.bottom, hasNotch() ? 20 : 16)
@@ -218,6 +219,20 @@ struct OnboardingScreenView: View {
                 }
             }
             .animation(.easeInOut, value: page.index)
+    }
+    
+    private var termsPolicyLabel: some View {
+        if let attributedText = try? AttributedString(markdown: Texts.OnboardingPage.markdownTerms) {
+                Text(attributedText)
+                    .font(.system(size: 14))
+                    .fontWeight(.medium)
+                    .foregroundStyle(Color.LabelColors.labelDetails)
+        } else {
+            Text(Texts.OnboardingPage.markdownTermsError)
+                .font(.system(size: 14))
+                .fontWeight(.medium)
+                .foregroundStyle(Color.LabelColors.labelDetails)
+        }
     }
 }
 

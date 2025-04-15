@@ -593,6 +593,40 @@
         }
       }
     },
+    "OnboardingPageMarkdownTerms" : {
+      "comment" : "By clicking Start, you agree to our [Terms of Service](https://avoqode.com/terms-of-service) and [Privacy Policy](https://avoqode.com/privacy-policy).",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By clicking Start, you agree to our [Terms of Service](https://avoqode.com/terms-of-service) and [Privacy Policy](https://avoqode.com/privacy-policy)."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нажимая на Начать, Вы соглашаетесь с нашими [Terms of Service](https://avoqode.com/terms-of-service) и [Privacy Policy](https://avoqode.com/privacy-policy)."
+          }
+        }
+      }
+    },
+    "OnboardingPageMarkdownTermsError" : {
+      "comment" : "Error parsing Terms of Service and Privacy Policy",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error parsing Terms of Service and Privacy Policy"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ошибка вывода Условий использования и Политики конфиденциальности"
+          }
+        }
+      }
+    },
     "OnboardingPageNext" : {
       "comment" : "Next",
       "localizations" : {
