@@ -37,6 +37,7 @@ final class Texts {
             static let outdate = NSLocalizedString("MainPageFilterOutdate", comment: "Overdue")
             static let unsorted = NSLocalizedString("MainPageFilterUnsorted", comment: "Unsorted")
             static let completed = NSLocalizedString("MainPageFilterCompleted", comment: "Completed")
+            static let archived = NSLocalizedString("MainPageFilterArchived", comment: "Archived")
             static let deleted = NSLocalizedString("MainPageFilterDeleted", comment: "Deleted")
             
             enum RemoveFilter {

@@ -280,25 +280,44 @@ extension MainView {
                 
                 if viewModel.importance && !task.important { return false }
                 switch viewModel.selectedFilter {
+                    
                 case .active:
                     guard !task.removed else { return false }
                     guard task.completed != 2 else { return false }
-                    if task.completed == 1, let target = task.target, task.hasTargetTime, target < now {
+                    if let target = task.target, task.hasTargetTime, target < now {
+                        return false
+                    }
+                    if let count = task.notifications?.count, count > 0,
+                       let target = task.target, target < now {
                         return false
                     }
                     return true
+                    
                 case .outdated:
                     guard !task.removed else { return false }
                     if task.completed == 1,
-                       let target = task.target,
-                       task.hasTargetTime,
-                       target < now {
+                       let target = task.target, task.hasTargetTime, target < now {
                         return true
                     }
                     return false
+                    
                 case .completed:
                     guard !task.removed else { return false }
                     return task.completed == 2
+                    
+                case .archived:
+                    guard !task.removed else { return false }
+                    guard task.completed != 2 else { return false }
+                    
+                    if let target = task.target, task.hasTargetTime, target < now {
+                        return task.completed == 0
+                    }
+                    if let count = task.notifications?.count, count > 0,
+                       let target = task.target, target < now {
+                        return true
+                    }
+                    return false
+                    
                 case .unsorted:
                     return !task.removed
                 case .deleted:

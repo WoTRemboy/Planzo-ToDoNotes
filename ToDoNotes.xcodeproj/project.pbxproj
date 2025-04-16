@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		6303E2C02D33FF870096DB64 /* RootViewControllerMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */; };
 		6303E2C22D3405040096DB64 /* AuthorizationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2C12D3404FD0096DB64 /* AuthorizationViewModel.swift */; };
-		6303E2CA2D346A070096DB64 /* CoreDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2C92D3469FE0096DB64 /* CoreDataViewModel.swift */; };
 		6303E2D22D346BBF0096DB64 /* TaskModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2D02D346BBF0096DB64 /* TaskModel.xcdatamodeld */; };
 		631315BB2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631315BA2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift */; };
 		631315BD2D7DE21E0030D446 /* MainTaskRowWithActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631315BC2D7DE21E0030D446 /* MainTaskRowWithActions.swift */; };
@@ -120,7 +119,6 @@
 /* Begin PBXFileReference section */
 		6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewControllerMethods.swift; sourceTree = "<group>"; };
 		6303E2C12D3404FD0096DB64 /* AuthorizationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationViewModel.swift; sourceTree = "<group>"; };
-		6303E2C92D3469FE0096DB64 /* CoreDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataViewModel.swift; sourceTree = "<group>"; };
 		6303E2D12D346BBF0096DB64 /* TaskModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaskModel.xcdatamodel; sourceTree = "<group>"; };
 		631315BA2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTaskRowWithActions.swift; sourceTree = "<group>"; };
 		631315BC2D7DE21E0030D446 /* MainTaskRowWithActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTaskRowWithActions.swift; sourceTree = "<group>"; };
@@ -291,7 +289,6 @@
 			children = (
 				63A092932D7C60E00026A64D /* CoreDataProvider.swift */,
 				63A092952D7C63470026A64D /* TaskService.swift */,
-				6303E2C92D3469FE0096DB64 /* CoreDataViewModel.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -912,7 +909,6 @@
 				63F6C7052D2AA94F00716AB0 /* ThemeModel.swift in Sources */,
 				63F6C7152D2AB99600716AB0 /* CalendarViewModel.swift in Sources */,
 				63A092892D7BA05A0026A64D /* ToastView.swift in Sources */,
-				6303E2CA2D346A070096DB64 /* CoreDataViewModel.swift in Sources */,
 				63F6C71A2D2AF3B900716AB0 /* CustomCalendarCell.swift in Sources */,
 				637B9F482D295A510010F13B /* FolderModel.swift in Sources */,
 				637B9F462D29599B0010F13B /* FilterModel.swift in Sources */,
@@ -1128,7 +1124,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1164,7 +1160,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

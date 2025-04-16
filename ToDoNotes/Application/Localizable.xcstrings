@@ -112,7 +112,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Активные"
+            "value" : "Активно"
           }
         }
       }
@@ -180,7 +180,24 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Активные"
+            "value" : "Активно"
+          }
+        }
+      }
+    },
+    "MainPageFilterArchived" : {
+      "comment" : "Archived",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archived"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Архив"
           }
         }
       }
@@ -197,7 +214,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Выполненные"
+            "value" : "Выполнено"
           }
         }
       }
@@ -214,7 +231,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Удаленные"
+            "value" : "Удалено"
           }
         }
       }
@@ -231,7 +248,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Просроченные"
+            "value" : "Просрочено"
           }
         }
       }
@@ -2237,7 +2254,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Перемещено в Выполненные"
+            "value" : "Перемещено в Выполнено"
           }
         }
       }
