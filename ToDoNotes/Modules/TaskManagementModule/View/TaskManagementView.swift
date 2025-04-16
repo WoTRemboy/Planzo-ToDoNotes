@@ -15,12 +15,12 @@ struct TaskManagementView: View {
     @Binding private var taskManagementHeight: CGFloat
     @State private var isKeyboardActive = false
     
+    private var transitionID: String = Texts.NamespaceID.selectedEntity
+    
     private let entity: TaskEntity?
     private let folder: Folder?
     private let animation: Namespace.ID
     private let onDismiss: () -> Void
-    
-    private var transitionID: String = Texts.NamespaceID.selectedEntity
     
     init(taskManagementHeight: Binding<CGFloat>,
          selectedDate: Date? = nil,

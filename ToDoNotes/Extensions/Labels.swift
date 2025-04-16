@@ -249,6 +249,17 @@ final class Texts {
         static let duplicatedError = NSLocalizedString("ToastsDuplicatedError", comment: "Failed to Duplicate")
     }
     
+    enum Tips {
+        static let mainPageOverviewTitle = NSLocalizedString("TipsMainPageOverviewTitle", comment: "Home Page")
+        static let mainPageOverviewContent = NSLocalizedString("TipsMainPageOverviewContent", comment: "Keep track of all your tasks organized by filters and grouped into folders.")
+        
+        static let todayPageOverviewTitle = NSLocalizedString("TipsTodayPageOverviewTitle", comment: "Today Page")
+        static let todayPageOverviewContent = NSLocalizedString("TipsTodayPageOverviewContent", comment: "Review your tasks for the current day, categorized by their status.")
+        
+        static let calendarPageOverviewTitle = NSLocalizedString("TipsCalendarPageOverview", comment: "Calendar Page")
+        static let calendarPageOverviewContent = NSLocalizedString("TipsCalendarPageOverviewContent", comment: "Check tasks assigned to any specific day using the interactive calendar.")
+    }
+    
     enum DateParameters {
         static let locale = NSLocalizedString("DateParametersLocale", comment: "en_US")
     }

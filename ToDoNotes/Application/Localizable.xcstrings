@@ -2225,6 +2225,108 @@
         }
       }
     },
+    "TipsCalendarPageOverview" : {
+      "comment" : "Calendar Page",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendar Page"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Календарь"
+          }
+        }
+      }
+    },
+    "TipsCalendarPageOverviewContent" : {
+      "comment" : "Check tasks assigned to any specific day using the interactive calendar.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check tasks assigned to any specific day using the interactive calendar."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проверяйте задачи определенного дня с помощью календаря."
+          }
+        }
+      }
+    },
+    "TipsMainPageOverviewContent" : {
+      "comment" : "Keep track of all your tasks organized by filters and grouped into folders.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep track of all your tasks organized by filters and grouped into folders."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отслеживайте все свои задачи, отсортированные по фильтрам и папкам."
+          }
+        }
+      }
+    },
+    "TipsMainPageOverviewTitle" : {
+      "comment" : "Home Page",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home Page"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Главная страница"
+          }
+        }
+      }
+    },
+    "TipsTodayPageOverviewContent" : {
+      "comment" : "Review your tasks for the current day, categorized by their status.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review your tasks for the current day, categorized by their status."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Смотрите свои задачи, отсортированные по статусу, на текущий день."
+          }
+        }
+      }
+    },
+    "TipsTodayPageOverviewTitle" : {
+      "comment" : "Today Page",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today Page"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сегодня"
+          }
+        }
+      }
+    },
     "ToastsCompletedError" : {
       "comment" : "Failed to Complete",
       "localizations" : {
