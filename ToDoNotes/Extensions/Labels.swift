@@ -150,6 +150,7 @@ final class Texts {
         static let target = NSLocalizedString("TaskManagementTarget", comment: "Target")
         static let created = NSLocalizedString("TaskManagementCreated", comment: "Created")
         static let point = NSLocalizedString("TaskManagementPoint", comment: "Point")
+        static let addPoint = NSLocalizedString("TaskManagementAddPoint", comment: "Add Point")
         
         enum TaskRow {
             static let placeholder = NSLocalizedString("TaskManagementTaskRowPlaceholder", comment: "No Title")

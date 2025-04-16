@@ -1426,6 +1426,23 @@
         }
       }
     },
+    "TaskManagementAddPoint" : {
+      "comment" : "Add Point",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Point"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добавить пункт"
+          }
+        }
+      }
+    },
     "TaskManagementContextMenuComplete" : {
       "comment" : "Complete the Task",
       "localizations" : {

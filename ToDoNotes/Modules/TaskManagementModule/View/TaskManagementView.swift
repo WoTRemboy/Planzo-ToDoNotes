@@ -96,8 +96,11 @@ struct TaskManagementView: View {
                 
                 if entity != nil || folder == .lists || viewModel.taskCreationFullScreen == .fullScreen {
                     descriptionCoverInput
+                    
                     TaskChecklistView(viewModel: viewModel)
                         .padding(.horizontal, -8)
+                    
+                    addPointButton
                 } else {
                     descriptionSheetInput
                         .background(HeightReader(height: $taskManagementHeight))
@@ -183,6 +186,18 @@ struct TaskManagementView: View {
             viewModel.check == .checked ?
             Color.LabelColors.labelDetails :
                 Color.LabelColors.labelPrimary)
+    }
+    
+    private var addPointButton: some View {
+        Button {
+            withAnimation(.bouncy(duration: 0.2)) {
+                viewModel.appendChecklistItem()
+            }
+        } label: {
+            Text(Texts.TaskManagement.addPoint)
+                .foregroundStyle(Color.LabelColors.labelPlaceholder)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
     
     private var buttons: some View {

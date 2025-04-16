@@ -149,10 +149,6 @@ final class TaskManagementViewModel: ObservableObject {
             separateTargetDateToTimeAndDay(targetDate: targetDate)
         }
         
-        if !hasEntity {
-            setupEmptyChecklistLocal()
-        }
-        
         updateDays()
     }
     
@@ -433,6 +429,10 @@ final class TaskManagementViewModel: ObservableObject {
         }
     }
     
+    internal func appendChecklistItem() {
+        checklistLocal.append(ChecklistItem(name: checkListItemText))
+    }
+    
     internal func removeChecklistItem(for id: UUID) {
         guard checklistLocal.count > 1 else { return }
         if let index = checklistLocal.firstIndex(where: { $0.id == id }) {
@@ -449,7 +449,6 @@ final class TaskManagementViewModel: ObservableObject {
                 completed: entity.completed)
             checklistLocal.append(item)
         }
-        setupEmptyChecklistLocal()
     }
     
     private func setupEmptyChecklistLocal() {

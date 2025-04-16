@@ -34,6 +34,7 @@ extension Color {
         static let labelBlack = Color("LabelBlack")
         static let labelGreyLight = Color("LabelGreyLight")
         static let labelGreyDark = Color("LabelGreyDark")
+        static let labelPlaceholder = Color("LabelPlaceholder")
         
         enum Special {
             static let labelFilterUnselected = Color("LabelFilterUnselected")
