@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import CoreTransferable
 
-struct ChecklistItem: Identifiable, Equatable {
+struct ChecklistItem: Identifiable, Equatable, Codable, Transferable {
     var id = UUID()
     var name: String
     var completed: Bool = false
@@ -15,6 +16,10 @@ struct ChecklistItem: Identifiable, Equatable {
     mutating internal func toggleCompleted(to active: Bool) {
         guard completed != active, !name.isEmpty else { return }
         self.completed = active
+    }
+    
+    static internal var transferRepresentation: some TransferRepresentation {
+        CodableRepresentation(for: ChecklistItem.self, contentType: .init(exportedAs: "com.avoqode.checklistitem"))
     }
 }
 

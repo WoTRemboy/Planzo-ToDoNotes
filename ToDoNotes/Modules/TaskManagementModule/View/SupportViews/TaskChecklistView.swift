@@ -14,9 +14,11 @@ struct TaskChecklistView: View {
     @FocusState private var focusedItemID: UUID?
     
     private var textFieldDelegates: [UUID: TextFieldDelegate]
+    private let preview: Bool
     
-    init(viewModel: TaskManagementViewModel) {
+    init(viewModel: TaskManagementViewModel, preview: Bool = false) {
         self.viewModel = viewModel
+        self.preview = preview
         
         self.textFieldDelegates = Dictionary(uniqueKeysWithValues: viewModel.checklistLocal.map {
             ($0.id, TextFieldDelegate())
@@ -24,38 +26,29 @@ struct TaskChecklistView: View {
     }
     
     internal var body: some View {
-        VStack(spacing: 6) {
+        let columns = Array(
+            repeating: GridItem(.flexible(), spacing: 6),
+            count: 1)
+        
+        LazyVGrid(columns: columns, spacing: 0) {
             ForEach($viewModel.checklistLocal) { $item in
                 HStack {
-                    (item.completed ? checkedBox : uncheckedBox)
-                        .foregroundStyle(
-                            (item.completed || item.name.isEmpty) ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
+                    checkbox(item: $item)
+                    textField(item: $item)
                     
-                        .frame(width: 18, height: 18)
-                        .animation(.easeInOut(duration: 0.2), value: item.name)
-                        .onTapGesture {
-                            if !item.name.isEmpty {
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    item.completed.toggle()
-                                }
-                            }
-                        }
-                        .onAppear {
-                            if !item.name.isEmpty, viewModel.check == .checked {
-                                item.completed = true
-                            }
-                        }
-                    
-                    TextField(Texts.TaskManagement.point,
-                              text: $item.name)
-                    .font(.system(size: 17, weight: .regular))
-                    .foregroundStyle(
-                        item.completed ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
-                    
-                    .focused($focusedItemID, equals: item.id)
-                    .introspect(.textField, on: .iOS(.v16, .v17, .v18)) { textField in
-                        setupDelegate(for: textField, itemID: item.id)
+                    if !preview {
+                        removeButton(item: $item)
+                        dragHandle(for: $item)
                     }
+                }
+                .padding(.vertical, 3)
+                .padding(.horizontal, 8)
+                
+                .dropDestination(for: ChecklistItem.self) { item, location in
+                    viewModel.setDraggingItem(for: nil)
+                    return false
+                } isTargeted: { status in
+                    viewModel.setDraggingTargetResult(for: item, status: status)
                 }
                 .onChange(of: item.name) { _, newValue in
                     if newValue == String() {
@@ -70,14 +63,87 @@ struct TaskChecklistView: View {
         .padding(.vertical, 4)
     }
     
-    private var uncheckedBox: Image {
-        Image.TaskManagement.EditTask.checkListUncheck
-            .renderingMode(.template)
+    @ViewBuilder
+    private func checkbox(item: Binding<ChecklistItem>) -> some View {
+        Button {
+            if !item.wrappedValue.name.isEmpty {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    viewModel.toggleChecklistComplete(for: item)
+                }
+                let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                impactMed.impactOccurred()
+            }
+        } label: {
+            (item.wrappedValue.completed ? checkedBox : uncheckedBox)
+                .foregroundStyle(
+                    (item.wrappedValue.completed || item.wrappedValue.name.isEmpty) ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
             
+                .frame(width: 18, height: 18)
+                .animation(.easeInOut(duration: 0.2), value: item.wrappedValue.name)
+        }
+        .onAppear {
+            if !item.wrappedValue.name.isEmpty, viewModel.check == .checked {
+                item.wrappedValue.completed = true
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func textField(item: Binding<ChecklistItem>) -> some View {
+        TextField(Texts.TaskManagement.point,
+                  text: item.name,
+                  axis: preview ? .vertical : .horizontal)
+        .font(.system(size: 17, weight: .regular))
+        .foregroundStyle(
+            item.wrappedValue.completed ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
+        
+        .submitLabel(.next)
+        .focused($focusedItemID, equals: item.id)
+        .introspect(.textField, on: .iOS(.v16, .v17, .v18)) { textField in
+            setupDelegate(for: textField, itemID: item.id)
+        }
+    }
+    
+    @ViewBuilder
+    private func removeButton(item: Binding<ChecklistItem>) -> some View {
+        Button {
+            withAnimation(.bouncy(duration: 0.2)) {
+                viewModel.removeChecklistItem(item.wrappedValue)
+            }
+        } label: {
+            Rectangle()
+                .foregroundStyle(Color.BackColors.backDefault)
+                .frame(width: 20, height: 20)
+                .overlay {
+                    Image.TaskManagement.EditTask.Checklist.remove
+                        .resizable()
+                        .frame(width: 15, height: 15)
+                }
+        }
+    }
+    
+    @ViewBuilder
+    private func dragHandle(for item: Binding<ChecklistItem>) -> some View {
+        Image.TaskManagement.EditTask.Checklist.move
+            .contentShape(Rectangle())
+            .draggable(item.wrappedValue) {
+                Color.clear
+                    .frame(width: 1, height: 1)
+                    .onAppear {
+                        viewModel.setDraggingItem(for: item.wrappedValue)
+                        let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                        impactMed.impactOccurred()
+                    }
+            }
+    }
+    
+    private var uncheckedBox: Image {
+        Image.TaskManagement.EditTask.Checklist.uncheck
+            .renderingMode(.template)
     }
     
     private var checkedBox: Image {
-        Image.TaskManagement.EditTask.checkListCheck
+        Image.TaskManagement.EditTask.Checklist.check
     }
 }
 

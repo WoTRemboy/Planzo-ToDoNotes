@@ -56,6 +56,7 @@ struct CustomAlertView: View {
             }
         }
         .padding(.top, 20)
+        .padding(.horizontal)
     }
     
     private var buttons: some View {

@@ -37,6 +37,7 @@ final class Texts {
             static let outdate = NSLocalizedString("MainPageFilterOutdate", comment: "Overdue")
             static let unsorted = NSLocalizedString("MainPageFilterUnsorted", comment: "Unsorted")
             static let completed = NSLocalizedString("MainPageFilterCompleted", comment: "Completed")
+            static let archived = NSLocalizedString("MainPageFilterArchived", comment: "Archived")
             static let deleted = NSLocalizedString("MainPageFilterDeleted", comment: "Deleted")
             
             enum RemoveFilter {
@@ -149,6 +150,7 @@ final class Texts {
         static let target = NSLocalizedString("TaskManagementTarget", comment: "Target")
         static let created = NSLocalizedString("TaskManagementCreated", comment: "Created")
         static let point = NSLocalizedString("TaskManagementPoint", comment: "Point")
+        static let addPoint = NSLocalizedString("TaskManagementAddPoint", comment: "Add Point")
         
         enum TaskRow {
             static let placeholder = NSLocalizedString("TaskManagementTaskRowPlaceholder", comment: "No Title")
@@ -246,6 +248,17 @@ final class Texts {
         
         static let duplicated = NSLocalizedString("ToastsDuplicated", comment: "Duplicated")
         static let duplicatedError = NSLocalizedString("ToastsDuplicatedError", comment: "Failed to Duplicate")
+    }
+    
+    enum Tips {
+        static let mainPageOverviewTitle = NSLocalizedString("TipsMainPageOverviewTitle", comment: "Home Page")
+        static let mainPageOverviewContent = NSLocalizedString("TipsMainPageOverviewContent", comment: "Keep track of all your tasks organized by filters and grouped into folders.")
+        
+        static let todayPageOverviewTitle = NSLocalizedString("TipsTodayPageOverviewTitle", comment: "Today Page")
+        static let todayPageOverviewContent = NSLocalizedString("TipsTodayPageOverviewContent", comment: "Review your tasks for the current day, categorized by their status.")
+        
+        static let calendarPageOverviewTitle = NSLocalizedString("TipsCalendarPageOverview", comment: "Calendar Page")
+        static let calendarPageOverviewContent = NSLocalizedString("TipsCalendarPageOverviewContent", comment: "Check tasks assigned to any specific day using the interactive calendar.")
     }
     
     enum DateParameters {

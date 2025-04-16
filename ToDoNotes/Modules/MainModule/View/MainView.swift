@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct MainView: View {
     
@@ -14,6 +15,8 @@ struct MainView: View {
     
     @EnvironmentObject private var viewModel: MainViewModel
     @Namespace private var animation
+    
+    private let overviewTip = MainPageOverview()
     
     internal var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -80,6 +83,12 @@ struct MainView: View {
     
     private var taskForm: some View {
         Form {
+            TipView(overviewTip)
+                .tipBackground(Color.FolderColors.lists
+                    .opacity(0.3))
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets())
+            
             ForEach(filteredSegmentedTasks, id: \.0) { segment, tasks in
                     segmentView(segment: segment, tasks: tasks)
                 }
@@ -94,6 +103,7 @@ struct MainView: View {
         .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
+        .scrollDisabled(filteredSegmentedTasks.isEmpty)
 //        .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
     }
     
@@ -156,6 +166,7 @@ struct MainView: View {
     private var plusButton: some View {
         Button {
             viewModel.toggleShowingCreateView()
+            overviewTip.invalidate(reason: .tipClosed)
         } label: {
             Image.TaskManagement.plus
                 .resizable()
@@ -280,25 +291,44 @@ extension MainView {
                 
                 if viewModel.importance && !task.important { return false }
                 switch viewModel.selectedFilter {
+                    
                 case .active:
                     guard !task.removed else { return false }
                     guard task.completed != 2 else { return false }
-                    if task.completed == 1, let target = task.target, task.hasTargetTime, target < now {
+                    if let target = task.target, task.hasTargetTime, target < now {
+                        return false
+                    }
+                    if let count = task.notifications?.count, count > 0,
+                       let target = task.target, target < now {
                         return false
                     }
                     return true
+                    
                 case .outdated:
                     guard !task.removed else { return false }
                     if task.completed == 1,
-                       let target = task.target,
-                       task.hasTargetTime,
-                       target < now {
+                       let target = task.target, task.hasTargetTime, target < now {
                         return true
                     }
                     return false
+                    
                 case .completed:
                     guard !task.removed else { return false }
                     return task.completed == 2
+                    
+                case .archived:
+                    guard !task.removed else { return false }
+                    guard task.completed != 2 else { return false }
+                    
+                    if let target = task.target, task.hasTargetTime, target < now {
+                        return task.completed == 0
+                    }
+                    if let count = task.notifications?.count, count > 0,
+                       let target = task.target, target < now {
+                        return true
+                    }
+                    return false
+                    
                 case .unsorted:
                     return !task.removed
                 case .deleted:
@@ -313,4 +343,9 @@ extension MainView {
 #Preview {
     MainView()
         .environmentObject(MainViewModel())
+        .task {
+            try? Tips.resetDatastore()
+            try? Tips.configure([
+                .datastoreLocation(.applicationDefault)])
+        }
 }

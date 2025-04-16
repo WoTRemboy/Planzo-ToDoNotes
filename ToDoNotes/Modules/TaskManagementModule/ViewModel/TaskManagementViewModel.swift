@@ -20,6 +20,7 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var descriptionText: String
     @Published internal var check: TaskCheck
     @Published internal var checklistLocal: [ChecklistItem] = []
+    @Published internal var draggingItem: ChecklistItem? = nil
     
     @Published internal var checkListItemText: String = String()
     
@@ -146,10 +147,6 @@ final class TaskManagementViewModel: ObservableObject {
         
         if hasDate {
             separateTargetDateToTimeAndDay(targetDate: targetDate)
-        }
-        
-        if !hasEntity {
-            setupEmptyChecklistLocal()
         }
         
         updateDays()
@@ -427,9 +424,13 @@ final class TaskManagementViewModel: ObservableObject {
             }
         }
         
-        withAnimation(.easeInOut(duration: 0.2)) {
+        withAnimation(.bouncy(duration: 0.2)) {
             checklistLocal.insert(newItem, at: index)
         }
+    }
+    
+    internal func appendChecklistItem() {
+        checklistLocal.append(ChecklistItem(name: checkListItemText))
     }
     
     internal func removeChecklistItem(for id: UUID) {
@@ -448,13 +449,45 @@ final class TaskManagementViewModel: ObservableObject {
                 completed: entity.completed)
             checklistLocal.append(item)
         }
-        setupEmptyChecklistLocal()
     }
     
     private func setupEmptyChecklistLocal() {
         if checklistLocal.isEmpty {
             let emptyItem = ChecklistItem(name: String())
             checklistLocal.append(emptyItem)
+        }
+    }
+    
+    internal func toggleChecklistComplete(for item: Binding<ChecklistItem>) {
+        item.wrappedValue.completed.toggle()
+        if let index = checklistLocal.firstIndex(of: item.wrappedValue),
+           item.wrappedValue.completed {
+            withAnimation(.bouncy(duration: 0.2)) {
+                let sourceItem = checklistLocal.remove(at: index)
+                checklistLocal.insert(sourceItem, at: 0)
+            }
+        }
+    }
+    
+    internal func removeChecklistItem(_ item: ChecklistItem) {
+        if let sourceIndex = checklistLocal.firstIndex(of: item) {
+            checklistLocal.remove(at: sourceIndex)
+        }
+    }
+    
+    internal func setDraggingItem(for item: ChecklistItem?) {
+        draggingItem = item
+    }
+    
+    internal func setDraggingTargetResult(for item: ChecklistItem, status: Bool) {
+        if let draggingItem = draggingItem, status, draggingItem != item {
+            if let sourceIndex = checklistLocal.firstIndex(of: draggingItem),
+               let destinationIndex = checklistLocal.firstIndex(of: item) {
+                withAnimation(.bouncy(duration: 0.2)) {
+                    let sourceItem = checklistLocal.remove(at: sourceIndex)
+                    checklistLocal.insert(sourceItem, at: destinationIndex)
+                }
+            }
         }
     }
 }

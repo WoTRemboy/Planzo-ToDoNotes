@@ -15,12 +15,12 @@ struct TaskManagementView: View {
     @Binding private var taskManagementHeight: CGFloat
     @State private var isKeyboardActive = false
     
+    private var transitionID: String = Texts.NamespaceID.selectedEntity
+    
     private let entity: TaskEntity?
     private let folder: Folder?
     private let animation: Namespace.ID
     private let onDismiss: () -> Void
-    
-    private var transitionID: String = Texts.NamespaceID.selectedEntity
     
     init(taskManagementHeight: Binding<CGFloat>,
          selectedDate: Date? = nil,
@@ -96,12 +96,17 @@ struct TaskManagementView: View {
                 
                 if entity != nil || folder == .lists || viewModel.taskCreationFullScreen == .fullScreen {
                     descriptionCoverInput
+                    
                     TaskChecklistView(viewModel: viewModel)
+                        .padding(.horizontal, -8)
+                    
+                    addPointButton
                 } else {
                     descriptionSheetInput
                         .background(HeightReader(height: $taskManagementHeight))
                 }
             }
+            .scrollIndicators(.hidden)
             .scrollDisabled(entity == nil && viewModel.taskCreationFullScreen == .popup && folder != .lists)
             .padding(.horizontal, entity == nil && viewModel.taskCreationFullScreen == .popup && folder != .lists ? 16 : 24)
             
@@ -116,16 +121,17 @@ struct TaskManagementView: View {
     private var nameInput: some View {
         HStack {
             if viewModel.check != .none {
-                titleCheckbox
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            viewModel.toggleTitleCheck()
-                            let impactMed = UIImpactFeedbackGenerator(style: .medium)
-                            impactMed.impactOccurred()
-                        }
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        viewModel.toggleTitleCheck()
+                        let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                        impactMed.impactOccurred()
                     }
+                } label: {
+                    titleCheckbox
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                }
             }
             
             TextField(Texts.TaskManagement.titlePlaceholder,
@@ -150,9 +156,9 @@ struct TaskManagementView: View {
     
     private var titleCheckbox: Image {
         if viewModel.check == .unchecked {
-            Image.TaskManagement.EditTask.checkListUncheck
+            Image.TaskManagement.EditTask.Checklist.uncheck
         } else {
-            Image.TaskManagement.EditTask.checkListCheck
+            Image.TaskManagement.EditTask.Checklist.check
         }
     }
     
@@ -180,6 +186,18 @@ struct TaskManagementView: View {
             viewModel.check == .checked ?
             Color.LabelColors.labelDetails :
                 Color.LabelColors.labelPrimary)
+    }
+    
+    private var addPointButton: some View {
+        Button {
+            withAnimation(.bouncy(duration: 0.2)) {
+                viewModel.appendChecklistItem()
+            }
+        } label: {
+            Text(Texts.TaskManagement.addPoint)
+                .foregroundStyle(Color.LabelColors.labelPlaceholder)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
     
     private var buttons: some View {
