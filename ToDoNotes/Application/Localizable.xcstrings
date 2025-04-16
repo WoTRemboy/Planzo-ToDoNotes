@@ -1039,6 +1039,18 @@
             "value" : "By clicking Start, you agree to our [Terms of Service](https://avoqode.com/terms-of-service) and [Privacy Policy](https://avoqode.com/privacy-policy)."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al hacer clic en Comenzar, aceptas nuestros [Terms of Service](https://avoqode.com/terms-of-service) y nuestra [Privacy Policy](https://avoqode.com/privacy-policy)."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En cliquant sur Commencer, vous acceptez nos [Terms of Service](https://avoqode.com/terms-of-service) et notre [Privacy Policy](https://avoqode.com/privacy-policy)."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1054,6 +1066,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Error parsing Terms of Service and Privacy Policy"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error al analizar los Términos de servicio y la Política de privacidad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur lors de l’analyse des Conditions d’utilisation et de la Politique de confidentialité"
           }
         },
         "ru" : {
