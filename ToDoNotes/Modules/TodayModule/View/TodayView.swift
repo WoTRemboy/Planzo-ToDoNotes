@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct TodayView: View {
     
@@ -14,6 +15,8 @@ struct TodayView: View {
     
     @FetchRequest(entity: TaskEntity.entity(), sortDescriptors: [])
     private var tasksResults: FetchedResults<TaskEntity>
+    
+    private let overviewTip = TodayPageOverview()
     
     internal var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -56,6 +59,7 @@ struct TodayView: View {
             TodayNavBar(date: viewModel.todayDate.shortDate,
                         day: viewModel.todayDate.shortWeekday)
                 .zIndex(1)
+            
             taskForm
         }
         .animation(.easeInOut(duration: 0.2),
@@ -71,6 +75,12 @@ struct TodayView: View {
     
     private var taskForm: some View {
         Form {
+            TipView(overviewTip)
+                .tipBackground(Color.FolderColors.tasks
+                    .opacity(0.3))
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets())
+            
             ForEach(TaskSection.availableRarities(for: dayTasks.keys), id: \.self) { section in
                 taskFormSection(for: section)
             }
@@ -82,9 +92,10 @@ struct TodayView: View {
                 .listRowBackground(Color.clear)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
-        .background(Color.BackColors.backDefault)
         .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)
+        .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
+        .scrollDisabled(dayTasks.isEmpty)
 //        .animation(.easeInOut(duration: 0.1), value: tasksResults.count)
     }
     
@@ -111,6 +122,7 @@ struct TodayView: View {
             Spacer()
             Button {
                 viewModel.toggleShowingTaskCreateView()
+                overviewTip.invalidate(reason: .tipClosed)
             } label: {
                 Image.TaskManagement.plus
                     .resizable()
@@ -163,4 +175,9 @@ extension TodayView {
 #Preview {
     TodayView()
         .environmentObject(TodayViewModel())
+        .task {
+            try? Tips.resetDatastore()
+            try? Tips.configure([
+                .datastoreLocation(.applicationDefault)])
+        }
 }

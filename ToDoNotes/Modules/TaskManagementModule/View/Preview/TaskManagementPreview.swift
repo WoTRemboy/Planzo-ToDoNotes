@@ -38,9 +38,9 @@ struct TaskManagementPreview: View {
         VStack(spacing: 0) {
             ScrollView {
                 nameInput
-                
                 descriptionCoverInput
-                TaskChecklistView(viewModel: viewModel)
+                TaskChecklistView(viewModel: viewModel, preview: true)
+                    .padding(.horizontal, -8)
             }
         }
         .padding(.horizontal, 16)
@@ -70,9 +70,9 @@ struct TaskManagementPreview: View {
     
     private var titleCheckbox: Image {
         if viewModel.check == .unchecked {
-            Image.TaskManagement.EditTask.checkListUncheck
+            Image.TaskManagement.EditTask.Checklist.uncheck
         } else {
-            Image.TaskManagement.EditTask.checkListCheck
+            Image.TaskManagement.EditTask.Checklist.check
         }
     }
     

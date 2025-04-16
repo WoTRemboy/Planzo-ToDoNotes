@@ -10,10 +10,11 @@ enum Filter: CaseIterable {
     case outdated
     case unsorted
     case completed
+    case archived
     case deleted
     
     static internal var allCases: [Self] {
-        [.active, .outdated, .completed, .deleted]
+        [.active, .outdated, .completed, .archived, .deleted]
     }
     
     internal var name: String {
@@ -26,6 +27,8 @@ enum Filter: CaseIterable {
             return Texts.MainPage.Filter.unsorted
         case .completed:
             return Texts.MainPage.Filter.completed
+        case .archived:
+            return Texts.MainPage.Filter.archived
         case .deleted:
             return Texts.MainPage.Filter.deleted
         }

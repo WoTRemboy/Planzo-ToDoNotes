@@ -41,6 +41,13 @@ final class SettingsViewModel: ObservableObject {
         return String()
     }
     
+    internal var buildVersion: String {
+        if let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+            return buildVersion
+        }
+        return "1"
+    }
+    
     internal func toggleShowingLanguageAlert() {
         showingLanguageAlert.toggle()
     }

@@ -40,7 +40,7 @@ struct SettingAboutPageView: View {
     
     private var version: some View {
         VStack(spacing: 8) {
-            Text("\(Texts.Settings.About.version) \(viewModel.appVersion)")
+            Text("\(Texts.Settings.About.version) \(viewModel.appVersion) (\(viewModel.buildVersion))")
                 .font(.system(size: 18, weight: .medium))
             
             Text(Texts.Settings.About.copyright)

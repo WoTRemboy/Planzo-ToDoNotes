@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct CalendarView: View {
     
@@ -14,6 +15,8 @@ struct CalendarView: View {
     
     @EnvironmentObject private var viewModel: CalendarViewModel
     @Namespace private var animation
+    
+    private let overviewTip = CalendarPageOverview()
     
     internal var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -86,6 +89,10 @@ struct CalendarView: View {
     
     private var taskForm: some View {
         Form {
+            overviewTipView
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets())
+            
             ForEach(TaskSection.availableRarities(for: dayTasks.keys), id: \.self) { section in
                 taskSection(for: section)
             }
@@ -97,8 +104,8 @@ struct CalendarView: View {
                 .listRowBackground(Color.clear)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
-        .background(Color.BackColors.backDefault)
         .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)
+        .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
     }
     
@@ -117,9 +124,6 @@ struct CalendarView: View {
                     .font(.system(size: 15, weight: .medium))
                     .textCase(.none)
                     .contentTransition(.numericText(value: viewModel.selectedDate.timeIntervalSince1970))
-//                    .matchedGeometryEffect(
-//                        id: Texts.NamespaceID.selectedCalendarDate,
-//                        in: animation)
             } else {
                 Text(section.name)
                     .font(.system(size: 15, weight: .medium))
@@ -130,16 +134,21 @@ struct CalendarView: View {
     
     private var placeholder: some View {
         ScrollView {
-//            Color.BackColors.backDefault
-//                .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)
-//                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            overviewTipView
+                .padding(.horizontal)
             
             CalendarTaskFormPlaceholder(
                 date: viewModel.selectedDate,
                 namespace: animation)
             .padding(.top)
         }
-        .scrollDisabled(hasNotch())
+        .scrollIndicators(.hidden)
+    }
+    
+    private var overviewTipView: some View {
+        TipView(overviewTip)
+            .tipBackground(Color.FolderColors.reminders
+                .opacity(0.3))
     }
     
     private var plusButton: some View {
@@ -147,6 +156,7 @@ struct CalendarView: View {
             Spacer()
             Button {
                 viewModel.toggleShowingTaskCreateView()
+                overviewTip.invalidate(reason: .tipClosed)
             } label: {
                 Image.TaskManagement.plus
                     .resizable()
@@ -202,4 +212,9 @@ extension CalendarView {
 #Preview {
     CalendarView()
         .environmentObject(CalendarViewModel())
+        .task {
+            try? Tips.resetDatastore()
+            try? Tips.configure([
+                .datastoreLocation(.applicationDefault)])
+        }
 }

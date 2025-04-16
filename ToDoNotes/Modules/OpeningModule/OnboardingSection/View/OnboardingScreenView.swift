@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftUIPager
+import TipKit
 
 /// View displaying the onboarding process or the main `RootView` if onboarding is complete.
 struct OnboardingScreenView: View {
@@ -26,6 +27,10 @@ struct OnboardingScreenView: View {
             RootView {
                 ContentView()
                     .environmentObject(TabRouter())
+                    .task {
+                        try? Tips.configure([
+                            .datastoreLocation(.applicationDefault)])
+                    }
             }
         } else {
             VStack(spacing: 0) {

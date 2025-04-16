@@ -96,6 +96,8 @@ struct SettingTaskCreateView: View {
         Text(Texts.Settings.TaskCreate.descriptionContent)
             .font(.system(size: 15, weight: .regular))
             .foregroundStyle(Color.LabelColors.labelPrimary)
+        
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal)
     }
 }

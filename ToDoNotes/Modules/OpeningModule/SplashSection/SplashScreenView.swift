@@ -56,7 +56,7 @@ struct SplashScreenView: View {
                 
                 Text(texts[id])
                     .foregroundStyle(Color.LabelColors.labelPrimary)
-                    .font(.system(size: 55, weight: .medium))
+                    .font(.system(size: 80, weight: .medium))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .padding(.horizontal, 30)
