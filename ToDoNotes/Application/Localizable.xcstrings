@@ -9,7 +9,8 @@
             "value" : "%1$@ %2$@ (%3$@)"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
     },
     "%@:" : {
       "shouldTranslate" : false
@@ -27,6 +28,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aceptar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accepter"
           }
         },
         "ru" : {
@@ -52,6 +59,12 @@
             "value" : "Cerrar"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fermer"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -73,6 +86,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Día libre"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jour libre"
           }
         },
         "ru" : {
@@ -98,6 +117,12 @@
             "value" : "Calendario"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendrier"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -119,6 +144,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hoy"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aujourd’hui"
           }
         },
         "ru" : {
@@ -144,6 +175,12 @@
             "value" : "Activo"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actif"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -165,6 +202,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Completados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminé"
           }
         },
         "ru" : {
@@ -190,6 +233,12 @@
             "value" : "Fijado"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Épinglé"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -211,6 +260,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "es_ES"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "fr_FR"
           }
         },
         "ru" : {
@@ -236,6 +291,12 @@
             "value" : "Activo"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actif"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -257,6 +318,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Archivado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archivé"
           }
         },
         "ru" : {
@@ -282,6 +349,12 @@
             "value" : "Completados"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminé"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -303,6 +376,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimé"
           }
         },
         "ru" : {
@@ -328,6 +407,12 @@
             "value" : "Atrasado"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En retard"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -349,6 +434,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sin clasificar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non trié"
           }
         },
         "ru" : {
@@ -374,6 +465,12 @@
             "value" : "Todos"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tous"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -395,6 +492,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Listas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listes"
           }
         },
         "ru" : {
@@ -420,6 +523,12 @@
             "value" : "Otros"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autres"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -441,6 +550,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recordatorios"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rappels"
           }
         },
         "ru" : {
@@ -466,6 +581,12 @@
             "value" : "Tareas"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tâches"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -487,6 +608,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Carpetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dossiers"
           }
         },
         "ru" : {
@@ -512,6 +639,12 @@
             "value" : "Sin notas"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune note"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -533,6 +666,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Para editar una nota eliminada, primero debes recuperarla.  "
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pour modifier une note supprimée, vous devez d'abord la restaurer."
           }
         },
         "ru" : {
@@ -558,6 +697,12 @@
             "value" : "Eliminados recientemente"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimés récemment"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -579,6 +724,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancelar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
           }
         },
         "ru" : {
@@ -604,6 +755,12 @@
             "value" : "Los datos se eliminarán de forma permanente."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les données seront supprimées définitivement."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -625,6 +782,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Restaurar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurer"
           }
         },
         "ru" : {
@@ -650,6 +813,12 @@
             "value" : "¿Estás seguro?"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Êtes-vous sûr ?"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -671,6 +840,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sí"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oui"
           }
         },
         "ru" : {
@@ -696,6 +871,12 @@
             "value" : "Vaciar papelera"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vider la corbeille"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -714,6 +895,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Planzo"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Planzo"
@@ -742,6 +929,12 @@
             "value" : "Iniciar sesión con Apple"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se connecter avec Apple"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -763,6 +956,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aquí tienes una guía rápida para comenzar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voici un guide rapide pour vous aider à démarrer."
           }
         },
         "ru" : {
@@ -788,6 +987,12 @@
             "value" : "Desliza las tareas a izquierda o derecha para acciones rápidas"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faites glisser les tâches vers la gauche ou la droite pour des actions rapides."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -809,6 +1014,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Iniciar sesión con Google"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se connecter avec Google"
           }
         },
         "ru" : {
@@ -834,6 +1045,12 @@
             "value" : "Continuar"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuer"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -855,6 +1072,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aquí tienes una pequeña guía para comenzar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voici un guide rapide pour vous aider à démarrer."
           }
         },
         "ru" : {
@@ -880,6 +1103,12 @@
             "value" : "Revisa las tareas por estado.\nUsa carpetas para organizar a tu manera.\n\nLas notas coinciden con los colores de las carpetas  "
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consultez les tâches par statut\nUtilisez des dossiers pour organiser à votre façon.\n\nLes notes reprennent les couleurs des dossiers "
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -901,6 +1130,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Omitir"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passer"
           }
         },
         "ru" : {
@@ -926,6 +1161,12 @@
             "value" : "Comenzar"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commencer"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -947,6 +1188,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Crea notas o tareas con fechas de vencimiento y recordatorios"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créez des notes ou des tâches avec des échéances et des rappels"
           }
         },
         "ru" : {
@@ -972,6 +1219,12 @@
             "value" : "Sin autorización"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sans autorisation"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -993,6 +1246,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancelar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
           }
         },
         "ru" : {
@@ -1018,6 +1277,12 @@
             "value" : "Buscar por texto, título"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher par texte, titre"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1039,6 +1304,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Idioma"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langue"
           }
         },
         "ru" : {
@@ -1064,6 +1335,12 @@
             "value" : "Acerca de"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À propos"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1085,6 +1362,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Versión"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version"
           }
         },
         "ru" : {
@@ -1110,6 +1393,12 @@
             "value" : "Aceptar"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accepter"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1131,6 +1420,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancelar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
           }
         },
         "ru" : {
@@ -1156,6 +1451,12 @@
             "value" : "Oscuro"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sombre"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1177,6 +1478,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Claro"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claire"
           }
         },
         "ru" : {
@@ -1202,6 +1509,12 @@
             "value" : "Sistema"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Système"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1223,6 +1536,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aspecto"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apparence"
           }
         },
         "ru" : {
@@ -1248,6 +1567,12 @@
             "value" : "Cancelar"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1269,6 +1594,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Selecciona el idioma que deseas en Configuración."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionnez la langue dans les paramètres."
           }
         },
         "ru" : {
@@ -1294,6 +1625,12 @@
             "value" : "Cambiar idioma"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer de langue"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1315,6 +1652,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "General"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Général"
           }
         },
         "ru" : {
@@ -1340,6 +1683,12 @@
             "value" : "Configuración"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1361,6 +1710,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Español"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Français"
           }
         },
         "ru" : {
@@ -1386,6 +1741,12 @@
             "value" : "Por favor, activa esta opción en la configuración de la aplicación."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez activer cette option dans les paramètres de l'application."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1407,6 +1768,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Las notificaciones están desactivadas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les notifications sont désactivées"
           }
         },
         "ru" : {
@@ -1432,6 +1799,12 @@
             "value" : "Por favor, activa esta opción en Configuración."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez activer cette option dans les paramètres."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1453,6 +1826,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Las notificaciones están bloqueadas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les notifications sont bloquées"
           }
         },
         "ru" : {
@@ -1478,6 +1857,12 @@
             "value" : "Notificaciones"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1496,6 +1881,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
@@ -1524,6 +1915,12 @@
             "value" : "Confirmar"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmer"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1545,6 +1942,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancelado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annulé"
           }
         },
         "ru" : {
@@ -1570,6 +1973,12 @@
             "value" : "Los datos ya no están disponibles"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les données ne sont plus disponibles"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1591,6 +2000,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Error"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec"
           }
         },
         "ru" : {
@@ -1616,6 +2031,12 @@
             "value" : "No se pudo eliminar los datos"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec de la suppression des données"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1637,6 +2058,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Éxito"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Succès"
           }
         },
         "ru" : {
@@ -1662,6 +2089,12 @@
             "value" : "Datos eliminados correctamente"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Données supprimées avec succès"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1683,6 +2116,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Restablecer datos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialiser"
           }
         },
         "ru" : {
@@ -1708,6 +2147,12 @@
             "value" : "¿Estás seguro de que deseas eliminar todas las tareas existentes? No se podrán recuperar."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Êtes-vous sûr de vouloir supprimer toutes les tâches existantes ? Elles ne pourront pas être restaurées."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1729,6 +2174,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Elige entre pantalla completa o estilo diálogo para tomar notas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez entre les modes plein écran et dialogue pour prendre des notes. "
           }
         },
         "ru" : {
@@ -1754,6 +2205,12 @@
             "value" : "Pantalla completa"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plein écran"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1775,6 +2232,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Diálogo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dialogue"
           }
         },
         "ru" : {
@@ -1800,6 +2263,12 @@
             "value" : "Ventana de creación de notas"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fenêtre de création de notes"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1821,6 +2290,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Configuración"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres"
           }
         },
         "ru" : {
@@ -1846,6 +2321,12 @@
             "value" : "Calendario"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendrier"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1867,6 +2348,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Inicio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accueil"
           }
         },
         "ru" : {
@@ -1892,6 +2379,12 @@
             "value" : "Configuración"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1913,6 +2406,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hoy"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aujourd’hui"
           }
         },
         "ru" : {
@@ -1938,6 +2437,12 @@
             "value" : "Agregar punto"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter un point"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1959,6 +2464,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Completar la tarea"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminer la tâche"
           }
         },
         "ru" : {
@@ -1984,6 +2495,12 @@
             "value" : "Eliminar"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2005,6 +2522,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Duplicar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dupliquer"
           }
         },
         "ru" : {
@@ -2030,6 +2553,12 @@
             "value" : "Marcar como favorito"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter aux favoris"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2051,6 +2580,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quitar de favoritos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retirer des favoris"
           }
         },
         "ru" : {
@@ -2076,6 +2611,12 @@
             "value" : "Fijar"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Épingler"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2097,6 +2638,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desfijar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Détacher"
           }
         },
         "ru" : {
@@ -2122,6 +2669,12 @@
             "value" : "Creado"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créé"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2145,6 +2698,12 @@
             "value" : "Cancelar"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2163,6 +2722,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
@@ -2191,6 +2756,12 @@
             "value" : "Nunca"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jamais"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2212,6 +2783,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Finalizar repetición"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminer la répétition"
           }
         },
         "ru" : {
@@ -2237,6 +2814,12 @@
             "value" : "Error"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2258,6 +2841,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "5 minutos antes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5 minutes avant"
           }
         },
         "ru" : {
@@ -2283,6 +2872,12 @@
             "value" : "En 5 minutos "
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dans 5 minutes"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2304,6 +2899,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "En 1 día"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dans 1 jour"
           }
         },
         "ru" : {
@@ -2329,6 +2930,12 @@
             "value" : "En 1 hora"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dans 1 heure"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2350,6 +2957,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "En 30 minutos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dans 30 minutes"
           }
         },
         "ru" : {
@@ -2375,6 +2988,12 @@
             "value" : "No"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2396,6 +3015,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune"
           }
         },
         "ru" : {
@@ -2421,6 +3046,12 @@
             "value" : "Ahora"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maintenant"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2442,6 +3073,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1 día antes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 jour avant"
           }
         },
         "ru" : {
@@ -2467,6 +3104,12 @@
             "value" : "1 hora antes"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 heure avant"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2488,6 +3131,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "A tiempo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À l’heure"
           }
         },
         "ru" : {
@@ -2513,6 +3162,12 @@
             "value" : "Recordatorio"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rappel"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2534,6 +3189,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Borrar todo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout effacer"
           }
         },
         "ru" : {
@@ -2559,6 +3220,12 @@
             "value" : "Entre semana"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jours de semaine"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2580,6 +3247,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Todos los días"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tous les jours"
           }
         },
         "ru" : {
@@ -2605,6 +3278,12 @@
             "value" : "Todos los meses"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tous les mois"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2626,6 +3305,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nunca"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jamais"
           }
         },
         "ru" : {
@@ -2651,6 +3336,12 @@
             "value" : "Repetir"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Répéter"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2672,6 +3363,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Los fines de semana"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Week-ends"
           }
         },
         "ru" : {
@@ -2697,6 +3394,12 @@
             "value" : "Todas las semanas"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toutes les semaines"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2718,6 +3421,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Todos los años"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tous les ans"
           }
         },
         "ru" : {
@@ -2743,6 +3452,12 @@
             "value" : "Algunos"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quelques"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2764,6 +3479,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Objetivo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objectif"
           }
         },
         "ru" : {
@@ -2789,6 +3510,12 @@
             "value" : "30 minutos antes"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minutes avant"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2810,6 +3537,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hora"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heure"
           }
         },
         "ru" : {
@@ -2835,6 +3568,12 @@
             "value" : "Fecha y hora"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date et heure"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2856,6 +3595,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Descripción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description"
           }
         },
         "ru" : {
@@ -2881,6 +3626,12 @@
             "value" : "Sin descripción"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune description"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2902,6 +3653,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Punto"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point"
           }
         },
         "ru" : {
@@ -2927,6 +3684,12 @@
             "value" : "Objetivo"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objectif"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2948,6 +3711,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sin título"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sans titre"
           }
         },
         "ru" : {
@@ -2973,6 +3742,12 @@
             "value" : "¿Qué te gustaría hacer?"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Que souhaitez-vous faire ?"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2994,6 +3769,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sin título"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sans titre"
           }
         },
         "ru" : {
@@ -3019,6 +3800,12 @@
             "value" : "Hoy"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aujourd’hui"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3040,6 +3827,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Calendario"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendrier"
           }
         },
         "ru" : {
@@ -3065,6 +3858,12 @@
             "value" : "Consulta las tareas asignadas a un día específico con el calendario interactivo."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consultez les tâches attribuées à un jour précis grâce au calendrier interactif."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3086,6 +3885,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lleva un seguimiento de todas tus tareas organizadas por filtros y carpetas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suivez toutes vos tâches organisées par filtres et regroupées dans des dossiers."
           }
         },
         "ru" : {
@@ -3111,6 +3916,12 @@
             "value" : "Inicio"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accueil"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3132,6 +3943,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Revisa tus tareas del día actual, categorizadas por su estado."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consultez vos tâches du jour, classées par statut."
           }
         },
         "ru" : {
@@ -3157,6 +3974,12 @@
             "value" : "Hoy"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aujourd’hui"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3178,6 +4001,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No se pudo completar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec de la finalisation"
           }
         },
         "ru" : {
@@ -3203,6 +4032,12 @@
             "value" : "Marcado como completado"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marqué comme terminé"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3224,6 +4059,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimé"
           }
         },
         "ru" : {
@@ -3249,6 +4090,12 @@
             "value" : "La papelera está vacía"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La corbeille est vide"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3270,6 +4117,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Duplicado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dupliqué"
           }
         },
         "ru" : {
@@ -3295,6 +4148,12 @@
             "value" : "No se pudo duplicar"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec de la duplication"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3316,6 +4175,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminado de favoritos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retiré des favoris"
           }
         },
         "ru" : {
@@ -3341,6 +4206,12 @@
             "value" : "Agregado a favoritos"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouté aux favoris"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3362,6 +4233,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desfijado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Détaché"
           }
         },
         "ru" : {
@@ -3387,6 +4264,12 @@
             "value" : "Fijado"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Épinglé"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3408,6 +4291,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Movido a eliminados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déplacé dans la corbeille"
           }
         },
         "ru" : {
@@ -3433,6 +4322,12 @@
             "value" : "Restaurado"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restauré"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3454,6 +4349,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Activo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actif"
           }
         },
         "ru" : {
@@ -3479,6 +4380,12 @@
             "value" : "Completados"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminé"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3502,6 +4409,12 @@
             "value" : "Sin notas"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune note"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3523,6 +4436,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hoy"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aujourd’hui"
           }
         },
         "ru" : {
