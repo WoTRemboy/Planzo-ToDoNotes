@@ -96,6 +96,9 @@ final class TaskService {
     static func duplicate(task: TaskEntity?) throws {
         guard let task else { return }
         
+        // First remove notifications for the original task to prevent duplicates
+        UNUserNotificationCenter.current().removeNotifications(for: task.notifications)
+        
         let newTask = TaskEntity(context: viewContext)
         newTask.id = UUID()
         newTask.created = task.created
@@ -114,7 +117,7 @@ final class TaskService {
             var newNotifications = [NotificationEntity]()
             for notification in notificationsSet {
                 let newNotification = NotificationEntity(context: viewContext)
-                newNotification.id = UUID()
+                newNotification.id = UUID() // Generate new UUID for each notification
                 newNotification.type = notification.type
                 newNotification.target = notification.target
                 newNotifications.append(newNotification)
@@ -134,6 +137,11 @@ final class TaskService {
         }
         
         try save()
+        
+        // Only restore notifications if the task is not completed
+        if newTask.completed != 2 {
+            restoreNotifications(for: newTask)
+        }
     }
     
     static func deleteRemovedTask(for entity: TaskEntity) throws {
@@ -233,12 +241,16 @@ extension TaskService {
     // MARK: - Status Change Methods
     
     static func toggleCompleteChecking(for task: TaskEntity) throws {
+        let wasCompleted = task.completed == 2
         task.completed = task.completed == 1 ? 2 : 1
-        if task.completed == 2 {
+        
+        // Only handle notifications if the completion status actually changed
+        if task.completed == 2 && !wasCompleted {
             UNUserNotificationCenter.current().removeNotifications(for: task.notifications)
-        } else {
+        } else if task.completed != 2 && wasCompleted {
             restoreNotifications(for: task)
         }
+        
         try save()
     }
     
@@ -253,12 +265,16 @@ extension TaskService {
     }
     
     static func toggleRemoved(for task: TaskEntity) throws {
+        let wasRemoved = task.removed
         task.removed.toggle()
-        if task.removed {
+        
+        // Only handle notifications if the removed status actually changed
+        if task.removed && !wasRemoved {
             UNUserNotificationCenter.current().removeNotifications(for: task.notifications)
-        } else {
+        } else if !task.removed && wasRemoved {
             restoreNotifications(for: task)
         }
+        
         try save()
     }
 }
@@ -266,84 +282,110 @@ extension TaskService {
 
 extension TaskService {
     static func restoreNotifications(for task: TaskEntity) {
+        // First remove any existing notifications for this task
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.removeNotifications(for: task.notifications)
+        
+        // Skip if task is completed or removed
+        guard task.completed != 2 && !task.removed else { return }
+        
         guard let notificationsSet = task.notifications as? Set<NotificationEntity> else { return }
         
-        for entity in notificationsSet {
-            guard let targetDate = entity.target, targetDate > Date() else { continue }
+        // Get current pending notifications to check for duplicates
+        notificationCenter.getPendingNotificationRequests { pendingRequests in
+            let existingIdentifiers = Set(pendingRequests.map { $0.identifier })
             
-            let identifier = entity.id?.uuidString ?? ""
-            let content = UNMutableNotificationContent()
-            let type = TaskNotification(rawValue: entity.type ?? String()) ?? TaskNotification.inTime
-            content.title = type.notificationName
-            content.body = task.name ?? ""
-            content.sound = .default
-            
-            let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute],
-                                                                 from: targetDate)
-            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-            
-            let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-            notificationCenter.add(request) { error in
-                if let error = error {
-                    print("Error scheduling notification with id \(identifier): \(error.localizedDescription)")
-                } else {
-                    print("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error")")
+            for entity in notificationsSet {
+                guard let targetDate = entity.target,
+                      targetDate > Date() else { continue }
+                
+                let identifier = entity.id?.uuidString ?? ""
+                
+                // Skip if notification with this ID already exists
+                guard !existingIdentifiers.contains(identifier) else {
+                    print("Skipping duplicate notification with ID: \(identifier)")
+                    continue
+                }
+                
+                let content = UNMutableNotificationContent()
+                let type = TaskNotification(rawValue: entity.type ?? String()) ?? TaskNotification.inTime
+                content.title = type.notificationName
+                content.body = task.name ?? ""
+                content.sound = .default
+                
+                let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute],
+                                                                     from: targetDate)
+                let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+                
+                let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+                notificationCenter.add(request) { error in
+                    if let error = error {
+                        print("Error scheduling notification with id \(identifier): \(error.localizedDescription)")
+                    } else {
+                        print("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error")")
+                    }
                 }
             }
         }
     }
     
     static func restoreNotificationsForAllTasks(completion: ((Bool) -> Void)? = nil) {
-        // Create a fetch request for tasks that have at least one notification.
         let request: NSFetchRequest<TaskEntity> = NSFetchRequest(entityName: Texts.CoreData.entity)
-        request.predicate = NSPredicate(format: "notifications.@count > 0")
+        request.predicate = NSPredicate(format: "notifications.@count > 0 AND completed != 2 AND removed == NO")
         
         do {
-            // Fetch tasks with notifications from Core Data.
             let tasksWithNotifications = try viewContext.fetch(request)
             let group = DispatchGroup()
             let notificationCenter = UNUserNotificationCenter.current()
             
-            // Iterate over each task
-            for task in tasksWithNotifications {
-                if let notificationsSet = task.notifications as? Set<NotificationEntity> {
-                    for entity in notificationsSet {
-                        // Ensure the target date exists and is in the future
-                        guard let targetDate = entity.target, targetDate > Date() else { continue }
-                        
-                        // Convert the ObjectIdentifier (or similar type) to a String
-                        let identifier = entity.id?.uuidString ?? String()
-                        
-                        // Create the notification content
-                        let content = UNMutableNotificationContent()
-                        let type = TaskNotification(rawValue: entity.type ?? String()) ?? TaskNotification.inTime
-                        content.title = type.notificationName
-                        content.body = task.name ?? String()
-                        content.sound = .default
-                        
-                        // Create date components from the target date
-                        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: targetDate)
-                        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-                        
-                        // Create the notification request
-                        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-                        
-                        group.enter()
-                        notificationCenter.add(request) { error in
-                            if let error = error {
-                                print("Error scheduling notification with id \(identifier): \(error.localizedDescription)")
+            // First remove all existing notifications
+            notificationCenter.removeAllPendingNotificationRequests()
+            
+            // Get current pending notifications to check for duplicates
+            notificationCenter.getPendingNotificationRequests { pendingRequests in
+                let existingIdentifiers = Set(pendingRequests.map { $0.identifier })
+                
+                for task in tasksWithNotifications {
+                    if let notificationsSet = task.notifications as? Set<NotificationEntity> {
+                        for entity in notificationsSet {
+                            guard let targetDate = entity.target,
+                                  targetDate > Date() else { continue }
+                            
+                            let identifier = entity.id?.uuidString ?? ""
+                            
+                            // Skip if notification with this ID already exists
+                            guard !existingIdentifiers.contains(identifier) else {
+                                print("Skipping duplicate notification with ID: \(identifier)")
+                                continue
                             }
-                            group.leave()
+                            
+                            let content = UNMutableNotificationContent()
+                            let type = TaskNotification(rawValue: entity.type ?? String()) ?? TaskNotification.inTime
+                            content.title = type.notificationName
+                            content.body = task.name ?? String()
+                            content.sound = .default
+                            
+                            let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: targetDate)
+                            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+                            
+                            let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+                            
+                            group.enter()
+                            notificationCenter.add(request) { error in
+                                if let error = error {
+                                    print("Error scheduling notification with id \(identifier): \(error.localizedDescription)")
+                                } else {
+                                    print("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error")")
+                                }
+                                group.leave()
+                            }
                         }
                     }
                 }
-            }
-            
-            // Call the completion handler once all notifications are scheduled.
-            group.notify(queue: .main) {
-                completion?(true)
+                
+                group.notify(queue: .main) {
+                    completion?(true)
+                }
             }
         } catch {
             print("Error fetching tasks for restoring notifications: \(error.localizedDescription)")
