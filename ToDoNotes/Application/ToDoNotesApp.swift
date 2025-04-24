@@ -6,8 +6,12 @@
 //
 
 import SwiftUI
+import OSLog
 import GoogleSignIn
 import UserNotifications
+
+/// A logger instance for debug and error messages.
+private let logger = Logger(subsystem: "ApplicationModule", category: "ToDoNotesApp")
 
 @main
 struct ToDoNotesApp: App {
@@ -84,14 +88,14 @@ extension ToDoNotesApp {
                 if self.notificationsEnabled == .prohibited {
                     self.notificationsEnabled = .allowed
                 }
-                print("Notifications are allowed.")
+                logger.info("Notifications are allowed.")
             } else if let error {
                 // An error occurred; prohibit notifications
                 self.notificationsEnabled = .prohibited
-                print(error.localizedDescription)
+                logger.error("\(error.localizedDescription)")
             } else {
                 // User declined notification permissions
-                print("Notifications are prohibited.")
+                logger.info("Notifications are prohibited.")
             }
         }
     }
