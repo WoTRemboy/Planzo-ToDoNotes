@@ -89,19 +89,19 @@
 
 ### Data Management
 - **Core Data:** Provides robust data persistence and relationships
-- **NSManagedObjectContext:** Manages object lifecycle and changes
-- **NSFetchRequest:** Handles data queries and filtering
-- **NSPredicate:** Enables complex data filtering
+- `NSManagedObjectContext`: Manages object lifecycle and changes
+- `NSFetchRequest`: Handles data queries and filtering
+- `NSPredicate`: Enables complex data filtering
 
 ### User Interface
 - **SwiftUI Views:** Modern, declarative UI components
 - **Custom Animations:** Smooth transitions and interactions
 
 ### Push Notifications
-- **UNUserNotificationCenter:** Manages local notifications
-- **UNNotificationRequest:** Handles notification scheduling
-- **UNCalendarNotificationTrigger:** Sets up time-based notifications
-- **Notification Extensions:** Custom notification handling
+- `UNUserNotificationCenter`: Manages local notifications
+- `UNNotificationRequest`: Handles notification scheduling
+- `UNCalendarNotificationTrigger`: Sets up time-based notifications
+- **Notification Extensions**: Custom notification handling
 
 ### Logging
 - **OSLog:** Integrated for logging essential app data, system events, and debugging information, making it easier to track performance and bugs.
@@ -112,21 +112,21 @@ The **Planzo** app follows the MVVM (Model-View-ViewModel) architecture pattern,
 
 ### Model
 The Model layer represents the data and business logic:
-- **TaskEntity:** Core Data entity for task storage
-- **NotificationEntity:** Handles notification data
-- **ChecklistEntity:** Manages checklist items
-- **TaskService:** Provides data operations and business logic
+- `TaskEntity`: Core Data entity for task storage
+- `NotificationEntity`: Handles notification data
+- `ChecklistEntity`: Manages checklist items
+- `TaskService`: Provides data operations and business logic
 
 ### View
 The View layer handles UI presentation. Examples:
-- **TaskManagementView:** Main task management interface
-- **DateSelector:** Date and time selection components
-- **NotificationAlert:** Notification management UI
+- `TaskManagementView`: Main task management interface
+- `DateSelector`: Date and time selection components
+- `NotificationAlert`: Notification management UI
 - **Custom UI Components:** Reusable SwiftUI views
 
 ### ViewModel
 The ViewModel layer manages the presentation logic:
-- **TaskManagementViewModel:** Handles task-related logic
+- `TaskManagementViewModel`: Handles task-related logic
 - **Notification Management:** Manages notification scheduling
 - **Data Validation:** Ensures data integrity
 - **State Management:** Handles UI state
@@ -134,9 +134,9 @@ The ViewModel layer manages the presentation logic:
 <h2 id="testing">Testing 🧪</h2>
 
 ### Unit Testing
-- **TaskServiceTests:** Tests for task management operations
-- **NotificationTests:** Tests for notification scheduling and management
-- **DataValidationTests:** Tests for data integrity and validation
+- `TaskServiceTests`: Tests for task management operations
+- `NotificationTests`: Tests for notification scheduling and management
+- `DataValidationTests`: Tests for data integrity and validation
 
 <h2 id="documentation">Documentation 📚</h2>
 
