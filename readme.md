@@ -17,7 +17,7 @@
 
 <h2 id="modules">Modules 🧩</h2>
 
-**Main Page**: Central hub for task management with quick access to all features
+### Main Page
 - Overview of all tasks and folders
 - Quick access to important and pinned tasks
 - Search functionality for finding tasks quickly
@@ -26,7 +26,7 @@
 <img src="https://github.com/user-attachments/assets/3d138e1f-e4b5-4ee5-91fc-89fa30ffab17" alt="Main Page" width="200" height="435">
 <img src="https://github.com/user-attachments/assets/62017941-c043-4d9e-8657-2f2c10030598" alt="Search" width="200" height="435">
 
-**Today Page**: Focus on daily tasks and priorities
+### Today Page
 - Tasks due today
 - Upcoming deadlines
 - Priority tasks for the day
@@ -35,7 +35,7 @@
 <img src="https://github.com/user-attachments/assets/e87eb838-c35e-45bb-9acf-6040991beab4" alt="Today Page" width="200" height="435">
 <img src="https://github.com/user-attachments/assets/a264aa16-c0c5-4ef3-9734-ca6817864210" alt="Search" width="200" height="435">
 
-**Calendar Page**: Comprehensive view of tasks over time
+### Calendar Page
 - Monthly calendar view
 - Task distribution visualization
 - Easy date-based task creation
