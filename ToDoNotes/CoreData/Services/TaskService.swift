@@ -8,19 +8,32 @@
 import Foundation
 import CoreData
 import UserNotifications
+import OSLog
 
+/// A logger instance for debug and error messages.
+private let logger = Logger(subsystem: "TaskService", category: "CoreData")
+
+/// A service that handles all task-related operations such as creation, deletion,
+/// status toggling, duplication, and notification scheduling.
 final class TaskService {
     
+    // MARK: - Private Core Data Context and Save
+    
+    /// The main view context from Core Data.
     static private var viewContext: NSManagedObjectContext {
         CoreDataProvider.shared.persistentContainer.viewContext
     }
     
+    /// Saves the context if changes are pending.
     static private func save() throws {
         if viewContext.hasChanges {
-            try? viewContext.save()
+            try viewContext.save()
         }
     }
     
+    // MARK: - Task Creation / Update
+    
+    /// Creates or updates a task with the provided attributes.
     static func saveTask(entity: TaskEntity? = nil,
                          name: String,
                          description: String,
@@ -53,51 +66,43 @@ final class TaskService {
         task.pinned = pinned
         task.removed = removed
         
-        var notificationEntities = [NotificationEntity]()
-        for item in notifications {
+        // Converts NotificationItems to Core Data entities
+        let notificationEntities = notifications.map { item -> NotificationEntity in
             let entityItem = NotificationEntity(context: viewContext)
             entityItem.id = item.id
             entityItem.type = item.type.rawValue
             entityItem.target = item.target
-            notificationEntities.append(entityItem)
+            return entityItem
         }
-        let notificationsSet = NSSet(array: notificationEntities)
-        task.notifications = notificationsSet
+        task.notifications = NSSet(array: notificationEntities)
         
-        var checklistEnities = [ChecklistEntity]()
-        for item in checklist {
+        // Converts ChecklistItems to Core Data entities
+        let checklistEntities = checklist.map { item -> ChecklistEntity in
             let entityItem = ChecklistEntity(context: viewContext)
             entityItem.name = item.name
             entityItem.completed = item.completed
-            checklistEnities.append(entityItem)
+            return entityItem
         }
-        let orderedChecklist = NSOrderedSet(array: checklistEnities)
-        task.checklist = orderedChecklist
+        task.checklist = NSOrderedSet(array: checklistEntities)
         
-        guard entity == nil else {
-            try save()
-            return
-        }
-        if let folder {
-            task.folder = folder.rawValue
-        } else if !notifications.isEmpty {
-            task.folder = Folder.reminders.rawValue
-        } else if completeCheck != .none {
-            task.folder = Folder.tasks.rawValue
-        } else if checklist.count > 1 {
-            task.folder = Folder.lists.rawValue
-        } else {
-            task.folder = Folder.other.rawValue
+        // Determines folder if not set
+        if entity == nil {
+            task.folder = folder?.rawValue ?? {
+                if !notifications.isEmpty { return Folder.reminders.rawValue }
+                if completeCheck != .none { return Folder.tasks.rawValue }
+                if checklist.count > 0 { return Folder.lists.rawValue }
+                return Folder.other.rawValue
+            }()
         }
         
         try save()
     }
     
+    // MARK: - Task Duplication
+    
+    /// Duplicates a given task and its related data.
     static func duplicate(task: TaskEntity?) throws {
         guard let task else { return }
-        
-        // First remove notifications for the original task to prevent duplicates
-        UNUserNotificationCenter.current().removeNotifications(for: task.notifications)
         
         let newTask = TaskEntity(context: viewContext)
         newTask.id = UUID()
@@ -144,11 +149,15 @@ final class TaskService {
         }
     }
     
+    // MARK: - Deletion
+    
+    /// Permanently deletes a specific task.
     static func deleteRemovedTask(for entity: TaskEntity) throws {
         viewContext.delete(entity)
         try save()
     }
     
+    /// Deletes all tasks marked as removed using a batch delete.
     static func deleteRemovedTasks() {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Texts.CoreData.entity)
         fetchRequest.predicate = NSPredicate(format: "removed == %@", NSNumber(value: true))
@@ -164,11 +173,13 @@ final class TaskService {
             }
             viewContext.reset()
             try save()
+            logger.info("Removed tasks deleted successfully.")
         } catch {
-            print("Error deleting removed tasks: \(error.localizedDescription)")
+            logger.error("Error deleting removed tasks: \(error.localizedDescription)")
         }
     }
     
+    /// Deletes all tasks and clears all notifications.
     static func deleteAllTasksAndClearNotifications(completion: ((Bool) -> Void)? = nil) {
         let notificationCenter = UNUserNotificationCenter.current()
         
@@ -186,19 +197,24 @@ final class TaskService {
                 NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [viewContext])
             }
             viewContext.reset()
+            logger.info("All tasks deleted successfully.")
             completion?(true)
         } catch {
-            print("Batch delete error: \(error.localizedDescription)")
+            logger.error("Batch delete error: \(error.localizedDescription)")
             completion?(false)
         }
     }
     
+    // MARK: - Fetch Requests
+    
+    /// Returns a fetch request for all notifications associated with a given task.
     static func getNotificationsByTask(task: TaskEntity) -> NSFetchRequest<NotificationEntity> {
         let request = NotificationEntity.fetchRequest()
         request.predicate = NSPredicate(format: "task == %@", task)
         return request
     }
     
+    /// Returns a fetch request for tasks matching a given search term.
     static func getTasksBySearchTerm(_ searchTerm: String) -> NSFetchRequest<TaskEntity> {
         let request = TaskEntity.fetchRequest()
         request.sortDescriptors = []
@@ -303,7 +319,7 @@ extension TaskService {
                 
                 // Skip if notification with this ID already exists
                 guard !existingIdentifiers.contains(identifier) else {
-                    print("Skipping duplicate notification with ID: \(identifier)")
+                    logger.warning("Skipping duplicate notification with ID: \(identifier)")
                     continue
                 }
                 
@@ -320,9 +336,9 @@ extension TaskService {
                 let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
                 notificationCenter.add(request) { error in
                     if let error = error {
-                        print("Error scheduling notification with id \(identifier): \(error.localizedDescription)")
+                        logger.error("Error scheduling notification with id \(identifier): \(error.localizedDescription)")
                     } else {
-                        print("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error")")
+                        logger.info("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error")")
                     }
                 }
             }
@@ -355,7 +371,7 @@ extension TaskService {
                             
                             // Skip if notification with this ID already exists
                             guard !existingIdentifiers.contains(identifier) else {
-                                print("Skipping duplicate notification with ID: \(identifier)")
+                                logger.warning("Skipping duplicate notification with ID: \(identifier)")
                                 continue
                             }
                             
@@ -373,9 +389,9 @@ extension TaskService {
                             group.enter()
                             notificationCenter.add(request) { error in
                                 if let error = error {
-                                    print("Error scheduling notification with id \(identifier): \(error.localizedDescription)")
+                                    logger.error("Error scheduling notification with id \(identifier): \(error.localizedDescription)")
                                 } else {
-                                    print("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error")")
+                                    logger.info("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error")")
                                 }
                                 group.leave()
                             }
@@ -384,11 +400,12 @@ extension TaskService {
                 }
                 
                 group.notify(queue: .main) {
+                    logger.info("Notifications successfully restored for all tasks")
                     completion?(true)
                 }
             }
         } catch {
-            print("Error fetching tasks for restoring notifications: \(error.localizedDescription)")
+            logger.error("Error fetching tasks for restoring notifications: \(error.localizedDescription)")
             completion?(false)
         }
     }
