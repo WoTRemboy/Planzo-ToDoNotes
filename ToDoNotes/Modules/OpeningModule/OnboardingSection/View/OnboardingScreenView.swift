@@ -8,11 +8,20 @@
 import SwiftUI
 import SwiftUIPager
 import TipKit
+import OSLog
+
+/// A logger instance for debug and error messages.
+private let logger = Logger(subsystem: "OnboardingScreenView", category: "OpeningModule")
 
 /// View displaying the onboarding process or the main `RootView` if onboarding is complete.
 struct OnboardingScreenView: View {
     
+    // MARK: - Environment
+    
+    /// Detects the current system color scheme.
     @Environment(\.colorScheme) var colorScheme
+    
+    // MARK: - Properties
     
     /// View model controlling the onboarding state.
     @StateObject private var viewModel = OnboardingViewModel()
@@ -24,15 +33,22 @@ struct OnboardingScreenView: View {
     
     internal var body: some View {
         if viewModel.skipOnboarding {
+            // If onboarding is completed, shows the main content
             RootView {
                 ContentView()
                     .environmentObject(TabRouter())
                     .task {
-                        try? Tips.configure([
-                            .datastoreLocation(.applicationDefault)])
+                        do {
+                            try Tips.configure([
+                                .datastoreLocation(.applicationDefault)])
+                            logger.info("Tips configured successfully.")
+                        } catch {
+                            logger.error("Tips configuration failed: \(error.localizedDescription)")
+                        }
                     }
             }
         } else {
+            // Displays onboarding flow
             VStack(spacing: 0) {
                 content
                 progressCircles
@@ -49,9 +65,9 @@ struct OnboardingScreenView: View {
         }
     }
     
-    // MARK: - Content
+    // MARK: - Pager Content
     
-    /// Displays the onboarding steps using a Pager.
+    /// Displays onboarding pages with images and titles inside a pager.
     private var content: some View {
         Pager(page: page,
               data: viewModel.pages,
@@ -106,8 +122,9 @@ struct OnboardingScreenView: View {
         .padding(.top)
     }
     
-    // MARK: - Page Buttons
+    // MARK: - Navigation Buttons
     
+    /// Displays the button that either advances the pager or finishes onboarding.
     private var selectPageButtons: some View {
         VStack(spacing: 16) {
             if !viewModel.isLastPage(current: page.index) {
@@ -151,6 +168,7 @@ struct OnboardingScreenView: View {
     
     // MARK: - Sign with Apple Button
     
+    /// Button for signing in with Apple.
     private var signWithAppleButton: some View {
         Button {
             viewModel.startAppleSignIn()
@@ -179,6 +197,7 @@ struct OnboardingScreenView: View {
     
     // MARK: - Sign with Google Button
     
+    /// Button for signing in with Google.
     private var signWithGoogleButton: some View {
         Button {
             //viewModel.googleAuthorization()
@@ -226,14 +245,20 @@ struct OnboardingScreenView: View {
             .animation(.easeInOut, value: page.index)
     }
     
+    // MARK: - Terms and Policy
+    
+    /// Displays the terms of service and privacy policy acknowledgment text.
     private var termsPolicyLabel: some View {
         if let attributedText = try? AttributedString(markdown: Texts.OnboardingPage.markdownTerms) {
-                Text(attributedText)
-                    .font(.system(size: 14))
-                    .fontWeight(.medium)
-                    .foregroundStyle(Color.LabelColors.labelDetails)
+            logger.info("Attributed terms string successfully created from markdown.")
+            return Text(attributedText)
+                .font(.system(size: 14))
+                .fontWeight(.medium)
+                .foregroundStyle(Color.LabelColors.labelDetails)
+            
         } else {
-            Text(Texts.OnboardingPage.markdownTermsError)
+            logger.error("Attributed terms string creation failed from markdown.")
+            return Text(Texts.OnboardingPage.markdownTermsError)
                 .font(.system(size: 14))
                 .fontWeight(.medium)
                 .foregroundStyle(Color.LabelColors.labelDetails)
