@@ -7,18 +7,22 @@
 
 import Foundation
 
+/// Extension for `Date` providing utilities for working with custom calendar displays,
+/// like getting weekdays, month names, and calculating calendar layouts.
 extension Date {
     
     // MARK: - Static Properties
     
+    /// First day of the week according to the user's calendar settings.
     static private var firstDayOfWeek = Calendar.current.firstWeekday
     
     // MARK: - Static Computed Properties
 
+    /// Returns an array of capitalized short names of weekdays, adjusted to start from the user's first weekday.
     static internal var capitalizedFirstLettersOfWeekdays: [String] {
-        let calendar = Calendar.current
+        var weekdays = Calendar.current.shortWeekdaySymbols
         
-        var weekdays = calendar.shortWeekdaySymbols
+        // Adjust the weekdays array to match the first day of the week.
         if firstDayOfWeek > 1 {
             for _ in 1..<firstDayOfWeek {
                 if let first = weekdays.first {
@@ -30,7 +34,8 @@ extension Date {
         return weekdays.map { $0.uppercased() }
     }
     
-    static var fullMonthNames: [String] {
+    /// Returns full localized names of all months.
+    static internal var fullMonthNames: [String] {
         let formatter = DateFormatter()
         formatter.locale = Locale.autoupdatingCurrent
         
@@ -45,30 +50,38 @@ extension Date {
     
     // MARK: - Instance Properties
     
+    /// Returns the month component (1–12) of the date.
     internal var monthInt: Int {
         Calendar.current.component(.month, from: self)
     }
     
+    /// Returns the date at the start of the day.
     internal var startOfDay: Date {
         Calendar.current.startOfDay(for: self)
     }
         
+    /// Returns the start of the month for the date.
     private var startOfMonth: Date {
         Calendar.current.dateInterval(of: .month, for: self)?.start ?? .now
     }
     
+    /// Returns the end of the month for the date.
     private var endOfMonth: Date {
         let lastDay = Calendar.current.dateInterval(of: .month, for: self)?.end ?? .now
         return Calendar.current.date(byAdding: .day, value: -1, to: lastDay) ?? .now
     }
     
+    /// Returns the number of days in the month.
     private var numberOfDaysInMonth: Int {
         Calendar.current.component(.day, from: endOfMonth)
     }
     
+    /// Returns the first day to display before the start of the month in a calendar grid.
+    /// This ensures that the calendar layout starts at the beginning of the week.
     private var firstWeekDayBeforeStart: Date {
         let startOfMonthWeekday = Calendar.current.component(.weekday, from: startOfMonth)
         var numberFromPreviousMonth = startOfMonthWeekday - Self.firstDayOfWeek
+        
         if numberFromPreviousMonth < 0 {
             numberFromPreviousMonth += 7
         }
@@ -77,16 +90,19 @@ extension Date {
     
     // MARK: - Display Days Computed Property
 
+    /// Returns an array of `Date` representing all days to display in a month view,
+    /// including days from the previous month necessary to complete the first week.
     internal var calendarDisplayDays: [Date] {
        var days: [Date] = []
         
-       let firstDisplayDay = firstWeekDayBeforeStart
-       var day = firstDisplayDay
-       while day < startOfMonth {
-           days.append(day)
-           day = Calendar.current.date(byAdding: .day, value: 1, to: day) ?? .now
+        // Fill in days from previous month up to the start of the month
+       var currentDay = firstWeekDayBeforeStart
+       while currentDay < startOfMonth {
+           days.append(currentDay)
+           currentDay = Calendar.current.date(byAdding: .day, value: 1, to: currentDay) ?? .now
        }
         
+        // Fill in days of the current month
        for dayOffset in 0..<numberOfDaysInMonth {
            let newDay = Calendar.current.date(byAdding: .day, value: dayOffset, to: startOfMonth) ?? .now
            days.append(newDay)
