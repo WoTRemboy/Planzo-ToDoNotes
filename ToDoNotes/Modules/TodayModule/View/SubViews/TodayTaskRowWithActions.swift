@@ -6,24 +6,44 @@
 //
 
 import SwiftUI
+import OSLog
 
+/// A logger instance for debug and error messages.
+private let logger = Logger(subsystem: "TodayTaskRowWithActions", category: "TodayModule")
+
+/// A task row view for Today page with leading and trailing swipe actions.
+/// Allows marking task as important, pinning, and removing tasks.
 struct TodayTaskRowWithSwipeActions: View {
+    
+    // MARK: - Properties
+    
+    /// View model managing Today page state.
     @EnvironmentObject private var viewModel: TodayViewModel
     
+    /// The task entity being displayed.
     @ObservedObject private var entity: TaskEntity
+    
+    /// Whether this row is the last in the list.
     private let isLast: Bool
+    /// Namespace for matched geometry animations.
     private let namespace: Namespace.ID
     
+    /// Initializes a new task row.
+    /// - Parameters:
+    ///   - entity: Task to display.
+    ///   - isLast: Whether the task is the last item in section.
+    ///   - namespace: Animation namespace.
     init(entity: TaskEntity, isLast: Bool, namespace: Namespace.ID) {
         self._entity = ObservedObject(wrappedValue: entity)
         self.isLast = isLast
         self.namespace = namespace
     }
     
+    // MARK: - Body
+    
     internal var body: some View {
         Button {
-            viewModel.selectedTask = entity
-            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            handleTaskSelection()
         } label: {
             TaskListRow(entity: entity, isLast: isLast)            
         }
@@ -31,97 +51,34 @@ struct TodayTaskRowWithSwipeActions: View {
         .swipeActions(edge: .trailing, allowsFullSwipe: true) { trailingSwipeActions }
     }
     
-    private var contextMenuContent: some View {
-        Group {
-            ControlGroup {
-                Button {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        try? TaskService.toggleImportant(for: entity)
-                    }
-                    Toast.shared.present(
-                        title: entity.important ?
-                        Texts.Toasts.importantOn :
-                            Texts.Toasts.importantOff)
-                } label: {
-                    Label {
-                        TaskService.taskCheckImportant(for: entity) ?
-                        Text(Texts.TaskManagement.ContextMenu.importantDeselect) :
-                        Text(Texts.TaskManagement.ContextMenu.important)
-                    } icon: {
-                        TaskService.taskCheckImportant(for: entity) ?
-                        Image.TaskManagement.EditTask.Menu.importantDeselect :
-                        Image.TaskManagement.EditTask.Menu.importantSelect
-                            .renderingMode(.template)
-                    }
-                }
-                
-                Button {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        try? TaskService.togglePinned(for: entity)
-                    }
-                    Toast.shared.present(
-                        title: entity.pinned ?
-                        Texts.Toasts.pinnedOn :
-                            Texts.Toasts.pinnedOff)
-                } label: {
-                    TaskService.taskCheckPinned(for: entity) ?
-                    Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
-                    Image.TaskManagement.TaskRow.SwipeAction.pinned
-                }
-                
-                Button(role: .destructive) {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        try? TaskService.toggleRemoved(for: entity)
-                    }
-                    Toast.shared.present(
-                        title: Texts.Toasts.removed)
-                } label: {
-                    Image.TaskManagement.TaskRow.SwipeAction.remove
-                }
-            }
-            .controlGroupStyle(.compactMenu)
-        }
+    // MARK: - Actions
+    
+    /// Handles task selection (opens task editor).
+    private func handleTaskSelection() {
+        viewModel.selectedTask = entity
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        logger.info("Tapped on a task to edit: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
     }
     
+    /// Swipe actions on the leading side: important and pin.
     private var leadingSwipeActions: some View {
         Group {
-            Button(role: viewModel.importance ? .destructive : .cancel) {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    try? TaskService.toggleImportant(for: entity)
-                }
-                Toast.shared.present(
-                    title: entity.important ?
-                        Texts.Toasts.importantOn :
-                        Texts.Toasts.importantOff)
-            } label: {
-                TaskService.taskCheckImportant(for: entity) ?
-                    Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
-                    Image.TaskManagement.TaskRow.SwipeAction.important
-            }
-            .tint(Color.SwipeColors.important)
-            
-            Button(role: .destructive) {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    try? TaskService.togglePinned(for: entity)
-                }
-                Toast.shared.present(
-                    title: entity.pinned ?
-                        Texts.Toasts.pinnedOn :
-                        Texts.Toasts.pinnedOff)
-            } label: {
-                TaskService.taskCheckPinned(for: entity) ?
-                    Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
-                    Image.TaskManagement.TaskRow.SwipeAction.pinned
-            }
-            .tint(Color.SwipeColors.pin)
+            toggleImportantButton
+            togglePinnedButton
         }
     }
     
+    /// Swipe actions on the trailing side: remove.
     private var trailingSwipeActions: some View {
         Group {
             Button(role: .destructive) {
                 withAnimation(.easeInOut(duration: 0.2)) {
-                    try? TaskService.toggleRemoved(for: entity)
+                    do {
+                        try TaskService.toggleRemoved(for: entity)
+                        logger.info("Task removed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                    } catch {
+                        logger.error("Task removal failed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                    }
                 }
                 Toast.shared.present(
                     title: Texts.Toasts.removed)
@@ -130,6 +87,56 @@ struct TodayTaskRowWithSwipeActions: View {
             }
             .tint(Color.SwipeColors.remove)
         }
+    }
+    
+    // MARK: - Individual Swipe Buttons
+    
+    /// Button to toggle important status.
+    private var toggleImportantButton: some View {
+        Button(role: viewModel.importance ? .destructive : .cancel) {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                do {
+                    try TaskService.toggleImportant(for: entity)
+                    logger.info("Toggled important status to \(entity.important) for \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                } catch {
+                    logger.error("Toggling important status failed for \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                }
+            }
+            Toast.shared.present(
+                title: entity.important
+                ? Texts.Toasts.importantOn
+                : Texts.Toasts.importantOff
+            )
+        } label: {
+            TaskService.taskCheckImportant(for: entity)
+            ? Image.TaskManagement.TaskRow.SwipeAction.importantDeselect
+            : Image.TaskManagement.TaskRow.SwipeAction.important
+        }
+        .tint(Color.SwipeColors.important)
+    }
+    
+    /// Button to toggle pinned status.
+    private var togglePinnedButton: some View {
+        Button(role: .destructive) {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                do {
+                    try TaskService.togglePinned(for: entity)
+                    logger.info("Toggled pinned status to \(entity.pinned) for \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                } catch {
+                    logger.error("Toggling pinned status failed for \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                }
+            }
+            Toast.shared.present(
+                title: entity.pinned
+                ? Texts.Toasts.pinnedOn
+                : Texts.Toasts.pinnedOff
+            )
+        } label: {
+            TaskService.taskCheckPinned(for: entity)
+            ? Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect
+            : Image.TaskManagement.TaskRow.SwipeAction.pinned
+        }
+        .tint(Color.SwipeColors.pin)
     }
 }
 
