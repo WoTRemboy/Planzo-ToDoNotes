@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - Onboarding Step Model
+
 /// Represents a step in the onboarding process, including title, description, and image.
 struct OnboardingStep {
     /// Title of the onboarding step.
@@ -16,6 +18,8 @@ struct OnboardingStep {
     /// Image associated with this onboarding step.
     let image: Image
 }
+
+// MARK: - Onboarding Step Setup
 
 extension OnboardingStep {
     
@@ -42,7 +46,7 @@ extension OnboardingStep {
     }
 }
 
-// MARK: - OnboardingButtonType
+// MARK: - Onboarding Button Type
 
 /// Enum defining types of buttons in the onboarding screen.
 enum OnboardingButtonType {

@@ -8,15 +8,23 @@
 import SwiftUI
 import TipKit
 
+/// The main view displaying tasks for the current day.
 struct TodayView: View {
     
+    // MARK: - Properties
+    
     @EnvironmentObject private var viewModel: TodayViewModel
+    /// Used for smooth matched geometry transitions between floating buttons and task management screens.
     @Namespace private var animation
     
+    /// Fetched task results from Core Data.
     @FetchRequest(entity: TaskEntity.entity(), sortDescriptors: [])
     private var tasksResults: FetchedResults<TaskEntity>
     
+    /// TipKit overview tip for the today page.
     private let overviewTip = TodayPageOverview()
+    
+    // MARK: - Body
     
     internal var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -28,6 +36,7 @@ struct TodayView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         
+        // Sheet for task creation
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
@@ -37,6 +46,7 @@ struct TodayView: View {
                 .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
                 .presentationDragIndicator(.visible)
         }
+        // Fullscreen task creation
         .fullScreenCover(isPresented: $viewModel.showingTaskCreateViewFullscreen) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
@@ -44,6 +54,7 @@ struct TodayView: View {
                     viewModel.toggleShowingTaskCreateView()
                 }
         }
+        // Fullscreen task editing
         .fullScreenCover(item: $viewModel.selectedTask) { task in
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
@@ -54,11 +65,14 @@ struct TodayView: View {
         }
     }
     
+    // MARK: - Content Components
+    
+    /// The main content view containing the navigation bar and the task form.
     private var content: some View {
         VStack(spacing: 0) {
             TodayNavBar(date: viewModel.todayDate.shortDate,
                         day: viewModel.todayDate.shortWeekday)
-                .zIndex(1)
+            .zIndex(1)
             
             taskForm
         }
@@ -66,6 +80,7 @@ struct TodayView: View {
                    value: tasksResults.isEmpty)
     }
     
+    /// Label shown when there are no tasks for today.
     private var placeholderLabel: some View {
         Text(Texts.TodayPage.placeholder)
             .foregroundStyle(Color.LabelColors.labelSecondary)
@@ -73,20 +88,24 @@ struct TodayView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
     
+    /// The form listing today's tasks, grouped by sections.
     private var taskForm: some View {
         Form {
+            // Display a TipKit tip at the top
             TipView(overviewTip)
                 .tipBackground(Color.FolderColors.tasks
                     .opacity(0.3))
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
             
+            // List of tasks grouped by section
             ForEach(TaskSection.availableRarities(for: dayTasks.keys), id: \.self) { section in
                 taskFormSection(for: section)
             }
             .listRowSeparator(.hidden)
             .listSectionSpacing(0)
             
+            // Empty space at the bottom
             Color.clear
                 .frame(height: 50)
                 .listRowBackground(Color.clear)
@@ -96,9 +115,10 @@ struct TodayView: View {
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
         .scrollDisabled(dayTasks.isEmpty)
-//        .animation(.easeInOut(duration: 0.1), value: tasksResults.count)
+        //        .animation(.easeInOut(duration: 0.1), value: tasksResults.count)
     }
     
+    /// Creates a task section for a given `TaskSection` type.
     @ViewBuilder
     private func taskFormSection(for section: TaskSection) -> some View {
         Section {
@@ -117,6 +137,9 @@ struct TodayView: View {
         }
     }
     
+    // MARK: - Plus Button
+    
+    /// Floating plus button for creating a new task.
     private var plusButton: some View {
         VStack {
             Spacer()
@@ -138,39 +161,54 @@ struct TodayView: View {
     }
 }
 
+// MARK: - Tasks Filtering
+
 extension TodayView {
+    /// Returns today's tasks, grouped into sections (pinned, active, completed).
     private var dayTasks: [TaskSection: [TaskEntity]] {
         let calendar = Calendar.current
         let day = calendar.startOfDay(for: viewModel.todayDate)
-        let filteredTasks = tasksResults.filter { task in
-            if !viewModel.searchText.isEmpty {
-                let searchTerm = viewModel.searchText
-                let nameMatches = task.name?.localizedCaseInsensitiveContains(searchTerm) ?? false
-                let detailsMatches = task.details?.localizedCaseInsensitiveContains(searchTerm) ?? false
-                if !nameMatches && !detailsMatches {
-                    return false
+        let filteredTasks = tasksResults.lazy
+            .filter { task in
+                if !viewModel.searchText.isEmpty {
+                    let searchTerm = viewModel.searchText
+                    let nameMatches = task.name?.localizedCaseInsensitiveContains(searchTerm) ?? false
+                    let detailsMatches = task.details?.localizedCaseInsensitiveContains(searchTerm) ?? false
+                    if !nameMatches && !detailsMatches {
+                        return false
+                    }
                 }
+                
+                let taskDate = calendar.startOfDay(for: task.target ?? task.created ?? Date.distantPast)
+                return taskDate == day && !task.removed && (!viewModel.importance || task.important)
             }
-            
-            let taskDate = calendar.startOfDay(for: task.target ?? task.created ?? Date.distantPast)
-            return taskDate == day && !task.removed && (!viewModel.importance || task.important)
-        }
-        let sortedTasks = filteredTasks.sorted { t1, t2 in
-            let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : (Date.distantFuture + t1.created!.timeIntervalSinceNow)
-            let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : (Date.distantFuture + t2.created!.timeIntervalSinceNow)
-            return d1 < d2
-        }
+            // Sorting tasks by pinned status and nearest date/time
+            .sorted { t1, t2 in
+                if t1.pinned != t2.pinned {
+                    return t1.pinned && !t2.pinned
+                }
+                
+                let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : (Date.distantFuture + t1.created!.timeIntervalSinceNow)
+                let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : (Date.distantFuture + t2.created!.timeIntervalSinceNow)
+                return d1 < d2
+            }
+        
+        // Grouping sorted tasks into sections
         var result: [TaskSection: [TaskEntity]] = [:]
-        let pinned = sortedTasks.filter { $0.pinned }
-        let active = sortedTasks.filter { !$0.pinned && $0.completed != 2 }
-        let completed = sortedTasks.filter { !$0.pinned && $0.completed == 2 }
+        
+        let pinned = filteredTasks.filter { $0.pinned }
+        let active = filteredTasks.filter { !$0.pinned && $0.completed != 2 }
+        let completed = filteredTasks.filter { !$0.pinned && $0.completed == 2 }
         
         if !pinned.isEmpty { result[.pinned] = pinned }
         if !active.isEmpty { result[.active] = active }
         if !completed.isEmpty { result[.completed] = completed }
+        
         return result
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     TodayView()

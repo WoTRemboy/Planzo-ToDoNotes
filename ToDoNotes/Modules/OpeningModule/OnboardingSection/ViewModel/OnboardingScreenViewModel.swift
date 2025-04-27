@@ -13,9 +13,11 @@ final class OnboardingViewModel: NSObject, ObservableObject {
     
     // MARK: - Properties
     
-    /// A flag stored in `AppStorage` to track if this is the first launch of the app.
+    /// A flag indicating if onboarding should be skipped (i.e., onboarding is completed).
     @AppStorage(Texts.UserDefaults.skipOnboarding) var skipOnboarding: Bool = false
+    /// A flag controlling the glow effect around the "Add Task" button after onboarding.
     @AppStorage(Texts.UserDefaults.addTaskButtonGlow) private var addTaskButtonGlow: Bool = false
+    
     /// The list of onboarding steps, initialized using `stepsSetup()`.
     private(set) var steps = OnboardingStep.stepsSetup()
     
@@ -28,6 +30,9 @@ final class OnboardingViewModel: NSObject, ObservableObject {
     
     // MARK: - Methods
     
+    /// Determines if the given page index corresponds to the last onboarding page.
+    /// - Parameter current: The current page index.
+    /// - Returns: `true` if the current page is the last; otherwise, `false`.
     internal func isLastPage(current: Int) -> Bool {
         current == steps.count - 1
     }
