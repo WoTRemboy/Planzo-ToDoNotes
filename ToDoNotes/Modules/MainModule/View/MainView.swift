@@ -260,12 +260,11 @@ extension MainView {
     /// Segments and sorts tasks by their associated dates, applying pinning and deadlines.
     private var segmentedAndSortedTasksArray: [(Date?, [TaskEntity])] {
         let calendar = Calendar.current
-        var grouped: [Date: [TaskEntity]] = [:]
-        for task in tasksResults {
+        let grouped = Dictionary(grouping: tasksResults.lazy) { task -> Date in
             let refDate = task.target ?? task.created ?? Date.distantPast
-            let day = calendar.startOfDay(for: refDate)
-            grouped[day, default: []].append(task)
+            return calendar.startOfDay(for: refDate)
         }
+        
         return grouped.map { (key, tasks) in
             let sortedTasks = tasks.sorted { t1, t2 in
                 if t1.pinned != t2.pinned {
@@ -283,8 +282,8 @@ extension MainView {
     
     /// Applies filters based on search, folder selection, importance, and task status.
     private var filteredSegmentedTasks: [(Date?, [TaskEntity])] {
-        return segmentedAndSortedTasksArray.compactMap { (date, tasks) in
-            let filteredTasks = tasks.filter { task in
+        segmentedAndSortedTasksArray.lazy.compactMap { (date, tasks) in
+            let filteredTasks = tasks.lazy.filter { task in
                 if !viewModel.searchText.isEmpty {
                     let searchTerm = viewModel.searchText
                     let nameMatches = task.name?.localizedCaseInsensitiveContains(searchTerm) ?? false
@@ -298,8 +297,10 @@ extension MainView {
                 if viewModel.importance && !task.important { return false }
                 return viewModel.taskMatchesFilter(for: task)
             }
-            return filteredTasks.isEmpty ? nil : (date, filteredTasks)
+            
+            return filteredTasks.isEmpty ? nil : (date, Array(filteredTasks))
         }
+        .sorted { ($0.0 ?? Date.distantPast) < ($1.0 ?? Date.distantPast) }
     }
 }
 

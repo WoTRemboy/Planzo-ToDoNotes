@@ -72,7 +72,7 @@ struct TodayView: View {
         VStack(spacing: 0) {
             TodayNavBar(date: viewModel.todayDate.shortDate,
                         day: viewModel.todayDate.shortWeekday)
-                .zIndex(1)
+            .zIndex(1)
             
             taskForm
         }
@@ -115,7 +115,7 @@ struct TodayView: View {
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
         .scrollDisabled(dayTasks.isEmpty)
-//        .animation(.easeInOut(duration: 0.1), value: tasksResults.count)
+        //        .animation(.easeInOut(duration: 0.1), value: tasksResults.count)
     }
     
     /// Creates a task section for a given `TaskSection` type.
@@ -168,34 +168,42 @@ extension TodayView {
     private var dayTasks: [TaskSection: [TaskEntity]] {
         let calendar = Calendar.current
         let day = calendar.startOfDay(for: viewModel.todayDate)
-        let filteredTasks = tasksResults.filter { task in
-            if !viewModel.searchText.isEmpty {
-                let searchTerm = viewModel.searchText
-                let nameMatches = task.name?.localizedCaseInsensitiveContains(searchTerm) ?? false
-                let detailsMatches = task.details?.localizedCaseInsensitiveContains(searchTerm) ?? false
-                if !nameMatches && !detailsMatches {
-                    return false
+        let filteredTasks = tasksResults.lazy
+            .filter { task in
+                if !viewModel.searchText.isEmpty {
+                    let searchTerm = viewModel.searchText
+                    let nameMatches = task.name?.localizedCaseInsensitiveContains(searchTerm) ?? false
+                    let detailsMatches = task.details?.localizedCaseInsensitiveContains(searchTerm) ?? false
+                    if !nameMatches && !detailsMatches {
+                        return false
+                    }
                 }
+                
+                let taskDate = calendar.startOfDay(for: task.target ?? task.created ?? Date.distantPast)
+                return taskDate == day && !task.removed && (!viewModel.importance || task.important)
             }
-            
-            let taskDate = calendar.startOfDay(for: task.target ?? task.created ?? Date.distantPast)
-            return taskDate == day && !task.removed && (!viewModel.importance || task.important)
-        }
+            // Sorting tasks by pinned status and nearest date/time
+            .sorted { t1, t2 in
+                if t1.pinned != t2.pinned {
+                    return t1.pinned && !t2.pinned
+                }
+                
+                let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : (Date.distantFuture + t1.created!.timeIntervalSinceNow)
+                let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : (Date.distantFuture + t2.created!.timeIntervalSinceNow)
+                return d1 < d2
+            }
         
-        // Sorts tasks by nearest date/time
-        let sortedTasks = filteredTasks.sorted { t1, t2 in
-            let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : (Date.distantFuture + t1.created!.timeIntervalSinceNow)
-            let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : (Date.distantFuture + t2.created!.timeIntervalSinceNow)
-            return d1 < d2
-        }
+        // Grouping sorted tasks into sections
         var result: [TaskSection: [TaskEntity]] = [:]
-        let pinned = sortedTasks.filter { $0.pinned }
-        let active = sortedTasks.filter { !$0.pinned && $0.completed != 2 }
-        let completed = sortedTasks.filter { !$0.pinned && $0.completed == 2 }
+        
+        let pinned = filteredTasks.filter { $0.pinned }
+        let active = filteredTasks.filter { !$0.pinned && $0.completed != 2 }
+        let completed = filteredTasks.filter { !$0.pinned && $0.completed == 2 }
         
         if !pinned.isEmpty { result[.pinned] = pinned }
         if !active.isEmpty { result[.active] = active }
         if !completed.isEmpty { result[.completed] = completed }
+        
         return result
     }
 }

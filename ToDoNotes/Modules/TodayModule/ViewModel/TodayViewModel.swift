@@ -10,7 +10,7 @@ import SwiftUI
 /// ViewModel managing the state and interactions for the Today screen.
 final class TodayViewModel: ObservableObject {
     
-    // MARK: - AppStorage
+    // MARK: - Stored Properties
     
     /// Whether the Add Task button should glow (first-time user experience).
     @AppStorage(Texts.UserDefaults.addTaskButtonGlow)
