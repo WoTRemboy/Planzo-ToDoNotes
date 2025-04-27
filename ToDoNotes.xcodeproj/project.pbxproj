@@ -98,7 +98,6 @@
 		63F6C7022D2AA38C00716AB0 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C7012D2AA37F00716AB0 /* DateFormatter.swift */; };
 		63F6C7052D2AA94F00716AB0 /* ThemeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C7042D2AA94B00716AB0 /* ThemeModel.swift */; };
 		63F6C7082D2AAA0900716AB0 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C7072D2AAA0500716AB0 /* SettingsViewModel.swift */; };
-		63F6C70C2D2AAAA000716AB0 /* AboutAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C70B2D2AAAA000716AB0 /* AboutAppView.swift */; };
 		63F6C70E2D2AAD0100716AB0 /* SettingsNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C70D2D2AAD0100716AB0 /* SettingsNavBar.swift */; };
 		63F6C7122D2AB71900716AB0 /* CalendarNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C7112D2AB71200716AB0 /* CalendarNavBar.swift */; };
 		63F6C7152D2AB99600716AB0 /* CalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C7142D2AB99000716AB0 /* CalendarViewModel.swift */; };
@@ -224,7 +223,6 @@
 		63F6C7012D2AA37F00716AB0 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		63F6C7042D2AA94B00716AB0 /* ThemeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeModel.swift; sourceTree = "<group>"; };
 		63F6C7072D2AAA0500716AB0 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
-		63F6C70B2D2AAAA000716AB0 /* AboutAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutAppView.swift; sourceTree = "<group>"; };
 		63F6C70D2D2AAD0100716AB0 /* SettingsNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNavBar.swift; sourceTree = "<group>"; };
 		63F6C7112D2AB71200716AB0 /* CalendarNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarNavBar.swift; sourceTree = "<group>"; };
 		63F6C7142D2AB99000716AB0 /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
@@ -799,7 +797,6 @@
 		63F6C70A2D2AAA8500716AB0 /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
-				63F6C70B2D2AAAA000716AB0 /* AboutAppView.swift */,
 				6377871E2D76008C006DE892 /* SettingAppearanceView.swift */,
 				634877AB2D369B21009110B0 /* SettingFormRow.swift */,
 				63F6C70D2D2AAD0100716AB0 /* SettingsNavBar.swift */,
@@ -1063,7 +1060,6 @@
 				6396C8102D7DC8B70046DB14 /* TodayTaskRowWithActions.swift in Sources */,
 				635FEF822D24BEA6007FFBBA /* ImageExtension.swift in Sources */,
 				638E21962D2C209200FB1464 /* TaskManagementView.swift in Sources */,
-				63F6C70C2D2AAAA000716AB0 /* AboutAppView.swift in Sources */,
 				631FBB942DB0127E00BEABD0 /* CalendarPageOverviewTip.swift in Sources */,
 				637B9F582D2969940010F13B /* TodayView.swift in Sources */,
 				631FBB922DB0114D00BEABD0 /* TodayPageOverviewTip.swift in Sources */,

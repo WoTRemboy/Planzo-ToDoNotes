@@ -11,7 +11,7 @@ import TipKit
 import OSLog
 
 /// A logger instance for debug and error messages.
-private let logger = Logger(subsystem: "OnboardingScreenView", category: "OpeningModule")
+private let logger = Logger(subsystem: "com.todonotes.opening", category: "OnboardingScreenView")
 
 /// View displaying the onboarding process or the main `RootView` if onboarding is complete.
 struct OnboardingScreenView: View {

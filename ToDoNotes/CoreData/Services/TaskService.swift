@@ -11,7 +11,7 @@ import UserNotifications
 import OSLog
 
 /// A logger instance for debug and error messages.
-private let logger = Logger(subsystem: "TaskService", category: "CoreData")
+private let logger = Logger(subsystem: "com.todonotes.coredata", category: "TaskService")
 
 /// A service that handles all task-related operations such as creation, deletion,
 /// status toggling, duplication, and notification scheduling.

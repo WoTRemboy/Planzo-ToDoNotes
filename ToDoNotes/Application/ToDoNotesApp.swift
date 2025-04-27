@@ -11,7 +11,7 @@ import GoogleSignIn
 import UserNotifications
 
 /// A logger instance for debug and error messages.
-private let logger = Logger(subsystem: "ApplicationModule", category: "ToDoNotesApp")
+private let logger = Logger(subsystem: "com.todonotes.application", category: "ToDoNotesApp")
 
 @main
 struct ToDoNotesApp: App {

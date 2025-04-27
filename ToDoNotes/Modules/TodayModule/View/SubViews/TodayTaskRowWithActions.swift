@@ -9,7 +9,7 @@ import SwiftUI
 import OSLog
 
 /// A logger instance for debug and error messages.
-private let logger = Logger(subsystem: "TodayTaskRowWithActions", category: "TodayModule")
+private let logger = Logger(subsystem: "com.todonotes.today", category: "TodayTaskRowWithActions")
 
 /// A task row view for Today page with leading and trailing swipe actions.
 /// Allows marking task as important, pinning, and removing tasks.

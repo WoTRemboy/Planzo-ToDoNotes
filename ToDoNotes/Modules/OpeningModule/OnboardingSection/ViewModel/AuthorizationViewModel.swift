@@ -10,7 +10,7 @@ import GoogleSignIn
 import OSLog
 
 /// A logger instance for debug and error messages.
-private let logger = Logger(subsystem: "AuthorizationViewModel", category: "OpeningModule")
+private let logger = Logger(subsystem: "com.todonotes.opening", category: "AuthorizationViewModel")
 
 /// Extension for `OnboardingViewModel` that handles user authentication via Google Sign-In and Apple ID.
 extension OnboardingViewModel: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {

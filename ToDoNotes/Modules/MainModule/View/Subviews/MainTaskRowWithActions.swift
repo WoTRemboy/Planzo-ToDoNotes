@@ -9,7 +9,7 @@ import SwiftUI
 import OSLog
 
 /// A logger instance for debug and error messages.
-private let logger = Logger(subsystem: "MainTaskRowWithActions", category: "MainModule")
+private let logger = Logger(subsystem: "com.todonotes.main", category: "MainTaskRowWithActions")
 
 /// Displays a single task row with support for swipe actions (important, pinned, restore, delete).
 struct MainTaskRowWithActions: View {

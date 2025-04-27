@@ -10,7 +10,7 @@ import CoreData
 import OSLog
 
 /// A logger instance for debug and error messages.
-private let logger = Logger(subsystem: "CoreDataProvider", category: "CoreData")
+private let logger = Logger(subsystem: "com.todonotes.coredata", category: "CoreDataProvider")
 
 /// A singleton class responsible for setting up and managing the Core Data.
 final class CoreDataProvider {
