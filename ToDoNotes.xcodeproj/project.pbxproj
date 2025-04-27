@@ -85,6 +85,7 @@
 		63C5A8CF2D31BECD00154101 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 63C5A8CE2D31BECD00154101 /* GoogleSignIn */; };
 		63C5A8D12D31BECD00154101 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 63C5A8D02D31BECD00154101 /* GoogleSignInSwift */; };
 		63CD66982D367EC50053C93C /* TaskManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD66972D367EBD0053C93C /* TaskManagementViewModel.swift */; };
+		63D65D1C2DBED0B100BE9D87 /* CalendarViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D65D1B2DBED0AA00BE9D87 /* CalendarViewModelTests.swift */; };
 		63D9A1BA2D50F2FF008454E9 /* UserNotificationCenterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D9A1B92D50F2F2008454E9 /* UserNotificationCenterExtension.swift */; };
 		63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA81012D24C822005CEECB /* OnboardingScreenView.swift */; };
 		63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DA81032D24CE44005CEECB /* ViewExtension.swift */; };
@@ -210,6 +211,7 @@
 		63C2DC762D8C47BA00E6E0A0 /* CustomContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomContextMenu.swift; sourceTree = "<group>"; };
 		63C2DC782D8C4AB600E6E0A0 /* ContextMenuHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuHelper.swift; sourceTree = "<group>"; };
 		63CD66972D367EBD0053C93C /* TaskManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementViewModel.swift; sourceTree = "<group>"; };
+		63D65D1B2DBED0AA00BE9D87 /* CalendarViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModelTests.swift; sourceTree = "<group>"; };
 		63D9A1B92D50F2F2008454E9 /* UserNotificationCenterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationCenterExtension.swift; sourceTree = "<group>"; };
 		63DA81012D24C822005CEECB /* OnboardingScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenView.swift; sourceTree = "<group>"; };
 		63DA81032D24CE44005CEECB /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
@@ -657,11 +659,7 @@
 		63B88F532DBE532A00C9EA8A /* ToDoNotesTests */ = {
 			isa = PBXGroup;
 			children = (
-				63B88F582DBE555900C9EA8A /* OnboardingViewModelTests.swift */,
-				63B88F552DBE533200C9EA8A /* MainViewModelTests.swift */,
-				63B88F5D2DBE941400C9EA8A /* TodayViewDayTasksTest.swift */,
-				63B88F5F2DBE9DDE00C9EA8A /* TodayViewModelTests.swift */,
-				63B88F632DBEAEEF00C9EA8A /* SettingsViewModelTests.swift */,
+				63D65D1A2DBED07D00BE9D87 /* ViewModels */,
 			);
 			path = ToDoNotesTests;
 			sourceTree = "<group>";
@@ -724,6 +722,19 @@
 				63CD66972D367EBD0053C93C /* TaskManagementViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		63D65D1A2DBED07D00BE9D87 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				63B88F582DBE555900C9EA8A /* OnboardingViewModelTests.swift */,
+				63B88F552DBE533200C9EA8A /* MainViewModelTests.swift */,
+				63B88F5D2DBE941400C9EA8A /* TodayViewDayTasksTest.swift */,
+				63B88F5F2DBE9DDE00C9EA8A /* TodayViewModelTests.swift */,
+				63D65D1B2DBED0AA00BE9D87 /* CalendarViewModelTests.swift */,
+				63B88F632DBEAEEF00C9EA8A /* SettingsViewModelTests.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		63F6C6F52D29B40600716AB0 /* Folders */ = {
@@ -1073,6 +1084,7 @@
 				63B88F562DBE533700C9EA8A /* MainViewModelTests.swift in Sources */,
 				63B88F642DBEAEF200C9EA8A /* SettingsViewModelTests.swift in Sources */,
 				63B88F592DBE555A00C9EA8A /* OnboardingViewModelTests.swift in Sources */,
+				63D65D1C2DBED0B100BE9D87 /* CalendarViewModelTests.swift in Sources */,
 				63B88F5E2DBE941C00C9EA8A /* TodayViewDayTasksTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
