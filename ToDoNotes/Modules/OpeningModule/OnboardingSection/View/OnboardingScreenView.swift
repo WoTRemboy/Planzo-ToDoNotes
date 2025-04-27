@@ -43,7 +43,7 @@ struct OnboardingScreenView: View {
                                 .datastoreLocation(.applicationDefault)])
                             logger.info("Tips configured successfully.")
                         } catch {
-                            logger.error("Tips configuration failed: \(error.localizedDescription)")
+                            logger.error("Tips configuration failed: \(error.localizedDescription).")
                         }
                     }
             }

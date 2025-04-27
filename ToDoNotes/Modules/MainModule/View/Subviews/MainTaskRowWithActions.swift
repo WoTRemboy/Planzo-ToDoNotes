@@ -6,11 +6,19 @@
 //
 
 import SwiftUI
+import OSLog
 
+/// A logger instance for debug and error messages.
+private let logger = Logger(subsystem: "MainTaskRowWithActions", category: "MainModule")
+
+/// Displays a single task row with support for swipe actions (important, pinned, restore, delete).
 struct MainTaskRowWithActions: View {
+        
     @EnvironmentObject private var viewModel: MainViewModel
     
+    /// The task entity displayed in the row.
     @ObservedObject private var entity: TaskEntity
+    /// Indicates if the task is the last in its section (for divider behavior).
     private let isLast: Bool
     
     init(entity: TaskEntity, isLast: Bool) {
@@ -18,79 +26,140 @@ struct MainTaskRowWithActions: View {
         self.isLast = isLast
     }
     
+    // MARK: - Body
+    
     internal var body: some View {
         Button {
-            if viewModel.selectedFilter == .deleted {
-                viewModel.removedTask = entity
-                viewModel.toggleShowingEditRemovedAlert()
-            } else {
-                viewModel.selectedTask = entity
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-            }
+            handleRowTap()
         } label: {
             TaskListRow(entity: entity, isLast: isLast)
         }
         .swipeActions(edge: .leading, allowsFullSwipe: viewModel.selectedFilter == .deleted) {
-            if viewModel.selectedFilter != .deleted {
-                Button(role: viewModel.importance ? .destructive : .cancel) {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        try? TaskService.toggleImportant(for: entity)
-                    }
-                    Toast.shared.present(
-                        title: entity.important ?
-                            Texts.Toasts.importantOn :
-                            Texts.Toasts.importantOff)
-                } label: {
-                    TaskService.taskCheckImportant(for: entity) ?
-                    Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
-                    Image.TaskManagement.TaskRow.SwipeAction.important
-                }
-                .tint(Color.SwipeColors.important)
-                
-                Button(role: .cancel) {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        try? TaskService.togglePinned(for: entity)
-                    }
-                    Toast.shared.present(
-                        title: entity.pinned ?
-                            Texts.Toasts.pinnedOn :
-                            Texts.Toasts.pinnedOff)
-                } label: {
-                    TaskService.taskCheckPinned(for: entity) ?
-                    Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
-                    Image.TaskManagement.TaskRow.SwipeAction.pinned
-                }
-                .tint(Color.SwipeColors.pin)
-            } else {
-                Button(role: .destructive) {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        try? TaskService.toggleRemoved(for: entity)
-                    }
-                } label: {
-                    Image.TaskManagement.TaskRow.SwipeAction.restore
-                }
-                .tint(Color.SwipeColors.restore)
-            }
+            leadingSwipeActions
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-            Button(role: .destructive) {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    if viewModel.selectedFilter != .deleted {
-                        try? TaskService.toggleRemoved(for: entity)
-                        Toast.shared.present(
-                            title: Texts.Toasts.removed)
-                    } else {
-                        try? TaskService.deleteRemovedTask(for: entity)
-                    }
-                    
-                }
-            } label: {
-                Image.TaskManagement.TaskRow.SwipeAction.remove
-            }
-            .tint(Color.SwipeColors.remove)
+            trailingSwipeAction
         }
     }
+    
+    // MARK: - Actions
+    
+    /// Handles tapping the task row depending on the selected filter.
+    private func handleRowTap() {
+        if viewModel.selectedFilter == .deleted {
+            viewModel.removedTask = entity
+            viewModel.toggleShowingEditRemovedAlert()
+            logger.info("Tapped on a deleted task to recover: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+        } else {
+            viewModel.selectedTask = entity
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            logger.info("Tapped on an active task to edit: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+        }
+    }
+    
+    /// Defines leading swipe actions for the task (important, pin, or restore).
+    @ViewBuilder
+    private var leadingSwipeActions: some View {
+        if viewModel.selectedFilter != .deleted {
+            importantButton
+            pinnedButton
+        } else {
+            restoreButton
+        }
+    }
+    
+    /// Defines trailing swipe action for removing or deleting the task.
+    private var trailingSwipeAction: some View {
+        Button(role: .destructive) {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                if viewModel.selectedFilter != .deleted {
+                    do {
+                        try TaskService.toggleRemoved(for: entity)
+                        Toast.shared.present(title: Texts.Toasts.removed)
+                        logger.info("Task moved to deleted: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                    } catch {
+                        logger.error("Task could not be moved to deleted: \(error.localizedDescription)")
+                    }
+                } else {
+                    do {
+                        try TaskService.deleteRemovedTask(for: entity)
+                        logger.info("Task permanently deleted.")
+                    } catch {
+                        logger.error("Task could not be permanently deleted: \(error.localizedDescription)")
+                    }
+                }
+            }
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.remove
+        }
+        .tint(Color.SwipeColors.remove)
+    }
+    
+    // MARK: - Swipe Action Buttons
+    
+    /// Button to mark task as important or remove importance.
+    private var importantButton: some View {
+        Button(role: viewModel.importance ? .destructive : .cancel) {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                do {
+                    try TaskService.toggleImportant(for: entity)
+                    logger.info("Toggled important status to \(entity.important) for task: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                } catch {
+                    logger.error("Toggle important status for task failed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                }
+            }
+            Toast.shared.present(
+                title: entity.important ? Texts.Toasts.importantOn : Texts.Toasts.importantOff
+            )
+        } label: {
+            TaskService.taskCheckImportant(for: entity) ?
+            Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
+            Image.TaskManagement.TaskRow.SwipeAction.important
+        }
+        .tint(Color.SwipeColors.important)
+    }
+    
+    /// Button to pin or unpin the task.
+    private var pinnedButton: some View {
+        Button(role: .cancel) {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                do {
+                    try TaskService.togglePinned(for: entity)
+                    logger.info("Toggled pinned status to \(entity.pinned) for task: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                } catch {
+                    logger.error("Toggle pinned status for task failed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                }
+            }
+            Toast.shared.present(
+                title: entity.pinned ? Texts.Toasts.pinnedOn : Texts.Toasts.pinnedOff
+            )
+        } label: {
+            TaskService.taskCheckPinned(for: entity) ?
+            Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
+            Image.TaskManagement.TaskRow.SwipeAction.pinned
+        }
+        .tint(Color.SwipeColors.pin)
+    }
+    
+    /// Button to restore a deleted task.
+    private var restoreButton: some View {
+        Button(role: .destructive) {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                do {
+                    try TaskService.toggleRemoved(for: entity)
+                    logger.info("Restored task from deleted: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                } catch {
+                    logger.error("Restore task failed: \(error.localizedDescription)")
+                }
+            }
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.restore
+        }
+        .tint(Color.SwipeColors.restore)
+    }
 }
+
+// MARK: - Preview
 
 #Preview {
     MainTaskRowWithActions(entity: TaskEntity(), isLast: false)

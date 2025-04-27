@@ -8,15 +8,30 @@
 import SwiftUI
 import TipKit
 
+// MARK: - MainView
+
+/// The main view showing the list of tasks, floating action buttons, tips, and alerts.
+/// Handles task creation, editing, filtering, and task management UI.
 struct MainView: View {
     
+    // MARK: - Core Data Fetch
+    
+    /// Fetches all task entities without any initial sorting.
     @FetchRequest(entity: TaskEntity.entity(), sortDescriptors: [])
     private var tasksResults: FetchedResults<TaskEntity>
     
-    @EnvironmentObject private var viewModel: MainViewModel
-    @Namespace private var animation
+    // MARK: - Environment
     
+    @EnvironmentObject private var viewModel: MainViewModel
+    
+    // MARK: - Properties
+    
+    /// Used for smooth matched geometry transitions between floating buttons and task management screens.
+    @Namespace private var animation
+    /// Tip to introduce the overview feature.
     private let overviewTip = MainPageOverview()
+    
+    // MARK: - Body
     
     internal var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -30,6 +45,7 @@ struct MainView: View {
                    value: tasksResults.isEmpty)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         
+        // Configures and attaches sheets and full-screen covers for task creation and editing.
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
@@ -58,6 +74,7 @@ struct MainView: View {
                     viewModel.toggleShowingTaskEditView()
                 }
         }
+        // Configures and attaches pop-up alerts for removing or recovering tasks.
         .popView(isPresented: $viewModel.showingTaskRemoveAlert, onDismiss: {}) {
             removeAlert
         }
@@ -66,6 +83,9 @@ struct MainView: View {
         }
     }
     
+    // MARK: - Main Content Layout
+    
+    /// Displays the navigation bar and task form inside the main screen.
     private var content: some View {
         VStack(spacing: 0) {
             MainCustomNavBar(title: Texts.MainPage.title)
@@ -74,6 +94,7 @@ struct MainView: View {
         }
     }
     
+    /// Placeholder text shown when no tasks are available under current filters.
     private var placeholderLabel: some View {
         Text(Texts.MainPage.placeholder)
             .foregroundStyle(Color.LabelColors.labelSecondary)
@@ -81,6 +102,7 @@ struct MainView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
     
+    /// Displays the task list organized into segments and sections.
     private var taskForm: some View {
         Form {
             TipView(overviewTip)
@@ -90,10 +112,10 @@ struct MainView: View {
                 .listRowInsets(EdgeInsets())
             
             ForEach(filteredSegmentedTasks, id: \.0) { segment, tasks in
-                    segmentView(segment: segment, tasks: tasks)
-                }
-                .listRowSeparator(.hidden)
-                .listSectionSpacing(0)
+                segmentView(segment: segment, tasks: tasks)
+            }
+            .listRowSeparator(.hidden)
+            .listSectionSpacing(0)
             
             Color.clear
                 .frame(height: 50)
@@ -104,9 +126,15 @@ struct MainView: View {
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
         .scrollDisabled(filteredSegmentedTasks.isEmpty)
-//        .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
+        //        .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
     }
+}
+
+// MARK: - Segment Views
+
+extension MainView {
     
+    /// Displays a section for a specific segment (date) containing multiple tasks.
     @ViewBuilder
     private func segmentView(segment: Date?, tasks: [TaskEntity]) -> some View {
         Section(header: segmentHeader(name: segment)) {
@@ -119,6 +147,7 @@ struct MainView: View {
         }
     }
     
+    /// Displays a header for a segment, showing the date in a formatted style.
     @ViewBuilder
     private func segmentHeader(name: Date?) -> some View {
         Text(name?.longDayMonthWeekday ?? String())
@@ -126,11 +155,17 @@ struct MainView: View {
             .foregroundStyle(Color.LabelColors.labelDetails)
             .textCase(.none)
     }
+}
+
+// MARK: - Floating Buttons
+
+extension MainView {
     
+    /// Floating buttons displayed in the bottom right corner: plus button or remove all tasks button depending on context.
     private var floatingButtons: some View {
         VStack(alignment: .trailing, spacing: 16) {
             Spacer()
-//            scrollToTopButton
+            // scrollToTopButton (Placeholder for future scroll-to-top button)
             if viewModel.selectedFilter != .deleted {
                 plusButton
             } else if !filteredSegmentedTasks.isEmpty {
@@ -141,28 +176,7 @@ struct MainView: View {
         .ignoresSafeArea(.keyboard)
     }
     
-    private var scrollToTopButton: some View {
-        Button {
-            // Scroll to Top Action
-        } label: {
-            Image.TaskManagement.scrollToTop
-                .resizable()
-                .scaledToFit()
-                .frame(width: 32, height: 32)
-        }
-    }
-    
-    private var scrollToBottomButton: some View {
-        Button {
-            
-        } label: {
-            Image.TaskManagement.scrollToBottom
-                .resizable()
-                .scaledToFit()
-                .frame(width: 32, height: 32)
-        }
-    }
-    
+    /// Plus button to create a new task.
     private var plusButton: some View {
         Button {
             viewModel.toggleShowingCreateView()
@@ -181,6 +195,7 @@ struct MainView: View {
         .glow(available: viewModel.addTaskButtonGlow)
     }
     
+    /// Button to remove all deleted tasks.
     private var removeAllTasksButton: some View {
         Button {
             viewModel.toggleShowingTaskRemoveAlert()
@@ -196,7 +211,13 @@ struct MainView: View {
         .transition(.blurReplace)
         .padding(.bottom)
     }
+}
+
+// MARK: - Alerts
+
+extension MainView {
     
+    /// Confirmation alert to delete all tasks from the deleted section.
     private var removeAlert: some View {
         CustomAlertView(
             title: Texts.MainPage.Filter.RemoveFilter.alertTitle,
@@ -214,6 +235,7 @@ struct MainView: View {
             secondaryAction: viewModel.toggleShowingTaskRemoveAlert)
     }
     
+    /// Alert allowing users to recover a deleted task.
     private var editAlert: some View {
         CustomAlertView(
             title: Texts.MainPage.Filter.RemoveFilter.recoverAlertTitle,
@@ -231,7 +253,11 @@ struct MainView: View {
     }
 }
 
+// MARK: - Filtering and Sorting Tasks
+
 extension MainView {
+    
+    /// Segments and sorts tasks by their associated dates, applying pinning and deadlines.
     private var segmentedAndSortedTasksArray: [(Date?, [TaskEntity])] {
         let calendar = Calendar.current
         var grouped: [Date: [TaskEntity]] = [:]
@@ -255,8 +281,8 @@ extension MainView {
         .sorted { ($0.0 ?? Date.distantPast) < ($1.0 ?? Date.distantPast) }
     }
     
+    /// Applies filters based on search, folder selection, importance, and task status.
     private var filteredSegmentedTasks: [(Date?, [TaskEntity])] {
-        let now = Date()
         return segmentedAndSortedTasksArray.compactMap { (date, tasks) in
             let filteredTasks = tasks.filter { task in
                 if !viewModel.searchText.isEmpty {
@@ -268,77 +294,16 @@ extension MainView {
                     }
                 }
                 
-                switch viewModel.selectedFolder {
-                case .all:
-                    break
-                case .reminders:
-                    if task.folder != Folder.reminders.rawValue {
-                        return false
-                    }
-                case .tasks:
-                    if task.folder != Folder.tasks.rawValue {
-                        return false
-                    }
-                case .lists:
-                    if task.folder != Folder.lists.rawValue {
-                        return false
-                    }
-                case .other:
-                    if task.folder != Folder.other.rawValue {
-                        return false
-                    }
-                }
-                
+                guard viewModel.taskMatchesFolder(for: task) else { return false }
                 if viewModel.importance && !task.important { return false }
-                switch viewModel.selectedFilter {
-                    
-                case .active:
-                    guard !task.removed else { return false }
-                    guard task.completed != 2 else { return false }
-                    if let target = task.target, task.hasTargetTime, target < now {
-                        return false
-                    }
-                    if let count = task.notifications?.count, count > 0,
-                       let target = task.target, target < now {
-                        return false
-                    }
-                    return true
-                    
-                case .outdated:
-                    guard !task.removed else { return false }
-                    if task.completed == 1,
-                       let target = task.target, task.hasTargetTime, target < now {
-                        return true
-                    }
-                    return false
-                    
-                case .completed:
-                    guard !task.removed else { return false }
-                    return task.completed == 2
-                    
-                case .archived:
-                    guard !task.removed else { return false }
-                    guard task.completed != 2 else { return false }
-                    
-                    if let target = task.target, task.hasTargetTime, target < now {
-                        return task.completed == 0
-                    }
-                    if let count = task.notifications?.count, count > 0,
-                       let target = task.target, target < now {
-                        return true
-                    }
-                    return false
-                    
-                case .unsorted:
-                    return !task.removed
-                case .deleted:
-                    return task.removed
-                }
+                return viewModel.taskMatchesFilter(for: task)
             }
             return filteredTasks.isEmpty ? nil : (date, filteredTasks)
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     MainView()

@@ -338,7 +338,7 @@ extension TaskService {
                     if let error = error {
                         logger.error("Error scheduling notification with id \(identifier): \(error.localizedDescription)")
                     } else {
-                        logger.info("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error")")
+                        logger.info("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error").")
                     }
                 }
             }
@@ -389,9 +389,9 @@ extension TaskService {
                             group.enter()
                             notificationCenter.add(request) { error in
                                 if let error = error {
-                                    logger.error("Error scheduling notification with id \(identifier): \(error.localizedDescription)")
+                                    logger.error("Error scheduling notification with id \(identifier): \(error.localizedDescription).")
                                 } else {
-                                    logger.info("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error")")
+                                    logger.info("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error").")
                                 }
                                 group.leave()
                             }
@@ -400,12 +400,12 @@ extension TaskService {
                 }
                 
                 group.notify(queue: .main) {
-                    logger.info("Notifications successfully restored for all tasks")
+                    logger.info("Notifications successfully restored for all tasks.")
                     completion?(true)
                 }
             }
         } catch {
-            logger.error("Error fetching tasks for restoring notifications: \(error.localizedDescription)")
+            logger.error("Error fetching tasks for restoring notifications: \(error.localizedDescription).")
             completion?(false)
         }
     }

@@ -24,11 +24,11 @@ extension OnboardingViewModel: ASAuthorizationControllerDelegate, ASAuthorizatio
                 withPresenting: rootViewController
             ) { signInResult, error in
                 guard let signInResult else {
-                    logger.error("Google sign-in failed: \(error?.localizedDescription ?? "No error description")")
+                    logger.error("Google sign-in failed: \(error?.localizedDescription ?? "No error description").")
                     return
                 }
-                logger.info("UserID: \(signInResult.user.userID ?? "error userID", privacy: .sensitive)")
-                logger.info("Email: \(signInResult.user.profile?.email ?? "error email", privacy: .sensitive)")
+                logger.info("UserID: \(signInResult.user.userID ?? "error userID", privacy: .sensitive).")
+                logger.info("Email: \(signInResult.user.profile?.email ?? "error email", privacy: .sensitive).")
             }
         }
     }
@@ -50,14 +50,14 @@ extension OnboardingViewModel: ASAuthorizationControllerDelegate, ASAuthorizatio
     internal func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             let token = appleIDCredential.authorizationCode
-            logger.info("Token: \(token?.base64EncodedString() ?? "error token", privacy: .sensitive)")
+            logger.info("Token: \(token?.base64EncodedString() ?? "error token", privacy: .sensitive).")
             transferToMainPage()
         }
     }
 
     /// Handles Apple Sign-In authorization failure.
     internal func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        logger.error("Apple authorization failed with error: \(error.localizedDescription)")
+        logger.error("Apple authorization failed with error: \(error.localizedDescription).")
     }
     
     /// Provides the window (presentation anchor) where the Apple authorization UI should be displayed.

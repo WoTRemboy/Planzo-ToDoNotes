@@ -7,9 +7,12 @@
 
 import SwiftUI
 
+/// A horizontally scrolling filter bar allowing users to select task filters (e.g., active, completed, deleted).
 struct FilterScrollView: View {
     
     @EnvironmentObject private var viewModel: MainViewModel
+    
+    // MARK: - Body
     
     internal var body: some View {
         ScrollViewReader { proxy in
@@ -20,6 +23,9 @@ struct FilterScrollView: View {
         .scrollIndicators(.hidden)
     }
     
+    // MARK: - Scroll Content
+    
+    /// Displays all filter cells inside a horizontally scrolling HStack.
     @ViewBuilder
     private func scrollTabsContent(proxy: ScrollViewProxy) -> some View {
         HStack(spacing: 8) {
@@ -41,6 +47,8 @@ struct FilterScrollView: View {
         .padding(.horizontal)
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     FilterScrollView()

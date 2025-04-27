@@ -32,7 +32,7 @@ final class CoreDataProvider {
                 fatalError("Error initializing Core Data: \(error), \(error.userInfo)")
             } else {
                 // Logs a successful load
-                logger.info("Successfully loaded core data")
+                logger.info("Successfully loaded core data.")
             }
         }
     }
