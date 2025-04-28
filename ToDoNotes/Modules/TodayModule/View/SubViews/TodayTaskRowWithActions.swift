@@ -57,7 +57,7 @@ struct TodayTaskRowWithSwipeActions: View {
     private func handleTaskSelection() {
         viewModel.selectedTask = entity
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-        logger.info("Tapped on a task to edit: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+        logger.debug("Tapped on a task to edit: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
     }
     
     /// Swipe actions on the leading side: important and pin.
@@ -75,7 +75,7 @@ struct TodayTaskRowWithSwipeActions: View {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     do {
                         try TaskService.toggleRemoved(for: entity)
-                        logger.info("Task removed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                        logger.debug("Task removed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
                     } catch {
                         logger.error("Task removal failed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
                     }
@@ -97,7 +97,7 @@ struct TodayTaskRowWithSwipeActions: View {
             withAnimation(.easeInOut(duration: 0.2)) {
                 do {
                     try TaskService.toggleImportant(for: entity)
-                    logger.info("Toggled important status to \(entity.important) for \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                    logger.debug("Toggled important status to \(entity.important) for \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
                 } catch {
                     logger.error("Toggling important status failed for \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
                 }
@@ -121,7 +121,7 @@ struct TodayTaskRowWithSwipeActions: View {
             withAnimation(.easeInOut(duration: 0.2)) {
                 do {
                     try TaskService.togglePinned(for: entity)
-                    logger.info("Toggled pinned status to \(entity.pinned) for \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                    logger.debug("Toggled pinned status to \(entity.pinned) for \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
                 } catch {
                     logger.error("Toggling pinned status failed for \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
                 }

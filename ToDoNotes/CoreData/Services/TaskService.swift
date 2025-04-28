@@ -173,7 +173,7 @@ final class TaskService {
             }
             viewContext.reset()
             try save()
-            logger.info("Removed tasks deleted successfully.")
+            logger.debug("Removed tasks deleted successfully.")
         } catch {
             logger.error("Error deleting removed tasks: \(error.localizedDescription)")
         }
@@ -197,7 +197,7 @@ final class TaskService {
                 NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [viewContext])
             }
             viewContext.reset()
-            logger.info("All tasks deleted successfully.")
+            logger.debug("All tasks deleted successfully.")
             completion?(true)
         } catch {
             logger.error("Batch delete error: \(error.localizedDescription)")
@@ -338,7 +338,7 @@ extension TaskService {
                     if let error = error {
                         logger.error("Error scheduling notification with id \(identifier): \(error.localizedDescription)")
                     } else {
-                        logger.info("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error").")
+                        logger.debug("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error").")
                     }
                 }
             }
@@ -391,7 +391,7 @@ extension TaskService {
                                 if let error = error {
                                     logger.error("Error scheduling notification with id \(identifier): \(error.localizedDescription).")
                                 } else {
-                                    logger.info("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error").")
+                                    logger.debug("Notification successfully setup for \(String(describing: task.name)) at \(targetDate) with type \(entity.type ?? "notification type error").")
                                 }
                                 group.leave()
                             }
@@ -400,7 +400,7 @@ extension TaskService {
                 }
                 
                 group.notify(queue: .main) {
-                    logger.info("Notifications successfully restored for all tasks.")
+                    logger.debug("Notifications successfully restored for all tasks.")
                     completion?(true)
                 }
             }

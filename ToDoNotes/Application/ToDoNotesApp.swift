@@ -88,14 +88,14 @@ extension ToDoNotesApp {
                 if self.notificationsEnabled == .prohibited {
                     self.notificationsEnabled = .allowed
                 }
-                logger.info("Notifications are allowed.")
+                logger.debug("Notifications are allowed.")
             } else if let error {
                 // An error occurred; prohibit notifications
                 self.notificationsEnabled = .prohibited
                 logger.error("\(error.localizedDescription)")
             } else {
                 // User declined notification permissions
-                logger.info("Notifications are prohibited.")
+                logger.debug("Notifications are prohibited.")
             }
         }
     }

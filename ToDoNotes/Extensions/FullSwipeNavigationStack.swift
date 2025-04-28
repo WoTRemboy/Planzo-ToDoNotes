@@ -73,7 +73,7 @@ fileprivate struct AttachGestureView: UIViewRepresentable {
                         logger.warning("Navigation Back Gesture already attached")
                     } else {
                         navigationController.addFullSwipeGesture(gesture)
-                        logger.debug("Navigation Back Gesture attached")
+                        logger.debug("Navigation Back Gesture attached.")
                     }
                 }
             }

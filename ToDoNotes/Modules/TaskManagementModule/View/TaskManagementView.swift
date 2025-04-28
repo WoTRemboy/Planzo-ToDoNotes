@@ -411,7 +411,7 @@ extension TaskManagementView {
                     removed: viewModel.removed,
                     notifications: viewModel.notificationsLocal,
                     checklist: viewModel.checklistLocal)
-                logger.info("Task updated successfully: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown").")
+                logger.debug("Task updated successfully: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown").")
             } catch {
                 logger.error("Task update failed: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown"). Error: \(error.localizedDescription)")
             }
@@ -435,7 +435,7 @@ extension TaskManagementView {
             
             viewModel.setupUserNotifications(remove: nil)
             viewModel.disableButtonGlow()
-            logger.info("Task added: \(viewModel.nameText)")
+            logger.debug("Task added: \(viewModel.nameText)")
         } catch {
             logger.error("Task add Error: \(viewModel.nameText) \(error.localizedDescription)")
         }
@@ -450,7 +450,7 @@ extension TaskManagementView {
             }
             Toast.shared.present(
                 title: Texts.Toasts.duplicated)
-            logger.info("Task duplicated: \(entity?.name ?? "unnamed") \(entity?.id?.uuidString ?? "unknown")")
+            logger.debug("Task duplicated: \(entity?.name ?? "unnamed") \(entity?.id?.uuidString ?? "unknown")")
         } catch {
             Toast.shared.present(
                 title: Texts.Toasts.duplicatedError)

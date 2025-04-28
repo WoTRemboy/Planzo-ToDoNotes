@@ -134,7 +134,7 @@ struct TaskListRow: View {
                         Toast.shared.present(
                             title: Texts.Toasts.completedOn)
                     }
-                    logger.info("Task checkbox successfully toggled to \(entity.completed) for \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown")")
+                    logger.debug("Task checkbox successfully toggled to \(entity.completed) for \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown")")
                 } catch {
                     logger.error("Task checkbox toggle error: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown") \(error.localizedDescription)")
                     Toast.shared.present(
@@ -280,7 +280,7 @@ struct TaskListRow: View {
                     try TaskService.toggleRemoved(for: entity)
                     Toast.shared.present(
                         title: Texts.Toasts.removed)
-                    logger.info("Task removed: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown").")
+                    logger.debug("Task removed: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown").")
                 } catch {
                     logger.error("Task \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown") could not be removed with error: \(error.localizedDescription).")
                 }
