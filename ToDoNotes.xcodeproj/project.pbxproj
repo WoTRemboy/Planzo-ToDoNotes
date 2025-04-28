@@ -304,6 +304,8 @@
 		632D0DD82D37E0990071684D /* Modifiers */ = {
 			isa = PBXGroup;
 			children = (
+				635DBBB42D6A1E2C0050476C /* NavigationTransitionModifier.swift */,
+				6378A7522D3EB6A200C1B858 /* ImmediateKeyboardModifier.swift */,
 				63E870E62D54F44500699091 /* ViewGlow.swift */,
 				632D0DD92D37E0A90071684D /* HeightReader.swift */,
 			);
@@ -483,15 +485,6 @@
 			path = PreviewData;
 			sourceTree = "<group>";
 		};
-		6378A7512D3EB69D00C1B858 /* Modifiers */ = {
-			isa = PBXGroup;
-			children = (
-				635DBBB42D6A1E2C0050476C /* NavigationTransitionModifier.swift */,
-				6378A7522D3EB6A200C1B858 /* ImmediateKeyboardModifier.swift */,
-			);
-			path = Modifiers;
-			sourceTree = "<group>";
-		};
 		637B9F442D29598F0010F13B /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -595,7 +588,6 @@
 				632D0DD52D37D6880071684D /* SupportViews */,
 				63FC3DF42D92D4EB000D6AFA /* Preview */,
 				63A5B6652D4939DB00B0E408 /* DateSelector */,
-				6378A7512D3EB69D00C1B858 /* Modifiers */,
 			);
 			path = View;
 			sourceTree = "<group>";

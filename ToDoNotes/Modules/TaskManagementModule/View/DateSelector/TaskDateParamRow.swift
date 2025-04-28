@@ -7,18 +7,33 @@
 
 import SwiftUI
 
+/// A view that displays a single row of a task date parameter, such as time, reminder, repeat, or end repeating settings.
 struct TaskDateParamRow: View {
     
+    // MARK: - Properties
+    
+    /// ViewModel controlling the current task management parameters.
     @ObservedObject private var viewModel: TaskManagementViewModel
     
+    /// Type of the parameter represented (time, notifications, repeating, endRepeating).
     private let type: TaskDateParam
+    /// Flag indicating whether this is the last row.
     private let isLast: Bool
     
+    // MARK: - Initialization
+    
+    /// Initializes a new TaskDateParamRow.
+    /// - Parameters:
+    ///   - type: The parameter type for this row.
+    ///   - isLast: Whether this is the last element.
+    ///   - viewModel: The associated TaskManagementViewModel.
     init(type: TaskDateParam, isLast: Bool, viewModel: TaskManagementViewModel) {
         self.type = type
         self.isLast = isLast
         self.viewModel = viewModel
     }
+    
+    // MARK: - Body
     
     internal var body: some View {
         HStack(spacing: 0) {
@@ -48,6 +63,9 @@ struct TaskDateParamRow: View {
         )
     }
     
+    // MARK: - Subviews
+    
+    /// Icon representing the parameter type.
     private var paramIcon: Image {
         switch type {
         case .time:
@@ -65,6 +83,7 @@ struct TaskDateParamRow: View {
         }
     }
     
+    /// Text label for the parameter type.
     private var titleLabel: Text {
         switch type {
         case .time:
@@ -78,6 +97,7 @@ struct TaskDateParamRow: View {
         }
     }
     
+    /// Selector view for modifying the parameter value.
     private var selector: some View {
         HStack {
             switch type {
@@ -93,6 +113,9 @@ struct TaskDateParamRow: View {
         }
     }
     
+    // MARK: - Time Selector
+    
+    /// Time selection view using DatePicker.
     private var timeSelector: some View {
         menuLabel
             .overlay {
@@ -113,6 +136,9 @@ struct TaskDateParamRow: View {
             .animation(.easeInOut(duration: 0.2), value: viewModel.selectedTime)
     }
     
+    // MARK: - Reminder Selector
+    
+    /// Reminder selection menu.
     private var reminderSelector: some View {
         menuLabel
             .overlay {
@@ -127,15 +153,7 @@ struct TaskDateParamRow: View {
                             reminderMenuContent(type: notificationType)
                         }
                     }
-                    // "None" reminder button
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            viewModel.toggleNotificationSelection(
-                                for: TaskNotification.none)
-                        }
-                    } label: {
-                        reminderMenuContent(type: TaskNotification.none)
-                    }
+                    reminderNoneButton
                 } label: {
                     Rectangle()
                         .frame(maxWidth: .infinity)
@@ -152,6 +170,19 @@ struct TaskDateParamRow: View {
             }
     }
     
+    /// "None" reminder button
+    private var reminderNoneButton: some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.toggleNotificationSelection(
+                    for: TaskNotification.none)
+            }
+        } label: {
+            reminderMenuContent(type: TaskNotification.none)
+        }
+    }
+    
+    /// Content for each reminder menu option.
     private func reminderMenuContent(type: TaskNotification) -> some View {
         return HStack {
             Text(type.selectorName)
@@ -166,6 +197,9 @@ struct TaskDateParamRow: View {
         }
     }
     
+    // MARK: - Repeating Selector
+    
+    /// Repeating selection menu.
     private var repeatingSelector: some View {
         menuLabel
             .overlay {
@@ -200,6 +234,7 @@ struct TaskDateParamRow: View {
             }
     }
     
+    /// Content for each repeating menu option.
     private func repeatingMenuContent(type: TaskRepeating) -> some View {
         return HStack {
             Text(type.name)
@@ -211,6 +246,9 @@ struct TaskDateParamRow: View {
         }
     }
     
+    // MARK: - End Repeating Selector
+    
+    /// End repeating selection.
     private var endRepeatingSelector: some View {
         menuLabel
             .overlay {
@@ -230,6 +268,7 @@ struct TaskDateParamRow: View {
             }
     }
     
+    /// Content for end repeating menu.
     private func endRepeatingMenuContent(type: TaskEndRepeating) -> some View {
         return HStack {
             Text(type.name)
@@ -238,6 +277,9 @@ struct TaskDateParamRow: View {
         }
     }
     
+    // MARK: - Menu Content
+    
+    /// General menu label with dynamic value and remove button.
     private var menuLabel: some View {
         HStack(spacing: 0) {
             Text(viewModel.menuLabel(for: type))
@@ -254,6 +296,7 @@ struct TaskDateParamRow: View {
         .transition(.slide)
     }
     
+    /// Remove button or menu icon depending on the current parameter state.
     private var removeButton: some View {
         HStack {
             if !viewModel.showingMenuIcon(for: type) {
@@ -278,6 +321,8 @@ struct TaskDateParamRow: View {
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     TaskDateParamRow(type: .notifications,

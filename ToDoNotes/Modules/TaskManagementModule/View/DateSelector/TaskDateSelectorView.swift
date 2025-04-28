@@ -7,10 +7,18 @@
 
 import SwiftUI
 
+/// A view that allows the user to select a date and optionally enable notifications for a task.
 struct TaskDateSelectorView: View {
     
+    // MARK: - Properties
+    
+    /// The view model controlling the task data and date picker state.
     @ObservedObject private var viewModel: TaskManagementViewModel
     
+    // MARK: - Initialization
+    
+    /// Initializes the view with the provided TaskManagementViewModel.
+    /// - Parameter viewModel: An instance of `TaskManagementViewModel` to bind UI actions to.
     init(viewModel: TaskManagementViewModel) {
         self.viewModel = viewModel
     }
@@ -33,14 +41,18 @@ struct TaskDateSelectorView: View {
         )
     }
     
-    // MARK: - Title
+    // MARK: - Title Section
     
+    /// The title label displayed at the top of the modal.
     private var title: some View {
         Text(Texts.TaskManagement.DatePicker.title)
             .font(.system(size: 17, weight: .medium))
             .padding(.top)
     }
     
+    // MARK: - Selection Section
+    
+    /// Block containing the DatePicker and Notification Toggle.
     private var selectionBlock: some View {
         VStack(spacing: 16) {
             datePicker
@@ -49,18 +61,27 @@ struct TaskDateSelectorView: View {
         .padding(.vertical)
     }
     
+    /// A DatePicker allowing the user to pick a target date.
     private var datePicker: some View {
-        DatePicker("\(Texts.TaskManagement.DatePicker.target):", selection: $viewModel.targetDate)
-            .padding(.horizontal)
+        DatePicker(
+            "\(Texts.TaskManagement.DatePicker.target):",
+            selection: $viewModel.targetDate
+        )
+        .padding(.horizontal)
     }
     
+    /// A toggle allowing the user to enable or disable notifications for the selected date.
     private var notificationToggle: some View {
-        Toggle("\(Texts.TaskManagement.DatePicker.Reminder.title):", isOn: $viewModel.notificationsCheck)
-            .padding(.horizontal)
+        Toggle(
+            "\(Texts.TaskManagement.DatePicker.Reminder.title):",
+            isOn: $viewModel.notificationsCheck
+        )
+        .padding(.horizontal)
     }
     
-    // MARK: - Done Button
+    // MARK: - Buttons Section
     
+    /// Horizontal stack containing Cancel and Done buttons.
     private var buttons: some View {
         HStack(spacing: 16) {
             cancelButton
@@ -68,6 +89,7 @@ struct TaskDateSelectorView: View {
         }
     }
     
+    /// A button that confirms and saves the selected date.
     private var doneButton: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.2)) {
@@ -80,16 +102,11 @@ struct TaskDateSelectorView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
         .frame(height: 40)
-        .frame(maxWidth: .infinity)
-        .minimumScaleFactor(0.4)
-        
-        .foregroundStyle(Color.white)
-        .tint(Color.LabelColors.labelPrimary)
-        .buttonStyle(.bordered)
-        
+        .buttonStyleModifier()
         .padding([.trailing, .bottom])
     }
     
+    /// A button that cancels the date selection.
     private var cancelButton: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.2)) {
@@ -102,16 +119,25 @@ struct TaskDateSelectorView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
         .frame(height: 40)
-        .frame(maxWidth: .infinity)
-        .minimumScaleFactor(0.4)
-        
-        .foregroundStyle(Color.white)
-        .tint(Color.LabelColors.labelPrimary)
-        .buttonStyle(.bordered)
-        
+        .buttonStyleModifier()
         .padding([.leading, .bottom])
     }
 }
+
+// MARK: - Button Style Modifier
+
+private extension View {
+    
+    /// A reusable style modifier for the buttons in the TaskDateSelectorView.
+    func buttonStyleModifier() -> some View {
+        self
+            .minimumScaleFactor(0.4)
+            .foregroundStyle(Color.white)
+            .tint(Color.LabelColors.labelPrimary)
+            .buttonStyle(.bordered)
+    }
+}
+
 // MARK: - Preview
 
 #Preview {

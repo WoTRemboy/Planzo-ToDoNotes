@@ -7,26 +7,39 @@
 
 import SwiftUI
 
+/// A view responsible for displaying the Share Task screen,
+/// allowing users to configure sharing parameters and generate a shareable link.
 struct TaskManagementShareView: View {
+    
+    // MARK: - Properties
         
+    /// Indicates whether the task should be viewable via the shared link.
     @State private var viewParam: Bool = false
+    /// Indicates whether the task should be editable via the shared link.
     @State private var editParam: Bool = false
+    
+    // MARK: - Body
     
     internal var body: some View {
         ZStack {
+            // Background layer
+            Rectangle()
+                .foregroundStyle(Color.BackColors.backSheet)
+                .ignoresSafeArea()
+            
+            // Main content
             VStack {
                 navBar
                 paramsForm
                 generateLinkButton
             }
             .zIndex(1)
-            
-            Rectangle()
-                .foregroundStyle(Color.BackColors.backSheet)
-                .ignoresSafeArea()
         }
     }
     
+    // MARK: - Navigation Bar
+    
+    /// Top navigation bar with title and more button.
     private var navBar: some View {
         HStack {
             Text(Texts.TaskManagement.ShareView.title)
@@ -45,6 +58,9 @@ struct TaskManagementShareView: View {
         .padding(.horizontal)
     }
     
+    // MARK: - Share Parameters Form
+    
+    /// Form containing toggles to configure sharing options (view/edit).
     private var paramsForm: some View {
         VStack(spacing: 3) {
             viewToggle
@@ -53,6 +69,7 @@ struct TaskManagementShareView: View {
         .padding([.top, .horizontal])
     }
     
+    /// A reusable toggle row for sharing options.
     private var viewToggle: some View {
         ZStack {
             HStack {
@@ -70,6 +87,7 @@ struct TaskManagementShareView: View {
         }
     }
     
+    /// A reusable toggle row for edit options.
     private var editToggle: some View {
         ZStack {
             HStack {
@@ -87,6 +105,9 @@ struct TaskManagementShareView: View {
         }
     }
     
+    // MARK: - Generate Link Button
+    
+    /// Button to trigger the generation of a shareable link.
     private var generateLinkButton: some View {
         Button {
             // Action for generate link button
@@ -112,6 +133,8 @@ struct TaskManagementShareView: View {
         .padding(.top, 32)
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     TaskManagementShareView()

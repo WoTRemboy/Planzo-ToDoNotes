@@ -42,6 +42,7 @@ struct CalendarTaskRowWithActions: View {
         Button {
             // Selecting the task for editing.
             viewModel.selectedTask = entity
+            logger.info("Tapped on a task to edit: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
         } label: {
             TaskListRow(entity: entity, isLast: isLast)
         }
