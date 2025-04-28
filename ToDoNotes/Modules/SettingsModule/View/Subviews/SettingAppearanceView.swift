@@ -7,18 +7,26 @@
 
 import SwiftUI
 
+/// A view that allows the user to select and apply an appearance theme (Light, Dark, or System Default).
 struct SettingAppearanceView: View {
     
+    // MARK: - Properties
+    
+    /// The current color scheme of the app.
     @Environment(\.colorScheme) private var scheme
+    /// Access to the settings view model.
     @EnvironmentObject private var viewModel: SettingsViewModel
     
+    /// The currently selected theme during selection (local state).
     @State private var selectedTheme: Theme = .systemDefault
+    
+    // MARK: - Body
         
     internal var body: some View {
         VStack(spacing: 20) {
             title
             themeSelector
-            buttons
+            actionButtons
         }
         .frame(width: 320)
         
@@ -35,12 +43,16 @@ struct SettingAppearanceView: View {
         }
     }
     
+    // MARK: - Components
+    
+    /// Title for the appearance selection sheet.
     private var title: some View {
         Text(Texts.Settings.Appearance.title)
             .font(.system(size: 17, weight: .semibold))
             .padding(.top, 12)
     }
     
+    /// List of available themes for selection.
     private var themeSelector: some View {
         VStack(spacing: 16) {
             ForEach(Theme.allCases, id: \.self) { theme in
@@ -57,6 +69,10 @@ struct SettingAppearanceView: View {
         }
     }
     
+    /// A single row in the theme selector.
+    /// - Parameters:
+    ///   - title: The name of the theme.
+    ///   - isSelected: Whether the current theme is selected.
     @ViewBuilder
     private func selectorRow(title: String, isSelected: Bool) -> some View {
         HStack {
@@ -73,7 +89,10 @@ struct SettingAppearanceView: View {
         .padding(.horizontal, 16)
     }
     
-    private var buttons: some View {
+    // MARK: - Action Buttons
+    
+    /// Buttons to accept or cancel the theme selection.
+    private var actionButtons: some View {
         HStack(spacing: 4) {
             cancelButton
             acceptButton
@@ -81,25 +100,7 @@ struct SettingAppearanceView: View {
         .padding([.horizontal, .bottom], 6)
     }
     
-    private var acceptButton: some View {
-        Button {
-            viewModel.toggleShowingAppearance()
-            viewModel.changeTheme(theme: selectedTheme)
-        } label: {
-            ZStack {
-                Color.LabelColors.labelPrimary
-                
-                Text(Texts.Settings.Appearance.accept)
-                    .font(.system(size: 17, weight: .regular))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                    .foregroundColor(Color.LabelColors.labelReversed)
-            }
-            .clipShape(.rect(cornerRadius: 10))
-        }
-        .frame(height: 50)
-        .frame(maxWidth: .infinity)
-    }
-    
+    /// Button to cancel the selection and dismiss the sheet.
     private var cancelButton: some View {
         Button {
             viewModel.toggleShowingAppearance()
@@ -121,7 +122,29 @@ struct SettingAppearanceView: View {
         .frame(height: 50)
         .frame(maxWidth: .infinity)
     }
+    
+    /// Button to confirm the selection and apply the selected theme.
+    private var acceptButton: some View {
+        Button {
+            viewModel.toggleShowingAppearance()
+            viewModel.changeTheme(theme: selectedTheme)
+        } label: {
+            ZStack {
+                Color.LabelColors.labelPrimary
+                
+                Text(Texts.Settings.Appearance.accept)
+                    .font(.system(size: 17, weight: .regular))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .foregroundColor(Color.LabelColors.labelReversed)
+            }
+            .clipShape(.rect(cornerRadius: 10))
+        }
+        .frame(height: 50)
+        .frame(maxWidth: .infinity)
+    }
 }
+
+// MARK: - Preview
 
 #Preview {
     SettingAppearanceView()

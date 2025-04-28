@@ -8,15 +8,24 @@
 import SwiftUI
 import TipKit
 
+/// The main view for displaying a custom calendar and tasks for a selected day.
 struct CalendarView: View {
     
+    // MARK: - Properties
+    
+    /// Fetches all TaskEntity objects stored in Core Data.
     @FetchRequest(entity: TaskEntity.entity(), sortDescriptors: [])
     private var tasksResults: FetchedResults<TaskEntity>
     
+    /// ViewModel managing the calendar's logic and state.
     @EnvironmentObject private var viewModel: CalendarViewModel
+    /// Namespace for shared matched geometry effects between views.
     @Namespace private var animation
     
+    /// Tip shown at the top of the task list to guide users.
     private let overviewTip = CalendarPageOverview()
+    
+    // MARK: - Body
     
     internal var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -24,10 +33,12 @@ struct CalendarView: View {
             plusButton
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        
+        // Calendar month selector modal
         .popView(isPresented: $viewModel.showingCalendarSelector, onDismiss: {}) {
             CalendarMonthSelector()
         }
-        
+        // Task creation popup sheet
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
@@ -38,6 +49,7 @@ struct CalendarView: View {
                 .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
                 .presentationDragIndicator(.visible)
         }
+        // Task creation full screen
         .fullScreenCover(isPresented: $viewModel.showingTaskCreateViewFullscreen) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
@@ -46,6 +58,7 @@ struct CalendarView: View {
                     viewModel.toggleShowingTaskCreateView()
                 }
         }
+        // Task editing full screen
         .fullScreenCover(item: $viewModel.selectedTask) { task in
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
@@ -56,6 +69,9 @@ struct CalendarView: View {
         }
     }
     
+    // MARK: - Main Content
+    
+    /// The main vertical stack containing navigation bar, calendar, separator, and task list or placeholder.
     private var content: some View {
         VStack(spacing: 0) {
             CalendarNavBar(date: Texts.CalendarPage.today,
@@ -80,6 +96,9 @@ struct CalendarView: View {
                    value: viewModel.selectedDate)
     }
     
+    // MARK: - Subviews
+    
+    /// A thin separator between the calendar and the task list for better visual structure.
     private var separator: some View {
         Rectangle()
             .foregroundStyle(Color.clear)
@@ -87,6 +106,7 @@ struct CalendarView: View {
             .padding([.top, .horizontal])
     }
     
+    /// Displays a list of tasks grouped into pinned, active, and completed sections.
     private var taskForm: some View {
         Form {
             overviewTipView
@@ -109,7 +129,7 @@ struct CalendarView: View {
         .scrollContentBackground(.hidden)
     }
     
-    @ViewBuilder
+    /// Builds a section for a specific category of tasks (pinned, active, completed).
     private func taskSection(for section: TaskSection) -> some View {
         Section {
             let tasks = dayTasks[section] ?? []
@@ -132,6 +152,7 @@ struct CalendarView: View {
         }
     }
     
+    /// A placeholder screen displayed when no tasks are scheduled for the selected date.
     private var placeholder: some View {
         ScrollView {
             overviewTipView
@@ -145,12 +166,14 @@ struct CalendarView: View {
         .scrollIndicators(.hidden)
     }
     
+    /// Tip view providing contextual help for the user.
     private var overviewTipView: some View {
         TipView(overviewTip)
             .tipBackground(Color.FolderColors.reminders
                 .opacity(0.3))
     }
     
+    /// A floating plus button to create new tasks.
     private var plusButton: some View {
         VStack {
             Spacer()
@@ -172,11 +195,17 @@ struct CalendarView: View {
     }
 }
 
+// MARK: - Helpers
+
 extension CalendarView {
+    
+    /// Groups tasks by type (pinned, active, completed) for the currently selected day.
     private var dayTasks: [TaskSection: [TaskEntity]] {
         let calendar = Calendar.current
         let day = calendar.startOfDay(for: viewModel.selectedDate)
-        let filteredTasks = tasksResults.filter { task in
+        
+        let filteredTasks = tasksResults.lazy
+            .filter { task in
             let taskDate = calendar.startOfDay(for: task.target ?? task.created ?? Date.distantPast)
             return taskDate == day && !task.removed
         }
@@ -186,6 +215,7 @@ extension CalendarView {
             return d1 < d2
         }
         var result: [TaskSection: [TaskEntity]] = [:]
+        
         let pinned = sortedTasks.filter { $0.pinned }
         let active = sortedTasks.filter { !$0.pinned && $0.completed != 2 }
         let completed = sortedTasks.filter { !$0.pinned && $0.completed == 2 }
@@ -196,6 +226,7 @@ extension CalendarView {
         return result
     }
     
+    /// Creates a dictionary mapping dates to the number of tasks scheduled for each date.
     private var datesWithTasks: [Date: Int] {
         var groupedDates: [Date: Int] = [:]
         
@@ -208,6 +239,8 @@ extension CalendarView {
         return groupedDates
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     CalendarView()

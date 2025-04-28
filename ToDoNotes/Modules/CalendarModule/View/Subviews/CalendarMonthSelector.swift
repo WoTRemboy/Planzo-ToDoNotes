@@ -7,9 +7,13 @@
 
 import SwiftUI
 
+/// A bottom sheet view that allows users to select a month and year using a `DatePicker`.
 struct CalendarMonthSelector: View {
     
+    /// ViewModel responsible for the calendar logic and state.
     @EnvironmentObject private var viewModel: CalendarViewModel
+    
+    // MARK: - Body
         
     internal var body: some View {
         VStack(spacing: 0) {
@@ -28,11 +32,12 @@ struct CalendarMonthSelector: View {
     
     // MARK: - Shape Picker
     
-    /// Shows the label & progress view.
+    /// DatePicker allowing user to choose month and year.
     private var content: some View {
         HStack {
             DatePicker(selection: $viewModel.calendarDate.animation(.easeInOut(duration: 0.2)),
                        displayedComponents: .date) {
+                // Hides label text
                 EmptyView()
             }
             .labelsHidden()
@@ -42,7 +47,7 @@ struct CalendarMonthSelector: View {
     
     // MARK: - Cancel Button
     
-    /// A button that toggles the visibility of the overlay.
+    /// A button that closes the month selector sheet.
     private var cancelButton: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.2)) {
@@ -50,6 +55,7 @@ struct CalendarMonthSelector: View {
             }
         } label: {
             ZStack {
+                // Primary color for button background
                 Color.LabelColors.labelPrimary
                 
                 Text(Texts.CalendarPage.close)
@@ -64,6 +70,8 @@ struct CalendarMonthSelector: View {
         .padding([.horizontal, .bottom], 6)
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     CalendarMonthSelector()

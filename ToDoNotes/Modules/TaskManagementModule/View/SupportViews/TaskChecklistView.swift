@@ -8,14 +8,27 @@
 import SwiftUI
 import SwiftUIIntrospect
 
+/// A view that displays and manages the checklist for a task.
 struct TaskChecklistView: View {
     
+    // MARK: - Properties
+    
+    /// The view model managing the checklist state.
     @ObservedObject private var viewModel: TaskManagementViewModel
+    /// ID of the currently focused checklist item.
     @FocusState private var focusedItemID: UUID?
     
+    /// Mapping of each checklist item ID to its text field delegate.
     private var textFieldDelegates: [UUID: TextFieldDelegate]
+    /// Whether the checklist is shown in preview mode (read-only).
     private let preview: Bool
     
+    // MARK: - Initialization
+    
+    /// Initializes the checklist view with a view model and preview mode option.
+    /// - Parameters:
+    ///   - viewModel: The view model managing the checklist.
+    ///   - preview: Whether the view is displayed in preview mode (default is `false`).
     init(viewModel: TaskManagementViewModel, preview: Bool = false) {
         self.viewModel = viewModel
         self.preview = preview
@@ -25,6 +38,9 @@ struct TaskChecklistView: View {
         })
     }
     
+    // MARK: - Body
+    
+    /// Builds the checklist layout using a vertical lazy grid.
     internal var body: some View {
         let columns = Array(
             repeating: GridItem(.flexible(), spacing: 6),
@@ -44,12 +60,14 @@ struct TaskChecklistView: View {
                 .padding(.vertical, 3)
                 .padding(.horizontal, 8)
                 
+                // Handle drag and drop
                 .dropDestination(for: ChecklistItem.self) { item, location in
                     viewModel.setDraggingItem(for: nil)
                     return false
                 } isTargeted: { status in
                     viewModel.setDraggingTargetResult(for: item, status: status)
                 }
+                // Handle deletion on empty input
                 .onChange(of: item.name) { _, newValue in
                     if newValue == String() {
                         focusOnPreviousItem(before: item.id)
@@ -63,7 +81,9 @@ struct TaskChecklistView: View {
         .padding(.vertical, 4)
     }
     
-    @ViewBuilder
+    // MARK: - Components
+    
+    /// Checkbox to mark item as completed or not.
     private func checkbox(item: Binding<ChecklistItem>) -> some View {
         Button {
             if !item.wrappedValue.name.isEmpty {
@@ -88,7 +108,7 @@ struct TaskChecklistView: View {
         }
     }
     
-    @ViewBuilder
+    /// Editable text field for checklist item.
     private func textField(item: Binding<ChecklistItem>) -> some View {
         TextField(Texts.TaskManagement.point,
                   text: item.name,
@@ -104,7 +124,7 @@ struct TaskChecklistView: View {
         }
     }
     
-    @ViewBuilder
+    /// Button to remove the checklist item.
     private func removeButton(item: Binding<ChecklistItem>) -> some View {
         Button {
             withAnimation(.bouncy(duration: 0.2)) {
@@ -122,7 +142,7 @@ struct TaskChecklistView: View {
         }
     }
     
-    @ViewBuilder
+    /// Drag handle to reorder checklist items.
     private func dragHandle(for item: Binding<ChecklistItem>) -> some View {
         Image.TaskManagement.EditTask.Checklist.move
             .contentShape(Rectangle())
@@ -137,25 +157,36 @@ struct TaskChecklistView: View {
             }
     }
     
+    // MARK: - Icons
+    
+    /// Icon for unchecked checklist item.
     private var uncheckedBox: Image {
         Image.TaskManagement.EditTask.Checklist.uncheck
             .renderingMode(.template)
     }
     
+    /// Icon for checked checklist item.
     private var checkedBox: Image {
         Image.TaskManagement.EditTask.Checklist.check
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     TaskChecklistView(viewModel: TaskManagementViewModel())
 }
 
+// MARK: - Extensions
 
 extension TaskChecklistView {
     
     // MARK: - Delegate setup
     
+    /// Sets up a delegate for a text field to manage keyboard return key behavior.
+    /// - Parameters:
+    ///   - textField: The `UITextField` instance.
+    ///   - itemID: The ID of the checklist item associated with the text field.
     private func setupDelegate(for textField: UITextField, itemID: UUID) {
         guard let delegate = textFieldDelegates[itemID] else { return }
         
@@ -177,6 +208,8 @@ extension TaskChecklistView {
     
     // MARK: - Focus menagement
     
+    /// Focuses on the next checklist item after the given ID.
+    /// - Parameter id: The UUID of the current checklist item.
     private func focusOnNextItem(after id: UUID) {
         if let currentIndex = viewModel.checklistLocal.firstIndex(where: { $0.id == id }),
            currentIndex < viewModel.checklistLocal.count - 1 {
@@ -184,6 +217,8 @@ extension TaskChecklistView {
         }
     }
     
+    /// Focuses on the previous checklist item before the given ID.
+    /// - Parameter id: The UUID of the current checklist item.
     private func focusOnPreviousItem(before id: UUID) {
         if let currentIndex = viewModel.checklistLocal.firstIndex(where: { $0.id == id }),
            currentIndex > 0 {

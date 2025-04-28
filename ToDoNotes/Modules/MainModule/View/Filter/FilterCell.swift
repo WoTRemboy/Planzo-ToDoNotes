@@ -7,15 +7,24 @@
 
 import SwiftUI
 
+/// A single filter button displayed in the `FilterScrollView`.
 struct FilterCell: View {
+    
+    // MARK: - Properties
         
+    /// Indicates whether this filter is currently selected.
     private let selected: Bool
+    /// The filter type this cell represents.
     private let filter: Filter
+    
+    // MARK: - Initialization
     
     init(filter: Filter, selected: Bool) {
         self.filter = filter
         self.selected = selected
     }
+    
+    // MARK: - Body
     
     internal var body: some View {
         nameLabel
@@ -23,6 +32,9 @@ struct FilterCell: View {
             .frame(maxWidth: .infinity)
     }
     
+    // MARK: - Name or Icon
+    
+    /// Displays either the filter's name or a custom icon if it's the deleted filter.
     private var nameLabel: some View {
         Group {
             if filter != .deleted {
@@ -37,6 +49,8 @@ struct FilterCell: View {
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     FilterCell(filter: .deleted, selected: true)

@@ -8,6 +8,9 @@
 import SwiftUI
 
 extension Color {
+    
+    // MARK: - Back Colors
+    
     enum BackColors {
         static let backElevated = Color("BackElevated")
         static let backiOSPrimary = Color("BackiOSPrimary")
@@ -18,11 +21,15 @@ extension Color {
         static let backFormCell = Color("BackFormCell")
     }
     
+    // MARK: - Button Colors
+    
     enum ButtonColors {
         static let onboarding = Color("OnboardingButton")
         static let appleLogin = Color("AppleLoginButton")
         static let remove = Color ("RemoveButton")
     }
+    
+    // MARK: - Label Colors
     
     enum LabelColors {
         static let labelDisable = Color("LabelDisable")
@@ -42,6 +49,8 @@ extension Color {
         }
     }
     
+    // MARK: - Support Colors
+    
     enum SupportColors {
         static let supportNavBar = Color("SupportNavBar")
         static let supportOverlay = Color("SupportOverlay")
@@ -54,6 +63,8 @@ extension Color {
         static let supportParamRow = Color("SupportParamRow")
     }
     
+    // MARK: - Folder Colors
+    
     enum FolderColors {
         static let all = Color("FolderAll")
         static let reminders = Color("FolderReminders")
@@ -62,11 +73,15 @@ extension Color {
         static let other = Color("FolderOther")
     }
     
+    // MARK: - Shadow Colors
+    
     enum ShadowColors {
         static let navBar = Color("ShadowNavBarColor")
         static let popup = Color("ShadowPopupColor")
         static let taskSection = Color("ShadowTaskSectionColor")
     }
+    
+    // MARK: - Swipe Colors
     
     enum SwipeColors {
         static let important = Color("SwipeActionImportant")
@@ -78,10 +93,17 @@ extension Color {
 }
 
 
+// MARK: - UIColor Extension
+
 extension UIColor {
+    
+    // MARK: - Shadow Colors (UIColor)
+    
     enum ShadowColors {
         static let navBar = UIColor(named: "ShadowNavBarColor")
     }
+    
+    // MARK: - TabBar Colors (UIColor)
     
     enum TabBar {
         static let background = UIColor(named: "SupportNavBar")

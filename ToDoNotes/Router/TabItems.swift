@@ -7,7 +7,12 @@
 
 import SwiftUI
 
+/// A utility struct providing configured tab items for the main tab bar.
 struct TabItems {
+    
+    /// Creates the main tab view.
+    /// - Parameter isSelected: A boolean indicating whether the tab is currently selected.
+    /// - Returns: A `MainView` wrapped in a tab item.
     static func mainTab(isSelected: Bool) -> some View {
         MainView()
             .tabItem {
@@ -17,6 +22,9 @@ struct TabItems {
             }
     }
     
+    /// Creates the today tab view.
+    /// - Parameter isSelected: A boolean indicating whether the tab is currently selected.
+    /// - Returns: A `TodayView` wrapped in a tab item.
     static func todayTab(isSelected: Bool) -> some View {
         TodayView()
             .tabItem {
@@ -26,6 +34,9 @@ struct TabItems {
             }
     }
     
+    /// Creates the calendar tab view.
+    /// - Parameter isSelected: A boolean indicating whether the tab is currently selected.
+    /// - Returns: A `CalendarView` wrapped in a tab item.
     static func calendarTab(isSelected: Bool) -> some View {
         CalendarView()
             .tabItem {
@@ -35,6 +46,9 @@ struct TabItems {
             }
     }
     
+    /// Creates the settings tab view.
+    /// - Parameter isSelected: A boolean indicating whether the tab is currently selected.
+    /// - Returns: A `SettingsView` wrapped in a tab item.
     static func settingsTab(isSelected: Bool) -> some View {
         SettingsView()
             .tabItem {

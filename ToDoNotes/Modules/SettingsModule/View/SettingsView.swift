@@ -6,13 +6,24 @@
 //
 
 import SwiftUI
+import OSLog
 
+/// A logger instance for debug and error messages.
+private let logger = Logger(subsystem: "com.todonotes.settings", category: "SettingsView")
+
+/// Settings screen that provides options for appearance, language, notifications, and app data reset.
 struct SettingsView: View {
     
+    // MARK: - Properties
+    
+    /// Fetch request to access all saved tasks from Core Data.
     @FetchRequest(entity: TaskEntity.entity(), sortDescriptors: [])
     private var tasksResults: FetchedResults<TaskEntity>
     
+    /// EnvironmentObject providing state management for the settings screen.
     @EnvironmentObject private var viewModel: SettingsViewModel
+    
+    // MARK: - Body
     
     internal var body: some View {
         ZStack {
@@ -20,7 +31,7 @@ struct SettingsView: View {
                 SettingsNavBar()
                     .zIndex(1)
                 
-                paramsButtons
+                settingsList
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
@@ -38,7 +49,8 @@ struct SettingsView: View {
         }
     }
     
-    private var paramsButtons: some View {
+    /// Scrollable content with grouped setting options.
+    private var settingsList: some View {
         ScrollView {
             VStack(spacing: 0) {
                 appearanceButton
@@ -47,8 +59,8 @@ struct SettingsView: View {
                         viewModel.readNotificationStatus()
                     }
                 languageButton
-                resetButton
-                taskCreatePageButton
+                resetTasksButton
+                taskCreationSettingsButton
             }
             .clipShape(.rect(cornerRadius: 10))
             .padding([.horizontal, .top])
@@ -61,29 +73,9 @@ struct SettingsView: View {
         .scrollContentBackground(.hidden)
     }
     
-    private var aboutAppSection: some View {
-        Section {
-            AboutAppView(name: viewModel.appName,
-                         version: viewModel.appVersion)
-        } header: {
-            Text(Texts.Settings.About.title)
-                .font(.system(size: 13, weight: .medium))
-                .textCase(.none)
-        }
-    }
+    // MARK: - Individual Setting Items
     
-    private var languageButton: some View {
-        Button {
-            viewModel.toggleShowingLanguageAlert()
-        } label: {
-            SettingFormRow(
-                title: Texts.Settings.Language.title,
-                image: Image.Settings.language,
-                details: Texts.Settings.Language.details,
-                chevron: true)
-        }
-    }
-    
+    /// Button to open appearance customization modal.
     private var appearanceButton: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.2)) {
@@ -99,6 +91,7 @@ struct SettingsView: View {
         }
     }
     
+    /// Row displaying notification settings with a toggle switch.
     private var notificationRow: some View {
         ZStack(alignment: .trailing) {
             SettingFormRow(
@@ -110,6 +103,7 @@ struct SettingsView: View {
         }
     }
     
+    /// Toggle for enabling/disabling local notifications.
     private var notificationToggle: some View {
         Toggle(isOn: $viewModel.notificationsEnabled) {}
             .fixedSize()
@@ -122,14 +116,23 @@ struct SettingsView: View {
             }
     }
     
-    private var resetButton: some View {
+    /// Button to prompt language settings update.
+    private var languageButton: some View {
         Button {
-            if !tasksResults.isEmpty {
-                viewModel.toggleShowingResetDialog()
-            } else {
-                viewModel.resetMessage = .empty
-                viewModel.showingResetResult.toggle()
-            }
+            viewModel.toggleShowingLanguageAlert()
+        } label: {
+            SettingFormRow(
+                title: Texts.Settings.Language.title,
+                image: Image.Settings.language,
+                details: Texts.Settings.Language.details,
+                chevron: true)
+        }
+    }
+    
+    /// Button allowing the user to reset all tasks.
+    private var resetTasksButton: some View {
+        Button {
+            handleResetAction()
         } label: {
             SettingFormRow(title: Texts.Settings.Reset.title,
                            image: Image.Settings.reset,
@@ -139,47 +142,43 @@ struct SettingsView: View {
                             isPresented: $viewModel.showingResetDialog,
                             titleVisibility: .visible) {
             Button(role: .destructive) {
-                TaskService.deleteAllTasksAndClearNotifications { success in
-                    if success {
-                        viewModel.resetMessage = .success
-                    } else {
-                        viewModel.resetMessage = .failure
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        viewModel.showingResetResult.toggle()
-                    }
-                }
+                performResetTasks()
             } label: {
                 Text(Texts.Settings.Reset.confirm)
             }
         }
     }
     
-    private var taskCreatePageButton: some View {
+    /// Button linking to task creation page settings.
+    private var taskCreationSettingsButton: some View {
         CustomNavLink(
             destination: SettingTaskCreateView()
                 .environmentObject(viewModel),
-        label: {
-            SettingFormRow(
-                title: Texts.Settings.TaskCreate.title,
-                image: Image.Settings.taskCreate,
-                chevron: true,
-                last: true)
-        })
+            label: {
+                SettingFormRow(
+                    title: Texts.Settings.TaskCreate.title,
+                    image: Image.Settings.taskCreate,
+                    chevron: true,
+                    last: true)
+            })
     }
     
+    /// Button leading to the "About App" page.
     private var aboutAppButton: some View {
         CustomNavLink(
             destination: SettingAboutPageView()
                 .environmentObject(viewModel)) {
-            SettingFormRow(
-                title: Texts.Settings.About.title,
-                image: Image.Settings.about,
-                chevron: true,
-                last: true)
-        }
+                    SettingFormRow(
+                        title: Texts.Settings.About.title,
+                        image: Image.Settings.about,
+                        chevron: true,
+                        last: true)
+                }
     }
     
+    // MARK: - Alerts
+    
+    /// Displays an alert suggesting the user to open system settings to change the app's language.
     private var languageAlert: some View {
         CustomAlertView(
             title: Texts.Settings.Language.alertTitle,
@@ -193,6 +192,7 @@ struct SettingsView: View {
             secondaryAction: viewModel.toggleShowingLanguageAlert)
     }
     
+    /// Displays an alert suggesting the user to open system settings to enable notifications.
     private var notificationAlert: some View {
         CustomAlertView(
             title: Texts.Settings.Notification.prohibitedTitle,
@@ -206,6 +206,7 @@ struct SettingsView: View {
             secondaryAction: viewModel.toggleShowingNotificationAlert)
     }
     
+    /// Displays an alert showing the result of a reset operation.
     private var resetAlert: some View {
         CustomAlertView(
             title: viewModel.resetMessage.title,
@@ -217,13 +218,41 @@ struct SettingsView: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     SettingsView()
         .environmentObject(SettingsViewModel(notificationsEnabled: false))
 }
 
+// MARK: - Private Logic
 
 extension SettingsView {
+    /// Handles the reset button action based on the number of tasks.
+    private func handleResetAction() {
+        if !tasksResults.isEmpty {
+            viewModel.toggleShowingResetDialog()
+        } else {
+            viewModel.resetMessage = .empty
+            viewModel.showingResetResult.toggle()
+        }
+    }
+    
+    /// Performs task deletion and triggers a result message.
+    private func performResetTasks() {
+        TaskService.deleteAllTasksAndClearNotifications { success in
+            if success {
+                viewModel.resetMessage = .success
+            } else {
+                viewModel.resetMessage = .failure
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                viewModel.showingResetResult.toggle()
+            }
+        }
+    }
+    
+    /// Updates the notification settings based on user's permission status.
     private func setNotificationsStatus(allowed: Bool) {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { success, error in
             DispatchQueue.main.async {
@@ -232,22 +261,22 @@ extension SettingsView {
                     if allowed {
                         TaskService.restoreNotificationsForAllTasks { complete in
                             if complete {
-                                print("Restoration complete: Notifications have been restored.")
+                                logger.debug("Restoration complete: Notifications have been restored.")
                             } else {
-                                print("Restoration failed.")
+                                logger.error("Notifications restoration failed.")
                             }
                         }
                     } else {
                         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
                     }
-                    print("Notifications are set to \(allowed).")
+                    logger.debug("Notifications are set to \(allowed).")
                 } else if let error {
-                    print(error.localizedDescription)
+                    logger.error("Notifications authorization failed: \(error.localizedDescription)")
                 } else {
                     viewModel.notificationsProhibited()
-                    print("Notifications are prohibited.")
+                    logger.warning("Notifications are prohibited.")
                 }
             }
         }
-        }
+    }
 }

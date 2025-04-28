@@ -6,69 +6,135 @@
 //
 
 import SwiftUI
+import OSLog
 
+/// A logger instance for debug and error messages.
+private let logger = Logger(subsystem: "com.todonotes.calendar", category: "CalendarTaskRowWithActions")
+
+/// A view that represents a single task row inside the Calendar screen, with available swipe actions.
 struct CalendarTaskRowWithActions: View {
+    
+    // MARK: - Properties
+    
+    /// Access to the CalendarViewModel to update task-related states.
     @EnvironmentObject private var viewModel: CalendarViewModel
     
+    /// The task entity displayed in the row.
     @ObservedObject private var entity: TaskEntity
+    /// Flag indicating whether this is the last task in the list.
     private let isLast: Bool
     
+    // MARK: - Initialization
+    
+    /// Initializes the task row with entity and position information.
+    ///
+    /// - Parameters:
+    ///   - entity: The task to be displayed.
+    ///   - isLast: A Boolean indicating if this is the last task in the section.
     init(entity: TaskEntity, isLast: Bool) {
         self._entity = ObservedObject(wrappedValue: entity)
         self.isLast = isLast
     }
     
+    // MARK: - Body
+    
     internal var body: some View {
         Button {
+            // Selecting the task for editing.
             viewModel.selectedTask = entity
+            logger.debug("Tapped on a task to edit: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
         } label: {
             TaskListRow(entity: entity, isLast: isLast)
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
-            Button(role: .cancel) {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    try? TaskService.toggleImportant(for: entity)
-                }
-                Toast.shared.present(
-                    title: entity.important ?
-                        Texts.Toasts.importantOn :
-                        Texts.Toasts.importantOff)
-            } label: {
-                TaskService.taskCheckImportant(for: entity) ?
-                    Image.TaskManagement.TaskRow.SwipeAction.importantDeselect :
-                    Image.TaskManagement.TaskRow.SwipeAction.important
-            }
-            .tint(Color.SwipeColors.important)
-            
-            Button(role: .destructive) {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    try? TaskService.togglePinned(for: entity)
-                }
-                Toast.shared.present(
-                    title: entity.pinned ?
-                        Texts.Toasts.pinnedOn :
-                        Texts.Toasts.pinnedOff)
-            } label: {
-                TaskService.taskCheckPinned(for: entity) ?
-                    Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect :
-                    Image.TaskManagement.TaskRow.SwipeAction.pinned
-            }
-            .tint(Color.SwipeColors.pin)
+            leadingSwipeActions
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-            Button(role: .destructive) {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    try? TaskService.toggleRemoved(for: entity)
-                }
-                Toast.shared.present(
-                    title: Texts.Toasts.removed)
-            } label: {
-                Image.TaskManagement.TaskRow.SwipeAction.remove
-            }
-            .tint(Color.SwipeColors.remove)
+            trailingSwipeAction
         }
     }
+    
+    // MARK: - Leading Swipe Actions
+    
+    /// Actions shown when swiping from left to right.
+    private var leadingSwipeActions: some View {
+        Group {
+            toggleImportantButton
+            togglePinnedButton
+        }
+    }
+    
+    /// Button to toggle important status.
+    private var toggleImportantButton: some View {
+        Button(role: .cancel) {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                do {
+                    try TaskService.toggleImportant(for: entity)
+                    Toast.shared.present(
+                        title: entity.important
+                        ? Texts.Toasts.importantOn
+                        : Texts.Toasts.importantOff
+                    )
+                    logger.debug("Toggled important status to \(entity.important) for \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown")")
+                } catch {
+                    logger.error("Failed to toggle important for \(entity.name ?? "unnamed") \(error.localizedDescription)")
+                }
+            }
+        } label: {
+            TaskService.taskCheckImportant(for: entity)
+            ? Image.TaskManagement.TaskRow.SwipeAction.importantDeselect
+            : Image.TaskManagement.TaskRow.SwipeAction.important
+        }
+        .tint(Color.SwipeColors.important)
+    }
+    
+    /// Button to toggle pinned status.
+    private var togglePinnedButton: some View {
+        Button(role: .destructive) {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                do {
+                    try TaskService.togglePinned(for: entity)
+                    Toast.shared.present(
+                        title: entity.pinned
+                        ? Texts.Toasts.pinnedOn
+                        : Texts.Toasts.pinnedOff
+                    )
+                    logger.debug("Toggled pinned status to \(entity.important) for \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown")")
+                } catch {
+                    logger.error("Failed to toggle pin for \(entity.name ?? "unnamed") \(error.localizedDescription)")
+                }
+            }
+        } label: {
+            TaskService.taskCheckPinned(for: entity)
+            ? Image.TaskManagement.TaskRow.SwipeAction.pinnedDeselect
+            : Image.TaskManagement.TaskRow.SwipeAction.pinned
+        }
+        .tint(Color.SwipeColors.pin)
+    }
+    
+    // MARK: - Trailing Swipe Action
+    
+    /// Action shown when swiping from right to left.
+    private var trailingSwipeAction: some View {
+        Button(role: .destructive) {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                do {
+                    try TaskService.toggleRemoved(for: entity)
+                    Toast.shared.present(title: Texts.Toasts.removed)
+                    logger.debug("Task removed: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown")")
+                } catch {
+                    logger.error("Failed to remove task: \(entity.name ?? "unnamed") \(error.localizedDescription)")
+                }
+            }
+            
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.remove
+        }
+        .tint(Color.SwipeColors.remove)
+    }
 }
+
+// MARK: - Preview
 
 #Preview {
     CalendarTaskRowWithActions(entity: PreviewData.taskItem, isLast: false)

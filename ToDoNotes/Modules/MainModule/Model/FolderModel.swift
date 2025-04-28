@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Represents predefined task folders used for categorizing tasks.
 enum Folder: String, CaseIterable {
     case all = "TaskFoldersAll"
     case reminders = "TaskFoldersReminders"
@@ -14,6 +15,7 @@ enum Folder: String, CaseIterable {
     case lists = "TaskFoldersLists"
     case other = "TaskFoldersNoDate"
     
+    /// Returns a localized name for each folder to display in the UI.
     internal var name: String {
         switch self {
         case .all:
@@ -29,6 +31,7 @@ enum Folder: String, CaseIterable {
         }
     }
     
+    /// Returns the icon associated with the folder.
     internal var lockedIcon: Image {
         switch self {
         case .all, .reminders, .tasks, .lists, .other:
@@ -36,6 +39,7 @@ enum Folder: String, CaseIterable {
         }
     }
     
+    /// Returns a specific color associated with the folder for UI styling.
     internal var color: Color {
         switch self {
         case .all:

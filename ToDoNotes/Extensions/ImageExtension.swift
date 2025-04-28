@@ -8,11 +8,16 @@
 import SwiftUI
 
 extension Image {
+    
+    // MARK: - Placeholder Images
+    
     enum Placeholder {
         static let previewIcon = Image("PlaceholderPreviewIcon")
         static let tabbarIcon = Image("PlaceholderTabbarIcon")
         static let calendarFreeDay = Image("CalendarFreeDay")
     }
+    
+    // MARK: - Onboarding Images
     
     enum Onboarding {
         static let splashScreenLogo = Image("SplashScreenLogo")
@@ -23,6 +28,8 @@ extension Image {
         static let fifth = Image("OnboardingFifth")
         static let sixth = Image("OnboardingSixth")
     }
+    
+    // MARK: - Navigation Bar Images
     
     enum NavigationBar {
         enum MainTodayPages {
@@ -45,6 +52,8 @@ extension Image {
         static let share = Image("NavIconShare")
     }
     
+    // MARK: - Tab Bar Images
+    
     enum TabBar {
         enum Selected {
             static let home = Image("TabBarIconSelectedHome")
@@ -61,11 +70,15 @@ extension Image {
         }
     }
     
+    // MARK: - Folder Images
+    
     enum Folder {
         static let navBar = Image("FoldersNavIcon")
         static let locked = Image("FolderLockIcon")
         static let unlocked = Image("FolderUnlockIcon")
     }
+    
+    // MARK: - Settings Images
     
     enum Settings {
         static let about = Image("SettingsAboutApp")
@@ -86,10 +99,14 @@ extension Image {
         }
     }
     
+    // MARK: - Selector Images
+    
     enum Selector {
         static let selected = Image("SelectorSelected")
         static let unselected = Image("SelectorUnselected")
     }
+    
+    // MARK: - Task Management Images
     
     enum TaskManagement {
         static let plus = Image("AddPlusIcon")
@@ -172,21 +189,22 @@ extension Image {
         }
     }
     
+    // MARK: - Login Page Images
+    
     enum LoginPage {
         static let appleLogo = Image("AppleLogo")
         static let googleLogo = Image("GoogleLogo")
     }
 }
 
+// MARK: - UIImage Extension
 
 extension UIImage {
     enum TaskManagement {
         static let importantSelect = UIImage(named: "EditTaskImportantOffIcon")
         static let importantDeselect = UIImage(named: "EditTaskImportantOnIcon")
-        
         static let pinnedSelect = UIImage(named: "EditTaskPinnedOffIcon")
         static let pinnedDeselect = UIImage(named: "EditTaskPinnedOnIcon")
-        
         static let copy = UIImage(named: "EditTaskCopyIcon")
         static let trash = UIImage(named: "EditTaskTrashIcon")
     }

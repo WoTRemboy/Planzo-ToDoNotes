@@ -6,45 +6,59 @@
 //
 
 import SwiftUI
+import OSLog
 import GoogleSignIn
 import UserNotifications
+
+/// A logger instance for debug and error messages.
+private let logger = Logger(subsystem: "com.todonotes.application", category: "ToDoNotesApp")
 
 @main
 struct ToDoNotesApp: App {
     
     // MARK: - Properties
         
-    // UserDefaults for user notifications status
-    @AppStorage(Texts.UserDefaults.notifications) private var notificationsEnabled: NotificationStatus = .prohibited
-    // UserDefaults for current app theme
-    @AppStorage(Texts.UserDefaults.theme) private var userTheme: Theme = .systemDefault
+    /// Stores the current status of user notifications in UserDefaults.
+    @AppStorage(Texts.UserDefaults.notifications)
+    private var notificationsEnabled: NotificationStatus = .prohibited
     
-    /// The app starts by displaying the `SplashScreenView` as the initial view.
-    var body: some Scene {
+    /// Stores the user's selected theme in UserDefaults.
+    @AppStorage(Texts.UserDefaults.theme)
+    private var userTheme: Theme = .systemDefault
+    
+    /// The app's main scene, launching with the splash screen and setting up appearance and context.
+    internal var body: some Scene {
         WindowGroup {
             SplashScreenView()
+                // Handles URL for Google Sign-In flow
                 .onOpenURL { url in
                     GIDSignIn.sharedInstance.handle(url)
                 }
+                // Applies the saved user theme on launch
                 .onAppear {
                     setTheme(style: userTheme.userInterfaceStyle)
                 }
+                // Injects Core Data context into the environment
                 .environment(\.managedObjectContext, CoreDataProvider.shared.persistentContainer.viewContext)
         }
     }
     
     // MARK: - Initialization
     
+    /// App initialization. Requests user permission for notifications.
     init() {
         requestNotifications()
     }
     
     // MARK: - Appearance setup
     
+    /// Sets the UI style (light, dark, or system default) without animation.
+    /// - Parameter style: The desired UI user interface style.
     private func setTheme(style: UIUserInterfaceStyle) {
-        // System style by default
+        // Uses system default style if none is specified
         guard style != .unspecified else { return }
-        // Setups a theme style without animation
+        
+        // Access the key window and applies the selected style
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
             if let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
                 window.overrideUserInterfaceStyle = style
@@ -55,30 +69,33 @@ struct ToDoNotesApp: App {
 
 // MARK: - Notifications
 
-// Notifications Model
+/// Represents the authorization status for local notifications.
 enum NotificationStatus: String {
     case allowed = "allowed"
     case disabled = "disabled"
     case prohibited = "prohibited"
 }
 
-// Notifications Method
+// MARK: - Notification Handling
+
 extension ToDoNotesApp {
-    // Requests user for alert & sound notifications
+    /// Requests user authorization for local notifications (alerts and sounds).
+    /// Updates `notificationsEnabled` based on the user's choice or errors.
     private func requestNotifications() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { success, error in
             if success {
-                // User allowes notifications & they become active
+                // Notifications were granted
                 if self.notificationsEnabled == .prohibited {
                     self.notificationsEnabled = .allowed
                 }
-                print("Notifications are allowed.")
+                logger.debug("Notifications are allowed.")
             } else if let error {
-                // In error case notifications become prohibited
+                // An error occurred; prohibit notifications
                 self.notificationsEnabled = .prohibited
-                print(error.localizedDescription)
+                logger.error("\(error.localizedDescription)")
             } else {
-                print("Notifications are prohibited.")
+                // User declined notification permissions
+                logger.debug("Notifications are prohibited.")
             }
         }
     }
