@@ -8,9 +8,14 @@
 import Foundation
 
 final class Texts {
+    
+    // MARK: - App Info
+    
     enum AppInfo {
         static let title = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "Planzo"
     }
+    
+    // MARK: - Onboarding Module Texts
     
     enum OnboardingPage {
         static let skip = NSLocalizedString("OnboardingPageSkip", comment: "Skip")
@@ -30,6 +35,8 @@ final class Texts {
         static let markdownTerms = NSLocalizedString("OnboardingPageMarkdownTerms", comment: "By clicking Start, you agree to our [Terms of Service](https://avoqode.com/terms-of-service) and [Privacy Policy](https://avoqode.com/privacy-policy).")
         static let markdownTermsError = NSLocalizedString("OnboardingPageMarkdownTermsError", comment: "Error parsing Terms of Service and Privacy Policy")
     }
+    
+    // MARK: - Main Module Texts
     
     enum MainPage {
         static let title = NSLocalizedString("MainPageTitle", comment: "To Do List")
@@ -67,12 +74,16 @@ final class Texts {
         }
     }
     
+    // MARK: - Today Module Texts
+    
     enum TodayPage {
         static let title = NSLocalizedString("TodayPageTitle", comment: "Today")
         static let placeholder = NSLocalizedString("TodayPagePlaceholder", comment: "No notes for today")
         static let notCompleted = NSLocalizedString("TodayPageActive", comment: "Active")
         static let completed = NSLocalizedString("TodayPageCompleted", comment: "Completed")
     }
+    
+    // MARK: - Calendar Module Texts
     
     enum CalendarPage {
         static let title = NSLocalizedString("CalendarPageCalendarTitle", comment: "Calendar")
@@ -81,6 +92,8 @@ final class Texts {
         static let accept = NSLocalizedString("CalendarPageCalendarAccept", comment: "Accept")
         static let close = NSLocalizedString("CalendarPageCalendarClose", comment: "Close")
     }
+    
+    // MARK: - Settings Module Texts
     
     enum Settings {
         static let title = NSLocalizedString("SettingsPageTitle", comment: "Settings")
@@ -143,6 +156,8 @@ final class Texts {
             static let descriptionContent = NSLocalizedString("SettingsPageTaskCreateDescriptionContent", comment: "Choose between Page and Pop-up styles for taking notes.")
         }
     }
+    
+    // MARK: - TaskManagemant Module Texts
     
     enum TaskManagement {
         static let titlePlaceholder = NSLocalizedString("TaskManagementTitlePlaceholder", comment: "What would you like to do?")
@@ -223,10 +238,14 @@ final class Texts {
         }
     }
     
+    // MARK: - Search Bar Module Texts
+    
     enum SearchBar {
         static let placeholder = NSLocalizedString("SearchBarPlaceholder", comment: "Search by text, title")
         static let cancel = NSLocalizedString("SearchBarCancel", comment: "Cancel")
     }
+    
+    // MARK: - Tab Bar Module Texts
     
     enum Tabbar {
         static let main = NSLocalizedString("TabbarMainTitle", comment: "Home")
@@ -234,6 +253,8 @@ final class Texts {
         static let calendar = NSLocalizedString("TabbarCalendarTitle", comment: "Calendar")
         static let settings = NSLocalizedString("TabbarSettingsTitle", comment: "Settings")
     }
+    
+    // MARK: - Toasts Module Texts
     
     enum Toasts {
         static let completedOn = NSLocalizedString("ToastsCompletedOn", comment: "Moved to Completed")
@@ -253,6 +274,8 @@ final class Texts {
         static let duplicatedError = NSLocalizedString("ToastsDuplicatedError", comment: "Failed to Duplicate")
     }
     
+    // MARK: - Tips Module Texts
+    
     enum Tips {
         static let mainPageOverviewTitle = NSLocalizedString("TipsMainPageOverviewTitle", comment: "Home Page")
         static let mainPageOverviewContent = NSLocalizedString("TipsMainPageOverviewContent", comment: "Keep track of all your tasks organized by filters and grouped into folders.")
@@ -264,9 +287,13 @@ final class Texts {
         static let calendarPageOverviewContent = NSLocalizedString("TipsCalendarPageOverviewContent", comment: "Check tasks assigned to any specific day using the interactive calendar.")
     }
     
+    // MARK: - Date Parameters Locale
+    
     enum DateParameters {
         static let locale = NSLocalizedString("DateParametersLocale", comment: "en_US")
     }
+    
+    // MARK: - Core Data Texts
     
     enum CoreData {
         static let container = "TaskModel"
@@ -279,6 +306,8 @@ final class Texts {
         }
     }
     
+    // MARK: - UserDefaults Keys
+    
     enum UserDefaults {
         static let skipOnboarding = "SkipOnboarding"
         static let addTaskButtonGlow = "AddTaskButtonGlow"
@@ -287,6 +316,8 @@ final class Texts {
         static let taskCreation = "TaskCreationPage"
     }
     
+    // MARK: - Namespace ID Keys
+    
     enum NamespaceID {
         static let selectedTab = "SelectedTab"
         static let selectedCalendarCell = "SelectedCalendarCell"
@@ -294,6 +325,8 @@ final class Texts {
         static let selectedEntity = "NoSelectedEntity"
         static let floatingButtons = "MainPageFloatingButtons"
     }
+    
+    // MARK: - Accessibility Identifier
     
     enum AccessibilityIdentifier {
         static let tabBarShadow = "TabBarShadow"

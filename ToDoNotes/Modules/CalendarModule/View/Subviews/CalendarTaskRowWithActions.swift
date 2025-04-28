@@ -42,6 +42,7 @@ struct CalendarTaskRowWithActions: View {
         Button {
             // Selecting the task for editing.
             viewModel.selectedTask = entity
+            logger.debug("Tapped on a task to edit: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
         } label: {
             TaskListRow(entity: entity, isLast: isLast)
         }
@@ -74,7 +75,7 @@ struct CalendarTaskRowWithActions: View {
                         ? Texts.Toasts.importantOn
                         : Texts.Toasts.importantOff
                     )
-                    logger.info("Toggled important status to \(entity.important) for \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown")")
+                    logger.debug("Toggled important status to \(entity.important) for \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown")")
                 } catch {
                     logger.error("Failed to toggle important for \(entity.name ?? "unnamed") \(error.localizedDescription)")
                 }
@@ -98,7 +99,7 @@ struct CalendarTaskRowWithActions: View {
                         ? Texts.Toasts.pinnedOn
                         : Texts.Toasts.pinnedOff
                     )
-                    logger.info("Toggled pinned status to \(entity.important) for \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown")")
+                    logger.debug("Toggled pinned status to \(entity.important) for \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown")")
                 } catch {
                     logger.error("Failed to toggle pin for \(entity.name ?? "unnamed") \(error.localizedDescription)")
                 }
@@ -120,7 +121,7 @@ struct CalendarTaskRowWithActions: View {
                 do {
                     try TaskService.toggleRemoved(for: entity)
                     Toast.shared.present(title: Texts.Toasts.removed)
-                    logger.info("Task removed: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown")")
+                    logger.debug("Task removed: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown")")
                 } catch {
                     logger.error("Failed to remove task: \(entity.name ?? "unnamed") \(error.localizedDescription)")
                 }

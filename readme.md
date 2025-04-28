@@ -133,10 +133,10 @@ The ViewModel layer manages the presentation logic:
 
 <h2 id="testing">Testing 🧪</h2>
 
-### Unit Testing
-- `TaskServiceTests`: Tests for task management operations
-- `NotificationTests`: Tests for notification scheduling and management
-- `DataValidationTests`: Tests for data integrity and validation
+### Unit Testing (Examples)
+- `TaskManagementViewModelTests`: Tests for task management operations
+- `MainViewModelTests`: Tests task filtering, folder selection, search bar toggling, and task creation workflows.
+- `SettingsViewModelTests`: Tests initialization, toggling view states, theme changes, notification management, and task creation mode settings.
 
 <h2 id="documentation">Documentation 📚</h2>
 

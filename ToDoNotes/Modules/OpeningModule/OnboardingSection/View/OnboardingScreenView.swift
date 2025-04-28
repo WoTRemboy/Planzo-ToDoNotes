@@ -41,7 +41,7 @@ struct OnboardingScreenView: View {
                         do {
                             try Tips.configure([
                                 .datastoreLocation(.applicationDefault)])
-                            logger.info("Tips configured successfully.")
+                            logger.debug("Tips configured successfully.")
                         } catch {
                             logger.error("Tips configuration failed: \(error.localizedDescription).")
                         }
@@ -250,7 +250,7 @@ struct OnboardingScreenView: View {
     /// Displays the terms of service and privacy policy acknowledgment text.
     private var termsPolicyLabel: some View {
         if let attributedText = try? AttributedString(markdown: Texts.OnboardingPage.markdownTerms) {
-            logger.info("Attributed terms string successfully created from markdown.")
+            logger.debug("Attributed terms string successfully created from markdown.")
             return Text(attributedText)
                 .font(.system(size: 14))
                 .fontWeight(.medium)

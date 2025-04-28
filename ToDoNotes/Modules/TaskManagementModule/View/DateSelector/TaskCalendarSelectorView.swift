@@ -7,21 +7,37 @@
 
 import SwiftUI
 
+/// A view for selecting the date, time, and notification settings for a task.
 struct TaskCalendarSelectorView: View {
     
+    // MARK: - Properties
+    
+    /// View model for managing task data and date parameters.
     @ObservedObject private var viewModel: TaskManagementViewModel
+    /// Namespace used for animations between views.
     @Namespace private var namespace
     
+    /// Optional task entity being edited (nil for new tasks).
     private let entity: TaskEntity?
     
+    // MARK: - Initialization
+        
+    /// Initializes the date selector view.
+    /// - Parameters:
+    ///   - entity: The task entity to edit, if not nil.
+    ///   - viewModel: The view model handling task data.
     init(entity: TaskEntity?,
          viewModel: TaskManagementViewModel) {
         self.entity = entity
         self.viewModel = viewModel
     }
     
+    // MARK: - Body
+    
+    /// Main body of the view.
     internal var body: some View {
         ZStack(alignment: .bottom) {
+            // The background color of the entire view.
             Color.BackColors.backSheet
                 .ignoresSafeArea()
             
@@ -49,6 +65,9 @@ struct TaskCalendarSelectorView: View {
         }
     }
     
+    // MARK: - Subviews
+    
+    /// The header containing Cancel, Title, and Done buttons.
     private var header: some View {
         HStack {
             toolBarButtonCancel
@@ -62,6 +81,9 @@ struct TaskCalendarSelectorView: View {
         .padding([.horizontal, .top], 24)
     }
     
+    // MARK: - Alerts
+    
+    /// Alert shown when notifications are prohibited by system settings.
     private var prohibitedAlert: some View {
         CustomAlertView(
             title: Texts.Settings.Notification.prohibitedTitle,
@@ -75,6 +97,7 @@ struct TaskCalendarSelectorView: View {
             secondaryAction: viewModel.toggleShowingNotificationAlert)
     }
     
+    /// Alert shown when notifications are disabled manually by the user.
     private var disabledAlert: some View {
         CustomAlertView(
             title: Texts.Settings.Notification.disabledTitle,
@@ -83,20 +106,16 @@ struct TaskCalendarSelectorView: View {
             primaryAction: viewModel.toggleShowingNotificationAlert)
     }
     
+    // MARK: - Buttons
+    
+    /// An invisible cancel button used for layout balance in the header.
     private var toolBarButtonCancel: some View {
-//        Button {
-//            viewModel.cancelTaskDateParams()
-//            viewModel.toggleDatePicker()
-//        } label: {
-//            Image.TaskManagement.DateSelector.close
-//                .resizable()
-//                .frame(width: 24, height: 24)
-//        }
         Rectangle()
             .foregroundStyle(Color.clear)
             .frame(width: 24, height: 24)
     }
     
+    /// Done button that saves date settings and closes the view.
     private var toolBarButtonDone: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.2)) {
@@ -110,12 +129,13 @@ struct TaskCalendarSelectorView: View {
         }
     }
     
+    /// Calendar section for picking a date and optional time.
     private var calendarSection: some View {
-        TaskCustomCalendar(viewModel: viewModel,
-                           namespace: namespace)
-        .padding(.top)
+        TaskCustomCalendar(viewModel: viewModel, namespace: namespace)
+            .padding(.top)
     }
     
+    /// Form for selecting additional date parameters such as notifications.
     private var paramsForm: some View {
         VStack(spacing: 0) {
             TaskDateParamRow(type: .time,
@@ -124,18 +144,12 @@ struct TaskCalendarSelectorView: View {
             TaskDateParamRow(type: .notifications,
                              isLast: true,
                              viewModel: viewModel)
-//            TaskDateParamRow(type: .repeating,
-//                             viewModel: viewModel)
-            
-//            if viewModel.selectedRepeating != .none {
-//                TaskDateParamRow(type: .endRepeating,
-//                                 viewModel: viewModel)
-//            }
         }
         .clipShape(.rect(cornerRadius: 10))
         .padding()
     }
     
+    /// Button to clear all selected parameters (date, time, notifications).
     private var removeButton: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.2)) {
@@ -149,6 +163,8 @@ struct TaskCalendarSelectorView: View {
         .padding(.bottom)
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     TaskCalendarSelectorView(

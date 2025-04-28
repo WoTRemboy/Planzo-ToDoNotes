@@ -112,7 +112,7 @@ final class SettingsViewModel: ObservableObject {
     /// - Parameter theme: The selected `Theme`.
     internal func changeTheme(theme: Theme) {
         userTheme = theme
-        logger.info("User changed theme to: \(theme.rawValue)")
+        logger.debug("User changed theme to: \(theme.rawValue)")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
                 if let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
@@ -155,6 +155,6 @@ final class SettingsViewModel: ObservableObject {
         }
         addTaskButtonGlow = false
         taskCreation = mode
-        logger.info("User changed task creation mode to: \(mode.rawValue)")
+        logger.debug("User changed task creation mode to: \(mode.rawValue)")
     }
 }

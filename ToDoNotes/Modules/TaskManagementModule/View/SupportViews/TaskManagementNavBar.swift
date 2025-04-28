@@ -7,13 +7,29 @@
 
 import SwiftUI
 
+/// Navigation bar for the task creation/editing screen.
 struct TaskManagementNavBar: View {
     
+    // MARK: - Properties
+    
+    /// View model controlling the current task state.
     @ObservedObject private var viewModel: TaskManagementViewModel
+    
+    /// The task entity being edited/created.
     private let entity: TaskEntity?
+    /// Closure triggered when duplicating a task.
     private let onDuplicate: () -> Void
+    /// Closure triggered when dismissing the task editor.
     private let onDismiss: () -> Void
     
+    // MARK: - Initialization
+    
+    /// Creates a new `TaskManagementNavBar`.
+    /// - Parameters:
+    ///   - viewModel: The associated `TaskManagementViewModel`.
+    ///   - entity: The task entity being managed/created.
+    ///   - onDuplicate: Closure executed when duplicating a task.
+    ///   - onDismiss: Closure executed when dismissing the view.
     init(viewModel: TaskManagementViewModel,
          entity: TaskEntity?,
          onDuplicate: @escaping () -> Void,
@@ -24,19 +40,22 @@ struct TaskManagementNavBar: View {
         self.onDismiss = onDismiss
     }
     
+    // MARK: - Body
+    
     internal var body: some View {
         GeometryReader { proxy in
             let topInset = proxy.safeAreaInsets.top
             
             ZStack(alignment: .top) {
+                // Background color and shadow for the navigation bar
                 Color.SupportColors.supportNavBar
                     .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
                 
                 VStack(spacing: 0) {
                     HStack(spacing: 0) {
-                        backButton
-                        titleLabel
-                        moreButton
+                        backButton  // Back button to dismiss the view
+                        titleLabel  // Title showing today's date
+                        moreButton  // More options button (menu with actions)
                     }
                 }
                 .padding(.top, topInset + 9.5)
@@ -46,6 +65,9 @@ struct TaskManagementNavBar: View {
         .frame(height: 48)
     }
     
+    // MARK: - Components
+    
+    /// Back button for dismissing the task management view.
     private var backButton: some View {
         Button {
             onDismiss()
@@ -57,6 +79,7 @@ struct TaskManagementNavBar: View {
         .padding(.leading)
     }
     
+    /// Title label showing today's date and weekday.
     private var titleLabel: some View {
         HStack(spacing: 4) {
             Text(Texts.TaskManagement.today)
@@ -74,93 +97,21 @@ struct TaskManagementNavBar: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    private var shareButton: some View {
-        Button {
-            // Share Action
-        } label: {
-            Image.NavigationBar.share
-                .resizable()
-                .renderingMode(.template)
-                .foregroundStyle(Color.clear)
-                .frame(width: 22, height: 22)
-        }
-        .disabled(true)
-        .padding(.trailing)
-    }
-    
+    /// The menu button for additional task actions (important, pinned, delete, duplicate).
     private var moreButton: some View {
         Menu {
             ControlGroup {
-                Button {
-                    viewModel.toggleImportanceCheck()
-                    Toast.shared.present(
-                        title: viewModel.importance ?
-                        Texts.Toasts.importantOn :
-                            Texts.Toasts.importantOff)
-                } label: {
-                    Label {
-                        viewModel.importance ?
-                        Text(Texts.TaskManagement.ContextMenu.importantDeselect) :
-                        Text(Texts.TaskManagement.ContextMenu.important)
-                    } icon: {
-                        viewModel.importance ?
-                        Image.TaskManagement.EditTask.Menu.importantDeselect :
-                        Image.TaskManagement.EditTask.Menu.importantSelect
-                            .renderingMode(.template)
-                    }
-                }
-                
-                Button {
-                    viewModel.togglePinnedCheck()
-                    Toast.shared.present(
-                        title: viewModel.pinned ?
-                        Texts.Toasts.pinnedOn :
-                            Texts.Toasts.pinnedOff)
-                } label: {
-                    Label {
-                        viewModel.pinned ?
-                        Text(Texts.TaskManagement.ContextMenu.unpin) :
-                        Text(Texts.TaskManagement.ContextMenu.pin)
-                    } icon: {
-                        viewModel.pinned ?
-                        Image.TaskManagement.EditTask.Menu.pinnedDeselect :
-                        Image.TaskManagement.EditTask.Menu.pinnedSelect
-                            .renderingMode(.template)
-                    }
-                }
-                
+                importanceButton
+                pinnedButton
                 if entity != nil {
-                    Button(role: .destructive) {
-                        viewModel.toggleRemoved()
-                        onDismiss()
-                        Toast.shared.present(
-                            title: Texts.Toasts.removed)
-                    } label: {
-                        Label {
-                            Text(Texts.TaskManagement.ContextMenu.delete)
-                        } icon: {
-                            Image.TaskManagement.EditTask.Menu.trash
-                                .renderingMode(.template)
-                        }
-                    }
+                    deleteButton
                 }
             }
             .controlGroupStyle(.compactMenu)
             
             if entity != nil {
-                Button {
-                    onDuplicate()
-                    onDismiss()
-                } label: {
-                    Label {
-                        Text(Texts.TaskManagement.ContextMenu.dublicate)
-                    } icon: {
-                        Image.TaskManagement.EditTask.Menu.copy
-                            .renderingMode(.template)
-                    }
-                }
+                duplicateButton
             }
-            
         } label: {
             Image.NavigationBar.more
                 .resizable()
@@ -168,7 +119,88 @@ struct TaskManagementNavBar: View {
         }
         .padding(.trailing)
     }
+    
+    // MARK: - Menu Buttons
+    
+    /// Toggles importance for the task.
+    private var importanceButton: some View {
+        Button {
+            viewModel.toggleImportanceCheck()
+            Toast.shared.present(
+                title: viewModel.importance
+                ? Texts.Toasts.importantOn
+                : Texts.Toasts.importantOff
+            )
+        } label: {
+            Label {
+                Text(viewModel.importance
+                     ? Texts.TaskManagement.ContextMenu.importantDeselect
+                     : Texts.TaskManagement.ContextMenu.important)
+            } icon: {
+                viewModel.importance
+                ? Image.TaskManagement.EditTask.Menu.importantDeselect
+                : Image.TaskManagement.EditTask.Menu.importantSelect
+                    .renderingMode(.template)
+            }
+        }
+    }
+    
+    /// Toggles pinned status for the task.
+    private var pinnedButton: some View {
+        Button {
+            viewModel.togglePinnedCheck()
+            Toast.shared.present(
+                title: viewModel.pinned
+                ? Texts.Toasts.pinnedOn
+                : Texts.Toasts.pinnedOff
+            )
+        } label: {
+            Label {
+                Text(viewModel.pinned
+                     ? Texts.TaskManagement.ContextMenu.unpin
+                     : Texts.TaskManagement.ContextMenu.pin)
+            } icon: {
+                viewModel.pinned
+                ? Image.TaskManagement.EditTask.Menu.pinnedDeselect
+                : Image.TaskManagement.EditTask.Menu.pinnedSelect
+                    .renderingMode(.template)
+            }
+        }
+    }
+    
+    /// Deletes the current task.
+    private var deleteButton: some View {
+        Button(role: .destructive) {
+            viewModel.toggleRemoved()
+            onDismiss()
+            Toast.shared.present(title: Texts.Toasts.removed)
+        } label: {
+            Label {
+                Text(Texts.TaskManagement.ContextMenu.delete)
+            } icon: {
+                Image.TaskManagement.EditTask.Menu.trash
+                    .renderingMode(.template)
+            }
+        }
+    }
+    
+    /// Duplicates the current task.
+    private var duplicateButton: some View {
+        Button {
+            onDuplicate()
+            onDismiss()
+        } label: {
+            Label {
+                Text(Texts.TaskManagement.ContextMenu.dublicate)
+            } icon: {
+                Image.TaskManagement.EditTask.Menu.copy
+                    .renderingMode(.template)
+            }
+        }
+    }
 }
+
+// MARK: - Preview
 
 #Preview {
     TaskManagementNavBar(

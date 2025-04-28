@@ -49,11 +49,11 @@ struct MainTaskRowWithActions: View {
         if viewModel.selectedFilter == .deleted {
             viewModel.removedTask = entity
             viewModel.toggleShowingEditRemovedAlert()
-            logger.info("Tapped on a deleted task to recover: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+            logger.debug("Tapped on a deleted task to recover: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
         } else {
             viewModel.selectedTask = entity
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-            logger.info("Tapped on an active task to edit: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+            logger.debug("Tapped on an active task to edit: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
         }
     }
     
@@ -76,14 +76,14 @@ struct MainTaskRowWithActions: View {
                     do {
                         try TaskService.toggleRemoved(for: entity)
                         Toast.shared.present(title: Texts.Toasts.removed)
-                        logger.info("Task moved to deleted: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                        logger.debug("Task moved to deleted: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
                     } catch {
                         logger.error("Task could not be moved to deleted: \(error.localizedDescription)")
                     }
                 } else {
                     do {
                         try TaskService.deleteRemovedTask(for: entity)
-                        logger.info("Task permanently deleted.")
+                        logger.debug("Task permanently deleted.")
                     } catch {
                         logger.error("Task could not be permanently deleted: \(error.localizedDescription)")
                     }
@@ -103,7 +103,7 @@ struct MainTaskRowWithActions: View {
             withAnimation(.easeInOut(duration: 0.2)) {
                 do {
                     try TaskService.toggleImportant(for: entity)
-                    logger.info("Toggled important status to \(entity.important) for task: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                    logger.debug("Toggled important status to \(entity.important) for task: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
                 } catch {
                     logger.error("Toggle important status for task failed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
                 }
@@ -125,7 +125,7 @@ struct MainTaskRowWithActions: View {
             withAnimation(.easeInOut(duration: 0.2)) {
                 do {
                     try TaskService.togglePinned(for: entity)
-                    logger.info("Toggled pinned status to \(entity.pinned) for task: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                    logger.debug("Toggled pinned status to \(entity.pinned) for task: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
                 } catch {
                     logger.error("Toggle pinned status for task failed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
                 }
@@ -147,7 +147,7 @@ struct MainTaskRowWithActions: View {
             withAnimation(.easeInOut(duration: 0.2)) {
                 do {
                     try TaskService.toggleRemoved(for: entity)
-                    logger.info("Restored task from deleted: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                    logger.debug("Restored task from deleted: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
                 } catch {
                     logger.error("Restore task failed: \(error.localizedDescription)")
                 }

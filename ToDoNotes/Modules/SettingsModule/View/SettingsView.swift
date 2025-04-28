@@ -261,7 +261,7 @@ extension SettingsView {
                     if allowed {
                         TaskService.restoreNotificationsForAllTasks { complete in
                             if complete {
-                                logger.info("Restoration complete: Notifications have been restored.")
+                                logger.debug("Restoration complete: Notifications have been restored.")
                             } else {
                                 logger.error("Notifications restoration failed.")
                             }
@@ -269,7 +269,7 @@ extension SettingsView {
                     } else {
                         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
                     }
-                    logger.info("Notifications are set to \(allowed).")
+                    logger.debug("Notifications are set to \(allowed).")
                 } else if let error {
                     logger.error("Notifications authorization failed: \(error.localizedDescription)")
                 } else {
