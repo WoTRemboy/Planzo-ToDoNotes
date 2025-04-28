@@ -379,7 +379,6 @@
 				637B9F5D2D296F290010F13B /* Router */,
 				63C2DC742D8C474000E6E0A0 /* Modules */,
 				63BCD8AD2D7729460016950F /* Helpers */,
-				632D0DD82D37E0990071684D /* Modifiers */,
 				635FEF7E2D24BCDE007FFBBA /* Extensions */,
 				635FEF752D24BAD1007FFBBA /* SupportFiles */,
 				635FEF672D24B71C007FFBBA /* Preview Content */,
@@ -681,6 +680,7 @@
 				631FBB902DB0077900BEABD0 /* Tips */,
 				63C2DC752D8C477A00E6E0A0 /* CustomContextMenu */,
 				63AE658E2D73291F009A3541 /* CustomNavigationBar */,
+				632D0DD82D37E0990071684D /* Modifiers */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
