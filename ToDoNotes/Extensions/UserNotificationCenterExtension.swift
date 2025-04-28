@@ -6,15 +6,27 @@
 //
 
 import UserNotifications
+import OSLog
+
+/// A logger instance for debug and error messages.
+private let logger = Logger(subsystem: "com.todonotes.extensions", category: "UserNotificationCenterExtension")
 
 extension UNUserNotificationCenter {
+    
+    // MARK: - Notification Setup
+    
+    /// Sets up notifications for the given set of `NotificationItem`s.
+    /// - Parameters:
+    ///   - notifications: A set of `NotificationItem` instances to schedule notifications for.
+    ///   - entityNotifications: An optional `NSSet` of existing notifications to remove before scheduling new ones.
+    ///   - name: An optional string to be used as the notification body.
     internal func setupNotifications(for notifications: Set<NotificationItem>,
                                      remove entityNotifications: NSSet?,
                                      with name: String?) {
-        // First remove any existing notifications
+        // First removes any existing notifications
         removeNotifications(for: entityNotifications)
         
-        // Get current pending notifications to check for duplicates
+        // Gets current pending notifications to check for duplicates
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.getPendingNotificationRequests { pendingRequests in
             let existingIdentifiers = Set(pendingRequests.map { $0.identifier })
@@ -25,9 +37,9 @@ extension UNUserNotificationCenter {
                 
                 let identifier = notification.id.uuidString
                 
-                // Skip if notification with this ID already exists
+                // Skips if notification with this ID already exists
                 guard !existingIdentifiers.contains(identifier) else {
-                    print("Skipping duplicate notification with ID: \(identifier)")
+                    logger.debug("Skipping duplicate notification with ID: \(identifier)")
                     continue
                 }
                 
@@ -43,32 +55,38 @@ extension UNUserNotificationCenter {
                 
                 self.add(request) { error in
                     if let error = error {
-                        print("Notification setup error for \(identifier): \(error.localizedDescription)")
+                        logger.error("Notification setup error for \(identifier): \(error.localizedDescription)")
                     } else {
-                        print("Notification successfully setup for \(String(describing: name)) at \(targetDate) with type \(notification.type.selectorName)")
+                        logger.debug("Notification successfully setup for \(String(describing: name)) at \(targetDate) with type \(notification.type.selectorName)")
                     }
                 }
             }
         }
     }
     
+    // MARK: - Notification Removal
+    
+    /// Removes notifications for the given set of `NotificationItem`s.
+    /// - Parameter items: A set of `NotificationItem` instances whose notifications should be removed.
     internal func removeNotifications(for items: Set<NotificationItem>) {
         let identifiers = items.map { $0.id.uuidString }
         self.removePendingNotificationRequests(withIdentifiers: identifiers)
         self.removeDeliveredNotifications(withIdentifiers: identifiers)
-        print("Removed notifications with IDs: \(identifiers)")
+        logger.debug("Removed notifications with IDs: \(identifiers)")
     }
     
+    /// Removes notifications for the given optional `NSSet` of `NotificationEntity` objects.
+    /// - Parameter items: An optional `NSSet` of `NotificationEntity` objects to remove notifications for.
     internal func removeNotifications(for items: NSSet?) {
         guard let notifications = items?.compactMap({ $0 as? NotificationEntity }) else {
-            print("Remove notifications error: items must be Set<NotificationEntity>")
+            logger.error("Remove notifications error: items must be Set<NotificationEntity>")
             return
         }
         
         let identifiers = notifications.compactMap { $0.id?.uuidString }
         
         guard !identifiers.isEmpty else {
-            print("No valid notification IDs found for removal")
+            logger.debug("No valid notification IDs found for removal")
             return
         }
         
@@ -76,6 +94,6 @@ extension UNUserNotificationCenter {
         self.removePendingNotificationRequests(withIdentifiers: identifiers)
         self.removeDeliveredNotifications(withIdentifiers: identifiers)
         
-        print("Removed notifications with IDs: \(identifiers)")
+        logger.debug("Removed notifications with IDs: \(identifiers)")
     }
 }
