@@ -53,6 +53,9 @@
 		637B9F692D29754F0010F13B /* FilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F682D29754F0010F13B /* FilterCell.swift */; };
 		6380EB2D2D8843BA002CB75E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 6380EB2C2D8843BA002CB75E /* Localizable.xcstrings */; };
 		638E21962D2C209200FB1464 /* TaskManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638E21952D2C209200FB1464 /* TaskManagementView.swift */; };
+		6393E2332DC015CF00025838 /* AppleIDAuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393E2322DC015C300025838 /* AppleIDAuthorizationTests.swift */; };
+		6393E2352DC015DF00025838 /* GoogleAuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393E2342DC015D800025838 /* GoogleAuthorizationTests.swift */; };
+		6393E2372DC0163900025838 /* TaskManagementViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393E2362DC0162E00025838 /* TaskManagementViewModelTests.swift */; };
 		63958D2D2D33D8FE00A1913A /* SwiftUIPager in Frameworks */ = {isa = PBXBuildFile; productRef = 63958D2C2D33D8FE00A1913A /* SwiftUIPager */; };
 		6396C8102D7DC8B70046DB14 /* TodayTaskRowWithActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6396C80F2D7DC8B70046DB14 /* TodayTaskRowWithActions.swift */; };
 		63A092892D7BA05A0026A64D /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A092882D7BA0540026A64D /* ToastView.swift */; };
@@ -181,6 +184,9 @@
 		637B9F682D29754F0010F13B /* FilterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCell.swift; sourceTree = "<group>"; };
 		6380EB2C2D8843BA002CB75E /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		638E21952D2C209200FB1464 /* TaskManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementView.swift; sourceTree = "<group>"; };
+		6393E2322DC015C300025838 /* AppleIDAuthorizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleIDAuthorizationTests.swift; sourceTree = "<group>"; };
+		6393E2342DC015D800025838 /* GoogleAuthorizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAuthorizationTests.swift; sourceTree = "<group>"; };
+		6393E2362DC0162E00025838 /* TaskManagementViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementViewModelTests.swift; sourceTree = "<group>"; };
 		6396C80F2D7DC8B70046DB14 /* TodayTaskRowWithActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayTaskRowWithActions.swift; sourceTree = "<group>"; };
 		63A092882D7BA0540026A64D /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		63A0928B2D7C5EC30026A64D /* ToastModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastModel.swift; sourceTree = "<group>"; };
@@ -592,6 +598,15 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		6393E2312DC015B600025838 /* Authorization */ = {
+			isa = PBXGroup;
+			children = (
+				6393E2322DC015C300025838 /* AppleIDAuthorizationTests.swift */,
+				6393E2342DC015D800025838 /* GoogleAuthorizationTests.swift */,
+			);
+			path = Authorization;
+			sourceTree = "<group>";
+		};
 		63A092872D7BA02C0026A64D /* InternalNotifications */ = {
 			isa = PBXGroup;
 			children = (
@@ -651,6 +666,7 @@
 		63B88F532DBE532A00C9EA8A /* ToDoNotesTests */ = {
 			isa = PBXGroup;
 			children = (
+				6393E2312DC015B600025838 /* Authorization */,
 				63D65D1A2DBED07D00BE9D87 /* ViewModels */,
 			);
 			path = ToDoNotesTests;
@@ -725,6 +741,7 @@
 				63B88F5F2DBE9DDE00C9EA8A /* TodayViewModelTests.swift */,
 				63D65D1B2DBED0AA00BE9D87 /* CalendarViewModelTests.swift */,
 				63B88F632DBEAEEF00C9EA8A /* SettingsViewModelTests.swift */,
+				6393E2362DC0162E00025838 /* TaskManagementViewModelTests.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1073,6 +1090,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				63B88F602DBE9DDF00C9EA8A /* TodayViewModelTests.swift in Sources */,
+				6393E2332DC015CF00025838 /* AppleIDAuthorizationTests.swift in Sources */,
+				6393E2372DC0163900025838 /* TaskManagementViewModelTests.swift in Sources */,
+				6393E2352DC015DF00025838 /* GoogleAuthorizationTests.swift in Sources */,
 				63B88F562DBE533700C9EA8A /* MainViewModelTests.swift in Sources */,
 				63B88F642DBEAEF200C9EA8A /* SettingsViewModelTests.swift in Sources */,
 				63B88F592DBE555A00C9EA8A /* OnboardingViewModelTests.swift in Sources */,
