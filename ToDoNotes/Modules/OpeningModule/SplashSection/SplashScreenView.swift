@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 /// A splash screen view that displays the app logo and title briefly before transitioning to onboarding.
 struct SplashScreenView: View {
