@@ -68,31 +68,14 @@ struct MainTaskRowWithActions: View {
         }
     }
     
-    /// Defines trailing swipe action for removing or deleting the task.
+    /// Defines trailing swipe action for sharing, moving and deleting the task.
+    @ViewBuilder
     private var trailingSwipeAction: some View {
-        Button(role: .destructive) {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                if viewModel.selectedFilter != .deleted {
-                    do {
-                        try TaskService.toggleRemoved(for: entity)
-                        Toast.shared.present(title: Texts.Toasts.removed)
-                        logger.debug("Task moved to deleted: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
-                    } catch {
-                        logger.error("Task could not be moved to deleted: \(error.localizedDescription)")
-                    }
-                } else {
-                    do {
-                        try TaskService.deleteRemovedTask(for: entity)
-                        logger.debug("Task permanently deleted.")
-                    } catch {
-                        logger.error("Task could not be permanently deleted: \(error.localizedDescription)")
-                    }
-                }
-            }
-        } label: {
-            Image.TaskManagement.TaskRow.SwipeAction.remove
+        removeButton
+        if viewModel.selectedFilter != .deleted {
+            folderButton
+            shareButton
         }
-        .tint(Color.SwipeColors.remove)
     }
     
     // MARK: - Swipe Action Buttons
@@ -156,6 +139,50 @@ struct MainTaskRowWithActions: View {
             Image.TaskManagement.TaskRow.SwipeAction.restore
         }
         .tint(Color.SwipeColors.restore)
+    }
+    
+    private var shareButton: some View {
+        Button {
+            // Share Button Action
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.share
+        }
+        .tint(Color.SwipeColors.share)
+    }
+    
+    private var folderButton: some View {
+        Button {
+            // Folder Button Action
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.folder
+        }
+        .tint(Color.SwipeColors.folder)
+    }
+    
+    private var removeButton: some View {
+        Button(role: .destructive) {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                if viewModel.selectedFilter != .deleted {
+                    do {
+                        try TaskService.toggleRemoved(for: entity)
+                        Toast.shared.present(title: Texts.Toasts.removed)
+                        logger.debug("Task moved to deleted: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                    } catch {
+                        logger.error("Task could not be moved to deleted: \(error.localizedDescription)")
+                    }
+                } else {
+                    do {
+                        try TaskService.deleteRemovedTask(for: entity)
+                        logger.debug("Task permanently deleted.")
+                    } catch {
+                        logger.error("Task could not be permanently deleted: \(error.localizedDescription)")
+                    }
+                }
+            }
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.remove
+        }
+        .tint(Color.SwipeColors.remove)
     }
 }
 

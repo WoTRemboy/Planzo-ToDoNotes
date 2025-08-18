@@ -57,11 +57,10 @@ struct CalendarTaskRowWithActions: View {
     // MARK: - Leading Swipe Actions
     
     /// Actions shown when swiping from left to right.
+    @ViewBuilder
     private var leadingSwipeActions: some View {
-        Group {
-            toggleImportantButton
-            togglePinnedButton
-        }
+        toggleImportantButton
+        togglePinnedButton
     }
     
     /// Button to toggle important status.
@@ -115,7 +114,32 @@ struct CalendarTaskRowWithActions: View {
     // MARK: - Trailing Swipe Action
     
     /// Action shown when swiping from right to left.
+    @ViewBuilder
     private var trailingSwipeAction: some View {
+        removeButton
+        folderButton
+        shareButton
+    }
+    
+    private var shareButton: some View {
+        Button {
+            // Share Button Action
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.share
+        }
+        .tint(Color.SwipeColors.share)
+    }
+    
+    private var folderButton: some View {
+        Button {
+            // Folder Button Action
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.folder
+        }
+        .tint(Color.SwipeColors.folder)
+    }
+    
+    private var removeButton: some View {
         Button(role: .destructive) {
             withAnimation(.easeInOut(duration: 0.2)) {
                 do {
