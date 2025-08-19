@@ -35,6 +35,7 @@ final class TodayViewModel: ObservableObject {
     @Published internal var showingTaskCreateViewFullscreen: Bool = false
     /// Flag to toggle visibility of the search bar.
     @Published internal var showingSearchBar: Bool = false
+    @Published internal var showingShareSheet: Bool = false
     /// Whether to filter tasks to show only important ones.
     @Published internal var importance: Bool = false
     
@@ -71,5 +72,9 @@ final class TodayViewModel: ObservableObject {
         withAnimation(.easeInOut(duration: 0.2)) {
             importance.toggle()
         }
+    }
+    
+    internal func toggleShowShareSheet() {
+        showingShareSheet.toggle()
     }
 }

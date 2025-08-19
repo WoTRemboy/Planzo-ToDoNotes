@@ -49,6 +49,11 @@ struct CalendarView: View {
                 .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
                 .presentationDragIndicator(.visible)
         }
+        .sheet(isPresented: $viewModel.showingShareSheet) {
+            TaskManagementShareView()
+                .presentationDetents([.height(300)])
+                .presentationDragIndicator(.visible)
+        }
         // Task creation full screen
         .fullScreenCover(isPresented: $viewModel.showingTaskCreateViewFullscreen) {
             TaskManagementView(

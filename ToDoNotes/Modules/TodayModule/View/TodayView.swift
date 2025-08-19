@@ -46,6 +46,11 @@ struct TodayView: View {
                 .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
                 .presentationDragIndicator(.visible)
         }
+        .sheet(isPresented: $viewModel.showingShareSheet) {
+            TaskManagementShareView()
+                .presentationDetents([.height(300)])
+                .presentationDragIndicator(.visible)
+        }
         // Fullscreen task creation
         .fullScreenCover(isPresented: $viewModel.showingTaskCreateViewFullscreen) {
             TaskManagementView(

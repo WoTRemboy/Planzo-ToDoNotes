@@ -37,6 +37,7 @@ final class MainViewModel: ObservableObject {
     @Published internal var showingTaskRemoveAlert: Bool = false
     @Published internal var showingTaskEditRemovedAlert: Bool = false
     @Published internal var showingSearchBar: Bool = false
+    @Published internal var showingShareSheet: Bool = false
     
     /// The selected task for editing or viewing.
     @Published internal var selectedTask: TaskEntity? = nil
@@ -81,6 +82,10 @@ final class MainViewModel: ObservableObject {
     /// Toggles the visibility of the search bar.
     internal func toggleShowingSearchBar() {
         showingSearchBar.toggle()
+    }
+    
+    internal func toggleShowingShareSheet() {
+        showingShareSheet.toggle()
     }
     
     // MARK: - Filter and Folder Management

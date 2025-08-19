@@ -28,6 +28,7 @@ final class CalendarViewModel: ObservableObject {
     @Published internal var showingTaskCreateViewFullscreen: Bool = false
     /// Whether the month selector (calendar picker) is currently shown.
     @Published internal var showingCalendarSelector: Bool = false
+    @Published internal var showingShareSheet: Bool = false
     
     /// The task currently selected for editing.
     @Published internal var selectedTask: TaskEntity? = nil
@@ -94,5 +95,9 @@ final class CalendarViewModel: ObservableObject {
     internal func restoreTodayDate() {
         guard selectedDate != .now.startOfDay else { return }
         calendarDate = .now.startOfDay
+    }
+    
+    internal func toggleShowingShareSheet() {
+        showingShareSheet.toggle()
     }
 }
