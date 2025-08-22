@@ -49,6 +49,7 @@ final class SettingsViewModel: ObservableObject {
     /// Current reset result (success, failure, or empty).
     @Published internal var resetMessage: ResetMessage = .failure
     
+    @Published internal var selectedAppearance: Theme = .systemDefault
     /// Whether notifications are enabled.
     @Published internal var notificationsEnabled: Bool
     /// Whether the "notifications prohibited" alert should be shown.
