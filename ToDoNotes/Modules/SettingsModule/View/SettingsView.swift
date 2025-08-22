@@ -36,7 +36,21 @@ struct SettingsView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
         .popView(isPresented: $viewModel.showingAppearance, onDismiss: {}) {
-            SettingAppearanceView()
+            SelectorView<Theme>(
+                title: Texts.Settings.Appearance.title,
+                label: { $0.name },
+                options: Theme.allCases,
+                selected: $viewModel.selectedAppearance,
+                onCancel: {
+                    viewModel.toggleShowingAppearance()
+                },
+                onAccept: { _ in
+                    viewModel.changeTheme(theme: viewModel.selectedAppearance)
+                    viewModel.toggleShowingAppearance()
+                },
+                cancelTitle: Texts.Settings.Appearance.cancel,
+                acceptTitle: Texts.Settings.Appearance.accept
+            )
         }
         .popView(isPresented: $viewModel.showingLanguageAlert, onDismiss: {}) {
             languageAlert

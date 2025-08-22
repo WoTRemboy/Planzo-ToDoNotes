@@ -27,16 +27,20 @@ struct TodayTaskRowWithSwipeActions: View {
     private let isLast: Bool
     /// Namespace for matched geometry animations.
     private let namespace: Namespace.ID
+    /// Optional closure called when folder setup is requested.
+    private let onShowFolderSetup: ((TaskEntity) -> Void)?
     
     /// Initializes a new task row.
     /// - Parameters:
     ///   - entity: Task to display.
     ///   - isLast: Whether the task is the last item in section.
     ///   - namespace: Animation namespace.
-    init(entity: TaskEntity, isLast: Bool, namespace: Namespace.ID) {
+    ///   - onShowFolderSetup: Optional closure to handle showing folder setup UI.
+    init(entity: TaskEntity, isLast: Bool, namespace: Namespace.ID, onShowFolderSetup: ((TaskEntity) -> Void)? = nil) {
         self._entity = ObservedObject(wrappedValue: entity)
         self.isLast = isLast
         self.namespace = namespace
+        self.onShowFolderSetup = onShowFolderSetup
     }
     
     // MARK: - Body
@@ -61,32 +65,18 @@ struct TodayTaskRowWithSwipeActions: View {
     }
     
     /// Swipe actions on the leading side: important and pin.
+    @ViewBuilder
     private var leadingSwipeActions: some View {
-        Group {
-            toggleImportantButton
-            togglePinnedButton
-        }
+        toggleImportantButton
+        togglePinnedButton
     }
     
-    /// Swipe actions on the trailing side: remove.
+    /// Swipe actions on the trailing side: share, move & remove.
+    @ViewBuilder
     private var trailingSwipeActions: some View {
-        Group {
-            Button(role: .destructive) {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    do {
-                        try TaskService.toggleRemoved(for: entity)
-                        logger.debug("Task removed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
-                    } catch {
-                        logger.error("Task removal failed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
-                    }
-                }
-                Toast.shared.present(
-                    title: Texts.Toasts.removed)
-            } label: {
-                Image.TaskManagement.TaskRow.SwipeAction.remove
-            }
-            .tint(Color.SwipeColors.remove)
-        }
+        removeButton
+        folderButton
+        shareButton
     }
     
     // MARK: - Individual Swipe Buttons
@@ -138,12 +128,49 @@ struct TodayTaskRowWithSwipeActions: View {
         }
         .tint(Color.SwipeColors.pin)
     }
+    
+    private var shareButton: some View {
+        Button {
+            viewModel.toggleShowShareSheet()
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.share
+        }
+        .tint(Color.SwipeColors.share)
+    }
+    
+    private var folderButton: some View {
+        Button {
+            onShowFolderSetup?(entity) ?? viewModel.toggleShowingFolderSetupView()
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.folder
+        }
+        .tint(Color.SwipeColors.folder)
+    }
+    
+    private var removeButton: some View {
+        Button(role: .destructive) {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                do {
+                    try TaskService.toggleRemoved(for: entity)
+                    logger.debug("Task removed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                } catch {
+                    logger.error("Task removal failed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                }
+            }
+            Toast.shared.present(
+                title: Texts.Toasts.removed)
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.remove
+        }
+        .tint(Color.SwipeColors.remove)
+    }
 }
 
 
 #Preview {
     TodayTaskRowWithSwipeActions(entity: PreviewData.taskItem,
                                  isLast: false,
-                                 namespace: Namespace().wrappedValue)
+                                 namespace: Namespace().wrappedValue,
+                                 onShowFolderSetup: nil)
     .environmentObject(TodayViewModel())
 }

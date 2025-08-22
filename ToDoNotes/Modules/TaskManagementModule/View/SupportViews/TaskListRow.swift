@@ -88,6 +88,7 @@ struct TaskListRow: View {
         return Rectangle()
             .foregroundStyle(color)
             .frame(maxWidth: 6, maxHeight: .infinity)
+            .animation(.easeInOut(duration: 0.2), value: entity.folder)
     }
     
     /// Displays a small dot if the task is pinned to top.

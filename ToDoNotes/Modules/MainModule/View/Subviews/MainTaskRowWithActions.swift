@@ -20,10 +20,12 @@ struct MainTaskRowWithActions: View {
     @ObservedObject private var entity: TaskEntity
     /// Indicates if the task is the last in its section (for divider behavior).
     private let isLast: Bool
+    private let onShowFolderSetup: ((TaskEntity) -> Void)?
     
-    init(entity: TaskEntity, isLast: Bool) {
+    init(entity: TaskEntity, isLast: Bool, onShowFolderSetup: ((TaskEntity) -> Void)? = nil) {
         self._entity = ObservedObject(wrappedValue: entity)
         self.isLast = isLast
+        self.onShowFolderSetup = onShowFolderSetup
     }
     
     // MARK: - Body
@@ -68,31 +70,14 @@ struct MainTaskRowWithActions: View {
         }
     }
     
-    /// Defines trailing swipe action for removing or deleting the task.
+    /// Defines trailing swipe action for sharing, moving and deleting the task.
+    @ViewBuilder
     private var trailingSwipeAction: some View {
-        Button(role: .destructive) {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                if viewModel.selectedFilter != .deleted {
-                    do {
-                        try TaskService.toggleRemoved(for: entity)
-                        Toast.shared.present(title: Texts.Toasts.removed)
-                        logger.debug("Task moved to deleted: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
-                    } catch {
-                        logger.error("Task could not be moved to deleted: \(error.localizedDescription)")
-                    }
-                } else {
-                    do {
-                        try TaskService.deleteRemovedTask(for: entity)
-                        logger.debug("Task permanently deleted.")
-                    } catch {
-                        logger.error("Task could not be permanently deleted: \(error.localizedDescription)")
-                    }
-                }
-            }
-        } label: {
-            Image.TaskManagement.TaskRow.SwipeAction.remove
+        removeButton
+        if viewModel.selectedFilter != .deleted {
+            folderButton
+            shareButton
         }
-        .tint(Color.SwipeColors.remove)
     }
     
     // MARK: - Swipe Action Buttons
@@ -157,6 +142,50 @@ struct MainTaskRowWithActions: View {
         }
         .tint(Color.SwipeColors.restore)
     }
+    
+    private var shareButton: some View {
+        Button {
+            viewModel.toggleShowingShareSheet()
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.share
+        }
+        .tint(Color.SwipeColors.share)
+    }
+    
+    private var folderButton: some View {
+        Button {
+            onShowFolderSetup?(entity) ?? viewModel.toggleShowingFolderSetupView()
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.folder
+        }
+        .tint(Color.SwipeColors.folder)
+    }
+    
+    private var removeButton: some View {
+        Button(role: .destructive) {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                if viewModel.selectedFilter != .deleted {
+                    do {
+                        try TaskService.toggleRemoved(for: entity)
+                        Toast.shared.present(title: Texts.Toasts.removed)
+                        logger.debug("Task moved to deleted: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                    } catch {
+                        logger.error("Task could not be moved to deleted: \(error.localizedDescription)")
+                    }
+                } else {
+                    do {
+                        try TaskService.deleteRemovedTask(for: entity)
+                        logger.debug("Task permanently deleted.")
+                    } catch {
+                        logger.error("Task could not be permanently deleted: \(error.localizedDescription)")
+                    }
+                }
+            }
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.remove
+        }
+        .tint(Color.SwipeColors.remove)
+    }
 }
 
 // MARK: - Preview
@@ -164,3 +193,4 @@ struct MainTaskRowWithActions: View {
 #Preview {
     MainTaskRowWithActions(entity: TaskEntity(), isLast: false)
 }
+

@@ -28,9 +28,12 @@ final class CalendarViewModel: ObservableObject {
     @Published internal var showingTaskCreateViewFullscreen: Bool = false
     /// Whether the month selector (calendar picker) is currently shown.
     @Published internal var showingCalendarSelector: Bool = false
+    @Published internal var showingFolderSetupView: Bool = false
+    @Published internal var showingShareSheet: Bool = false
     
     /// The task currently selected for editing.
     @Published internal var selectedTask: TaskEntity? = nil
+    @Published internal var selectedTaskFolder: Folder = .other
     /// The date currently selected in the calendar (defaults to today).
     @Published internal var selectedDate: Date = .now.startOfDay
     
@@ -73,6 +76,10 @@ final class CalendarViewModel: ObservableObject {
         selectedTask = nil
     }
     
+    internal func toggleShowingFolderSetupView() {
+        showingFolderSetupView.toggle()
+    }
+    
     // MARK: - Calendar Handling
     
     /// Toggles the visibility of the calendar month/year selector.
@@ -94,5 +101,14 @@ final class CalendarViewModel: ObservableObject {
     internal func restoreTodayDate() {
         guard selectedDate != .now.startOfDay else { return }
         calendarDate = .now.startOfDay
+    }
+    
+    internal func toggleShowingShareSheet() {
+        showingShareSheet.toggle()
+    }
+    
+    internal func setTaskFolder(to folder: String?) {
+        guard let folder else { return }
+        selectedTaskFolder = Folder(rawValue: folder) ?? .other
     }
 }

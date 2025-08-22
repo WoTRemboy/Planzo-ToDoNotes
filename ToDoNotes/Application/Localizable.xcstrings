@@ -4046,6 +4046,35 @@
         }
       }
     },
+    "ToastsChangedFolder" : {
+      "comment" : "Moved to",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moved to"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Movido a"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déplacé dans"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Перемещено в"
+          }
+        }
+      }
+    },
     "ToastsCompletedError" : {
       "comment" : "Failed to Complete",
       "localizations" : {
@@ -4390,6 +4419,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Восстановлено"
+          }
+        }
+      }
+    },
+    "ToastsSameFolders" : {
+      "comment" : "Already in this folder",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Already in this folder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya en esta carpeta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déjà dans ce dossier"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Уже в данной папке"
           }
         }
       }

@@ -89,6 +89,8 @@ extension Color {
         static let remove = Color("SwipeActionDelete")
         static let restore = Color("SwipeActionRestore")
         static let duplicate = Color("SwipeActionDuplicate")
+        static let folder = Color("SwipeActionFolder")
+        static let share = Color("SwipeActionShare")
     }
 }
 

@@ -49,6 +49,7 @@ final class SettingsViewModel: ObservableObject {
     /// Current reset result (success, failure, or empty).
     @Published internal var resetMessage: ResetMessage = .failure
     
+    @Published internal var selectedAppearance: Theme = .systemDefault
     /// Whether notifications are enabled.
     @Published internal var notificationsEnabled: Bool
     /// Whether the "notifications prohibited" alert should be shown.
@@ -60,6 +61,7 @@ final class SettingsViewModel: ObservableObject {
     /// - Parameter notificationsEnabled: Whether notifications are currently enabled.
     init(notificationsEnabled: Bool) {
         self.notificationsEnabled = notificationsEnabled
+        self.selectedAppearance = self.userTheme
     }
     
     // MARK: - App Info
@@ -158,3 +160,4 @@ final class SettingsViewModel: ObservableObject {
         logger.debug("User changed task creation mode to: \(mode.rawValue)")
     }
 }
+

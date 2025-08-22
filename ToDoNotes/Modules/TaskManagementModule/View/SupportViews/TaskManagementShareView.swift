@@ -24,7 +24,7 @@ struct TaskManagementShareView: View {
         ZStack {
             // Background layer
             Rectangle()
-                .foregroundStyle(Color.BackColors.backSheet)
+                .foregroundStyle(Color.BackColors.backPrimary)
                 .ignoresSafeArea()
             
             // Main content

@@ -166,6 +166,8 @@ extension Image {
                 static let pinnedDeselect = Image("TaskRowSwipePinnedOn")
                 static let remove = Image("TaskRowSwipeRemove")
                 static let restore = Image("TaskRowSwipeRestore")
+                static let folder = Image("TaskRowSwipeFolder")
+                static let share = Image("TaskRowSwipeShare")
             }
         }
         

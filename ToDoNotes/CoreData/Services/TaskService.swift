@@ -293,6 +293,22 @@ extension TaskService {
         
         try save()
     }
+    
+    static func updateFolder(for task: TaskEntity, to folder: String) throws {
+        guard task.folder != folder else {
+            logger.debug("Folders are the same, no need to update.")
+            throw TaskServiceError.folderIsTheSame
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            task.folder = folder
+            do {
+                try save()
+                logger.debug("Folder updated and context saved successfully.")
+            } catch {
+                logger.error("Error saving context after updating folder: \(error.localizedDescription)")
+            }
+        }
+    }
 }
 
 
@@ -409,4 +425,8 @@ extension TaskService {
             completion?(false)
         }
     }
+}
+
+enum TaskServiceError: Error {
+    case folderIsTheSame
 }

@@ -24,6 +24,7 @@ final class TodayViewModel: ObservableObject {
     
     /// The currently selected task for editing.
     @Published internal var selectedTask: TaskEntity? = nil
+    @Published internal var selectedTaskFolder: Folder = .other
     /// Current text entered into the search bar.
     @Published internal var searchText: String = String()
     /// Height of the task management sheet.
@@ -33,8 +34,10 @@ final class TodayViewModel: ObservableObject {
     @Published internal var showingTaskCreateView: Bool = false
     /// Flag to show the fullscreen task creation view.
     @Published internal var showingTaskCreateViewFullscreen: Bool = false
+    @Published internal var showingFolderSetupView: Bool = false
     /// Flag to toggle visibility of the search bar.
     @Published internal var showingSearchBar: Bool = false
+    @Published internal var showingShareSheet: Bool = false
     /// Whether to filter tasks to show only important ones.
     @Published internal var importance: Bool = false
     
@@ -54,6 +57,11 @@ final class TodayViewModel: ObservableObject {
         }
     }
     
+    internal func setTaskFolder(to folder: String?) {
+        guard let folder else { return }
+        selectedTaskFolder = Folder(rawValue: folder) ?? .other
+    }
+    
     // MARK: - UI Toggle Methods
     
     /// Clears the selected task to dismiss.
@@ -71,5 +79,13 @@ final class TodayViewModel: ObservableObject {
         withAnimation(.easeInOut(duration: 0.2)) {
             importance.toggle()
         }
+    }
+    
+    internal func toggleShowShareSheet() {
+        showingShareSheet.toggle()
+    }
+    
+    internal func toggleShowingFolderSetupView() {
+        showingFolderSetupView.toggle()
     }
 }
