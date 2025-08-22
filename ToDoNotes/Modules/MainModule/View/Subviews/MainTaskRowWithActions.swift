@@ -20,10 +20,12 @@ struct MainTaskRowWithActions: View {
     @ObservedObject private var entity: TaskEntity
     /// Indicates if the task is the last in its section (for divider behavior).
     private let isLast: Bool
+    private let onShowFolderSetup: ((TaskEntity) -> Void)?
     
-    init(entity: TaskEntity, isLast: Bool) {
+    init(entity: TaskEntity, isLast: Bool, onShowFolderSetup: ((TaskEntity) -> Void)? = nil) {
         self._entity = ObservedObject(wrappedValue: entity)
         self.isLast = isLast
+        self.onShowFolderSetup = onShowFolderSetup
     }
     
     // MARK: - Body
@@ -152,7 +154,7 @@ struct MainTaskRowWithActions: View {
     
     private var folderButton: some View {
         Button {
-            // Folder Button Action
+            onShowFolderSetup?(entity) ?? viewModel.toggleShowingFolderSetupView()
         } label: {
             Image.TaskManagement.TaskRow.SwipeAction.folder
         }
@@ -191,3 +193,4 @@ struct MainTaskRowWithActions: View {
 #Preview {
     MainTaskRowWithActions(entity: TaskEntity(), isLast: false)
 }
+

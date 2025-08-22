@@ -30,6 +30,7 @@ struct MainView: View {
     @Namespace private var animation
     /// Tip to introduce the overview feature.
     private let overviewTip = MainPageOverview()
+    @State private var folderSetupTask: TaskEntity?
     
     // MARK: - Body
     
@@ -44,6 +45,29 @@ struct MainView: View {
         .animation(.easeInOut(duration: 0.2),
                    value: tasksResults.isEmpty)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .popView(isPresented: $viewModel.showingFolderSetupView,
+                 onDismiss: {}) {
+            SelectorView<Folder>(
+                title: Texts.MainPage.Folders.title,
+                label: { $0.name },
+                options: Folder.selectCases,
+                selected: $viewModel.selectedTaskFolder,
+                onCancel: {
+                    viewModel.toggleShowingFolderSetupView()
+                },
+                onAccept: { _ in
+                    if let task = folderSetupTask {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            TaskService.updateFolder(for: task, to: viewModel.selectedTaskFolder.rawValue)
+                        }
+                    }
+                    viewModel.toggleShowingFolderSetupView()
+                    folderSetupTask = nil
+                },
+                cancelTitle: Texts.Settings.Appearance.cancel,
+                acceptTitle: Texts.Settings.Appearance.accept
+            )
+        }
         
         // Configures and attaches sheets and full-screen covers for task creation and editing.
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
@@ -132,7 +156,9 @@ struct MainView: View {
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
         .scrollDisabled(filteredSegmentedTasks.isEmpty)
-        //        .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
+        
+        .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
+        .animation(.easeInOut(duration: 0.1), value: tasksResults.map { $0.folder })
     }
 }
 
@@ -147,7 +173,13 @@ extension MainView {
             ForEach(tasks) { entity in
                 MainTaskRowWithActions(
                     entity: entity,
-                    isLast: tasks.last == entity)
+                    isLast: tasks.last == entity,
+                    onShowFolderSetup: { task in
+                        folderSetupTask = task
+                        viewModel.setTaskFolder(to: task.folder)
+                        viewModel.toggleShowingFolderSetupView()
+                    }
+                )
             }
             .listRowInsets(EdgeInsets())
         }
@@ -321,3 +353,4 @@ extension MainView {
                 .datastoreLocation(.applicationDefault)])
         }
 }
+

@@ -36,11 +36,14 @@ final class MainViewModel: ObservableObject {
     @Published internal var showingTaskCreateViewFullscreen: Bool = false
     @Published internal var showingTaskRemoveAlert: Bool = false
     @Published internal var showingTaskEditRemovedAlert: Bool = false
+    @Published internal var showingFolderSetupView: Bool = false
     @Published internal var showingSearchBar: Bool = false
     @Published internal var showingShareSheet: Bool = false
     
     /// The selected task for editing or viewing.
     @Published internal var selectedTask: TaskEntity? = nil
+    @Published internal var selectedTaskFolder: Folder = .other
+
     /// The task selected for restoring from deleted.
     @Published internal var removedTask: TaskEntity? = nil
     /// The height of the task management view (dynamic sizing).
@@ -88,6 +91,10 @@ final class MainViewModel: ObservableObject {
         showingShareSheet.toggle()
     }
     
+    internal func toggleShowingFolderSetupView() {
+        showingFolderSetupView.toggle()
+    }
+    
     // MARK: - Filter and Folder Management
     
     /// Changes the currently active filter with animation.
@@ -116,6 +123,11 @@ final class MainViewModel: ObservableObject {
     /// - Returns: `true` if it matches, otherwise `false`.
     internal func compareFolders(with folder: Folder) -> Bool {
         folder == selectedFolder
+    }
+    
+    internal func setTaskFolder(to folder: String?) {
+        guard let folder else { return }
+        selectedTaskFolder = Folder(rawValue: folder) ?? .other
     }
     
     /// Toggles the importance-only filter.

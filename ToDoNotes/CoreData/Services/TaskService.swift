@@ -293,6 +293,18 @@ extension TaskService {
         
         try save()
     }
+    
+    static func updateFolder(for task: TaskEntity, to folder: String) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            task.folder = folder
+            do {
+                try save()
+                logger.debug("Folder updated and context saved successfully.")
+            } catch {
+                logger.error("Error saving context after updating folder: \(error.localizedDescription)")
+            }
+        }
+    }
 }
 
 
@@ -410,3 +422,4 @@ extension TaskService {
         }
     }
 }
+

@@ -15,6 +15,8 @@ enum Folder: String, CaseIterable {
     case lists = "TaskFoldersLists"
     case other = "TaskFoldersNoDate"
     
+    static internal var selectCases: [Folder] = [.reminders, .tasks, .lists, .other]
+    
     /// Returns a localized name for each folder to display in the UI.
     internal var name: String {
         switch self {
