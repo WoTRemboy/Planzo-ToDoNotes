@@ -61,6 +61,7 @@ final class SettingsViewModel: ObservableObject {
     /// - Parameter notificationsEnabled: Whether notifications are currently enabled.
     init(notificationsEnabled: Bool) {
         self.notificationsEnabled = notificationsEnabled
+        self.selectedAppearance = self.userTheme
     }
     
     // MARK: - App Info
@@ -159,3 +160,4 @@ final class SettingsViewModel: ObservableObject {
         logger.debug("User changed task creation mode to: \(mode.rawValue)")
     }
 }
+
