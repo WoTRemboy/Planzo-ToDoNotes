@@ -294,7 +294,11 @@ extension TaskService {
         try save()
     }
     
-    static func updateFolder(for task: TaskEntity, to folder: String) {
+    static func updateFolder(for task: TaskEntity, to folder: String) throws {
+        guard task.folder != folder else {
+            logger.debug("Folders are the same, no need to update.")
+            throw TaskServiceError.folderIsTheSame
+        }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             task.folder = folder
             do {
@@ -423,3 +427,6 @@ extension TaskService {
     }
 }
 
+enum TaskServiceError: Error {
+    case folderIsTheSame
+}

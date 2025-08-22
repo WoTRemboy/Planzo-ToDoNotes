@@ -57,8 +57,13 @@ struct MainView: View {
                 },
                 onAccept: { _ in
                     if let task = folderSetupTask {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            TaskService.updateFolder(for: task, to: viewModel.selectedTaskFolder.rawValue)
+                        do {
+                            try TaskService.updateFolder(for: task, to: viewModel.selectedTaskFolder.rawValue)
+                            Toast.shared.present(
+                                title: "\(Texts.Toasts.changedFolder) \(viewModel.selectedTaskFolder.name)")
+                        } catch {
+                            Toast.shared.present(
+                                title: Texts.Toasts.sameFolders)
                         }
                     }
                     viewModel.toggleShowingFolderSetupView()
