@@ -23,6 +23,8 @@ struct CalendarTaskRowWithActions: View {
     @ObservedObject private var entity: TaskEntity
     /// Flag indicating whether this is the last task in the list.
     private let isLast: Bool
+    /// Closure to call when folder setup should be shown, passing the current task entity.
+    private let onShowFolderSetup: ((TaskEntity) -> Void)?
     
     // MARK: - Initialization
     
@@ -31,9 +33,11 @@ struct CalendarTaskRowWithActions: View {
     /// - Parameters:
     ///   - entity: The task to be displayed.
     ///   - isLast: A Boolean indicating if this is the last task in the section.
-    init(entity: TaskEntity, isLast: Bool) {
+    ///   - onShowFolderSetup: An optional closure to handle folder setup action with the task entity.
+    init(entity: TaskEntity, isLast: Bool, onShowFolderSetup: ((TaskEntity) -> Void)? = nil) {
         self._entity = ObservedObject(wrappedValue: entity)
         self.isLast = isLast
+        self.onShowFolderSetup = onShowFolderSetup
     }
     
     // MARK: - Body
@@ -57,11 +61,10 @@ struct CalendarTaskRowWithActions: View {
     // MARK: - Leading Swipe Actions
     
     /// Actions shown when swiping from left to right.
+    @ViewBuilder
     private var leadingSwipeActions: some View {
-        Group {
-            toggleImportantButton
-            togglePinnedButton
-        }
+        toggleImportantButton
+        togglePinnedButton
     }
     
     /// Button to toggle important status.
@@ -115,7 +118,32 @@ struct CalendarTaskRowWithActions: View {
     // MARK: - Trailing Swipe Action
     
     /// Action shown when swiping from right to left.
+    @ViewBuilder
     private var trailingSwipeAction: some View {
+        removeButton
+        folderButton
+        shareButton
+    }
+    
+    private var shareButton: some View {
+        Button {
+            viewModel.toggleShowingShareSheet()
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.share
+        }
+        .tint(Color.SwipeColors.share)
+    }
+    
+    private var folderButton: some View {
+        Button {
+            onShowFolderSetup?(entity) ?? viewModel.toggleShowingFolderSetupView()
+        } label: {
+            Image.TaskManagement.TaskRow.SwipeAction.folder
+        }
+        .tint(Color.SwipeColors.folder)
+    }
+    
+    private var removeButton: some View {
         Button(role: .destructive) {
             withAnimation(.easeInOut(duration: 0.2)) {
                 do {
@@ -137,5 +165,5 @@ struct CalendarTaskRowWithActions: View {
 // MARK: - Preview
 
 #Preview {
-    CalendarTaskRowWithActions(entity: PreviewData.taskItem, isLast: false)
+    CalendarTaskRowWithActions(entity: PreviewData.taskItem, isLast: false, onShowFolderSetup: nil)
 }

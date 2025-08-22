@@ -272,6 +272,9 @@ final class Texts {
         
         static let duplicated = NSLocalizedString("ToastsDuplicated", comment: "Duplicated")
         static let duplicatedError = NSLocalizedString("ToastsDuplicatedError", comment: "Failed to Duplicate")
+        
+        static let changedFolder = NSLocalizedString("ToastsChangedFolder", comment: "Moved to")
+        static let sameFolders = NSLocalizedString("ToastsSameFolders", comment: "Already in this folder")
     }
     
     // MARK: - Tips Module Texts

@@ -25,6 +25,8 @@ struct CalendarView: View {
     /// Tip shown at the top of the task list to guide users.
     private let overviewTip = CalendarPageOverview()
     
+    @State private var folderSetupTask: TaskEntity? = nil
+    
     // MARK: - Body
     
     internal var body: some View {
@@ -38,6 +40,34 @@ struct CalendarView: View {
         .popView(isPresented: $viewModel.showingCalendarSelector, onDismiss: {}) {
             CalendarMonthSelector()
         }
+        .popView(isPresented: $viewModel.showingFolderSetupView,
+                 onDismiss: {}) {
+            SelectorView<Folder>(
+                title: Texts.MainPage.Folders.title,
+                label: { $0.name },
+                options: Folder.selectCases,
+                selected: $viewModel.selectedTaskFolder,
+                onCancel: {
+                    viewModel.toggleShowingFolderSetupView()
+                },
+                onAccept: { _ in
+                    if let task = folderSetupTask {
+                        do {
+                            try TaskService.updateFolder(for: task, to: viewModel.selectedTaskFolder.rawValue)
+                            Toast.shared.present(
+                                title: "\(Texts.Toasts.changedFolder) \(viewModel.selectedTaskFolder.name)")
+                        } catch {
+                            Toast.shared.present(
+                                title: Texts.Toasts.sameFolders)
+                        }
+                    }
+                    viewModel.toggleShowingFolderSetupView()
+                    folderSetupTask = nil
+                },
+                cancelTitle: Texts.Settings.Appearance.cancel,
+                acceptTitle: Texts.Settings.Appearance.accept
+            )
+        }
         // Task creation popup sheet
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
@@ -47,6 +77,11 @@ struct CalendarView: View {
                     viewModel.toggleShowingTaskCreateView()
                 }
                 .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
+                .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $viewModel.showingShareSheet) {
+            TaskManagementShareView()
+                .presentationDetents([.height(300)])
                 .presentationDragIndicator(.visible)
         }
         // Task creation full screen
@@ -134,8 +169,14 @@ struct CalendarView: View {
         Section {
             let tasks = dayTasks[section] ?? []
             ForEach(tasks) { entity in
-                CalendarTaskRowWithActions(entity: entity,
-                                           isLast: tasks.last == entity)
+                CalendarTaskRowWithActions(
+                    entity: entity,
+                    isLast: tasks.last == entity,
+                    onShowFolderSetup: { task in
+                        folderSetupTask = task
+                        viewModel.setTaskFolder(to: task.folder)
+                        viewModel.toggleShowingFolderSetupView()
+                    })
             }
             .listRowInsets(EdgeInsets())
         } header: {
@@ -251,3 +292,4 @@ extension CalendarView {
                 .datastoreLocation(.applicationDefault)])
         }
 }
+
