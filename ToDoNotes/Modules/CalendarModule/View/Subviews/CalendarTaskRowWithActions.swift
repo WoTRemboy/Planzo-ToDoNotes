@@ -23,6 +23,8 @@ struct CalendarTaskRowWithActions: View {
     @ObservedObject private var entity: TaskEntity
     /// Flag indicating whether this is the last task in the list.
     private let isLast: Bool
+    /// Closure to call when folder setup should be shown, passing the current task entity.
+    private let onShowFolderSetup: ((TaskEntity) -> Void)?
     
     // MARK: - Initialization
     
@@ -31,9 +33,11 @@ struct CalendarTaskRowWithActions: View {
     /// - Parameters:
     ///   - entity: The task to be displayed.
     ///   - isLast: A Boolean indicating if this is the last task in the section.
-    init(entity: TaskEntity, isLast: Bool) {
+    ///   - onShowFolderSetup: An optional closure to handle folder setup action with the task entity.
+    init(entity: TaskEntity, isLast: Bool, onShowFolderSetup: ((TaskEntity) -> Void)? = nil) {
         self._entity = ObservedObject(wrappedValue: entity)
         self.isLast = isLast
+        self.onShowFolderSetup = onShowFolderSetup
     }
     
     // MARK: - Body
@@ -132,7 +136,7 @@ struct CalendarTaskRowWithActions: View {
     
     private var folderButton: some View {
         Button {
-            // Folder Button Action
+            onShowFolderSetup?(entity) ?? viewModel.toggleShowingFolderSetupView()
         } label: {
             Image.TaskManagement.TaskRow.SwipeAction.folder
         }
@@ -161,5 +165,5 @@ struct CalendarTaskRowWithActions: View {
 // MARK: - Preview
 
 #Preview {
-    CalendarTaskRowWithActions(entity: PreviewData.taskItem, isLast: false)
+    CalendarTaskRowWithActions(entity: PreviewData.taskItem, isLast: false, onShowFolderSetup: nil)
 }

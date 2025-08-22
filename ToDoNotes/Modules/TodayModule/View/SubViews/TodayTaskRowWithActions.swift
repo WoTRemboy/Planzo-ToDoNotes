@@ -27,16 +27,20 @@ struct TodayTaskRowWithSwipeActions: View {
     private let isLast: Bool
     /// Namespace for matched geometry animations.
     private let namespace: Namespace.ID
+    /// Optional closure called when folder setup is requested.
+    private let onShowFolderSetup: ((TaskEntity) -> Void)?
     
     /// Initializes a new task row.
     /// - Parameters:
     ///   - entity: Task to display.
     ///   - isLast: Whether the task is the last item in section.
     ///   - namespace: Animation namespace.
-    init(entity: TaskEntity, isLast: Bool, namespace: Namespace.ID) {
+    ///   - onShowFolderSetup: Optional closure to handle showing folder setup UI.
+    init(entity: TaskEntity, isLast: Bool, namespace: Namespace.ID, onShowFolderSetup: ((TaskEntity) -> Void)? = nil) {
         self._entity = ObservedObject(wrappedValue: entity)
         self.isLast = isLast
         self.namespace = namespace
+        self.onShowFolderSetup = onShowFolderSetup
     }
     
     // MARK: - Body
@@ -136,7 +140,7 @@ struct TodayTaskRowWithSwipeActions: View {
     
     private var folderButton: some View {
         Button {
-            // Folder Button Action
+            onShowFolderSetup?(entity) ?? viewModel.toggleShowingFolderSetupView()
         } label: {
             Image.TaskManagement.TaskRow.SwipeAction.folder
         }
@@ -166,6 +170,7 @@ struct TodayTaskRowWithSwipeActions: View {
 #Preview {
     TodayTaskRowWithSwipeActions(entity: PreviewData.taskItem,
                                  isLast: false,
-                                 namespace: Namespace().wrappedValue)
+                                 namespace: Namespace().wrappedValue,
+                                 onShowFolderSetup: nil)
     .environmentObject(TodayViewModel())
 }

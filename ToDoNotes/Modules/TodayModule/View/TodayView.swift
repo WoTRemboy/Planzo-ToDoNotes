@@ -23,6 +23,7 @@ struct TodayView: View {
     
     /// TipKit overview tip for the today page.
     private let overviewTip = TodayPageOverview()
+    @State private var folderSetupTask: TaskEntity?
     
     // MARK: - Body
     
@@ -35,6 +36,29 @@ struct TodayView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .popView(isPresented: $viewModel.showingFolderSetupView,
+                 onDismiss: {}) {
+            SelectorView<Folder>(
+                title: Texts.MainPage.Folders.title,
+                label: { $0.name },
+                options: Folder.selectCases,
+                selected: $viewModel.selectedTaskFolder,
+                onCancel: {
+                    viewModel.toggleShowingFolderSetupView()
+                },
+                onAccept: { _ in
+                    if let task = folderSetupTask {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            TaskService.updateFolder(for: task, to: viewModel.selectedTaskFolder.rawValue)
+                        }
+                    }
+                    viewModel.toggleShowingFolderSetupView()
+                    folderSetupTask = nil
+                },
+                cancelTitle: Texts.Settings.Appearance.cancel,
+                acceptTitle: Texts.Settings.Appearance.accept
+            )
+        }
         
         // Sheet for task creation
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
@@ -120,10 +144,12 @@ struct TodayView: View {
         .background(Color.BackColors.backDefault)
         .scrollContentBackground(.hidden)
         .scrollDisabled(dayTasks.isEmpty)
-        //        .animation(.easeInOut(duration: 0.1), value: tasksResults.count)
+        .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
     }
     
     /// Creates a task section for a given `TaskSection` type.
+    /// - Parameter section: The section type (pinned, active, completed).
+    /// - Returns: A view representing the section with its tasks.
     @ViewBuilder
     private func taskFormSection(for section: TaskSection) -> some View {
         Section {
@@ -132,7 +158,12 @@ struct TodayView: View {
                 TodayTaskRowWithSwipeActions(
                     entity: entity,
                     isLast: tasks.last == entity,
-                    namespace: animation)
+                    namespace: animation,
+                    onShowFolderSetup: { task in
+                        folderSetupTask = task
+                        viewModel.setTaskFolder(to: task.folder)
+                        viewModel.toggleShowingFolderSetupView()
+                    })
             }
             .listRowInsets(EdgeInsets())
         } header: {
@@ -224,3 +255,4 @@ extension TodayView {
                 .datastoreLocation(.applicationDefault)])
         }
 }
+
