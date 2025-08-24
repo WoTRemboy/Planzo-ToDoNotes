@@ -127,6 +127,20 @@ final class Texts {
             static let cancel = NSLocalizedString("SettingsPageAppearanceCancel", comment: "Cancel")
         }
         
+        enum TimeLocale {
+            static let title = NSLocalizedString("SettingsPageTimeLocaleTitle", comment: "Time Format")
+            static let twelveHour = NSLocalizedString("SettingsPageTimeLocaleTwelveHour", comment: "12 hour (1:00 PM)")
+            static let twentyFourHour = NSLocalizedString("SettingsPageTimeLocaleTwentyFourHour", comment: "24 hour (13:00)")
+            static let system = NSLocalizedString("SettingsPageTimeLocaleSystem", comment: "System Default")
+        }
+        
+        enum WeekFirstDay {
+            static let title = NSLocalizedString("SettingsPageWeekFirstDayTitle", comment: "Week Start")
+            static let monday = NSLocalizedString("SettingsPageWeekFirstDayMonday", comment: "Monday")
+            static let saturady = NSLocalizedString("SettingsPageWeekFirstDaySaturday", comment: "Saturday")
+            static let sunday = NSLocalizedString("SettingsPageWeekFirstDaySunday", comment: "Sunday")
+        }
+        
         enum Notification {
             static let title = NSLocalizedString("SettingsPageNotificationsTitle", comment: "Notifications")
             static let prohibitedTitle = NSLocalizedString("SettingsPageNotificationsProhibitedTitle", comment: "Notifications are prohibited")

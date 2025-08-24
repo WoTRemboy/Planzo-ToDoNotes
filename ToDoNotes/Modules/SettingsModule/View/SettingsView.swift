@@ -79,6 +79,13 @@ struct SettingsView: View {
             .clipShape(.rect(cornerRadius: 10))
             .padding([.horizontal, .top])
             
+            VStack(spacing: 0) {
+                timeFormatButton
+                weekFirstDayButton
+            }
+            .clipShape(.rect(cornerRadius: 10))
+            .padding([.horizontal])
+            
             
             aboutAppButton
                 .clipShape(.rect(cornerRadius: 10))
@@ -175,6 +182,29 @@ struct SettingsView: View {
                     chevron: true,
                     last: true)
             })
+    }
+    
+    private var timeFormatButton: some View {
+        Button {
+            // Date Locale Button Action
+        } label: {
+            SettingFormRow(title: Texts.Settings.TimeLocale.title,
+                           image: Image.Settings.timeformat,
+                           details: Texts.Settings.TimeLocale.system,
+                           chevron: true)
+        }
+    }
+    
+    private var weekFirstDayButton: some View {
+        Button {
+            // Week Format Settings Button Action
+        } label: {
+            SettingFormRow(title: Texts.Settings.WeekFirstDay.title,
+                           image: Image.Settings.weekFirstDay,
+                           details: Texts.Settings.WeekFirstDay.monday,
+                           chevron: true,
+                           last: true)
+        }
     }
     
     /// Button leading to the "About App" page.
