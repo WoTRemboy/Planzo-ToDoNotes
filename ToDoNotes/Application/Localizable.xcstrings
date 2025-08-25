@@ -1465,36 +1465,6 @@
         }
       }
     },
-    "SettingsPageAppearanceCancel" : {
-      "comment" : "Cancel",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancelar"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Annuler"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Отмена"
-          }
-        }
-      }
-    },
     "SettingsPageAppearanceDark" : {
       "comment" : "Dark",
       "localizations" : {
@@ -2481,6 +2451,35 @@
         }
       }
     },
+    "SettingsPageWeekFirstDayFriday" : {
+      "comment" : "Friday",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Friday"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Viernes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vendredi"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пятница"
+          }
+        }
+      }
+    },
     "SettingsPageWeekFirstDayMonday" : {
       "comment" : "Monday",
       "localizations" : {
@@ -2568,6 +2567,35 @@
         }
       }
     },
+    "SettingsPageWeekFirstDayThursday" : {
+      "comment" : "Thursday",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thursday"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jueves"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jeudi"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Четверг"
+          }
+        }
+      }
+    },
     "SettingsPageWeekFirstDayTitle" : {
       "comment" : "Week Start",
       "localizations" : {
@@ -2593,6 +2621,64 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Начало недели"
+          }
+        }
+      }
+    },
+    "SettingsPageWeekFirstDayTuesday" : {
+      "comment" : "Tuesday",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tuesday"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Martes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mardi"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вторник"
+          }
+        }
+      }
+    },
+    "SettingsPageWeekFirstDayWednesday" : {
+      "comment" : "Wednesday",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wednesday"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miércoles"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mercredi"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Среда"
           }
         }
       }

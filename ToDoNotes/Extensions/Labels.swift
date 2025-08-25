@@ -135,6 +135,10 @@ final class Texts {
         enum WeekFirstDay {
             static let title = NSLocalizedString("SettingsPageWeekFirstDayTitle", comment: "Week Start")
             static let monday = NSLocalizedString("SettingsPageWeekFirstDayMonday", comment: "Monday")
+            static let tuesday = NSLocalizedString("SettingsPageWeekFirstDayTuesday", comment: "Tuesday")
+            static let wednesday = NSLocalizedString("SettingsPageWeekFirstDayWednesday", comment: "Wednesday")
+            static let thursday = NSLocalizedString("SettingsPageWeekFirstDayThursday", comment: "Thursday")
+            static let friday = NSLocalizedString("SettingsPageWeekFirstDayFriday", comment: "Friday")
             static let saturday = NSLocalizedString("SettingsPageWeekFirstDaySaturday", comment: "Saturday")
             static let sunday = NSLocalizedString("SettingsPageWeekFirstDaySunday", comment: "Sunday")
         }
