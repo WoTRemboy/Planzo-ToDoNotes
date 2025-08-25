@@ -66,6 +66,7 @@ final class SettingsViewModel: ObservableObject {
     init(notificationsEnabled: Bool) {
         self.notificationsEnabled = notificationsEnabled
         self.selectedAppearance = self.userTheme
+        self.selectedWeekFirstDay = WeekFirstDay.setupValue(for: firstDayOfWeek)
     }
     
     // MARK: - App Info
@@ -83,6 +84,14 @@ final class SettingsViewModel: ObservableObject {
     /// Current build number of the app.
     internal var buildVersion: String {
         Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+    }
+    
+    // MARK: - Computed Properties
+    
+    /// User's preferred first day of the week (1 – Sunday, 2 – Monday, 7 - Saturday).
+    internal var firstDayOfWeek: Int {
+        get { Date.firstDayOfWeek }
+        set { Date.firstDayOfWeek = newValue }
     }
     
     // MARK: - UI Toggles
@@ -171,5 +180,11 @@ final class SettingsViewModel: ObservableObject {
         taskCreation = mode
         logger.debug("User changed task creation mode to: \(mode.rawValue)")
     }
+    
+    /// Sets the preferred first day of the week for the calendar.
+    /// - Parameter value: 1 (Sunday), 2 (Monday), 7 (Saturday)
+    internal func setFirstDayOfWeek(to value: WeekFirstDay) {
+        self.firstDayOfWeek = value.rawValue
+        logger.debug("User changed firstDayOfWeek to: \(value.name)")
+    }
 }
-

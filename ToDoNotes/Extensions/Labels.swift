@@ -329,6 +329,7 @@ final class Texts {
         static let notifications = "NotificationsEnabled"
         static let theme = "UserTheme"
         static let taskCreation = "TaskCreationPage"
+        static let firstDayOfWeek = "FirstDayOfWeek"
     }
     
     // MARK: - Namespace ID Keys

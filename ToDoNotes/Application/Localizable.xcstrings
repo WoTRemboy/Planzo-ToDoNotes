@@ -2574,19 +2574,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Week Start"
+            "value" : "First Weekday"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inicio de la semana"
+            "value" : "Día inicial"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Début de la semaine"
+            "value" : "Jour initial"
           }
         },
         "ru" : {

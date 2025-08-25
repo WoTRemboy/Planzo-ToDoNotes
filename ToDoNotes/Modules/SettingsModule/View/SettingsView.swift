@@ -79,7 +79,7 @@ struct SettingsView: View {
                     viewModel.toggleShowingWeekFirstDay()
                 },
                 onAccept: { _ in
-                    // Week First Day Setting Action
+                    viewModel.setFirstDayOfWeek(to: viewModel.selectedWeekFirstDay)
                     viewModel.toggleShowingWeekFirstDay()
                 },
                 cancelTitle: Texts.Settings.cancel,
@@ -235,7 +235,7 @@ struct SettingsView: View {
         } label: {
             SettingFormRow(title: Texts.Settings.WeekFirstDay.title,
                            image: Image.Settings.weekFirstDay,
-                           details: Texts.Settings.WeekFirstDay.monday,
+                           details: WeekFirstDay.setupValue(for: viewModel.firstDayOfWeek).name,
                            chevron: true,
                            last: true)
         }

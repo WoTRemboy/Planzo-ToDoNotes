@@ -11,20 +11,29 @@ import Foundation
 /// like getting weekdays, month names, and calculating calendar layouts.
 extension Date {
     
-    // MARK: - Static Properties
-    
-    /// First day of the week according to the user's calendar settings.
-    static private var firstDayOfWeek = Calendar.current.firstWeekday
+    static var firstDayOfWeek: Int {
+        get {
+            UserDefaults.standard.integer(forKey: Texts.UserDefaults.firstDayOfWeek)
+                .nonZeroOr(Calendar.current.firstWeekday)
+        }
+        set {
+            UserDefaults.standard.set(
+                newValue,
+                forKey: Texts.UserDefaults.firstDayOfWeek
+            )
+        }
+    }
     
     // MARK: - Static Computed Properties
 
-    /// Returns an array of capitalized short names of weekdays, adjusted to start from the user's first weekday.
+    /// Returns an array of capitalized short names of weekdays,
+    /// adjusted to start from the user-selected first weekday stored in UserDefaults.
     static internal var capitalizedFirstLettersOfWeekdays: [String] {
         var weekdays = Calendar.current.shortWeekdaySymbols
         
         // Adjust the weekdays array to match the first day of the week.
-        if firstDayOfWeek > 1 {
-            for _ in 1..<firstDayOfWeek {
+        if Self.firstDayOfWeek > 1 {
+            for _ in 1..<Self.firstDayOfWeek {
                 if let first = weekdays.first {
                     weekdays.append(first)
                     weekdays.removeFirst()
@@ -77,7 +86,7 @@ extension Date {
     }
     
     /// Returns the first day to display before the start of the month in a calendar grid.
-    /// This ensures that the calendar layout starts at the beginning of the week.
+    /// This ensures that the calendar layout starts at the beginning of the user-selected week.
     private var firstWeekDayBeforeStart: Date {
         let startOfMonthWeekday = Calendar.current.component(.weekday, from: startOfMonth)
         var numberFromPreviousMonth = startOfMonthWeekday - Self.firstDayOfWeek
@@ -91,7 +100,8 @@ extension Date {
     // MARK: - Display Days Computed Property
 
     /// Returns an array of `Date` representing all days to display in a month view,
-    /// including days from the previous month necessary to complete the first week.
+    /// including days from the previous month necessary to complete the first week,
+    /// taking into account the user-selected first day of the week.
     internal var calendarDisplayDays: [Date] {
        var days: [Date] = []
         
@@ -108,5 +118,12 @@ extension Date {
            days.append(newDay)
        }
        return days
+    }
+}
+
+extension Int {
+    /// Returns the fallback if the integer is zero, otherwise returns self.
+    fileprivate func nonZeroOr(_ fallback: Int) -> Int {
+        self == 0 ? fallback : self
     }
 }
