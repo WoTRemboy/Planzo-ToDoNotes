@@ -41,6 +41,8 @@ final class SettingsViewModel: ObservableObject {
     @Published internal var showingLanguageAlert: Bool = false
     /// Flag to show appearance selector popup.
     @Published internal var showingAppearance: Bool = false
+    @Published internal var showingTimeFormat: Bool = false
+    @Published internal var showingWeekFirstDay: Bool = false
     
     /// Flag to show reset confirmation dialog.
     @Published internal var showingResetDialog: Bool = false
@@ -50,6 +52,8 @@ final class SettingsViewModel: ObservableObject {
     @Published internal var resetMessage: ResetMessage = .failure
     
     @Published internal var selectedAppearance: Theme = .systemDefault
+    @Published internal var selectedTimeFormat: TimeFormat = .system
+    @Published internal var selectedWeekFirstDay: WeekFirstDay = .monday
     /// Whether notifications are enabled.
     @Published internal var notificationsEnabled: Bool
     /// Whether the "notifications prohibited" alert should be shown.
@@ -62,6 +66,7 @@ final class SettingsViewModel: ObservableObject {
     init(notificationsEnabled: Bool) {
         self.notificationsEnabled = notificationsEnabled
         self.selectedAppearance = self.userTheme
+        self.selectedWeekFirstDay = WeekFirstDay.setupValue(for: firstDayOfWeek)
     }
     
     // MARK: - App Info
@@ -81,6 +86,14 @@ final class SettingsViewModel: ObservableObject {
         Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
     }
     
+    // MARK: - Computed Properties
+    
+    /// User's preferred first day of the week (1 – Sunday, 2 – Monday, 7 - Saturday).
+    internal var firstDayOfWeek: Int {
+        get { Date.firstDayOfWeek }
+        set { Date.firstDayOfWeek = newValue }
+    }
+    
     // MARK: - UI Toggles
     
     /// Toggles the display of the language alert.
@@ -91,6 +104,14 @@ final class SettingsViewModel: ObservableObject {
     /// Toggles the display of the appearance selector.
     internal func toggleShowingAppearance() {
         showingAppearance.toggle()
+    }
+    
+    internal func toggleShowingTimeFormat() {
+        showingTimeFormat.toggle()
+    }
+    
+    internal func toggleShowingWeekFirstDay() {
+        showingWeekFirstDay.toggle()
     }
     
     /// Toggles the display of the reset confirmation dialog.
@@ -159,5 +180,11 @@ final class SettingsViewModel: ObservableObject {
         taskCreation = mode
         logger.debug("User changed task creation mode to: \(mode.rawValue)")
     }
+    
+    /// Sets the preferred first day of the week for the calendar.
+    /// - Parameter value: 1 (Sunday), 2 (Monday), 7 (Saturday)
+    internal func setFirstDayOfWeek(to value: WeekFirstDay) {
+        self.firstDayOfWeek = value.rawValue
+        logger.debug("User changed firstDayOfWeek to: \(value.name)")
+    }
 }
-
