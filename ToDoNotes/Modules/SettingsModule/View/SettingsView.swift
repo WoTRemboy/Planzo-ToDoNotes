@@ -48,8 +48,42 @@ struct SettingsView: View {
                     viewModel.changeTheme(theme: viewModel.selectedAppearance)
                     viewModel.toggleShowingAppearance()
                 },
-                cancelTitle: Texts.Settings.Appearance.cancel,
-                acceptTitle: Texts.Settings.Appearance.accept
+                cancelTitle: Texts.Settings.cancel,
+                acceptTitle: Texts.Settings.accept
+            )
+        }
+        .popView(isPresented: $viewModel.showingTimeFormat, onDismiss: {}) {
+            SelectorView<TimeFormat>(
+                title: Texts.Settings.TimeFormat.title,
+                label: { $0.name },
+                options: TimeFormat.allCases,
+                selected: $viewModel.selectedTimeFormat,
+                onCancel: {
+                    viewModel.toggleShowingTimeFormat()
+                },
+                onAccept: { _ in
+                    // Time Format Setting Action
+                    viewModel.toggleShowingTimeFormat()
+                },
+                cancelTitle: Texts.Settings.cancel,
+                acceptTitle: Texts.Settings.accept
+            )
+        }
+        .popView(isPresented: $viewModel.showingWeekFirstDay, onDismiss: {}) {
+            SelectorView<WeekFirstDay>(
+                title: Texts.Settings.WeekFirstDay.title,
+                label: { $0.name },
+                options: WeekFirstDay.allCases,
+                selected: $viewModel.selectedWeekFirstDay,
+                onCancel: {
+                    viewModel.toggleShowingWeekFirstDay()
+                },
+                onAccept: { _ in
+                    // Week First Day Setting Action
+                    viewModel.toggleShowingWeekFirstDay()
+                },
+                cancelTitle: Texts.Settings.cancel,
+                acceptTitle: Texts.Settings.accept
             )
         }
         .popView(isPresented: $viewModel.showingLanguageAlert, onDismiss: {}) {
@@ -186,18 +220,18 @@ struct SettingsView: View {
     
     private var timeFormatButton: some View {
         Button {
-            // Date Locale Button Action
+            viewModel.toggleShowingTimeFormat()
         } label: {
-            SettingFormRow(title: Texts.Settings.TimeLocale.title,
+            SettingFormRow(title: Texts.Settings.TimeFormat.title,
                            image: Image.Settings.timeformat,
-                           details: Texts.Settings.TimeLocale.system,
+                           details: Texts.Settings.TimeFormat.system,
                            chevron: true)
         }
     }
     
     private var weekFirstDayButton: some View {
         Button {
-            // Week Format Settings Button Action
+            viewModel.toggleShowingWeekFirstDay()
         } label: {
             SettingFormRow(title: Texts.Settings.WeekFirstDay.title,
                            image: Image.Settings.weekFirstDay,

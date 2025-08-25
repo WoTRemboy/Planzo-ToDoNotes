@@ -98,6 +98,7 @@ final class Texts {
     enum Settings {
         static let title = NSLocalizedString("SettingsPageTitle", comment: "Settings")
         static let cancel = NSLocalizedString("SettingsPageCancel", comment: "Cancel")
+        static let accept = NSLocalizedString("SettingsPageAccept", comment: "Accept")
         static let ok = NSLocalizedString("SettingsPageOk", comment: "OK")
         
         enum About {
@@ -122,12 +123,9 @@ final class Texts {
             static let system = NSLocalizedString("SettingsPageAppearanceSystem", comment: "System")
             static let light = NSLocalizedString("SettingsPageAppearanceLight", comment: "Light")
             static let dark = NSLocalizedString("SettingsPageAppearanceDark", comment: "Dark")
-            
-            static let accept = NSLocalizedString("SettingsPageAppearanceAccept", comment: "Accept")
-            static let cancel = NSLocalizedString("SettingsPageAppearanceCancel", comment: "Cancel")
         }
         
-        enum TimeLocale {
+        enum TimeFormat {
             static let title = NSLocalizedString("SettingsPageTimeLocaleTitle", comment: "Time Format")
             static let twelveHour = NSLocalizedString("SettingsPageTimeLocaleTwelveHour", comment: "12 hour (1:00 PM)")
             static let twentyFourHour = NSLocalizedString("SettingsPageTimeLocaleTwentyFourHour", comment: "24 hour (13:00)")
@@ -137,7 +135,7 @@ final class Texts {
         enum WeekFirstDay {
             static let title = NSLocalizedString("SettingsPageWeekFirstDayTitle", comment: "Week Start")
             static let monday = NSLocalizedString("SettingsPageWeekFirstDayMonday", comment: "Monday")
-            static let saturady = NSLocalizedString("SettingsPageWeekFirstDaySaturday", comment: "Saturday")
+            static let saturday = NSLocalizedString("SettingsPageWeekFirstDaySaturday", comment: "Saturday")
             static let sunday = NSLocalizedString("SettingsPageWeekFirstDaySunday", comment: "Sunday")
         }
         

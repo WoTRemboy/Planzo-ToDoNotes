@@ -41,6 +41,8 @@ final class SettingsViewModel: ObservableObject {
     @Published internal var showingLanguageAlert: Bool = false
     /// Flag to show appearance selector popup.
     @Published internal var showingAppearance: Bool = false
+    @Published internal var showingTimeFormat: Bool = false
+    @Published internal var showingWeekFirstDay: Bool = false
     
     /// Flag to show reset confirmation dialog.
     @Published internal var showingResetDialog: Bool = false
@@ -50,6 +52,8 @@ final class SettingsViewModel: ObservableObject {
     @Published internal var resetMessage: ResetMessage = .failure
     
     @Published internal var selectedAppearance: Theme = .systemDefault
+    @Published internal var selectedTimeFormat: TimeFormat = .system
+    @Published internal var selectedWeekFirstDay: WeekFirstDay = .monday
     /// Whether notifications are enabled.
     @Published internal var notificationsEnabled: Bool
     /// Whether the "notifications prohibited" alert should be shown.
@@ -91,6 +95,14 @@ final class SettingsViewModel: ObservableObject {
     /// Toggles the display of the appearance selector.
     internal func toggleShowingAppearance() {
         showingAppearance.toggle()
+    }
+    
+    internal func toggleShowingTimeFormat() {
+        showingTimeFormat.toggle()
+    }
+    
+    internal func toggleShowingWeekFirstDay() {
+        showingWeekFirstDay.toggle()
     }
     
     /// Toggles the display of the reset confirmation dialog.

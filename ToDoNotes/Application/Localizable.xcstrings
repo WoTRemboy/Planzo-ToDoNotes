@@ -1436,7 +1436,7 @@
         }
       }
     },
-    "SettingsPageAppearanceAccept" : {
+    "SettingsPageAccept" : {
       "comment" : "Accept",
       "localizations" : {
         "en" : {
@@ -1467,6 +1467,7 @@
     },
     "SettingsPageAppearanceCancel" : {
       "comment" : "Cancel",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
