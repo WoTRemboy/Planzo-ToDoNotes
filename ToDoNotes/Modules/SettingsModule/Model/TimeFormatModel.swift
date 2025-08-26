@@ -24,6 +24,17 @@ enum TimeFormat: String, Codable {
             return Texts.Settings.TimeFormat.system
         }
     }
+    
+    internal var locale: Locale {
+        switch self {
+        case .twelveHour:
+            Locale(identifier: "en_US")
+        case .twentyFourHour:
+            Locale(identifier: "ru_RU")
+        case .system:
+            Locale.autoupdatingCurrent
+        }
+    }
 }
 
 enum TimeFormatSelector {
