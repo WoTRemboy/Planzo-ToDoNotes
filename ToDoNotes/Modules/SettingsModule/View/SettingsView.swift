@@ -62,7 +62,7 @@ struct SettingsView: View {
                     viewModel.toggleShowingTimeFormat()
                 },
                 onAccept: { _ in
-                    // Time Format Setting Action
+                    viewModel.changeTimeFormat(to: viewModel.selectedTimeFormat)
                     viewModel.toggleShowingTimeFormat()
                 },
                 cancelTitle: Texts.Settings.cancel,
@@ -224,7 +224,7 @@ struct SettingsView: View {
         } label: {
             SettingFormRow(title: Texts.Settings.TimeFormat.title,
                            image: Image.Settings.timeformat,
-                           details: Texts.Settings.TimeFormat.system,
+                           details: TimeFormatSelector.current.name,
                            chevron: true)
         }
     }
