@@ -105,6 +105,7 @@ struct SettingFormRow: View {
             Text(title)
                 .font(.system(size: 17, weight: .regular))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
+                .lineLimit(1)
         }
     }
 }

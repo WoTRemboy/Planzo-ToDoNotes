@@ -48,18 +48,25 @@ final class CalendarViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Computed & Internal Properties
-    
     /// Days to display in the custom calendar grid.
-    private(set) var days: [Date] = []
+    @Published internal var days: [Date] = []
     /// Names of the weekdays with capitalized first letters, localized.
-    internal let daysOfWeek: [String] = Date.capitalizedFirstLettersOfWeekdays
+    @Published internal var daysOfWeek: [String] = Date.capitalizedFirstLettersOfWeekdays
     
     // MARK: - Initialization
     
     /// Initializes the ViewModel and sets up the initial days array.
     init() {
         updateDays()
+        daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
+        NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: .main) { [weak self] _ in
+            guard let self = self else { return }
+            let newDaysOfWeek = Date.capitalizedFirstLettersOfWeekdays
+            if self.daysOfWeek != newDaysOfWeek {
+                self.daysOfWeek = newDaysOfWeek
+                self.updateDays()
+            }
+        }
     }
     
     // MARK: - Task Create View Handling

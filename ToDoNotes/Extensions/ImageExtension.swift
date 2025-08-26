@@ -90,6 +90,9 @@ extension Image {
         static let email = Image("SettingsEmail")
         static let taskCreate = Image("SettingsTaskCreate")
         
+        static let timeformat = Image("SettingsTimeFormat")
+        static let weekFirstDay = Image("SettingsWeekFirstDay")
+        
         static let chevron = Image("SettingsChevron")
         static let check = Image(systemName: "checkmark")
         

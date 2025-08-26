@@ -64,8 +64,8 @@ struct CalendarView: View {
                     viewModel.toggleShowingFolderSetupView()
                     folderSetupTask = nil
                 },
-                cancelTitle: Texts.Settings.Appearance.cancel,
-                acceptTitle: Texts.Settings.Appearance.accept
+                cancelTitle: Texts.Settings.cancel,
+                acceptTitle: Texts.Settings.accept
             )
         }
         // Task creation popup sheet

@@ -48,8 +48,42 @@ struct SettingsView: View {
                     viewModel.changeTheme(theme: viewModel.selectedAppearance)
                     viewModel.toggleShowingAppearance()
                 },
-                cancelTitle: Texts.Settings.Appearance.cancel,
-                acceptTitle: Texts.Settings.Appearance.accept
+                cancelTitle: Texts.Settings.cancel,
+                acceptTitle: Texts.Settings.accept
+            )
+        }
+        .popView(isPresented: $viewModel.showingTimeFormat, onDismiss: {}) {
+            SelectorView<TimeFormat>(
+                title: Texts.Settings.TimeFormat.title,
+                label: { $0.name },
+                options: TimeFormat.allCases,
+                selected: $viewModel.selectedTimeFormat,
+                onCancel: {
+                    viewModel.toggleShowingTimeFormat()
+                },
+                onAccept: { _ in
+                    viewModel.changeTimeFormat(to: viewModel.selectedTimeFormat)
+                    viewModel.toggleShowingTimeFormat()
+                },
+                cancelTitle: Texts.Settings.cancel,
+                acceptTitle: Texts.Settings.accept
+            )
+        }
+        .popView(isPresented: $viewModel.showingWeekFirstDay, onDismiss: {}) {
+            SelectorView<WeekFirstDay>(
+                title: Texts.Settings.WeekFirstDay.title,
+                label: { $0.name },
+                options: WeekFirstDay.allCases,
+                selected: $viewModel.selectedWeekFirstDay,
+                onCancel: {
+                    viewModel.toggleShowingWeekFirstDay()
+                },
+                onAccept: { _ in
+                    viewModel.setFirstDayOfWeek(to: viewModel.selectedWeekFirstDay)
+                    viewModel.toggleShowingWeekFirstDay()
+                },
+                cancelTitle: Texts.Settings.cancel,
+                acceptTitle: Texts.Settings.accept
             )
         }
         .popView(isPresented: $viewModel.showingLanguageAlert, onDismiss: {}) {
@@ -78,6 +112,13 @@ struct SettingsView: View {
             }
             .clipShape(.rect(cornerRadius: 10))
             .padding([.horizontal, .top])
+            
+            VStack(spacing: 0) {
+                timeFormatButton
+                weekFirstDayButton
+            }
+            .clipShape(.rect(cornerRadius: 10))
+            .padding([.horizontal])
             
             
             aboutAppButton
@@ -175,6 +216,29 @@ struct SettingsView: View {
                     chevron: true,
                     last: true)
             })
+    }
+    
+    private var timeFormatButton: some View {
+        Button {
+            viewModel.toggleShowingTimeFormat()
+        } label: {
+            SettingFormRow(title: Texts.Settings.TimeFormat.title,
+                           image: Image.Settings.timeformat,
+                           details: TimeFormatSelector.current.name,
+                           chevron: true)
+        }
+    }
+    
+    private var weekFirstDayButton: some View {
+        Button {
+            viewModel.toggleShowingWeekFirstDay()
+        } label: {
+            SettingFormRow(title: Texts.Settings.WeekFirstDay.title,
+                           image: Image.Settings.weekFirstDay,
+                           details: WeekFirstDay.setupValue(for: viewModel.firstDayOfWeek).name,
+                           chevron: true,
+                           last: true)
+        }
     }
     
     /// Button leading to the "About App" page.

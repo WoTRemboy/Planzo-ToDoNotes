@@ -90,18 +90,43 @@ extension Date {
     }
     
     // MARK: - Short Day Month Hour Minutes (MMM d, HH:mm)
-        
-    private static let shortDayMonthHourMinutesFormatter: DateFormatter = {
+    
+    static private func withTimeFormat(dayMonthTemplate: String, timeTemplate: String) -> String {
+        switch TimeFormatSelector.current {
+        case .system:
+            return dayMonthTemplate + ", " + timeTemplate
+        case .twelveHour:
+            return dayMonthTemplate + ", h:mm a"
+        case .twentyFourHour:
+            return dayMonthTemplate + ", HH:mm"
+        }
+    }
+    
+    static private var shortDayMonthHourMinutesFormatter: DateFormatter {
         let formatter = DateFormatter()
+        let locale = Locale.autoupdatingCurrent
+        
+        let dayMonthTemplate: String
         switch TimeLocale.locale {
         case .american:
-            formatter.dateFormat = "MMM d, HH:mm"
+            dayMonthTemplate = "MMM d"
         case .european, .russian:
-            formatter.dateFormat = "d MMM, HH:mm"
+            dayMonthTemplate = "d MMM"
         }
-        formatter.locale = Locale.autoupdatingCurrent
+        
+        let timeTemplate: String
+        switch TimeFormatSelector.current {
+        case .system:
+            timeTemplate = DateFormatter.dateFormat(fromTemplate: "j:mm", options: 0, locale: locale) ?? "HH:mm"
+        case .twelveHour:
+            timeTemplate = "h:mm a"
+        case .twentyFourHour:
+            timeTemplate = "HH:mm"
+        }
+        formatter.dateFormat = dayMonthTemplate + ", " + timeTemplate
+        formatter.locale = locale
         return formatter
-    }()
+    }
     
     internal var shortDayMonthHourMinutes: String {
         let dateString = Date.shortDayMonthHourMinutesFormatter.string(from: self)
@@ -110,12 +135,24 @@ extension Date {
     
     // MARK: - Full Hour Minutes (j:mm)
     
-    private static let fullHourMinutesFormatter: DateFormatter = {
+    private static func makeFullHourMinutesFormatter(for format: TimeFormat) -> DateFormatter {
         let formatter = DateFormatter()
         let locale = Locale.autoupdatingCurrent
-        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "j:mm", options: 0, locale: locale)
+        switch format {
+        case .system:
+            formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "j:mm", options: 0, locale: locale)
+        case .twelveHour:
+            formatter.dateFormat = "h:mm a"
+        case .twentyFourHour:
+            formatter.dateFormat = "HH:mm"
+        }
+        formatter.locale = locale
         return formatter
-    }()
+    }
+    
+    private static var fullHourMinutesFormatter: DateFormatter {
+        return makeFullHourMinutesFormatter(for: TimeFormatSelector.current)
+    }
     
     internal var fullHourMinutes: String {
         let dateString = Date.fullHourMinutesFormatter.string(from: self)
