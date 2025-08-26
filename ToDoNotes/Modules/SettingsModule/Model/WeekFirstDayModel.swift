@@ -35,7 +35,7 @@ enum WeekFirstDay: Int, Codable {
         }
     }
     
-    static func setupValue(for value: Int) -> WeekFirstDay {
-        WeekFirstDay(rawValue: value) ?? .monday
+    static func setupValue(for raw: Int) -> WeekFirstDay {
+        WeekFirstDay(rawValue: raw) ?? .monday
     }
 }

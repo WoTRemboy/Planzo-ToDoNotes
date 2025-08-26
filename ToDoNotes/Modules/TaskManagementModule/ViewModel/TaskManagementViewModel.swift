@@ -122,7 +122,7 @@ final class TaskManagementViewModel: ObservableObject {
         case .none:
             Texts.TaskManagement.DatePicker.Time.none
         case .value(_):
-            selectedTime.formatted(date: .omitted, time: .shortened)
+            selectedTime.fullHourMinutes
         }
     }
     

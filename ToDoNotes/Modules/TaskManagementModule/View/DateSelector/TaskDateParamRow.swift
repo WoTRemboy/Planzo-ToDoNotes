@@ -130,6 +130,7 @@ struct TaskDateParamRow: View {
                 }
                 .labelsHidden()
                 .blendMode(.destinationOver)
+                .environment(\.locale, TimeFormatSelector.current.locale)
                 .padding(.trailing,
                          viewModel.selectedTimeType == .none ? 16 : 70)
             }

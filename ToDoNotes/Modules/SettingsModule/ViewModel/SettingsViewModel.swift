@@ -66,6 +66,7 @@ final class SettingsViewModel: ObservableObject {
     init(notificationsEnabled: Bool) {
         self.notificationsEnabled = notificationsEnabled
         self.selectedAppearance = self.userTheme
+        self.selectedTimeFormat = TimeFormatSelector.current
         self.selectedWeekFirstDay = WeekFirstDay.setupValue(for: firstDayOfWeek)
     }
     
@@ -186,5 +187,13 @@ final class SettingsViewModel: ObservableObject {
     internal func setFirstDayOfWeek(to value: WeekFirstDay) {
         self.firstDayOfWeek = value.rawValue
         logger.debug("User changed firstDayOfWeek to: \(value.name)")
+    }
+    
+    /// Changes the application's time format (system, 12-hour, or 24-hour).
+    /// - Parameter format: The selected `TimeFormat`.
+    internal func changeTimeFormat(to format: TimeFormat) {
+        selectedTimeFormat = format
+        TimeFormatSelector.current = format
+        logger.debug("User changed time format to: \(format.rawValue)")
     }
 }

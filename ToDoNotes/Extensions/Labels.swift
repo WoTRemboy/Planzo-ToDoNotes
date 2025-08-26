@@ -333,6 +333,7 @@ final class Texts {
         static let notifications = "NotificationsEnabled"
         static let theme = "UserTheme"
         static let taskCreation = "TaskCreationPage"
+        static let timeFormat = "TimeFormat"
         static let firstDayOfWeek = "FirstDayOfWeek"
     }
     

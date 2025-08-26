@@ -2312,7 +2312,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "System Default"
+            "value" : "System"
           }
         },
         "es" : {
@@ -2370,25 +2370,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "12 hour (1:00 PM)"
+            "value" : "12 hour"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "12 horas (1:00 p. m.)"
+            "value" : "12 horas"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "12 heures (13:00)"
+            "value" : "12 heures"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "12-часовой (1:00 PM)"
+            "value" : "12-часовой"
           }
         }
       }
@@ -2399,25 +2399,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "24 hour (13:00)"
+            "value" : "24 hour"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "24 horas (13:00)"
+            "value" : "24 horas"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "24 heures (13:00)"
+            "value" : "24 heures"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "24-часовой (13:00)"
+            "value" : "24-часовой"
           }
         }
       }
