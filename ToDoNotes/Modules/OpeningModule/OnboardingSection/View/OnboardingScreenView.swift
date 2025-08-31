@@ -9,9 +9,17 @@ import SwiftUI
 import SwiftUIPager
 import TipKit
 import OSLog
+//import GoogleSignIn
+//import GoogleAuthService
 
 /// A logger instance for debug and error messages.
 private let logger = Logger(subsystem: "com.todonotes.opening", category: "OnboardingScreenView")
+
+struct IdentifiableError: Identifiable, Error {
+    let id = UUID()
+    let wrapped: Error
+    var localizedDescription: String { wrapped.localizedDescription }
+}
 
 /// View displaying the onboarding process or the main `RootView` if onboarding is complete.
 struct OnboardingScreenView: View {
@@ -28,6 +36,9 @@ struct OnboardingScreenView: View {
     
     /// Current page tracker for the pager.
     @StateObject private var page: Page = .first()
+    
+    /// Stores error for alert presentation
+    @State private var alertError: IdentifiableError? = nil
     
     // MARK: - Body
     
@@ -52,7 +63,12 @@ struct OnboardingScreenView: View {
             VStack(spacing: 0) {
                 content
                 progressCircles
-                selectPageButtons
+                VStack(spacing: 8) {
+                    selectPageButtons
+                    // signWithAppleButton
+                    signWithGoogleButton
+                }
+                
                 if viewModel.isLastPage(current: page.index) {
                     termsPolicyLabel
                         .padding([.top, .horizontal])
@@ -60,8 +76,14 @@ struct OnboardingScreenView: View {
                 } else {
                     skipButton
                 }
+                
             }
             .padding(.vertical)
+            .alert(item: $alertError) { error in
+                Alert(title: Text("Ошибка авторизации"),
+                      message: Text(error.localizedDescription),
+                      dismissButton: .default(Text("OK")))
+            }
         }
     }
     
@@ -200,13 +222,41 @@ struct OnboardingScreenView: View {
     /// Button for signing in with Google.
     private var signWithGoogleButton: some View {
         Button {
-            //viewModel.googleAuthorization()
+            viewModel.startGoogleWebSignIn(presentationAnchor: UIApplication.shared.windows.first { $0.isKeyWindow } ?? UIWindow()) { result in
+                switch result {
+                case .success:
+                    viewModel.transferToMainPage()
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        alertError = IdentifiableError(wrapped: error)
+                    }
+                }
+                
+//                if let topVC = UIApplication.shared.connectedScenes
+//                    .compactMap({ ($0 as? UIWindowScene)?.windows.first(where: { $0.isKeyWindow }) })
+//                    .first?.rootViewController {
+//                    viewModel.signInWithGoogle(presentingViewController: topVC) { result in
+//                        switch result {
+//                        case .success:
+//                            viewModel.transferToMainPage()
+//                        case .failure(let error):
+//                            DispatchQueue.main.async {
+//                                alertError = IdentifiableError(wrapped: error)
+//                            }
+//                        }
+//                    }
+//                } else {
+//                    logger.error("Top view controller not found for Google Sign-In presentation.")
+//                }
+            }
         } label: {
             HStack {
-                Image.LoginPage.googleLogo
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                Text(Texts.OnboardingPage.googleLogin)
+                
+                    Image.LoginPage.googleLogo
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                
+                Text(Texts.OnboardingPage.googleLogin.isEmpty ? "Sign in with Google" : Texts.OnboardingPage.googleLogin)
                     .font(.system(size: 17, weight: .medium))
                     .foregroundStyle(Color.black)
             }
@@ -219,7 +269,6 @@ struct OnboardingScreenView: View {
         
         .clipShape(.rect(cornerRadius: 10))
         .shadow(radius: 2)
-        .frame(height: 50)
         .padding(.horizontal)
     }
     
