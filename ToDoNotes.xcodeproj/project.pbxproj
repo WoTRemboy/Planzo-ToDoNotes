@@ -10,7 +10,6 @@
 		6302B3562E5C5C7E002E65C1 /* TimeFormatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6302B3552E5C5C7A002E65C1 /* TimeFormatModel.swift */; };
 		6302B3582E5C6A6E002E65C1 /* WeekFirstDayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6302B3572E5C6A64002E65C1 /* WeekFirstDayModel.swift */; };
 		6303E2C02D33FF870096DB64 /* RootViewControllerMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */; };
-		6303E2C22D3405040096DB64 /* AuthorizationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2C12D3404FD0096DB64 /* AuthorizationViewModel.swift */; };
 		6303E2D22D346BBF0096DB64 /* TaskModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2D02D346BBF0096DB64 /* TaskModel.xcdatamodeld */; };
 		631315BB2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631315BA2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift */; };
 		631315BD2D7DE21E0030D446 /* MainTaskRowWithActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631315BC2D7DE21E0030D446 /* MainTaskRowWithActions.swift */; };
@@ -114,6 +113,10 @@
 		63F6C71F2D2B1E5200716AB0 /* CalendarTaskFormPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C71E2D2B1E5200716AB0 /* CalendarTaskFormPlaceholder.swift */; };
 		63F849462D38145E00E9D5CE /* TaskChecklistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F849452D38145E00E9D5CE /* TaskChecklistView.swift */; };
 		63FC3DF62D92D510000D6AFA /* TaskManagementPreviewNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FC3DF52D92D509000D6AFA /* TaskManagementPreviewNavBar.swift */; };
+		63FD574D2E68B77F00B7B062 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FD574C2E68B77D00B7B062 /* UserModel.swift */; };
+		63FD574F2E68B83400B7B062 /* AppleAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FD574E2E68B83400B7B062 /* AppleAuthService.swift */; };
+		63FD57512E68B83900B7B062 /* GoogleAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FD57502E68B83900B7B062 /* GoogleAuthService.swift */; };
+		63FD57532E68B84900B7B062 /* AuthNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FD57522E68B84900B7B062 /* AuthNetworkService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -143,7 +146,6 @@
 		6302B3552E5C5C7A002E65C1 /* TimeFormatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFormatModel.swift; sourceTree = "<group>"; };
 		6302B3572E5C6A64002E65C1 /* WeekFirstDayModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekFirstDayModel.swift; sourceTree = "<group>"; };
 		6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewControllerMethods.swift; sourceTree = "<group>"; };
-		6303E2C12D3404FD0096DB64 /* AuthorizationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationViewModel.swift; sourceTree = "<group>"; };
 		6303E2D12D346BBF0096DB64 /* TaskModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaskModel.xcdatamodel; sourceTree = "<group>"; };
 		631315BA2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTaskRowWithActions.swift; sourceTree = "<group>"; };
 		631315BC2D7DE21E0030D446 /* MainTaskRowWithActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTaskRowWithActions.swift; sourceTree = "<group>"; };
@@ -247,6 +249,10 @@
 		63F849452D38145E00E9D5CE /* TaskChecklistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskChecklistView.swift; sourceTree = "<group>"; };
 		63FB4F272D31577A007FA140 /* ToDoNotes.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ToDoNotes.entitlements; sourceTree = "<group>"; };
 		63FC3DF52D92D509000D6AFA /* TaskManagementPreviewNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementPreviewNavBar.swift; sourceTree = "<group>"; };
+		63FD574C2E68B77D00B7B062 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
+		63FD574E2E68B83400B7B062 /* AppleAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleAuthService.swift; sourceTree = "<group>"; };
+		63FD57502E68B83900B7B062 /* GoogleAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAuthService.swift; sourceTree = "<group>"; };
+		63FD57522E68B84900B7B062 /* AuthNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthNetworkService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -380,6 +386,7 @@
 			children = (
 				635FEF712D24B72E007FFBBA /* Application */,
 				6303E2C82D3469DC0096DB64 /* CoreData */,
+				63FD574B2E68B76F00B7B062 /* Authorization */,
 				637B9F5D2D296F290010F13B /* Router */,
 				63C2DC742D8C474000E6E0A0 /* Modules */,
 				63BCD8AD2D7729460016950F /* Helpers */,
@@ -448,7 +455,6 @@
 			isa = PBXGroup;
 			children = (
 				635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */,
-				6303E2C12D3404FD0096DB64 /* AuthorizationViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -880,6 +886,17 @@
 			path = Preview;
 			sourceTree = "<group>";
 		};
+		63FD574B2E68B76F00B7B062 /* Authorization */ = {
+			isa = PBXGroup;
+			children = (
+				63FD574C2E68B77D00B7B062 /* UserModel.swift */,
+				63FD57522E68B84900B7B062 /* AuthNetworkService.swift */,
+				63FD574E2E68B83400B7B062 /* AppleAuthService.swift */,
+				63FD57502E68B83900B7B062 /* GoogleAuthService.swift */,
+			);
+			path = Authorization;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1008,11 +1025,11 @@
 				635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */,
 				637B9F4C2D295B290010F13B /* MainView.swift in Sources */,
 				63F6C7122D2AB71900716AB0 /* CalendarNavBar.swift in Sources */,
-				6303E2C22D3405040096DB64 /* AuthorizationViewModel.swift in Sources */,
 				63F6C6F72D29B41E00716AB0 /* FolderCell.swift in Sources */,
 				6303E2C02D33FF870096DB64 /* RootViewControllerMethods.swift in Sources */,
 				637B9F5F2D296F3D0010F13B /* TabRouter.swift in Sources */,
 				63A5B6692D49446800B0E408 /* TaskDateParamRow.swift in Sources */,
+				63FD57512E68B83900B7B062 /* GoogleAuthService.swift in Sources */,
 				63CD66982D367EC50053C93C /* TaskManagementViewModel.swift in Sources */,
 				631315BD2D7DE21E0030D446 /* MainTaskRowWithActions.swift in Sources */,
 				637B9F612D296FA90010F13B /* ContentView.swift in Sources */,
@@ -1023,6 +1040,7 @@
 				63F6C71F2D2B1E5200716AB0 /* CalendarTaskFormPlaceholder.swift in Sources */,
 				63F6C7052D2AA94F00716AB0 /* ThemeModel.swift in Sources */,
 				63F6C7152D2AB99600716AB0 /* CalendarViewModel.swift in Sources */,
+				63FD57532E68B84900B7B062 /* AuthNetworkService.swift in Sources */,
 				63A092892D7BA05A0026A64D /* ToastView.swift in Sources */,
 				63F6C71A2D2AF3B900716AB0 /* CustomCalendarCell.swift in Sources */,
 				637B9F482D295A510010F13B /* FolderModel.swift in Sources */,
@@ -1047,12 +1065,14 @@
 				63ADCBBA2D92CE6900C80DCB /* TaskManagementPreview.swift in Sources */,
 				63A0928C2D7C5EC80026A64D /* ToastModel.swift in Sources */,
 				63A5B6672D493C4200B0E408 /* TaskCustomCalendar.swift in Sources */,
+				63FD574F2E68B83400B7B062 /* AppleAuthService.swift in Sources */,
 				631315BB2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift in Sources */,
 				63F6C6F92D29B78400716AB0 /* FoldersScrollView.swift in Sources */,
 				63BCB7202DAFF44F008603D4 /* MainPageOverviewTip.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
 				637B9F662D2974E40010F13B /* FilterScrollView.swift in Sources */,
 				6338FFA92D7C9FE900E9E4C2 /* PreviewData.swift in Sources */,
+				63FD574D2E68B77F00B7B062 /* UserModel.swift in Sources */,
 				632D0DDA2D37E0AE0071684D /* HeightReader.swift in Sources */,
 				63AE657F2D72172E009A3541 /* TaskCreationPageModel.swift in Sources */,
 				63AE65832D721AED009A3541 /* SettingAboutPageView.swift in Sources */,
