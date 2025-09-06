@@ -1,3 +1,10 @@
+//
+//  GoogleAuthService.swift
+//  ToDoNotes
+//
+//  Created by Roman Tverdokhleb on 03/09/2025.
+//
+
 import GoogleSignIn
 import OSLog
 import UIKit
