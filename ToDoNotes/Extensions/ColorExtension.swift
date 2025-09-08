@@ -25,7 +25,7 @@ extension Color {
     
     enum ButtonColors {
         static let onboarding = Color("OnboardingButton")
-        static let appleLogin = Color("AppleLoginButton")
+        static let login = Color("LoginButton")
         static let remove = Color ("RemoveButton")
     }
     
@@ -36,6 +36,7 @@ extension Color {
         static let labelDetails = Color("LabelDetails")
         static let labelPrimary = Color("LabelPrimary")
         static let labelSecondary = Color("LabelSecondary")
+        static let labelLogout = Color("LabelLogout")
         static let labelTertiary = Color("LabelTertiary")
         static let labelReversed = Color("LabelReversed")
         static let labelBlack = Color("LabelBlack")

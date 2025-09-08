@@ -64,6 +64,18 @@
             ReferencedContainer = "container:ToDoNotes.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "GOOGLE_CLIENT_ID"
+            value = "1024130776338-16an5gj724mcvre2llpmf48g7s7uig1s.apps.googleusercontent.com"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "GOOGLE_URL_SCHEME"
+            value = "com.googleusercontent.apps.1024130776338-16an5gj724mcvre2llpmf48g7s7uig1s"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

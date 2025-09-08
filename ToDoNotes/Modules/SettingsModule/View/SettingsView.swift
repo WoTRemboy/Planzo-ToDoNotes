@@ -22,6 +22,7 @@ struct SettingsView: View {
     
     /// EnvironmentObject providing state management for the settings screen.
     @EnvironmentObject private var viewModel: SettingsViewModel
+    @EnvironmentObject private var authService: AuthNetworkService
     
     // MARK: - Body
     
@@ -99,36 +100,67 @@ struct SettingsView: View {
     
     /// Scrollable content with grouped setting options.
     private var settingsList: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                appearanceButton
-                notificationRow
-                    .onAppear {
-                        viewModel.readNotificationStatus()
-                    }
-                languageButton
-                resetTasksButton
-                taskCreationSettingsButton
-            }
-            .clipShape(.rect(cornerRadius: 10))
-            .padding([.horizontal, .top])
-            
-            VStack(spacing: 0) {
-                timeFormatButton
-                weekFirstDayButton
-            }
-            .clipShape(.rect(cornerRadius: 10))
-            .padding([.horizontal])
-            
-            
-            aboutAppButton
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(spacing: 16) {
+                profileButton
+                    .clipShape(.rect(cornerRadius: 10))
+                    .padding([.horizontal, .top])
+                
+                VStack(spacing: 0) {
+                    appearanceButton
+                    notificationRow
+                        .onAppear {
+                            viewModel.readNotificationStatus()
+                        }
+                    languageButton
+                    resetTasksButton
+                    taskCreationSettingsButton
+                }
                 .clipShape(.rect(cornerRadius: 10))
                 .padding(.horizontal)
+                
+                VStack(spacing: 0) {
+                    timeFormatButton
+                    weekFirstDayButton
+                }
+                .clipShape(.rect(cornerRadius: 10))
+                .padding([.horizontal])
+                
+                aboutAppButton
+                
+                if let _ = authService.currentUser {
+                    logoutButton
+                }
+            }
+            .padding(.bottom)
         }
         .scrollContentBackground(.hidden)
     }
     
     // MARK: - Individual Setting Items
+    
+    private var profileButton: some View {
+        Group {
+            if let user = authService.currentUser {
+                CustomNavLink(
+                    destination: SettingAccountView()
+                        .environmentObject(authService),
+                    label: {
+                        SettingsProfileRow(
+                            title: user.name,
+                            image: user.avatarUrl,
+                            details: Texts.Authorization.Details.freePlan,
+                            chevron: true)
+                    })
+            } else {
+                Button {
+                    // Sign In Button Action
+                } label: {
+                    SettingsProfileRow()
+                }
+            }
+        }
+    }
     
     /// Button to open appearance customization modal.
     private var appearanceButton: some View {
@@ -252,6 +284,18 @@ struct SettingsView: View {
                         chevron: true,
                         last: true)
                 }
+                .clipShape(.rect(cornerRadius: 10))
+                .padding(.horizontal)
+    }
+    
+    private var logoutButton: some View {
+        Button {
+            authService.logout(accessToken: authService.accessToken ?? String())
+        } label: {
+            SettingLogoutButton()
+        }
+        .clipShape(.rect(cornerRadius: 10))
+        .padding(.horizontal)
     }
     
     // MARK: - Alerts
@@ -301,6 +345,7 @@ struct SettingsView: View {
 #Preview {
     SettingsView()
         .environmentObject(SettingsViewModel(notificationsEnabled: false))
+        .environmentObject(AuthNetworkService())
 }
 
 // MARK: - Private Logic
