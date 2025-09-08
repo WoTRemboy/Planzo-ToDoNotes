@@ -22,10 +22,6 @@ final class Texts {
         static let next = NSLocalizedString("OnboardingPageNext", comment: "Next")
         static let start = NSLocalizedString("OnboardingPageStart", comment: "Start")
         
-        static let appleLogin = NSLocalizedString("OnboardingPageAppleLogin", comment: "Sign in with Apple")
-        static let googleLogin = NSLocalizedString("OnboardingPageGoogleLogin", comment: "Sign in with Google")
-        static let withoutAuth = NSLocalizedString("OnboardingPageWithoutAuth", comment: "Without Authorization")
-        
         static let firstTitle = NSLocalizedString("OnboardingPageFirstTitle", comment: "Here's a short guide to help you get started")
         static let secondTitle = NSLocalizedString("OnboardingPageSecondTitle", comment: "Check tasks by status. Create folders to sort things your way. Notes match folder colors")
         static let thirdTitle = NSLocalizedString("OnboardingPageThirdTitle", comment: "Create notes or tasks with due dates and reminders")
@@ -268,6 +264,17 @@ final class Texts {
         static let today = NSLocalizedString("TabbarTodayTitle", comment: "Today")
         static let calendar = NSLocalizedString("TabbarCalendarTitle", comment: "Calendar")
         static let settings = NSLocalizedString("TabbarSettingsTitle", comment: "Settings")
+    }
+    
+    enum Authorization {
+        static let login = NSLocalizedString("AuthorizationLogin", comment: "Sign in or Sign up")
+        static let appleLogin = NSLocalizedString("AuthorizationAppleLogin", comment: "Sign in with Apple")
+        static let googleLogin = NSLocalizedString("AuthorizationGoogleLogin", comment: "Sign in with Google")
+        static let withoutAuth = NSLocalizedString("AuthorizationWithoutAuth", comment: "Without Authorization")
+        
+        enum Error {
+            static let authorizationFailed = NSLocalizedString("AuthorizationFailed", comment: "Authorization failed")
+        }
     }
     
     // MARK: - Toasts Module Texts

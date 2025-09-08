@@ -55,3 +55,11 @@ enum OnboardingButtonType {
     /// Button that completes onboarding and starts the app.
     case getStarted
 }
+
+// MARK: - Identifiable Error Type
+
+struct IdentifiableError: Identifiable, Error {
+    let id = UUID()
+    let wrapped: Error
+    var localizedDescription: String { wrapped.localizedDescription }
+}

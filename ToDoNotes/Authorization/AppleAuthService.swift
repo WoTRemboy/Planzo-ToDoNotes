@@ -13,9 +13,9 @@ private let logger = Logger(subsystem: "com.todonotes.opening", category: "Apple
 
 final class AppleAuthService: NSObject, ObservableObject, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding, ASWebAuthenticationPresentationContextProviding {
     
-    var onAuthSuccess: ((ASAuthorizationAppleIDCredential) -> Void)?
-    var onAuthError: ((Error) -> Void)?
-    var onBackendAuthResult: ((Result<AuthResponse, Error>) -> Void)?
+    internal var onAuthSuccess: ((ASAuthorizationAppleIDCredential) -> Void)?
+    internal var onAuthError: ((Error) -> Void)?
+    internal var onBackendAuthResult: ((Result<AuthResponse, Error>) -> Void)?
     
     private let networkService: AuthNetworkService
     
@@ -24,7 +24,7 @@ final class AppleAuthService: NSObject, ObservableObject, ASAuthorizationControl
         super.init()
     }
 
-    func startAppleSignIn() {
+    internal func startAppleSignIn() {
         let request = ASAuthorizationAppleIDProvider().createRequest()
         request.requestedScopes = [.fullName, .email]
         let controller = ASAuthorizationController(authorizationRequests: [request])
@@ -34,7 +34,7 @@ final class AppleAuthService: NSObject, ObservableObject, ASAuthorizationControl
     }
 
     // MARK: - ASAuthorizationControllerDelegate
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+    internal func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         guard let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential else {
             logger.error("Apple authorization finished, but credential is not ASAuthorizationAppleIDCredential.")
             onAuthError?(URLError(.cannotParseResponse))
@@ -52,9 +52,7 @@ final class AppleAuthService: NSObject, ObservableObject, ASAuthorizationControl
             onAuthError?(URLError(.badServerResponse))
             return
         }
-        
-        print(idToken)
-        
+                
         logger.debug("Apple idToken received. Exchanging with backend...")
         networkService.appleAuthorize(idToken: idToken) { [weak self] result in
             switch result {
@@ -69,20 +67,21 @@ final class AppleAuthService: NSObject, ObservableObject, ASAuthorizationControl
         }
     }
     
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+    internal func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         logger.error("Apple authorization failed with error: \(error.localizedDescription).")
         onAuthError?(error)
     }
     
     // MARK: - Presentation
-    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+    
+    internal func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         if let windowScene = UIApplication.shared.connectedScenes.first(where: { $0 is UIWindowScene }) as? UIWindowScene {
             return windowScene.windows.first { $0.isKeyWindow } ?? UIWindow()
         }
         return UIWindow()
     }
     
-    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+    internal func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         if let windowScene = UIApplication.shared.connectedScenes.first(where: { $0 is UIWindowScene }) as? UIWindowScene {
             return windowScene.windows.first { $0.isKeyWindow } ?? UIWindow()
         }
