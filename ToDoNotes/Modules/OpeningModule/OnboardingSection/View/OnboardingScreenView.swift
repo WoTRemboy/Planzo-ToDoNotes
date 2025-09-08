@@ -29,6 +29,24 @@ struct OnboardingScreenView: View {
     /// Current page tracker for the pager.
     @StateObject private var page: Page = .first()
     
+    /// Network service for authentication.
+    @StateObject private var networkService = AuthNetworkService()
+    
+    /// Apple authentication service.
+    @StateObject private var appleAuthService = AppleAuthService()
+    
+    /// Google authentication service.
+    @State private var googleAuthService: GoogleAuthService
+    
+    init() {
+        let networkService = AuthNetworkService()
+        _networkService = StateObject(wrappedValue: networkService)
+        _appleAuthService = StateObject(wrappedValue: AppleAuthService())
+        
+        let googleClientID = ProcessInfo.processInfo.environment["GOOGLE_CLIENT_ID"] ?? String()
+        _googleAuthService = State(initialValue: GoogleAuthService(clientID: googleClientID, networkService: networkService))
+    }
+    
     // MARK: - Body
     
     internal var body: some View {
@@ -53,15 +71,23 @@ struct OnboardingScreenView: View {
                 content
                 progressCircles
                 selectPageButtons
+                
                 if viewModel.isLastPage(current: page.index) {
+                    signInButtons
                     termsPolicyLabel
                         .padding([.top, .horizontal])
                         .padding(.bottom, hasNotch() ? 4 : 0)
                 } else {
                     skipButton
                 }
+                
             }
             .padding(.vertical)
+            .alert(item: $viewModel.alertError) { error in
+                Alert(title: Text(Texts.Authorization.Error.authorizationFailed),
+                      message: Text(error.localizedDescription),
+                      dismissButton: .default(Text(Texts.Settings.ok)))
+            }
         }
     }
     
@@ -72,23 +98,23 @@ struct OnboardingScreenView: View {
         Pager(page: page,
               data: viewModel.pages,
               id: \.self) { index in
-                VStack(spacing: 0) {
-                    viewModel.steps[index].image
-                        .resizable()
-                        .scaledToFit()
-                        .clipShape(.rect(cornerRadius: 10))
-                        .padding(.horizontal)
-                    
-                    Text(viewModel.steps[index].name)
-                        .font(.system(size: 18, weight: .medium))
-                        .foregroundStyle(Color.LabelColors.labelPrimary)
-                        .multilineTextAlignment(.center)
-                        .minimumScaleFactor(0.5)
-                        .frame(width: index == 1 ? 350 : 270)
-                        .padding(.top, hasNotch() ? 24 : 16)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                .tag(index)
+            VStack(spacing: 0) {
+                viewModel.steps[index].image
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(.rect(cornerRadius: 10))
+                    .padding(.horizontal)
+                
+                Text(viewModel.steps[index].name)
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(Color.LabelColors.labelPrimary)
+                    .multilineTextAlignment(.center)
+                    .minimumScaleFactor(0.5)
+                    .frame(width: index == 1 ? 350 : 270)
+                    .padding(.top, hasNotch() ? 24 : 16)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .tag(index)
         }
               .interactive(scale: 0.8)
               .itemSpacing(10)
@@ -126,7 +152,7 @@ struct OnboardingScreenView: View {
     
     /// Displays the button that either advances the pager or finishes onboarding.
     private var selectPageButtons: some View {
-        VStack(spacing: 16) {
+        Group {
             if !viewModel.isLastPage(current: page.index) {
                 nextPageButton
                     .transition(.blurReplace)
@@ -150,7 +176,7 @@ struct OnboardingScreenView: View {
                 viewModel.transferToMainPage()
             }
         } label: {
-            Text(!viewModel.isLastPage(current: page.index) ? Texts.OnboardingPage.next : Texts.OnboardingPage.start)
+            Text(!viewModel.isLastPage(current: page.index) ? Texts.OnboardingPage.next : Texts.Authorization.withoutAuth)
                 .font(.system(size: 17, weight: .medium))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             
@@ -166,23 +192,31 @@ struct OnboardingScreenView: View {
         .padding(.top)
     }
     
+    private var signInButtons: some View {
+        VStack(spacing: 16) {
+            signWithAppleButton
+            signWithGoogleButton
+        }
+        .transition(.blurReplace)
+    }
+    
     // MARK: - Sign with Apple Button
     
-    /// Button for signing in with Apple.
+    /// Button for signing in with Apple using AppleAuthService.
     private var signWithAppleButton: some View {
         Button {
-            viewModel.startAppleSignIn()
+            appleAuthService.startAppleSignIn()
         } label: {
             HStack {
                 Image.LoginPage.appleLogo
                     .resizable()
                     .frame(width: 20, height: 20)
-                Text(Texts.OnboardingPage.appleLogin)
+                Text(Texts.Authorization.appleLogin)
                     .font(.system(size: 17, weight: .medium))
                     .foregroundStyle(Color.LabelColors.labelReversed)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .background(Color.ButtonColors.appleLogin)
+            .background(Color.ButtonColors.login)
         }
         .frame(height: 50)
         .frame(maxWidth: .infinity)
@@ -191,35 +225,37 @@ struct OnboardingScreenView: View {
         .clipShape(.rect(cornerRadius: 10))
         .shadow(radius: 2)
         .frame(height: 50)
+        
         .padding(.horizontal)
-        .padding(.top, 30)
+        .padding(.top, 16)
     }
     
     // MARK: - Sign with Google Button
     
-    /// Button for signing in with Google.
+    /// Button for signing in with Google using GoogleAuthService.
     private var signWithGoogleButton: some View {
         Button {
-            //viewModel.googleAuthorization()
+            viewModel.handleGoogleSignIn(googleAuthService: googleAuthService)
         } label: {
             HStack {
                 Image.LoginPage.googleLogo
                     .resizable()
                     .frame(width: 20, height: 20)
-                Text(Texts.OnboardingPage.googleLogin)
+                
+                Text(Texts.Authorization.googleLogin)
                     .font(.system(size: 17, weight: .medium))
-                    .foregroundStyle(Color.black)
+                    .foregroundStyle(Color.LabelColors.labelReversed)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .background(Color.white)
+            .background(Color.ButtonColors.login)
         }
         .frame(height: 50)
         .frame(maxWidth: .infinity)
         .minimumScaleFactor(0.4)
+        .transition(.blurReplace)
         
         .clipShape(.rect(cornerRadius: 10))
         .shadow(radius: 2)
-        .frame(height: 50)
         .padding(.horizontal)
     }
     
@@ -227,7 +263,7 @@ struct OnboardingScreenView: View {
     
     /// Button allowing users to skip to the last onboarding step.
     private var skipButton: some View {
-        Text(!viewModel.isLastPage(current: page.index) ? Texts.OnboardingPage.skip : Texts.OnboardingPage.withoutAuth)
+        Text(Texts.OnboardingPage.skip)
             .font(.system(size: 14))
             .fontWeight(.medium)
             .foregroundStyle(Color.LabelColors.labelPrimary)

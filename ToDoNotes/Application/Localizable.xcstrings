@@ -15,6 +15,151 @@
     "%@:" : {
       "shouldTranslate" : false
     },
+    "AuthorizationAppleLogin" : {
+      "comment" : "Sign in with Apple",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in with Apple"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar sesión con Apple"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se connecter avec Apple"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войти с помощью Apple"
+          }
+        }
+      }
+    },
+    "AuthorizationFailed" : {
+      "comment" : "Authorization failed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authorization failed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error de autorización"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec de l’autorisation"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ошибка авторизации"
+          }
+        }
+      }
+    },
+    "AuthorizationGoogleLogin" : {
+      "comment" : "Sign in with Google",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in with Google"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar sesión con Google"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se connecter avec Google"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войти с помощью Google"
+          }
+        }
+      }
+    },
+    "AuthorizationLogin" : {
+      "comment" : "Sign in or Sign up",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in or Sign up"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar sesión o registrarse"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se connecter ou s’inscrire"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войти или зарегистрироваться"
+          }
+        }
+      }
+    },
+    "AuthorizationWithoutAuth" : {
+      "comment" : "Without Authorization",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Without Authorization"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin autorización"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sans autorisation"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Без авторизации"
+          }
+        }
+      }
+    },
     "CalendarPageCalendarAccept" : {
       "comment" : "Accept",
       "localizations" : {
@@ -914,35 +1059,6 @@
         }
       }
     },
-    "OnboardingPageAppleLogin" : {
-      "comment" : "Sign in with Apple",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign in with Apple"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Iniciar sesión con Apple"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se connecter avec Apple"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Войти с помощью Apple"
-          }
-        }
-      }
-    },
     "OnboardingPageFirstTitle" : {
       "comment" : "Here's a short guide to help you get started",
       "localizations" : {
@@ -997,35 +1113,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Свайп задачи влево или вправо для быстрого доступа к действиям"
-          }
-        }
-      }
-    },
-    "OnboardingPageGoogleLogin" : {
-      "comment" : "Sign in with Google",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign in with Google"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Iniciar sesión con Google"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se connecter avec Google"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Войти с помощью Google"
           }
         }
       }
@@ -1258,35 +1345,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Создавайте заметки или задачи с датами выполнения и напоминаниями"
-          }
-        }
-      }
-    },
-    "OnboardingPageWithoutAuth" : {
-      "comment" : "Without Authorization",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Without Authorization"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sin autorización"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sans autorisation"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Без авторизации"
           }
         }
       }
@@ -4888,5 +4946,5 @@
       }
     }
   },
-  "version" : "1.0"
+  "version" : "1.1"
 }
