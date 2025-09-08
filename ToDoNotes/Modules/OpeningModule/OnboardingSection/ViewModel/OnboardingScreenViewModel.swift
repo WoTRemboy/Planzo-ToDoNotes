@@ -78,4 +78,3 @@ final class OnboardingViewModel: NSObject, ObservableObject {
         }
     }
 }
-

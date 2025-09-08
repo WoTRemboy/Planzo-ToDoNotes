@@ -8,7 +8,7 @@
 import Foundation
 import Security
 
-final class TokenStorageService {
+final class TokenStorageService: ObservableObject {
     enum TokenType: String {
         case appleIDToken
         case googleIDToken

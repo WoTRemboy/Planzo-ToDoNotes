@@ -22,6 +22,7 @@ struct SettingsView: View {
     
     /// EnvironmentObject providing state management for the settings screen.
     @EnvironmentObject private var viewModel: SettingsViewModel
+    @EnvironmentObject private var authService: AuthNetworkService
     
     // MARK: - Body
     
@@ -100,6 +101,10 @@ struct SettingsView: View {
     /// Scrollable content with grouped setting options.
     private var settingsList: some View {
         ScrollView {
+            profileButton
+                .clipShape(.rect(cornerRadius: 10))
+                .padding([.horizontal, .top])
+            
             VStack(spacing: 0) {
                 appearanceButton
                 notificationRow
@@ -111,7 +116,7 @@ struct SettingsView: View {
                 taskCreationSettingsButton
             }
             .clipShape(.rect(cornerRadius: 10))
-            .padding([.horizontal, .top])
+            .padding(.horizontal)
             
             VStack(spacing: 0) {
                 timeFormatButton
@@ -129,6 +134,28 @@ struct SettingsView: View {
     }
     
     // MARK: - Individual Setting Items
+    
+    private var profileButton: some View {
+        Group {
+            if let user = authService.currentUser {
+                Button {
+                    // Profile Details Button Action
+                } label: {
+                    SettingsProfileRow(
+                        title: user.name,
+                        image: user.avatarUrl,
+                        details: "Free Plan",
+                        chevron: true)
+                }
+            } else {
+                Button {
+                    // Sign In Button Action
+                } label: {
+                    SettingsProfileRow()
+                }
+            }
+        }
+    }
     
     /// Button to open appearance customization modal.
     private var appearanceButton: some View {
