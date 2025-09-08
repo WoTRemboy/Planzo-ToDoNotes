@@ -21,7 +21,7 @@ struct SettingsProfileRow: View {
     
     // MARK: - Initialization
         
-    /// Creates a new instance of `SettingFormRow`.
+    /// Creates a new instance of `SettingsProfileRow`.
     /// - Parameters:
     ///   - title: The title text.
     ///   - image: An optional left-side profile image URL.

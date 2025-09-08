@@ -274,6 +274,17 @@ final class Texts {
         static let googleLogin = NSLocalizedString("AuthorizationGoogleLogin", comment: "Sign in with Google")
         static let withoutAuth = NSLocalizedString("AuthorizationWithoutAuth", comment: "Without Authorization")
         
+        enum Details {
+            static let account = NSLocalizedString("AuthorizationDetailsAccount", comment: "Account")
+            static let nickname = NSLocalizedString("AuthorizationDetailsNickname", comment: "Nickname")
+            static let email = NSLocalizedString("AuthorizationDetailsEmail", comment: "Email")
+            static let passkey = NSLocalizedString("AuthorizationDetailsPasskey", comment: "Passkey")
+            static let twoStepVerification = NSLocalizedString("AuthorizationDetailsTwoStepVerification", comment: "2-Step Verification")
+            static let plan = NSLocalizedString("AuthorizationDetailsPlan", comment: "Plan")
+            static let free = NSLocalizedString("AuthorizationDetailsFree", comment: "Free")
+            static let freePlan = NSLocalizedString("AuthorizationDetailsFreePlan", comment: "Free Plan")
+        }
+        
         enum Error {
             static let authorizationFailed = NSLocalizedString("AuthorizationFailed", comment: "Authorization failed")
         }
