@@ -100,7 +100,7 @@ struct SettingsView: View {
     
     /// Scrollable content with grouped setting options.
     private var settingsList: some View {
-        ScrollView(.vertical) {
+        ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 16) {
                 profileButton
                     .clipShape(.rect(cornerRadius: 10))
@@ -132,6 +132,7 @@ struct SettingsView: View {
                     logoutButton
                 }
             }
+            .padding(.bottom)
         }
         .scrollContentBackground(.hidden)
     }
@@ -141,15 +142,16 @@ struct SettingsView: View {
     private var profileButton: some View {
         Group {
             if let user = authService.currentUser {
-                Button {
-                    // Profile Details Button Action
-                } label: {
-                    SettingsProfileRow(
-                        title: user.name,
-                        image: user.avatarUrl,
-                        details: "Free Plan",
-                        chevron: true)
-                }
+                CustomNavLink(
+                    destination: SettingAccountView()
+                        .environmentObject(authService),
+                    label: {
+                        SettingsProfileRow(
+                            title: user.name,
+                            image: user.avatarUrl,
+                            details: Texts.Authorization.Details.freePlan,
+                            chevron: true)
+                    })
             } else {
                 Button {
                     // Sign In Button Action
@@ -343,6 +345,7 @@ struct SettingsView: View {
 #Preview {
     SettingsView()
         .environmentObject(SettingsViewModel(notificationsEnabled: false))
+        .environmentObject(AuthNetworkService())
 }
 
 // MARK: - Private Logic
