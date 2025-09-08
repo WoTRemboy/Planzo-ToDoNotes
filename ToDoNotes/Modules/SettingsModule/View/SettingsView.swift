@@ -100,35 +100,38 @@ struct SettingsView: View {
     
     /// Scrollable content with grouped setting options.
     private var settingsList: some View {
-        ScrollView {
-            profileButton
-                .clipShape(.rect(cornerRadius: 10))
-                .padding([.horizontal, .top])
-            
-            VStack(spacing: 0) {
-                appearanceButton
-                notificationRow
-                    .onAppear {
-                        viewModel.readNotificationStatus()
-                    }
-                languageButton
-                resetTasksButton
-                taskCreationSettingsButton
-            }
-            .clipShape(.rect(cornerRadius: 10))
-            .padding(.horizontal)
-            
-            VStack(spacing: 0) {
-                timeFormatButton
-                weekFirstDayButton
-            }
-            .clipShape(.rect(cornerRadius: 10))
-            .padding([.horizontal])
-            
-            
-            aboutAppButton
+        ScrollView(.vertical) {
+            VStack(spacing: 16) {
+                profileButton
+                    .clipShape(.rect(cornerRadius: 10))
+                    .padding([.horizontal, .top])
+                
+                VStack(spacing: 0) {
+                    appearanceButton
+                    notificationRow
+                        .onAppear {
+                            viewModel.readNotificationStatus()
+                        }
+                    languageButton
+                    resetTasksButton
+                    taskCreationSettingsButton
+                }
                 .clipShape(.rect(cornerRadius: 10))
                 .padding(.horizontal)
+                
+                VStack(spacing: 0) {
+                    timeFormatButton
+                    weekFirstDayButton
+                }
+                .clipShape(.rect(cornerRadius: 10))
+                .padding([.horizontal])
+                
+                aboutAppButton
+                
+                if let _ = authService.currentUser {
+                    logoutButton
+                }
+            }
         }
         .scrollContentBackground(.hidden)
     }
@@ -279,6 +282,18 @@ struct SettingsView: View {
                         chevron: true,
                         last: true)
                 }
+                .clipShape(.rect(cornerRadius: 10))
+                .padding(.horizontal)
+    }
+    
+    private var logoutButton: some View {
+        Button {
+            authService.logout(accessToken: authService.accessToken ?? String())
+        } label: {
+            SettingLogoutButton()
+        }
+        .clipShape(.rect(cornerRadius: 10))
+        .padding(.horizontal)
     }
     
     // MARK: - Alerts

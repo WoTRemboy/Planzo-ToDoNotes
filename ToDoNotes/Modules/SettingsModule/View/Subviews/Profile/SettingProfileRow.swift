@@ -29,7 +29,7 @@ struct SettingsProfileRow: View {
     ///   - chevron: Whether to show a chevron icon.
     init(title: String? = nil, image: String? = nil,
          details: String? = nil, chevron: Bool = false) {
-        self.title = title ?? "Sign in or Sign up"
+        self.title = title ?? Texts.Authorization.login
         self.imageURL = image
         self.details = details
         self.chevron = chevron

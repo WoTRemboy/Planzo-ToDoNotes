@@ -268,6 +268,8 @@ final class Texts {
     
     enum Authorization {
         static let login = NSLocalizedString("AuthorizationLogin", comment: "Sign in or Sign up")
+        static let logout = NSLocalizedString("AuthorizationLogout", comment: "Log Out")
+
         static let appleLogin = NSLocalizedString("AuthorizationAppleLogin", comment: "Sign in with Apple")
         static let googleLogin = NSLocalizedString("AuthorizationGoogleLogin", comment: "Sign in with Google")
         static let withoutAuth = NSLocalizedString("AuthorizationWithoutAuth", comment: "Without Authorization")

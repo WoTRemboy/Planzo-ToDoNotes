@@ -12,6 +12,7 @@
 		6303E2C02D33FF870096DB64 /* RootViewControllerMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */; };
 		6303E2D22D346BBF0096DB64 /* TaskModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2D02D346BBF0096DB64 /* TaskModel.xcdatamodeld */; };
 		630F547D2E6F5F1F00DF57E6 /* SettingProfileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F547C2E6F5F1F00DF57E6 /* SettingProfileRow.swift */; };
+		630F547F2E6F72CF00DF57E6 /* SettingLogoutButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F547E2E6F72CF00DF57E6 /* SettingLogoutButton.swift */; };
 		631315BB2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631315BA2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift */; };
 		631315BD2D7DE21E0030D446 /* MainTaskRowWithActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631315BC2D7DE21E0030D446 /* MainTaskRowWithActions.swift */; };
 		631A52892E6F501900880B84 /* TokenStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631A52882E6F501800880B84 /* TokenStorageService.swift */; };
@@ -150,6 +151,7 @@
 		6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewControllerMethods.swift; sourceTree = "<group>"; };
 		6303E2D12D346BBF0096DB64 /* TaskModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaskModel.xcdatamodel; sourceTree = "<group>"; };
 		630F547C2E6F5F1F00DF57E6 /* SettingProfileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingProfileRow.swift; sourceTree = "<group>"; };
+		630F547E2E6F72CF00DF57E6 /* SettingLogoutButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingLogoutButton.swift; sourceTree = "<group>"; };
 		631315BA2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTaskRowWithActions.swift; sourceTree = "<group>"; };
 		631315BC2D7DE21E0030D446 /* MainTaskRowWithActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTaskRowWithActions.swift; sourceTree = "<group>"; };
 		631A52882E6F501800880B84 /* TokenStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorageService.swift; sourceTree = "<group>"; };
@@ -289,6 +291,15 @@
 				636C53E12D7E79370096F436 /* PreviewData */,
 			);
 			path = CoreData;
+			sourceTree = "<group>";
+		};
+		630F54802E6F736C00DF57E6 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				630F547C2E6F5F1F00DF57E6 /* SettingProfileRow.swift */,
+				630F547E2E6F72CF00DF57E6 /* SettingLogoutButton.swift */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 		631A528A2E6F506300880B84 /* Model */ = {
@@ -855,8 +866,8 @@
 		63F6C70A2D2AAA8500716AB0 /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
+				630F54802E6F736C00DF57E6 /* Profile */,
 				63F6C70D2D2AAD0100716AB0 /* SettingsNavBar.swift */,
-				630F547C2E6F5F1F00DF57E6 /* SettingProfileRow.swift */,
 				634877AB2D369B21009110B0 /* SettingFormRow.swift */,
 			);
 			path = Subviews;
@@ -1083,6 +1094,7 @@
 				63F6C71C2D2B19A200716AB0 /* CustomCalendarModel.swift in Sources */,
 				63A0928E2D7C5EF20026A64D /* RootView.swift in Sources */,
 				63D9A1BA2D50F2FF008454E9 /* UserNotificationCenterExtension.swift in Sources */,
+				630F547F2E6F72CF00DF57E6 /* SettingLogoutButton.swift in Sources */,
 				635DBBB32D64E89A0050476C /* TaskSectionModel.swift in Sources */,
 				63A5B6642D4937D100B0E408 /* TaskCalendarSelectorView.swift in Sources */,
 				63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */,
