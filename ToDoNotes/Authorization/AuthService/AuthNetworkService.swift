@@ -12,6 +12,15 @@ private let logger = Logger(subsystem: "com.todonotes.opening", category: "AuthN
 
 final class AuthNetworkService: ObservableObject {
     
+    @Published var currentUser: User? = nil
+    @Published var accessToken: String? = nil
+    @Published var refreshToken: String? = nil
+
+    // Keys for storing to UserDefaults
+    private let userKey = "CurrentUserProfile"
+    private let accessTokenKey = "AccessToken"
+    private let refreshTokenKey = "RefreshToken"
+    
     private let logoutDelay: TimeInterval = 1.5
     
     internal func googleAuthorize(idToken: String, completion: @escaping (Result<AuthResponse, Error>) -> Void) {
@@ -52,6 +61,7 @@ final class AuthNetworkService: ObservableObject {
             }
             do {
                 let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
+                self.saveAuthResponse(authResponse, idToken: idToken)
                 logger.info("Google authorization succeeded, access token received.")
                 DispatchQueue.main.async {
                     completion(.success(authResponse))
@@ -106,6 +116,7 @@ final class AuthNetworkService: ObservableObject {
             
             do {
                 let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
+                self.saveAuthResponse(authResponse, idToken: idToken)
                 logger.info("Apple authorization succeeded, access token received.")
                 DispatchQueue.main.async {
                     completion(.success(authResponse))
@@ -159,6 +170,7 @@ final class AuthNetworkService: ObservableObject {
             }
             do {
                 let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
+                self.saveAuthResponse(authResponse)
                 logger.info("Token refresh succeeded, access token received.")
                 DispatchQueue.main.async {
                     completion(.success(authResponse))
@@ -197,10 +209,73 @@ final class AuthNetworkService: ObservableObject {
                 completion?(.failure(error))
                 return
             }
+            self.clearProfile()
             logger.info("Logout request succeeded.")
             completion?(.success(()))
         }
         task.resume()
+    }
+    
+    func loadPersistedProfile() {
+        if let userData = UserDefaults.standard.data(forKey: userKey),
+           let user = try? JSONDecoder().decode(User.self, from: userData) {
+            self.currentUser = user
+            logger.debug("Current user loaded from cache.")
+        }
+        self.accessToken = UserDefaults.standard.string(forKey: accessTokenKey)
+        self.refreshToken = UserDefaults.standard.string(forKey: refreshTokenKey)
+    }
+    
+    var isAuthorized: Bool {
+        accessToken != nil && currentUser != nil
+    }
+    
+    private func saveAuthResponse(_ authResponse: AuthResponse, idToken: String? = nil) {
+        if let idToken = idToken,
+           let claims = decodeJWTClaims(from: idToken) {
+            let user = User(
+                id: authResponse.user.id,
+                provider: authResponse.user.provider,
+                sub: authResponse.user.sub,
+                createdAt: authResponse.user.createdAt,
+                name: (claims["name"] as? String) ?? (claims["given_name"] as? String),
+                email: claims["email"] as? String,
+                avatarUrl: claims["picture"] as? String
+            )
+            logger.debug("Current user saved to cache.")
+            DispatchQueue.main.async {
+                self.currentUser = user
+                if let encodedUser = try? JSONEncoder().encode(user) {
+                    UserDefaults.standard.set(encodedUser, forKey: self.userKey)
+                }
+                self.accessToken = authResponse.accessToken
+                self.refreshToken = authResponse.refreshToken
+                UserDefaults.standard.set(authResponse.accessToken, forKey: self.accessTokenKey)
+                UserDefaults.standard.set(authResponse.refreshToken, forKey: self.refreshTokenKey)
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.currentUser = authResponse.user
+                if let encodedUser = try? JSONEncoder().encode(authResponse.user) {
+                    UserDefaults.standard.set(encodedUser, forKey: self.userKey)
+                }
+                self.accessToken = authResponse.accessToken
+                self.refreshToken = authResponse.refreshToken
+                UserDefaults.standard.set(authResponse.accessToken, forKey: self.accessTokenKey)
+                UserDefaults.standard.set(authResponse.refreshToken, forKey: self.refreshTokenKey)
+            }
+        }
+    }
+    
+    private func clearProfile() {
+        DispatchQueue.main.async {
+            self.currentUser = nil
+            self.accessToken = nil
+            self.refreshToken = nil
+            UserDefaults.standard.removeObject(forKey: self.userKey)
+            UserDefaults.standard.removeObject(forKey: self.accessTokenKey)
+            UserDefaults.standard.removeObject(forKey: self.refreshTokenKey)
+        }
     }
 }
 
@@ -230,4 +305,17 @@ private extension AuthNetworkService {
             }
         }
     }
+    
+    func decodeJWTClaims(from idToken: String) -> [String: Any]? {
+        let segments = idToken.split(separator: ".")
+        guard segments.count > 1,
+              let payloadData = Data(base64Encoded: String(segments[1])
+                .replacingOccurrences(of: "-", with: "+")
+                .replacingOccurrences(of: "_", with: "/")
+                .padding(toLength: ((String(segments[1]).count+3)/4)*4, withPad: "=", startingAt: 0)) else {
+            return nil
+        }
+        return (try? JSONSerialization.jsonObject(with: payloadData, options: [])) as? [String: Any]
+    }
 }
+

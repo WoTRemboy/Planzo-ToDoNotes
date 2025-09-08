@@ -26,6 +26,10 @@ struct ToDoNotesApp: App {
     @AppStorage(Texts.UserDefaults.theme)
     private var userTheme: Theme = .systemDefault
     
+    // Inject global AuthNetworkService for secure profile and auth state management
+    @StateObject private var authService = AuthNetworkService()
+    @StateObject private var tokenService = TokenStorageService()
+    
     /// The app's main scene, launching with the splash screen and setting up appearance and context.
     internal var body: some Scene {
         WindowGroup {
@@ -37,9 +41,12 @@ struct ToDoNotesApp: App {
                 // Applies the saved user theme on launch
                 .onAppear {
                     setTheme(style: userTheme.userInterfaceStyle)
+                    authService.loadPersistedProfile()
                 }
                 // Injects Core Data context into the environment
                 .environment(\.managedObjectContext, CoreDataProvider.shared.persistentContainer.viewContext)
+                .environmentObject(authService)
+                .environmentObject(tokenService)
         }
     }
     
@@ -100,3 +107,4 @@ extension ToDoNotesApp {
         }
     }
 }
+

@@ -18,8 +18,7 @@ final class OnboardingViewModel: NSObject, ObservableObject {
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "ToDoNotes", category: "OnboardingViewModel")
 
     /// A flag indicating if onboarding should be skipped (i.e., onboarding is completed).
-//    @AppStorage(Texts.UserDefaults.skipOnboarding) var skipOnboarding: Bool = false
-    @Published var skipOnboarding: Bool = false
+    @AppStorage(Texts.UserDefaults.skipOnboarding) var skipOnboarding: Bool = false
     /// A flag controlling the glow effect around the "Add Task" button after onboarding.
     @AppStorage(Texts.UserDefaults.addTaskButtonGlow) private var addTaskButtonGlow: Bool = false
     
@@ -78,4 +77,3 @@ final class OnboardingViewModel: NSObject, ObservableObject {
         }
     }
 }
-

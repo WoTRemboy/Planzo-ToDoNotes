@@ -11,6 +11,13 @@ internal struct User: Codable {
     let provider: String
     let sub: String
     let createdAt: String
+    let name: String?
+    let email: String?
+    let avatarUrl: String?
+    
+    private enum CodingKeys: String, CodingKey {
+        case id, provider, sub, createdAt, name, email, avatarUrl
+    }
 }
 
 /// Represents the structure of the response returned by the authorization endpoint.
