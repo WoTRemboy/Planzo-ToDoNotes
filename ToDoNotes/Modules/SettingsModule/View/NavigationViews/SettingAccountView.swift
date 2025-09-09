@@ -38,19 +38,27 @@ struct SettingAccountView: View {
     private var profileImage: some View {
         if let user = authService.currentUser, let url = user.avatarUrl {
             AsyncImage(url: URL(string: url)) { image in
-                image.image?
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 80, height: 80)
-                    .clipShape(.circle)
+                if let image = image.image {
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 80, height: 80)
+                        .clipShape(.circle)
+                } else {
+                    placeholderImage
+                }
             }
         } else {
-            Image.Settings.signIn
-                .resizable()
-                .scaledToFit()
-                .frame(width: 80, height: 80)
-                .clipShape(.circle)
+            placeholderImage
         }
+    }
+    
+    private var placeholderImage: some View {
+        Image.Settings.signIn
+            .resizable()
+            .scaledToFit()
+            .frame(width: 80, height: 80)
+            .clipShape(.circle)
     }
     
     private var nicknameView: some View {
