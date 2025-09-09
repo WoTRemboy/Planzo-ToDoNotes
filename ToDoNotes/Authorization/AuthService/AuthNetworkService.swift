@@ -18,10 +18,9 @@ final class AuthNetworkService: ObservableObject {
 
     // Keys for storing to UserDefaults
     private let userKey = "CurrentUserProfile"
-    private let accessTokenKey = "AccessToken"
-    private let refreshTokenKey = "RefreshToken"
     
     private let logoutDelay: TimeInterval = 1.5
+    private let tokenStorage = TokenStorageService()
     
     internal func googleAuthorize(idToken: String, completion: @escaping (Result<AuthResponse, Error>) -> Void) {
         guard let url = URL(string: "https://banana.avoqode.com/api/v1/auth/google") else {
@@ -222,8 +221,8 @@ final class AuthNetworkService: ObservableObject {
             self.currentUser = user
             logger.debug("Current user loaded from cache.")
         }
-        self.accessToken = UserDefaults.standard.string(forKey: accessTokenKey)
-        self.refreshToken = UserDefaults.standard.string(forKey: refreshTokenKey)
+        self.accessToken = tokenStorage.load(type: .accessToken)
+        self.refreshToken = tokenStorage.load(type: .refreshToken)
     }
     
     var isAuthorized: Bool {
@@ -250,8 +249,8 @@ final class AuthNetworkService: ObservableObject {
                 }
                 self.accessToken = authResponse.accessToken
                 self.refreshToken = authResponse.refreshToken
-                UserDefaults.standard.set(authResponse.accessToken, forKey: self.accessTokenKey)
-                UserDefaults.standard.set(authResponse.refreshToken, forKey: self.refreshTokenKey)
+                self.tokenStorage.save(token: authResponse.accessToken, type: .accessToken)
+                self.tokenStorage.save(token: authResponse.refreshToken, type: .refreshToken)
             }
         } else {
             DispatchQueue.main.async {
@@ -261,8 +260,8 @@ final class AuthNetworkService: ObservableObject {
                 }
                 self.accessToken = authResponse.accessToken
                 self.refreshToken = authResponse.refreshToken
-                UserDefaults.standard.set(authResponse.accessToken, forKey: self.accessTokenKey)
-                UserDefaults.standard.set(authResponse.refreshToken, forKey: self.refreshTokenKey)
+                self.tokenStorage.save(token: authResponse.accessToken, type: .accessToken)
+                self.tokenStorage.save(token: authResponse.refreshToken, type: .refreshToken)
             }
         }
     }
@@ -273,8 +272,8 @@ final class AuthNetworkService: ObservableObject {
             self.accessToken = nil
             self.refreshToken = nil
             UserDefaults.standard.removeObject(forKey: self.userKey)
-            UserDefaults.standard.removeObject(forKey: self.accessTokenKey)
-            UserDefaults.standard.removeObject(forKey: self.refreshTokenKey)
+            self.tokenStorage.delete(type: .accessToken)
+            self.tokenStorage.delete(type: .refreshToken)
         }
     }
 }
@@ -318,4 +317,3 @@ private extension AuthNetworkService {
         return (try? JSONSerialization.jsonObject(with: payloadData, options: [])) as? [String: Any]
     }
 }
-
