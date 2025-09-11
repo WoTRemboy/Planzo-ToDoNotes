@@ -83,6 +83,22 @@ struct OnboardingScreenView: View {
                 
             }
             .padding(.vertical)
+            
+            // Listen for Apple sign-in completion to trigger onboarding finish.
+            .onAppear {
+                appleAuthService.onBackendAuthResult = { result in
+                    switch result {
+                    case .success:
+                        DispatchQueue.main.async {
+                            viewModel.transferToMainPage()
+                        }
+                    case .failure(let error):
+                        DispatchQueue.main.async {
+                            viewModel.alertError = IdentifiableError(wrapped: error)
+                        }
+                    }
+                }
+            }
             .alert(item: $viewModel.alertError) { error in
                 Alert(title: Text(Texts.Authorization.Error.authorizationFailed),
                       message: Text(error.localizedDescription),
