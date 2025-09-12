@@ -1929,6 +1929,35 @@
         }
       }
     },
+    "SettingsPageHide" : {
+      "comment" : "Hide",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Masquer"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Скрыть"
+          }
+        }
+      }
+    },
     "SettingsPageLanguageAlertContent" : {
       "comment" : "Select the required language in the settings.",
       "localizations" : {

@@ -44,6 +44,7 @@ final class SettingsViewModel: ObservableObject {
     @Published internal var showingTimeFormat: Bool = false
     @Published internal var showingWeekFirstDay: Bool = false
     
+    @Published internal var showLoginOptions: Bool = false
     /// Flag to show reset confirmation dialog.
     @Published internal var showingResetDialog: Bool = false
     /// Flag to show reset result popup.
@@ -131,6 +132,29 @@ final class SettingsViewModel: ObservableObject {
     }
     
     // MARK: - Functional Actions
+    
+    internal func handleGoogleSignIn(googleAuthService: GoogleAuthService) {
+        guard let topVC = UIApplication.shared.connectedScenes
+            .compactMap({ ($0 as? UIWindowScene)?.windows.first(where: { $0.isKeyWindow }) })
+            .first?.rootViewController else {
+            logger.error("Top view controller not found for Google Sign-In presentation.")
+            return
+        }
+        googleAuthService.signInWithGoogle(presentingViewController: topVC) { [weak self] result in
+            switch result {
+            case .success:
+                DispatchQueue.main.async {
+                    withAnimation {
+                        self?.showLoginOptions = false
+                    }
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+//                    self?.alertError = IdentifiableError(wrapped: error)
+                }
+            }
+        }
+    }
     
     /// Changes the application's appearance theme with a smooth transition.
     /// - Parameter theme: The selected `Theme`.

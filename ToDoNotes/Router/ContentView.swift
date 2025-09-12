@@ -21,6 +21,8 @@ struct ContentView: View {
     @StateObject private var calendarVM = CalendarViewModel()
     @StateObject private var settingsVM: SettingsViewModel
     
+    @EnvironmentObject private var networkService: AuthNetworkService
+    
     // MARK: - Initialization
     
     /// Initializes the view and configures tab bar appearance and initial settings state.
@@ -62,7 +64,7 @@ struct ContentView: View {
                     .environmentObject(calendarVM)
                     .tag(TabRouter.Tab.calendar)
                 
-                TabItems.settingsTab(isSelected: router.selectedTab == .settings)
+                TabItems.settingsTab(isSelected: router.selectedTab == .settings, networkService: networkService)
                     .environmentObject(settingsVM)
                     .tag(TabRouter.Tab.settings)
             }
@@ -107,3 +109,4 @@ extension UITabBarController {
         }
     }
 }
+

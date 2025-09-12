@@ -192,7 +192,7 @@ struct OnboardingScreenView: View {
             
                 .foregroundColor(Color.LabelColors.labelReversed)
                 .background(Color.LabelColors.labelPrimary)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .frame(height: 50)
         .frame(maxWidth: .infinity)
@@ -208,65 +208,25 @@ struct OnboardingScreenView: View {
             signWithGoogleButton
         }
         .transition(.blurReplace)
+        .padding([.top, .horizontal])
     }
     
     // MARK: - Sign with Apple Button
     
     /// Button for signing in with Apple using AppleAuthService.
     private var signWithAppleButton: some View {
-        Button {
+        LoginButtonView(type: .apple) {
             appleAuthService.startAppleSignIn()
-        } label: {
-            HStack {
-                Image.LoginPage.appleLogo
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                Text(Texts.Authorization.appleLogin)
-                    .font(.system(size: 17, weight: .medium))
-                    .foregroundStyle(Color.LabelColors.labelReversed)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .background(Color.ButtonColors.login)
         }
-        .frame(height: 50)
-        .frame(maxWidth: .infinity)
-        .minimumScaleFactor(0.4)
-        
-        .clipShape(.rect(cornerRadius: 10))
-        .shadow(radius: 2)
-        .frame(height: 50)
-        
-        .padding(.horizontal)
-        .padding(.top, 16)
     }
     
     // MARK: - Sign with Google Button
     
     /// Button for signing in with Google using GoogleAuthService.
     private var signWithGoogleButton: some View {
-        Button {
+        LoginButtonView(type: .google) {
             viewModel.handleGoogleSignIn(googleAuthService: googleAuthService)
-        } label: {
-            HStack {
-                Image.LoginPage.googleLogo
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                
-                Text(Texts.Authorization.googleLogin)
-                    .font(.system(size: 17, weight: .medium))
-                    .foregroundStyle(Color.LabelColors.labelReversed)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .background(Color.ButtonColors.login)
         }
-        .frame(height: 50)
-        .frame(maxWidth: .infinity)
-        .minimumScaleFactor(0.4)
-        .transition(.blurReplace)
-        
-        .clipShape(.rect(cornerRadius: 10))
-        .shadow(radius: 2)
-        .padding(.horizontal)
     }
     
     // MARK: - Skip Button

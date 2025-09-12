@@ -24,6 +24,19 @@ struct SettingsView: View {
     @EnvironmentObject private var viewModel: SettingsViewModel
     @EnvironmentObject private var authService: AuthNetworkService
     
+    /// Apple authentication service.
+    @StateObject private var appleAuthService: AppleAuthService
+    
+    /// Google authentication service.
+    @StateObject private var googleAuthService: GoogleAuthService
+        
+    init(networkService: AuthNetworkService) {
+        _appleAuthService = StateObject(wrappedValue: AppleAuthService())
+        
+        let googleClientID = ProcessInfo.processInfo.environment["GOOGLE_CLIENT_ID"] ?? String()
+        _googleAuthService = StateObject(wrappedValue: GoogleAuthService(clientID: googleClientID, networkService: networkService))
+    }
+    
     // MARK: - Body
     
     internal var body: some View {
@@ -153,12 +166,54 @@ struct SettingsView: View {
                             chevron: true)
                     })
             } else {
-                Button {
-                    // Sign In Button Action
-                } label: {
-                    SettingsProfileRow()
-                }
+                loginOptionsView
             }
+        }
+    }
+    
+    private var loginOptionsView: some View {
+        VStack(spacing: 12) {
+            if !viewModel.showLoginOptions {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        viewModel.showLoginOptions.toggle()
+                    }
+                } label: {
+                    SettingsProfileRow(title: Texts.Authorization.login)
+                }
+                .transition(.blurReplace)
+            } else {
+                VStack(spacing: 12) {
+                    appleLoginButton
+                    googleLoginButton
+                    closeButton
+                }
+                .transition(.blurReplace.combined(with: .move(edge: .top)))
+            }
+        }
+    }
+    
+    private var appleLoginButton: some View {
+        LoginButtonView(type: .apple) {
+            appleAuthService.startAppleSignIn()
+        }
+    }
+    
+    private var googleLoginButton: some View {
+        LoginButtonView(type: .google) {
+            viewModel.handleGoogleSignIn(googleAuthService: googleAuthService)
+        }
+    }
+    
+    private var closeButton: some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.25)) {
+                viewModel.showLoginOptions.toggle()
+            }
+        } label: {
+            Text(Texts.Settings.hide)
+                .font(.system(size: 15, weight: .regular))
+                .foregroundStyle(Color.LabelColors.labelPrimary)
         }
     }
     
@@ -343,9 +398,10 @@ struct SettingsView: View {
 // MARK: - Preview
 
 #Preview {
-    SettingsView()
+    let authService = AuthNetworkService()
+    SettingsView(networkService: authService)
         .environmentObject(SettingsViewModel(notificationsEnabled: false))
-        .environmentObject(AuthNetworkService())
+        .environmentObject(authService)
 }
 
 // MARK: - Private Logic
