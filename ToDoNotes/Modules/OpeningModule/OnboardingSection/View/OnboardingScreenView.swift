@@ -29,22 +29,17 @@ struct OnboardingScreenView: View {
     /// Current page tracker for the pager.
     @StateObject private var page: Page = .first()
     
-    /// Network service for authentication.
-    @StateObject private var networkService = AuthNetworkService()
-    
     /// Apple authentication service.
-    @StateObject private var appleAuthService = AppleAuthService()
+    @StateObject private var appleAuthService: AppleAuthService
     
     /// Google authentication service.
-    @State private var googleAuthService: GoogleAuthService
+    @StateObject private var googleAuthService: GoogleAuthService
     
-    init() {
-        let networkService = AuthNetworkService()
-        _networkService = StateObject(wrappedValue: networkService)
+    init(networkService: AuthNetworkService) {
         _appleAuthService = StateObject(wrappedValue: AppleAuthService())
         
         let googleClientID = ProcessInfo.processInfo.environment["GOOGLE_CLIENT_ID"] ?? String()
-        _googleAuthService = State(initialValue: GoogleAuthService(clientID: googleClientID, networkService: networkService))
+        _googleAuthService = StateObject(wrappedValue: GoogleAuthService(clientID: googleClientID, networkService: networkService))
     }
     
     // MARK: - Body
@@ -84,7 +79,6 @@ struct OnboardingScreenView: View {
             }
             .padding(.vertical)
             
-            // Listen for Apple sign-in completion to trigger onboarding finish.
             .onAppear {
                 appleAuthService.onBackendAuthResult = { result in
                     switch result {
@@ -321,6 +315,6 @@ struct OnboardingScreenView: View {
 // MARK: - Preview
 
 #Preview {
-    OnboardingScreenView()
+    OnboardingScreenView(networkService: AuthNetworkService())
         .environmentObject(OnboardingViewModel())
 }

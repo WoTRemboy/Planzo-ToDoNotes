@@ -11,7 +11,7 @@ import UIKit
 
 private let logger = Logger(subsystem: "com.todonotes.opening", category: "GoogleAuthService")
 
-final class GoogleAuthService {
+final class GoogleAuthService: ObservableObject {
     let clientID: String
     let networkService: AuthNetworkService
     
