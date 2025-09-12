@@ -290,7 +290,7 @@ struct SettingsView: View {
     
     private var logoutButton: some View {
         Button {
-            authService.logout(accessToken: authService.accessToken ?? String())
+            authService.logout()
         } label: {
             SettingLogoutButton()
         }
