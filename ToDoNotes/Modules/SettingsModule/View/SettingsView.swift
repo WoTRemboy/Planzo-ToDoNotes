@@ -153,7 +153,7 @@ struct SettingsView: View {
     // MARK: - Individual Setting Items
     
     private var profileButton: some View {
-        Group {
+        ZStack {
             if let user = authService.currentUser {
                 CustomNavLink(
                     destination: SettingAccountView()
@@ -165,10 +165,13 @@ struct SettingsView: View {
                             details: Texts.Authorization.Details.freePlan,
                             chevron: true)
                     })
+                .transition(.blurReplace)
             } else {
                 loginOptionsView
+                    .transition(.blurReplace)
             }
         }
+        .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
     }
     
     private var loginOptionsView: some View {
@@ -195,7 +198,7 @@ struct SettingsView: View {
     
     private var appleLoginButton: some View {
         LoginButtonView(type: .apple) {
-            appleAuthService.startAppleSignIn()
+            viewModel.handleAppleSignIn(appleAuthService: appleAuthService)
         }
     }
     
@@ -349,6 +352,9 @@ struct SettingsView: View {
         } label: {
             SettingLogoutButton()
         }
+        .transition(.slide)
+        .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
+        
         .clipShape(.rect(cornerRadius: 10))
         .padding(.horizontal)
     }
@@ -459,3 +465,4 @@ extension SettingsView {
         }
     }
 }
+

@@ -140,12 +140,13 @@ final class SettingsViewModel: ObservableObject {
             logger.error("Top view controller not found for Google Sign-In presentation.")
             return
         }
+        hideLoginOptions()
         googleAuthService.signInWithGoogle(presentingViewController: topVC) { [weak self] result in
             switch result {
             case .success:
                 DispatchQueue.main.async {
-                    withAnimation {
-                        self?.showLoginOptions = false
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        self?.hideLoginOptions()
                     }
                 }
             case .failure(let error):
@@ -153,6 +154,17 @@ final class SettingsViewModel: ObservableObject {
 //                    self?.alertError = IdentifiableError(wrapped: error)
                 }
             }
+        }
+    }
+    
+    internal func handleAppleSignIn(appleAuthService: AppleAuthService) {
+        hideLoginOptions()
+        appleAuthService.startAppleSignIn()
+    }
+    
+    private func hideLoginOptions() {
+        withAnimation(.easeInOut(duration: 0.25)) {
+            showLoginOptions = false
         }
     }
     
@@ -221,3 +233,4 @@ final class SettingsViewModel: ObservableObject {
         logger.debug("User changed time format to: \(format.rawValue)")
     }
 }
+
