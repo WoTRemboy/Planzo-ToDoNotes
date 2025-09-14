@@ -31,7 +31,7 @@ struct SettingsView: View {
     @StateObject private var googleAuthService: GoogleAuthService
         
     init(networkService: AuthNetworkService) {
-        _appleAuthService = StateObject(wrappedValue: AppleAuthService())
+        _appleAuthService = StateObject(wrappedValue: AppleAuthService(networkService: networkService))
         
         let googleClientID = ProcessInfo.processInfo.environment["GOOGLE_CLIENT_ID"] ?? String()
         _googleAuthService = StateObject(wrappedValue: GoogleAuthService(clientID: googleClientID, networkService: networkService))
@@ -140,10 +140,7 @@ struct SettingsView: View {
                 .padding([.horizontal])
                 
                 aboutAppButton
-                
-                if let _ = authService.currentUser {
-                    logoutButton
-                }
+                logoutButton
             }
             .padding(.bottom)
         }
@@ -160,7 +157,7 @@ struct SettingsView: View {
                         .environmentObject(authService),
                     label: {
                         SettingsProfileRow(
-                            title: user.name,
+                            title: user.name ?? user.email,
                             image: user.avatarUrl,
                             details: Texts.Authorization.Details.freePlan,
                             chevron: true)
@@ -347,16 +344,19 @@ struct SettingsView: View {
     }
     
     private var logoutButton: some View {
-        Button {
-            authService.logout()
-        } label: {
-            SettingLogoutButton()
+        ZStack {
+            if authService.currentUser != nil {
+                Button {
+                    authService.logout()
+                } label: {
+                    SettingLogoutButton()
+                }
+                .clipShape(.rect(cornerRadius: 10))
+                .padding(.horizontal)
+                .transition(.blurReplace)
+            }
         }
-        .transition(.slide)
         .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
-        
-        .clipShape(.rect(cornerRadius: 10))
-        .padding(.horizontal)
     }
     
     // MARK: - Alerts

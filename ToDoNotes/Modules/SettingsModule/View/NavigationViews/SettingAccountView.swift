@@ -24,7 +24,9 @@ struct SettingAccountView: View {
             profileImage
             
             VStack(spacing: 0) {
-                nicknameView
+                if authService.currentUser?.name != nil {
+                    nicknameView
+                }
                 emailView
                 planView
             }

@@ -35,15 +35,16 @@ struct ContentView: View {
         // Initializes SettingsViewModel based on permission status
         self._settingsVM = StateObject(wrappedValue: SettingsViewModel(notificationsEnabled: notificationsStatus == .allowed))
         
-        // Configures tab bar appearance
-        let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor.TabBar.background
-        appearance.shadowImage = nil
-        appearance.shadowColor = nil
-        
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
+        if #available(iOS 26.0, *) {} else {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = UIColor.TabBar.background
+            appearance.shadowImage = nil
+            appearance.shadowColor = nil
+
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
     }
     
     // MARK: - Body
@@ -88,7 +89,13 @@ struct ContentView: View {
 extension UITabBarController {
     public override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-
+        
+        if #available(iOS 26.0, *) {} else {
+            tabBarShadowSetup()
+        }
+    }
+    
+    private func tabBarShadowSetup() {
         if let shadowView = view.subviews.first(where: { $0.accessibilityIdentifier == Texts.AccessibilityIdentifier.tabBarShadow }) {
             // Updates the frame if shadow view already exists
             shadowView.frame = tabBar.frame
