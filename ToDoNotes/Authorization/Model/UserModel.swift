@@ -6,7 +6,7 @@
 //
 
 /// Represents the user information returned by the authorization response.
-internal struct User: Codable {
+internal struct User: Codable, Equatable {
     let id: String
     let provider: String
     let sub: String

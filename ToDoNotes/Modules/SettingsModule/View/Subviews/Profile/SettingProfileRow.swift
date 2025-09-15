@@ -62,33 +62,47 @@ struct SettingsProfileRow: View {
         HStack(alignment: .center, spacing: 8) {
             if let imageURL {
                 AsyncImage(url: URL(string: imageURL)) { result in
-                    result.image?
-                        .resizable()
-                        .scaledToFit()
+                    if let image = result.image {
+                        image
+                            .resizable()
+                            .scaledToFit()
+                    } else {
+                        placeholderImage
+                    }
                 }
                 .clipShape(.circle)
                 .frame(width: 36, height: 36)
+            } else if !title.isEmpty, details != nil {
+                EmailInitialCircleView(email: title, type: .small)
+                    .frame(width: 36, height: 36)
             } else {
-                Image.Settings.signIn
-                    .resizable()
-                    .scaledToFit()
+                placeholderImage
                     .frame(width: 26, height: 26)
             }
+            textDetailsBlock
+        }
+    }
+    
+    private var placeholderImage: some View {
+        Image.Settings.signIn
+            .resizable()
+            .scaledToFit()
+    }
+    
+    private var textDetailsBlock: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(title)
+                .font(.system(size: 17, weight: .regular))
+                .foregroundStyle(Color.LabelColors.labelPrimary)
+                .lineLimit(1)
             
-            VStack(alignment: .leading, spacing: 0) {
-                Text(title)
-                    .font(.system(size: 17, weight: .regular))
-                    .foregroundStyle(Color.LabelColors.labelPrimary)
+            // Optional details text
+            if let details {
+                Text(details)
+                    .font(.system(size: 13,
+                                  weight: .regular))
+                    .foregroundStyle(Color.LabelColors.labelSecondary)
                     .lineLimit(1)
-                
-                // Optional details text
-                if let details {
-                    Text(details)
-                        .font(.system(size: 13,
-                                      weight: .regular))
-                        .foregroundStyle(Color.LabelColors.labelSecondary)
-                        .lineLimit(1)
-                }
             }
         }
     }

@@ -41,6 +41,15 @@ final class AppleAuthService: NSObject, ObservableObject, ASAuthorizationControl
             return
         }
         
+//        let userName: String?
+//        if let fullName = appleIDCredential.fullName {
+//            userName = (fullName.givenName ?? "") + (fullName.familyName ?? "")
+//            logger.info("Apple user full name: \(userName ?? String())")
+//        } else {
+//            userName = nil
+//            logger.info("Apple user fullName is nil")
+//        }
+        
         logger.info("Apple sign-in succeeded.")
         onAuthSuccess?(appleIDCredential)
         

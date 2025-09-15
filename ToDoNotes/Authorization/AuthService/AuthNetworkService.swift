@@ -13,15 +13,12 @@ private let logger = Logger(subsystem: "com.todonotes.opening", category: "AuthN
 final class AuthNetworkService: ObservableObject {
     
     @Published var currentUser: User? = nil
-    @Published var accessToken: String? = nil
-    @Published var refreshToken: String? = nil
 
     // Keys for storing to UserDefaults
     private let userKey = "CurrentUserProfile"
-    private let accessTokenKey = "AccessToken"
-    private let refreshTokenKey = "RefreshToken"
     
     private let logoutDelay: TimeInterval = 1.5
+    private let tokenStorage = TokenStorageService()
     
     internal func googleAuthorize(idToken: String, completion: @escaping (Result<AuthResponse, Error>) -> Void) {
         guard let url = URL(string: "https://banana.avoqode.com/api/v1/auth/google") else {
@@ -44,6 +41,7 @@ final class AuthNetworkService: ObservableObject {
             }
             return
         }
+        LoadingOverlay.shared.show()
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 logger.error("Google authorization request failed with error: \(error.localizedDescription)")
@@ -66,6 +64,7 @@ final class AuthNetworkService: ObservableObject {
                 DispatchQueue.main.async {
                     completion(.success(authResponse))
                 }
+                LoadingOverlay.shared.hide()
 //                self?.refreshThenLogout(after: authResponse)
             } catch {
                 logger.error("Failed to decode Google authorization response: \(error.localizedDescription)")
@@ -132,12 +131,17 @@ final class AuthNetworkService: ObservableObject {
         task.resume()
     }
     
-    internal func refreshTokens(refreshToken: String, completion: @escaping (Result<AuthResponse, Error>) -> Void) {
+    internal func refreshTokens(completion: @escaping (Result<AuthResponse, Error>) -> Void) {
         guard let url = URL(string: "https://banana.avoqode.com/api/v1/auth/refresh") else {
             logger.error("Invalid refresh token endpoint URL.")
             DispatchQueue.main.async {
                 completion(.failure(URLError(.badURL)))
             }
+            return
+        }
+        guard let refreshToken = tokenStorage.load(type: .refreshToken) else {
+            logger.error("No refresh token to refresh with.")
+            completion(.failure(URLError(.userAuthenticationRequired)))
             return
         }
         var request = URLRequest(url: url)
@@ -185,12 +189,18 @@ final class AuthNetworkService: ObservableObject {
         task.resume()
     }
     
-    internal func logout(accessToken: String, completion: ((Result<Void, Error>) -> Void)? = nil) {
+    internal func logout(completion: ((Result<Void, Error>) -> Void)? = nil) {
         guard let url = URL(string: "https://banana.avoqode.com/api/v1/auth/logout") else {
             logger.error("Invalid logout endpoint URL.")
             completion?(.failure(URLError(.badURL)))
             return
         }
+        guard let accessToken = tokenStorage.load(type: .accessToken) else {
+            logger.error("No access token to logout.")
+            completion?(.failure(URLError(.userAuthenticationRequired)))
+            return
+        }
+        
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -222,12 +232,11 @@ final class AuthNetworkService: ObservableObject {
             self.currentUser = user
             logger.debug("Current user loaded from cache.")
         }
-        self.accessToken = UserDefaults.standard.string(forKey: accessTokenKey)
-        self.refreshToken = UserDefaults.standard.string(forKey: refreshTokenKey)
     }
     
     var isAuthorized: Bool {
-        accessToken != nil && currentUser != nil
+        let accessToken = tokenStorage.load(type: .accessToken)
+        return accessToken != nil && currentUser != nil
     }
     
     private func saveAuthResponse(_ authResponse: AuthResponse, idToken: String? = nil) {
@@ -248,10 +257,8 @@ final class AuthNetworkService: ObservableObject {
                 if let encodedUser = try? JSONEncoder().encode(user) {
                     UserDefaults.standard.set(encodedUser, forKey: self.userKey)
                 }
-                self.accessToken = authResponse.accessToken
-                self.refreshToken = authResponse.refreshToken
-                UserDefaults.standard.set(authResponse.accessToken, forKey: self.accessTokenKey)
-                UserDefaults.standard.set(authResponse.refreshToken, forKey: self.refreshTokenKey)
+                self.tokenStorage.save(token: authResponse.accessToken, type: .accessToken)
+                self.tokenStorage.save(token: authResponse.refreshToken, type: .refreshToken)
             }
         } else {
             DispatchQueue.main.async {
@@ -259,10 +266,8 @@ final class AuthNetworkService: ObservableObject {
                 if let encodedUser = try? JSONEncoder().encode(authResponse.user) {
                     UserDefaults.standard.set(encodedUser, forKey: self.userKey)
                 }
-                self.accessToken = authResponse.accessToken
-                self.refreshToken = authResponse.refreshToken
-                UserDefaults.standard.set(authResponse.accessToken, forKey: self.accessTokenKey)
-                UserDefaults.standard.set(authResponse.refreshToken, forKey: self.refreshTokenKey)
+                self.tokenStorage.save(token: authResponse.accessToken, type: .accessToken)
+                self.tokenStorage.save(token: authResponse.refreshToken, type: .refreshToken)
             }
         }
     }
@@ -270,11 +275,9 @@ final class AuthNetworkService: ObservableObject {
     private func clearProfile() {
         DispatchQueue.main.async {
             self.currentUser = nil
-            self.accessToken = nil
-            self.refreshToken = nil
             UserDefaults.standard.removeObject(forKey: self.userKey)
-            UserDefaults.standard.removeObject(forKey: self.accessTokenKey)
-            UserDefaults.standard.removeObject(forKey: self.refreshTokenKey)
+            self.tokenStorage.delete(type: .accessToken)
+            self.tokenStorage.delete(type: .refreshToken)
         }
     }
 }
@@ -283,23 +286,19 @@ final class AuthNetworkService: ObservableObject {
 
 private extension AuthNetworkService {
     func refreshThenLogout(after authResponse: AuthResponse) {
-        let initialAccessToken = authResponse.accessToken
-        let refreshToken = authResponse.refreshToken
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + (self.logoutDelay)) {
             logger.debug("Starting refresh after authorization...")
-            self.refreshTokens(refreshToken: refreshToken) { [weak self] result in
+            self.refreshTokens() { [weak self] result in
                 switch result {
-                case .success(let refreshed):
+                case .success:
                     logger.info("Refresh succeeded. Scheduling logout after \(self?.logoutDelay ?? 0) seconds.")
-                    let accessForLogout = refreshed.accessToken
                     DispatchQueue.main.asyncAfter(deadline: .now() + (self?.logoutDelay ?? 0)) {
-                        self?.logout(accessToken: accessForLogout, completion: nil)
+                        self?.logout(completion: nil)
                     }
                 case .failure(let error):
                     logger.error("Refresh failed: \(error.localizedDescription). Proceeding to logout with initial access token after delay.")
                     DispatchQueue.main.asyncAfter(deadline: .now() + (self?.logoutDelay ?? 0)) { [weak self] in
-                        self?.logout(accessToken: initialAccessToken, completion: nil)
+                        self?.logout(completion: nil)
                     }
                 }
             }
@@ -318,4 +317,3 @@ private extension AuthNetworkService {
         return (try? JSONSerialization.jsonObject(with: payloadData, options: [])) as? [String: Any]
     }
 }
-

@@ -12,6 +12,8 @@ struct SplashScreenView: View {
     
     // MARK: - Properties
     
+    @EnvironmentObject private var networkService: AuthNetworkService
+    
     /// Indicates whether to show the main onboarding screen.
     @State private var isActive = false
     /// Controls the index of the displayed text during splash animation.
@@ -25,7 +27,7 @@ struct SplashScreenView: View {
     internal var body: some View {
         if isActive {
             // Navigates to the onboarding screen
-            OnboardingScreenView()
+            OnboardingScreenView(networkService: networkService)
         } else {
             // Displays splash screen content
             content
@@ -82,4 +84,5 @@ struct SplashScreenView: View {
 
 #Preview {
     SplashScreenView()
+        .environmentObject(AuthNetworkService())
 }

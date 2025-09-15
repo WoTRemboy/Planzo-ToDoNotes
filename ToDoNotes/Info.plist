@@ -9,7 +9,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.1024130776338-16an5gj724mcvre2llpmf48g7s7uig1s</string>
+				<string>$(GOOGLE_URL_SCHEME)</string>
 			</array>
 		</dict>
 	</array>
