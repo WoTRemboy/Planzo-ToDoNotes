@@ -26,7 +26,8 @@ final class OnboardingViewModel: NSObject, ObservableObject {
     private(set) var steps = OnboardingStep.stepsSetup()
     
     /// Stores an error to be displayed in alerts.
-    @Published var alertError: IdentifiableError?
+    @Published internal var alertError: IdentifiableError?
+    @Published internal var showingErrorAlert: Bool = false
     
     // MARK: - Computed Properties
     
@@ -36,6 +37,10 @@ final class OnboardingViewModel: NSObject, ObservableObject {
     }
     
     // MARK: - Methods
+    
+    internal func toggleShowingErrorAlert() {
+        showingErrorAlert.toggle()
+    }
     
     /// Determines if the given page index corresponds to the last onboarding page.
     /// - Parameter current: The current page index.
@@ -64,14 +69,13 @@ final class OnboardingViewModel: NSObject, ObservableObject {
             return
         }
         googleAuthService.signInWithGoogle(presentingViewController: topVC) { [weak self] result in
-            switch result {
-            case .success:
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
                     self?.transferToMainPage()
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
+                case .failure(let error):
                     self?.alertError = IdentifiableError(wrapped: error)
+                    self?.showingErrorAlert = true
                 }
             }
         }

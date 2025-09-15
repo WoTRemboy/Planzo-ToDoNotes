@@ -270,6 +270,7 @@ final class Texts {
     enum Authorization {
         static let login = NSLocalizedString("AuthorizationLogin", comment: "Sign in or Sign up")
         static let logout = NSLocalizedString("AuthorizationLogout", comment: "Log Out")
+        static let confirmLogout = NSLocalizedString("AuthorizationConfirmLogout", comment: "Are you sure you want to log out?")
 
         static let appleLogin = NSLocalizedString("AuthorizationAppleLogin", comment: "Sign in with Apple")
         static let googleLogin = NSLocalizedString("AuthorizationGoogleLogin", comment: "Sign in with Google")
@@ -288,6 +289,7 @@ final class Texts {
         
         enum Error {
             static let authorizationFailed = NSLocalizedString("AuthorizationFailed", comment: "Authorization failed")
+            static let retryLater = NSLocalizedString("AuthorizationRetryLater", comment: "Please try again later")
         }
     }
     

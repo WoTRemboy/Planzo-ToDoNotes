@@ -72,6 +72,9 @@ struct SettingsProfileRow: View {
                 }
                 .clipShape(.circle)
                 .frame(width: 36, height: 36)
+            } else if !title.isEmpty, details != nil {
+                EmailInitialCircleView(email: title, type: .small)
+                    .frame(width: 36, height: 36)
             } else {
                 placeholderImage
                     .frame(width: 26, height: 26)

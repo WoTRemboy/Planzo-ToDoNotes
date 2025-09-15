@@ -50,6 +50,9 @@ struct SettingAccountView: View {
                     placeholderImage
                 }
             }
+        } else if let user = authService.currentUser, let email = user.email, !email.isEmpty {
+            EmailInitialCircleView(email: email, type: .large)
+                .frame(width: 80, height: 80)
         } else {
             placeholderImage
         }

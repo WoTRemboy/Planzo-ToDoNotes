@@ -109,6 +109,9 @@ struct SettingsView: View {
         .popView(isPresented: $viewModel.showingResetResult, onDismiss: {}) {
             resetAlert
         }
+        .popView(isPresented: $viewModel.showingErrorAlert, onDismiss: {}) {
+            errorAlert
+        }
     }
     
     /// Scrollable content with grouped setting options.
@@ -280,13 +283,14 @@ struct SettingsView: View {
                            image: Image.Settings.reset,
                            chevron: true)
         }
-        .confirmationDialog(Texts.Settings.Reset.warning,
-                            isPresented: $viewModel.showingResetDialog,
-                            titleVisibility: .visible) {
-            Button(role: .destructive) {
-                performResetTasks()
-            } label: {
-                Text(Texts.Settings.Reset.confirm)
+        .confirmationDialog(
+            Texts.Settings.Reset.warning,
+            isPresented: $viewModel.showingResetDialog,
+            titleVisibility: .visible) {
+                Button(role: .destructive) {
+                    performResetTasks()
+                } label: {
+                    Text(Texts.Settings.Reset.confirm)
             }
         }
     }
@@ -347,7 +351,7 @@ struct SettingsView: View {
         ZStack {
             if authService.currentUser != nil {
                 Button {
-                    authService.logout()
+                    viewModel.toggleShowingLogoutConfirmation()
                 } label: {
                     SettingLogoutButton()
                 }
@@ -357,6 +361,15 @@ struct SettingsView: View {
             }
         }
         .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
+        .confirmationDialog(Texts.Authorization.confirmLogout,
+            isPresented: $viewModel.showingLogoutConfirmation,
+            titleVisibility: .visible) {
+                Button(role: .destructive) {
+                    authService.logout()
+                } label: {
+                    Text(Texts.Authorization.logout)
+            }
+        }
     }
     
     // MARK: - Alerts
@@ -397,6 +410,16 @@ struct SettingsView: View {
             primaryButtonTitle: Texts.Settings.ok,
             primaryAction: {
                 viewModel.toggleShowingResetResult()
+            })
+    }
+    
+    private var errorAlert: some View {
+        CustomAlertView(
+            title: Texts.Authorization.Error.authorizationFailed,
+            message: Texts.Authorization.Error.retryLater,
+            primaryButtonTitle: Texts.Settings.ok,
+            primaryAction: {
+                viewModel.toggleShowingErrorAlert()
             })
     }
 }

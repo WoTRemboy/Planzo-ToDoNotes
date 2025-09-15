@@ -39,12 +39,14 @@ final class SettingsViewModel: ObservableObject {
     
     /// Flag to show language alert popup.
     @Published internal var showingLanguageAlert: Bool = false
+    @Published internal var showingErrorAlert: Bool = false
     /// Flag to show appearance selector popup.
     @Published internal var showingAppearance: Bool = false
     @Published internal var showingTimeFormat: Bool = false
     @Published internal var showingWeekFirstDay: Bool = false
     
     @Published internal var showLoginOptions: Bool = false
+    @Published internal var showingLogoutConfirmation: Bool = false
     /// Flag to show reset confirmation dialog.
     @Published internal var showingResetDialog: Bool = false
     /// Flag to show reset result popup.
@@ -98,6 +100,10 @@ final class SettingsViewModel: ObservableObject {
     
     // MARK: - UI Toggles
     
+    internal func toggleShowingErrorAlert() {
+        showingErrorAlert.toggle()
+    }
+    
     /// Toggles the display of the language alert.
     internal func toggleShowingLanguageAlert() {
         showingLanguageAlert.toggle()
@@ -119,6 +125,10 @@ final class SettingsViewModel: ObservableObject {
     /// Toggles the display of the reset confirmation dialog.
     internal func toggleShowingResetDialog() {
         showingResetDialog.toggle()
+    }
+    
+    internal func toggleShowingLogoutConfirmation() {
+        showingLogoutConfirmation.toggle()
     }
     
     /// Toggles the display of the reset result popup.
@@ -151,7 +161,8 @@ final class SettingsViewModel: ObservableObject {
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-//                    self?.alertError = IdentifiableError(wrapped: error)
+                    self?.showingErrorAlert = true
+                    logger.error("Google Sign-In failed: \(error.localizedDescription)")
                 }
             }
         }

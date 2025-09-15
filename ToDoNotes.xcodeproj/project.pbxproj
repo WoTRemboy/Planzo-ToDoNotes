@@ -11,6 +11,7 @@
 		6302B3582E5C6A6E002E65C1 /* WeekFirstDayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6302B3572E5C6A64002E65C1 /* WeekFirstDayModel.swift */; };
 		6303E2C02D33FF870096DB64 /* RootViewControllerMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */; };
 		6303E2D22D346BBF0096DB64 /* TaskModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6303E2D02D346BBF0096DB64 /* TaskModel.xcdatamodeld */; };
+		6307CD652E773F96005836D5 /* EmailInitialCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6307CD642E773F96005836D5 /* EmailInitialCircleView.swift */; };
 		630F547D2E6F5F1F00DF57E6 /* SettingProfileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F547C2E6F5F1F00DF57E6 /* SettingProfileRow.swift */; };
 		630F547F2E6F72CF00DF57E6 /* SettingLogoutButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F547E2E6F72CF00DF57E6 /* SettingLogoutButton.swift */; };
 		630F54822E6F7BAC00DF57E6 /* SettingAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F54812E6F7BAC00DF57E6 /* SettingAccountView.swift */; };
@@ -153,6 +154,7 @@
 		6302B3572E5C6A64002E65C1 /* WeekFirstDayModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekFirstDayModel.swift; sourceTree = "<group>"; };
 		6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewControllerMethods.swift; sourceTree = "<group>"; };
 		6303E2D12D346BBF0096DB64 /* TaskModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaskModel.xcdatamodel; sourceTree = "<group>"; };
+		6307CD642E773F96005836D5 /* EmailInitialCircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailInitialCircleView.swift; sourceTree = "<group>"; };
 		630F547C2E6F5F1F00DF57E6 /* SettingProfileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingProfileRow.swift; sourceTree = "<group>"; };
 		630F547E2E6F72CF00DF57E6 /* SettingLogoutButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingLogoutButton.swift; sourceTree = "<group>"; };
 		630F54812E6F7BAC00DF57E6 /* SettingAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingAccountView.swift; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 				630F54832E6F82C000DF57E6 /* AccountDetailsRow.swift */,
 				630F547C2E6F5F1F00DF57E6 /* SettingProfileRow.swift */,
 				630F547E2E6F72CF00DF57E6 /* SettingLogoutButton.swift */,
+				6307CD642E773F96005836D5 /* EmailInitialCircleView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -1142,6 +1145,7 @@
 				63A092912D7C5F380026A64D /* ToastViewModel.swift in Sources */,
 				632D0DD22D36BAF50071684D /* CustomNavBar.swift in Sources */,
 				63F6C7082D2AAA0900716AB0 /* SettingsViewModel.swift in Sources */,
+				6307CD652E773F96005836D5 /* EmailInitialCircleView.swift in Sources */,
 				63DA81042D24CE48005CEECB /* ViewExtension.swift in Sources */,
 				63A092942D7C60E40026A64D /* CoreDataProvider.swift in Sources */,
 				632D0DD72D37D6D70071684D /* TaskManagementShareView.swift in Sources */,

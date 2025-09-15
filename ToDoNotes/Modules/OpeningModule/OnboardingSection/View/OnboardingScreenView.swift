@@ -93,10 +93,8 @@ struct OnboardingScreenView: View {
                     }
                 }
             }
-            .alert(item: $viewModel.alertError) { error in
-                Alert(title: Text(Texts.Authorization.Error.authorizationFailed),
-                      message: Text(error.localizedDescription),
-                      dismissButton: .default(Text(Texts.Settings.ok)))
+            .popView(isPresented: $viewModel.showingErrorAlert, onDismiss: {}) {
+                errorAlert
             }
         }
     }
@@ -269,6 +267,16 @@ struct OnboardingScreenView: View {
                 .fontWeight(.medium)
                 .foregroundStyle(Color.LabelColors.labelDetails)
         }
+    }
+    
+    private var errorAlert: some View {
+        CustomAlertView(
+            title: Texts.Authorization.Error.authorizationFailed,
+            message: Texts.Authorization.Error.retryLater,
+            primaryButtonTitle: Texts.Settings.ok,
+            primaryAction: {
+                viewModel.toggleShowingErrorAlert()
+            })
     }
 }
 
