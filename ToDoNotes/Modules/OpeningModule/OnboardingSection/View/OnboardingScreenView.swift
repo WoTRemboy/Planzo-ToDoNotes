@@ -69,6 +69,7 @@ struct OnboardingScreenView: View {
                 
                 if viewModel.isLastPage(current: page.index) {
                     signInButtons
+                        .disabled(viewModel.isAuthorizing)
                     termsPolicyLabel
                         .padding([.top, .horizontal])
                         .padding(.bottom, hasNotch() ? 4 : 0)
@@ -79,23 +80,12 @@ struct OnboardingScreenView: View {
             }
             .padding(.vertical)
             
-            .onAppear {
-                appleAuthService.onBackendAuthResult = { result in
-                    switch result {
-                    case .success:
-                        DispatchQueue.main.async {
-                            viewModel.transferToMainPage()
-                        }
-                    case .failure(let error):
-                        DispatchQueue.main.async {
-                            viewModel.alertError = IdentifiableError(wrapped: error)
-                        }
-                    }
-                }
-            }
             .popView(isPresented: $viewModel.showingErrorAlert, onDismiss: {}) {
                 errorAlert
             }
+            .overlay(
+                loadingOverlay
+            )
         }
     }
     
@@ -214,7 +204,7 @@ struct OnboardingScreenView: View {
     /// Button for signing in with Apple using AppleAuthService.
     private var signWithAppleButton: some View {
         LoginButtonView(type: .apple) {
-            appleAuthService.startAppleSignIn()
+            viewModel.handleAppleSignIn(appleAuthService: appleAuthService)
         }
     }
     
@@ -278,6 +268,27 @@ struct OnboardingScreenView: View {
                 viewModel.toggleShowingErrorAlert()
             })
     }
+    
+    private var loadingOverlay: some View {
+        Group {
+            if viewModel.isAuthorizing {
+                Color.black.opacity(0.25)
+                    .ignoresSafeArea()
+                    .overlay(
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundStyle(Color.backSheet)
+                                .frame(width: 60, height: 60)
+                            
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                                .scaleEffect(1.6)
+                        }
+                    )
+                    .transition(.opacity)
+            }
+        }
+    }
 }
 
 // MARK: - Preview
@@ -285,4 +296,5 @@ struct OnboardingScreenView: View {
 #Preview {
     OnboardingScreenView(networkService: AuthNetworkService())
         .environmentObject(OnboardingViewModel())
+        .environmentObject(AuthNetworkService())
 }

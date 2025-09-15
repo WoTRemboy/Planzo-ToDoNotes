@@ -22,15 +22,18 @@ struct EmailInitialCircleView: View {
             Circle()
                 .fill(Color.LabelColors.labelPrimary)
             
-            Text(email.prefix(1).uppercased())
+            Text(email.prefix(2).uppercased())
                 .font(type.font)
                 .foregroundStyle(Color.LabelColors.labelReversed)
+                .minimumScaleFactor(0.5)
+                .padding(5)
         }
     }
 }
 
 #Preview {
-    EmailInitialCircleView(email: "qwerty@gmail.com", type: .large)
+    EmailInitialCircleView(email: "wwerty@gmail.com", type: .large)
+        .frame(width: 80, height: 80)
 }
 
 enum EmailInitialCircleSize {

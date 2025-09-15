@@ -44,7 +44,9 @@ struct SettingAboutPageView: View {
         Image.Settings.aboutLogo
             .resizable()
             .frame(width: 185, height: 185)
-            .clipShape(.buttonBorder)
+            .clipShape(
+                RoundedRectangle(cornerRadius: 40)
+            )
     }
     
     /// Displays the app name.

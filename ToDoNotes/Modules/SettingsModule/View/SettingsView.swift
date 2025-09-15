@@ -365,7 +365,7 @@ struct SettingsView: View {
             isPresented: $viewModel.showingLogoutConfirmation,
             titleVisibility: .visible) {
                 Button(role: .destructive) {
-                    authService.logout()
+                    viewModel.handleLogout(authService: authService)
                 } label: {
                     Text(Texts.Authorization.logout)
             }

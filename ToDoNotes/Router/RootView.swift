@@ -23,6 +23,11 @@ struct RootView<Content: View>: View {
     @State private var overlayWindow: UIWindow?
     /// A reference to the hosting controller displaying the toast views.
     @State private var toastHostingController: UIHostingController<AnyView>? = nil
+
+    /// A reference to the overlay window used to display loading overlays.
+    @State private var loadingOverlayWindow: UIWindow?
+    /// A reference to the hosting controller displaying the loading overlay views.
+    @State private var loadingOverlayHostingController: UIHostingController<AnyView>? = nil
     
     // MARK: - Body
     
@@ -51,12 +56,37 @@ struct RootView<Content: View>: View {
                     overlayWindow = window
                     toastHostingController = controller
                 }
+                
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   loadingOverlayWindow == nil {
+                    
+                    let window = PassthroughWindow(windowScene: windowScene)
+                    window.backgroundColor = .clear
+                    
+                    let controller = UIHostingController(rootView: AnyView(
+                        LoadingOverlayGroup().preferredColorScheme(userTheme.colorScheme)
+                    ))
+                    controller.view.frame = windowScene.keyWindow?.frame ?? .zero
+                    controller.view.backgroundColor = .clear
+                    window.rootViewController = controller
+                    
+                    window.isHidden = false
+                    window.isUserInteractionEnabled = false
+                    window.tag = 1010
+                    
+                    loadingOverlayWindow = window
+                    loadingOverlayHostingController = controller
+                }
             }
             .onChange(of: userTheme) { _, newTheme in
                 // Smoothly updates the toast appearance when theme changes
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     toastHostingController?.rootView = AnyView(
                         ToastGroup().preferredColorScheme(newTheme.colorScheme)
+                    )
+                    
+                    loadingOverlayHostingController?.rootView = AnyView(
+                        LoadingOverlayGroup().preferredColorScheme(newTheme.colorScheme)
                     )
                 }
             }

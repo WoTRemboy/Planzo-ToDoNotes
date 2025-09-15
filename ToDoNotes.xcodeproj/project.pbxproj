@@ -43,6 +43,7 @@
 		635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */; };
 		63645A5C2D3836FB000095D3 /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 63645A5B2D3836FB000095D3 /* SwiftUIIntrospect */; };
 		63645A5E2D383897000095D3 /* TextFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63645A5D2D383890000095D3 /* TextFieldDelegate.swift */; };
+		63753A7B2E78447E00D75DAF /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63753A7A2E78447E00D75DAF /* LoadingOverlay.swift */; };
 		6377871D2D75E99B006DE892 /* FullSwipeNavigationStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6377871C2D75E99B006DE892 /* FullSwipeNavigationStack.swift */; };
 		6378A7532D3EB6B100C1B858 /* ImmediateKeyboardModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6378A7522D3EB6A200C1B858 /* ImmediateKeyboardModifier.swift */; };
 		6378A7552D3FCBE500C1B858 /* TaskDateSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6378A7542D3FCBDA00C1B858 /* TaskDateSelectorView.swift */; };
@@ -186,6 +187,7 @@
 		635FEF852D24C255007FFBBA /* OnboardingScreenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenModel.swift; sourceTree = "<group>"; };
 		635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenViewModel.swift; sourceTree = "<group>"; };
 		63645A5D2D383890000095D3 /* TextFieldDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldDelegate.swift; sourceTree = "<group>"; };
+		63753A7A2E78447E00D75DAF /* LoadingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
 		6377871C2D75E99B006DE892 /* FullSwipeNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullSwipeNavigationStack.swift; sourceTree = "<group>"; };
 		6378A7522D3EB6A200C1B858 /* ImmediateKeyboardModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmediateKeyboardModifier.swift; sourceTree = "<group>"; };
 		6378A7542D3FCBDA00C1B858 /* TaskDateSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDateSelectorView.swift; sourceTree = "<group>"; };
@@ -560,6 +562,14 @@
 			path = PreviewData;
 			sourceTree = "<group>";
 		};
+		63753A7C2E78448900D75DAF /* HelperViews */ = {
+			isa = PBXGroup;
+			children = (
+				63753A7A2E78447E00D75DAF /* LoadingOverlay.swift */,
+			);
+			path = HelperViews;
+			sourceTree = "<group>";
+		};
 		637B9F442D29598F0010F13B /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -744,6 +754,7 @@
 		63BCD8AD2D7729460016950F /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				63753A7C2E78448900D75DAF /* HelperViews */,
 				63A092872D7BA02C0026A64D /* InternalNotifications */,
 				63BCD8B32D7B665C0016950F /* SearchBar */,
 				63BCD8AE2D7729730016950F /* AlertPopView */,
@@ -1154,6 +1165,7 @@
 				63645A5E2D383897000095D3 /* TextFieldDelegate.swift in Sources */,
 				63C2DC772D8C47BA00E6E0A0 /* CustomContextMenu.swift in Sources */,
 				637B9F692D29754F0010F13B /* FilterCell.swift in Sources */,
+				63753A7B2E78447E00D75DAF /* LoadingOverlay.swift in Sources */,
 				63F6C7002D2AA01700716AB0 /* TodayViewModel.swift in Sources */,
 				6321FBFF2E5890CA00F0AEA5 /* SelectorView.swift in Sources */,
 				635FEF842D24C17B007FFBBA /* Labels.swift in Sources */,

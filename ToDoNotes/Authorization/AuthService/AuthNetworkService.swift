@@ -41,6 +41,7 @@ final class AuthNetworkService: ObservableObject {
             }
             return
         }
+        LoadingOverlay.shared.show()
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 logger.error("Google authorization request failed with error: \(error.localizedDescription)")
@@ -63,6 +64,7 @@ final class AuthNetworkService: ObservableObject {
                 DispatchQueue.main.async {
                     completion(.success(authResponse))
                 }
+                LoadingOverlay.shared.hide()
 //                self?.refreshThenLogout(after: authResponse)
             } catch {
                 logger.error("Failed to decode Google authorization response: \(error.localizedDescription)")

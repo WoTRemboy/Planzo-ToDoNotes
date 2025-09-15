@@ -151,17 +151,15 @@ final class SettingsViewModel: ObservableObject {
             return
         }
         hideLoginOptions()
+        
         googleAuthService.signInWithGoogle(presentingViewController: topVC) { [weak self] result in
-            switch result {
-            case .success:
-                DispatchQueue.main.async {
-                    withAnimation(.easeInOut(duration: 0.25)) {
-                        self?.hideLoginOptions()
-                    }
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self?.showingErrorAlert = true
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                switch result {
+                case .success:
+                    break
+                case .failure(let error):
+                    self.showingErrorAlert = true
                     logger.error("Google Sign-In failed: \(error.localizedDescription)")
                 }
             }
@@ -170,7 +168,53 @@ final class SettingsViewModel: ObservableObject {
     
     internal func handleAppleSignIn(appleAuthService: AppleAuthService) {
         hideLoginOptions()
+        LoadingOverlay.shared.show()
+        
+        appleAuthService.onBackendAuthResult = { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                
+                LoadingOverlay.shared.hide()
+                switch result {
+                case .success:
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        self.hideLoginOptions()
+                    }
+                case .failure(let error):
+                    self.showingErrorAlert = true
+                    logger.error("Apple Sign-In backend failed: \(error.localizedDescription)")
+                }
+            }
+        }
+        appleAuthService.onAuthError = { [weak self] error in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                
+                LoadingOverlay.shared.hide()
+                self.showingErrorAlert = true
+                logger.error("Apple Sign-In failed: \(error.localizedDescription)")
+            }
+        }
         appleAuthService.startAppleSignIn()
+    }
+    
+    /// Handles logout with animation and error reporting.
+    internal func handleLogout(authService: AuthNetworkService) {
+        LoadingOverlay.shared.show()
+        authService.logout { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                
+                LoadingOverlay.shared.hide()
+                switch result {
+                case .success:
+                    break
+                case .failure(let error):
+                    self.showingErrorAlert = true
+                    logger.error("Logout failed: \(error.localizedDescription)")
+                }
+            }
+        }
     }
     
     private func hideLoginOptions() {
