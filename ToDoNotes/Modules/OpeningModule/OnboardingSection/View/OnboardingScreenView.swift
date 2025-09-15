@@ -38,8 +38,7 @@ struct OnboardingScreenView: View {
     init(networkService: AuthNetworkService) {
         _appleAuthService = StateObject(wrappedValue: AppleAuthService(networkService: networkService))
         
-        let googleClientID = ProcessInfo.processInfo.environment["GOOGLE_CLIENT_ID"] ?? String()
-        _googleAuthService = StateObject(wrappedValue: GoogleAuthService(clientID: googleClientID, networkService: networkService))
+        _googleAuthService = StateObject(wrappedValue: GoogleAuthService(networkService: networkService))
     }
     
     // MARK: - Body

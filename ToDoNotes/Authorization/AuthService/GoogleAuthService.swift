@@ -12,12 +12,17 @@ import UIKit
 private let logger = Logger(subsystem: "com.todonotes.opening", category: "GoogleAuthService")
 
 final class GoogleAuthService: ObservableObject {
-    let clientID: String
-    let networkService: AuthNetworkService
+    private let clientID: String
+    private let networkService: AuthNetworkService
     
-    init(clientID: String, networkService: AuthNetworkService) {
-        self.clientID = clientID
+    init(networkService: AuthNetworkService) {
         self.networkService = networkService
+        
+        if let clientID = ProcessInfo.processInfo.environment["GOOGLE_CLIENT_ID"], !clientID.isEmpty {
+            self.clientID = clientID
+        } else {
+            self.clientID = Secrets.googleClientID
+        }
     }
     
     func signInWithGoogle(presentingViewController: UIViewController, completion: @escaping (Result<AuthResponse, Error>) -> Void) {
