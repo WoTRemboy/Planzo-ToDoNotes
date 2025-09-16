@@ -40,6 +40,7 @@ extension Color {
         static let labelTertiary = Color("LabelTertiary")
         static let labelReversed = Color("LabelReversed")
         static let labelBlack = Color("LabelBlack")
+        static let labelSubscription = Color("LabelSubscription")
         static let labelGreyLight = Color("LabelGreyLight")
         static let labelGreyDark = Color("LabelGreyDark")
         static let labelPlaceholder = Color("LabelPlaceholder")

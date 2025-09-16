@@ -282,15 +282,24 @@ final class Texts {
             static let email = NSLocalizedString("AuthorizationDetailsEmail", comment: "Email")
             static let passkey = NSLocalizedString("AuthorizationDetailsPasskey", comment: "Passkey")
             static let twoStepVerification = NSLocalizedString("AuthorizationDetailsTwoStepVerification", comment: "2-Step Verification")
-            static let plan = NSLocalizedString("AuthorizationDetailsPlan", comment: "Plan")
-            static let free = NSLocalizedString("AuthorizationDetailsFree", comment: "Free")
-            static let freePlan = NSLocalizedString("AuthorizationDetailsFreePlan", comment: "Free Plan")
         }
         
         enum Error {
             static let authorizationFailed = NSLocalizedString("AuthorizationFailed", comment: "Authorization failed")
             static let retryLater = NSLocalizedString("AuthorizationRetryLater", comment: "Please try again later")
         }
+    }
+    
+    enum Subscription {
+        enum SubType {
+            static let free = NSLocalizedString("SubscriptionFree", comment: "Free")
+            static let freePlan = NSLocalizedString("SubscriptionFreePlan", comment: "Free Plan")
+            
+            static let pro = NSLocalizedString("SubscriptionPro", comment: "Pro")
+            static let proPlan = NSLocalizedString("SubscriptionProPlan", comment: "Pro Plan")
+        }
+        
+        static let plan = NSLocalizedString("SubscriptionPlan", comment: "Plan")
     }
     
     // MARK: - Toasts Module Texts

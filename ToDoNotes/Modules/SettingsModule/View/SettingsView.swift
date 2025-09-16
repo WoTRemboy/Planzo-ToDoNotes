@@ -161,7 +161,7 @@ struct SettingsView: View {
                         SettingsProfileRow(
                             title: user.name ?? user.email,
                             image: user.avatarUrl,
-                            details: Texts.Authorization.Details.freePlan,
+                            details: authService.currentUser?.subscription.plan,
                             chevron: true)
                     })
                 .transition(.blurReplace)
