@@ -85,7 +85,7 @@ struct MainCustomNavBar: View {
     /// Action buttons for search and importance toggle.
     private var buttons: some View {
         HStack(spacing: 20) {
-            if authService.currentUser?.isFree == true {
+            if authService.currentUser?.isFree == true || authService.currentUser == nil {
                 subscriptionButton
             }
             
@@ -118,7 +118,7 @@ struct MainCustomNavBar: View {
     
     private var subscriptionButton: some View {
         Button {
-            authService.currentUser?.changeSubscriptionType(to: .pro)
+            viewModel.toggleShowingSubscriptionPage()
         } label: {
             RoundedRectangle(cornerRadius: 5)
                 .foregroundStyle(Color.LabelColors.labelSubscription)

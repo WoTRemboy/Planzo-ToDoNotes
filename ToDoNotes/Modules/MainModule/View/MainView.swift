@@ -109,6 +109,11 @@ struct MainView: View {
                     viewModel.toggleShowingTaskEditView()
                 }
         }
+        .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {
+            SubscriptionView(namespace: animation)
+                .environmentObject(SubscriptionViewModel())
+        }
+        
         // Configures and attaches pop-up alerts for removing or recovering tasks.
         .popView(isPresented: $viewModel.showingTaskRemoveAlert, onDismiss: {}) {
             removeAlert

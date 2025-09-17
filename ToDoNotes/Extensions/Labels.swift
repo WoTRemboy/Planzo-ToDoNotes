@@ -291,6 +291,8 @@ final class Texts {
     }
     
     enum Subscription {
+        static let plan = NSLocalizedString("SubscriptionPlan", comment: "Plan")
+
         enum SubType {
             static let free = NSLocalizedString("SubscriptionFree", comment: "Free")
             static let freePlan = NSLocalizedString("SubscriptionFreePlan", comment: "Free Plan")
@@ -299,7 +301,12 @@ final class Texts {
             static let proPlan = NSLocalizedString("SubscriptionProPlan", comment: "Pro Plan")
         }
         
-        static let plan = NSLocalizedString("SubscriptionPlan", comment: "Plan")
+        enum Benefits {
+            static let firstTitle = NSLocalizedString("SubscriptionBenefitsFirstTitle", comment: "Collaborate with Planzo Pro")
+            static let firstDescription = NSLocalizedString("SubscriptionBenefitsFirstDescription", comment: "Share tasks with friends and family.")
+            static let secondTitle = NSLocalizedString("SubscriptionBenefitsSecondTitle", comment: "Collaborate with Planzo Pro")
+            static let secondDescription = NSLocalizedString("SubscriptionBenefitsSecondDescription", comment: "Grant view-only or editing access.")
+        }
     }
     
     // MARK: - Toasts Module Texts
