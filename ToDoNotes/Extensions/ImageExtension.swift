@@ -197,6 +197,15 @@ extension Image {
         }
     }
     
+    enum Subscription {
+        static let firstBenefit = Image("SubscriptionBenefitsOne")
+        static let secondBenefit = Image("SubscriptionBenefitsTwo")
+        static let thirdBenefit = Image("SubscriptionBenefitsThree")
+        static let fourthBenefit = Image("SubscriptionBenefitsFour")
+        
+        static let check = Image("SubscriptionCheck")
+    }
+    
     // MARK: - Login Page Images
     
     enum LoginPage {

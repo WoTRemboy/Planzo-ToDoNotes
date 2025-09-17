@@ -282,14 +282,30 @@ final class Texts {
             static let email = NSLocalizedString("AuthorizationDetailsEmail", comment: "Email")
             static let passkey = NSLocalizedString("AuthorizationDetailsPasskey", comment: "Passkey")
             static let twoStepVerification = NSLocalizedString("AuthorizationDetailsTwoStepVerification", comment: "2-Step Verification")
-            static let plan = NSLocalizedString("AuthorizationDetailsPlan", comment: "Plan")
-            static let free = NSLocalizedString("AuthorizationDetailsFree", comment: "Free")
-            static let freePlan = NSLocalizedString("AuthorizationDetailsFreePlan", comment: "Free Plan")
         }
         
         enum Error {
             static let authorizationFailed = NSLocalizedString("AuthorizationFailed", comment: "Authorization failed")
             static let retryLater = NSLocalizedString("AuthorizationRetryLater", comment: "Please try again later")
+        }
+    }
+    
+    enum Subscription {
+        static let plan = NSLocalizedString("SubscriptionPlan", comment: "Plan")
+
+        enum SubType {
+            static let free = NSLocalizedString("SubscriptionFree", comment: "Free")
+            static let freePlan = NSLocalizedString("SubscriptionFreePlan", comment: "Free Plan")
+            
+            static let pro = NSLocalizedString("SubscriptionPro", comment: "Pro")
+            static let proPlan = NSLocalizedString("SubscriptionProPlan", comment: "Pro Plan")
+        }
+        
+        enum Benefits {
+            static let firstTitle = NSLocalizedString("SubscriptionBenefitsFirstTitle", comment: "Collaborate with Planzo Pro")
+            static let firstDescription = NSLocalizedString("SubscriptionBenefitsFirstDescription", comment: "Share tasks with friends and family.")
+            static let secondTitle = NSLocalizedString("SubscriptionBenefitsSecondTitle", comment: "Collaborate with Planzo Pro")
+            static let secondDescription = NSLocalizedString("SubscriptionBenefitsSecondDescription", comment: "Grant view-only or editing access.")
         }
     }
     

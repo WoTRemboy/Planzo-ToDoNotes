@@ -40,6 +40,8 @@ extension Color {
         static let labelTertiary = Color("LabelTertiary")
         static let labelReversed = Color("LabelReversed")
         static let labelBlack = Color("LabelBlack")
+        static let labelWhite = Color("LabelWhite")
+        static let labelSubscription = Color("LabelSubscription")
         static let labelGreyLight = Color("LabelGreyLight")
         static let labelGreyDark = Color("LabelGreyDark")
         static let labelPlaceholder = Color("LabelPlaceholder")
@@ -62,6 +64,7 @@ extension Color {
         static let supportToggle = Color("SupportToggle")
         static let supportPopup = Color("SupportPopup")
         static let supportParamRow = Color("SupportParamRow")
+        static let supportSubscription = Color("SupportSubscription")
     }
     
     // MARK: - Folder Colors

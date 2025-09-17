@@ -80,8 +80,8 @@ struct SettingAccountView: View {
     
     private var planView: some View {
         AccountDetailsRow(
-            title: Texts.Authorization.Details.plan,
-            details: Texts.Authorization.Details.free,
+            title: Texts.Subscription.plan,
+            details: authService.currentUser?.subscription.title,
             last: true)
     }
 }

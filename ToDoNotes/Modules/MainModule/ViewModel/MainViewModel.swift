@@ -39,6 +39,7 @@ final class MainViewModel: ObservableObject {
     @Published internal var showingFolderSetupView: Bool = false
     @Published internal var showingSearchBar: Bool = false
     @Published internal var showingShareSheet: Bool = false
+    @Published internal var showingSubscriptionPage: Bool = false
     
     /// The selected task for editing or viewing.
     @Published internal var selectedTask: TaskEntity? = nil
@@ -93,6 +94,10 @@ final class MainViewModel: ObservableObject {
     
     internal func toggleShowingFolderSetupView() {
         showingFolderSetupView.toggle()
+    }
+    
+    internal func toggleShowingSubscriptionPage() {
+        showingSubscriptionPage.toggle()
     }
     
     // MARK: - Filter and Folder Management

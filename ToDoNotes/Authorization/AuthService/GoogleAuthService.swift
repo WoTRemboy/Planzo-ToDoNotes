@@ -26,6 +26,10 @@ final class GoogleAuthService: ObservableObject {
     }
     
     func signInWithGoogle(presentingViewController: UIViewController, completion: @escaping (Result<AuthResponse, Error>) -> Void) {
+        guard !clientID.isEmpty else {
+            completion(.failure(URLError(.badURL)))
+            return
+        }
         let config = GIDConfiguration(clientID: clientID)
         GIDSignIn.sharedInstance.configuration = config
         GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewController) { signInResult, error in
