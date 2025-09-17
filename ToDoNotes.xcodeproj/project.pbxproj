@@ -109,6 +109,7 @@
 		63E870E72D54F44D00699091 /* ViewGlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E870E62D54F44500699091 /* ViewGlow.swift */; };
 		63E870E92D55313000699091 /* ResetMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E870E82D55312200699091 /* ResetMessageModel.swift */; };
 		63E890CA2D347655003D7370 /* TaskListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E890C92D347655003D7370 /* TaskListRow.swift */; };
+		63F39F812E7A07600089E1AE /* SubscriptionNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F39F802E7A07600089E1AE /* SubscriptionNetworkService.swift */; };
 		63F6C6F72D29B41E00716AB0 /* FolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C6F62D29B41E00716AB0 /* FolderCell.swift */; };
 		63F6C6F92D29B78400716AB0 /* FoldersScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C6F82D29B78400716AB0 /* FoldersScrollView.swift */; };
 		63F6C6FE2D2A9FF500716AB0 /* TodayNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C6FD2D2A9FF500716AB0 /* TodayNavBar.swift */; };
@@ -256,6 +257,7 @@
 		63E870E62D54F44500699091 /* ViewGlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewGlow.swift; sourceTree = "<group>"; };
 		63E870E82D55312200699091 /* ResetMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetMessageModel.swift; sourceTree = "<group>"; };
 		63E890C92D347655003D7370 /* TaskListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListRow.swift; sourceTree = "<group>"; };
+		63F39F802E7A07600089E1AE /* SubscriptionNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionNetworkService.swift; sourceTree = "<group>"; };
 		63F6C6F62D29B41E00716AB0 /* FolderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderCell.swift; sourceTree = "<group>"; };
 		63F6C6F82D29B78400716AB0 /* FoldersScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoldersScrollView.swift; sourceTree = "<group>"; };
 		63F6C6FD2D2A9FF500716AB0 /* TodayNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayNavBar.swift; sourceTree = "<group>"; };
@@ -327,6 +329,7 @@
 			children = (
 				63FD574C2E68B77D00B7B062 /* UserModel.swift */,
 				63BF43932E7994C7008F52D0 /* SubscriptionModel.swift */,
+				63F39F802E7A07600089E1AE /* SubscriptionNetworkService.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1174,6 +1177,7 @@
 				63FD574F2E68B83400B7B062 /* AppleAuthService.swift in Sources */,
 				631315BB2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift in Sources */,
 				63F6C6F92D29B78400716AB0 /* FoldersScrollView.swift in Sources */,
+				63F39F812E7A07600089E1AE /* SubscriptionNetworkService.swift in Sources */,
 				63BCB7202DAFF44F008603D4 /* MainPageOverviewTip.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
 				637B9F662D2974E40010F13B /* FilterScrollView.swift in Sources */,
