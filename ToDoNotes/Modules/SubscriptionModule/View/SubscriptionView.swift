@@ -68,7 +68,7 @@ struct SubscriptionView: View {
             if authService.isAuthorized {
                 continueButton
             }
-            HStack(spacing: 40) {
+            HStack(spacing: 16) {
                 termsPolicyButton(type: .termsOfService)
                 termsPolicyButton(type: .privacyPolicy)
             }
@@ -152,6 +152,7 @@ struct SubscriptionView: View {
                 .font(.system(size: 14, weight: .medium))
                 .foregroundStyle(Color.LabelColors.labelDetails)
         }
+        .frame(maxWidth: .infinity, alignment: .center)
     }
     
     private var errorAlert: some View {

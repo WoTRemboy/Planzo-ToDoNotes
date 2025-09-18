@@ -195,6 +195,7 @@
 		632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementNavBar.swift; sourceTree = "<group>"; };
 		632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementShareView.swift; sourceTree = "<group>"; };
 		632D0DD92D37E0A90071684D /* HeightReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightReader.swift; sourceTree = "<group>"; };
+		632F9CA92E7CAE3000DBDAF0 /* SubscriptionsConfiguration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = SubscriptionsConfiguration.storekit; sourceTree = "<group>"; };
 		6338FFA82D7C9FE400E9E4C2 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		634877AB2D369B21009110B0 /* SettingFormRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingFormRow.swift; sourceTree = "<group>"; };
 		635DBBB22D64E88D0050476C /* TaskSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSectionModel.swift; sourceTree = "<group>"; };
@@ -584,6 +585,7 @@
 			children = (
 				63753A842E7868F900D75DAF /* Secrets.json */,
 				635FEF682D24B71C007FFBBA /* Assets.xcassets */,
+				632F9CA92E7CAE3000DBDAF0 /* SubscriptionsConfiguration.storekit */,
 			);
 			path = SupportingFiles;
 			sourceTree = "<group>";

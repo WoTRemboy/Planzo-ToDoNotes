@@ -53,13 +53,13 @@ struct SubscriptionPricesView: View {
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
             
-            Text("$\(type.price)")
+            Text(String(format: "$%.2f", type.price))
                 .font(.system(size: 25, weight: .bold))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
             
-            Text("($\(type.month)/\(Texts.Subscription.Page.month))")
+            Text("($\(String(format: "%.2f", type.month))/\(Texts.Subscription.Page.month))")
                 .textCase(.lowercase)
                 .font(.system(size: 14, weight: .regular))
                 .foregroundStyle(Color.LabelColors.labelSecondary)
@@ -137,23 +137,24 @@ enum SubscriptionPlan {
         }
     }
     
-    internal var price: Int {
+    internal var price: Float {
         switch self {
         case .annual:
-            120
+            119.99
         case .monthly:
-            15
+            14.99
         }
     }
     
-    internal var month: Int {
+    internal var month: Float {
         switch self {
         case .annual:
-            10
+            9.99
         case .monthly:
-            15
+            14.99
         }
     }
 }
+
 
 
