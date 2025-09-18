@@ -10,6 +10,7 @@ import SwiftUI
 struct SubscriptionView: View {
     
     @EnvironmentObject private var viewModel: SubscriptionViewModel
+    @EnvironmentObject private var authService: AuthNetworkService
     
     /// Animation namespace used for matched geometry transitions.
     private let namespace: Namespace.ID
@@ -26,35 +27,76 @@ struct SubscriptionView: View {
                     showBackButton: true)
                 .zIndex(1)
                 
-                SubscriptionBenefitsCarousel()
-                    .frame(height: 250)
-                
-                planTitle
-                trialToggle
-                subscriptionPricesView
+                ScrollView(showsIndicators: false) {
+                    subscriptionCarousel
+                    
+                    if authService.isAuthorized {
+                        subscriptionView
+                    } else {
+                        authView
+                    }
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
         .safeAreaInset(edge: .bottom) {
-            continueButton
+            VStack(spacing: 0) {
+                if authService.isAuthorized {
+                    continueButton
+                }
+                HStack(spacing: 40) {
+                    termsPolicyButton(type: .termsOfService)
+                    termsPolicyButton(type: .privacyPolicy)
+                }
+                .padding([.horizontal, .top])
+                .padding(.bottom, hasNotch() ? 0 : 16)
+            }
+            .frame(maxWidth: .infinity)
+            .background {
+                Color.BackColors.backDefault
+                    .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: -5)
+                    .ignoresSafeArea()
+            }
         }
+        .navigationTransition(
+            id: Texts.NamespaceID.subscriptionButton,
+            namespace: namespace)
+    }
+    
+    private var subscriptionCarousel: some View {
+        SubscriptionBenefitsCarousel()
+            .frame(minHeight: 250)
+    }
+    
+    private var authView: some View {
+        SubscriptionLoginView()
+            .padding(.top, 30)
+    }
+    
+    private var subscriptionView: some View {
+        VStack {
+            planTitle
+            trialToggle
+            subscriptionPricesView
+        }
+        .padding(.top, 30)
     }
     
     private var planTitle: some View {
         Text("Choose Your Plan")
             .font(.system(size: 20, weight: .medium))
             .foregroundColor(Color.LabelColors.labelPrimary)
-            .padding(.top, 36)
     }
     
     private var trialToggle: some View {
         SubscriptionTrialToggle()
-            .padding([.horizontal, .top], 16)
+            .padding(.horizontal)
+            .padding(.top, 8)
     }
     
     private var subscriptionPricesView: some View {
         SubscriptionPricesView()
-            .padding(.top, 24)
+            .padding(.top)
     }
     
     private var continueButton: some View {
@@ -74,11 +116,21 @@ struct SubscriptionView: View {
         .minimumScaleFactor(0.4)
         
         .padding([.horizontal, .top], 16)
-        .padding(.bottom, 30)
+    }
+        
+    private func termsPolicyButton(type: SupportLink) -> some View {
+        Button {
+            viewModel.openSupportLink(url: type.url)
+        } label: {
+            Text(type.title)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(Color.LabelColors.labelDetails)
+        }
     }
 }
 
 #Preview {
     SubscriptionView(namespace: Namespace().wrappedValue)
         .environmentObject(SubscriptionViewModel())
+        .environmentObject(AuthNetworkService())
 }

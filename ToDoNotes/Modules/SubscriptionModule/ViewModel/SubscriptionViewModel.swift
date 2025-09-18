@@ -32,4 +32,10 @@ final class SubscriptionViewModel: ObservableObject {
     internal func strokeColor(for plan: SubscriptionPlan) -> Color {
         plan == selectedSubscriptionPlan ? .supportSubscription : .labelSecondary
     }
+    
+    internal func openSupportLink(url: String) {
+        if let url = URL(string: url) {
+            UIApplication.shared.open(url)
+        }
+    }
 }

@@ -103,6 +103,8 @@
 		63BCD8B02D77298D0016950F /* PopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD8AF2D77298D0016950F /* PopView.swift */; };
 		63BCD8B22D77400D0016950F /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD8B12D77400D0016950F /* AlertView.swift */; };
 		63BCD8B52D7B666B0016950F /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD8B42D7B66680016950F /* SearchBar.swift */; };
+		63BDC3402E7C1C2400E92FDC /* SubscriptionLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BDC33F2E7C1C2400E92FDC /* SubscriptionLoginView.swift */; };
+		63BDC3422E7C22F600E92FDC /* SupportLinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BDC3412E7C22F200E92FDC /* SupportLinkModel.swift */; };
 		63BF43942E7994CA008F52D0 /* SubscriptionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BF43932E7994C7008F52D0 /* SubscriptionModel.swift */; };
 		63C2DC772D8C47BA00E6E0A0 /* CustomContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C2DC762D8C47BA00E6E0A0 /* CustomContextMenu.swift */; };
 		63C2DC792D8C4ABD00E6E0A0 /* ContextMenuHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C2DC782D8C4AB600E6E0A0 /* ContextMenuHelper.swift */; };
@@ -260,6 +262,8 @@
 		63BCD8AF2D77298D0016950F /* PopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopView.swift; sourceTree = "<group>"; };
 		63BCD8B12D77400D0016950F /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		63BCD8B42D7B66680016950F /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		63BDC33F2E7C1C2400E92FDC /* SubscriptionLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionLoginView.swift; sourceTree = "<group>"; };
+		63BDC3412E7C22F200E92FDC /* SupportLinkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportLinkModel.swift; sourceTree = "<group>"; };
 		63BF43932E7994C7008F52D0 /* SubscriptionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionModel.swift; sourceTree = "<group>"; };
 		63C2DC762D8C47BA00E6E0A0 /* CustomContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomContextMenu.swift; sourceTree = "<group>"; };
 		63C2DC782D8C4AB600E6E0A0 /* ContextMenuHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuHelper.swift; sourceTree = "<group>"; };
@@ -400,6 +404,7 @@
 			children = (
 				63BF43932E7994C7008F52D0 /* SubscriptionModel.swift */,
 				63286AF22E7B3A0D00483810 /* SubscriptionCarouselModel.swift */,
+				63BDC3412E7C22F200E92FDC /* SupportLinkModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -428,6 +433,7 @@
 				63286AF02E7B39DB00483810 /* SubscriptionBenefitsCarousel.swift */,
 				63286AF72E7B48C800483810 /* SubscriptionTrialToggle.swift */,
 				63286AF92E7B495A00483810 /* SubscriptionPricesView.swift */,
+				63BDC33F2E7C1C2400E92FDC /* SubscriptionLoginView.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -1194,6 +1200,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63A092962D7C634E0026A64D /* TaskService.swift in Sources */,
+				63BDC3422E7C22F600E92FDC /* SupportLinkModel.swift in Sources */,
 				6378A7532D3EB6B100C1B858 /* ImmediateKeyboardModifier.swift in Sources */,
 				634877AC2D369B2C009110B0 /* SettingFormRow.swift in Sources */,
 				63F6C7022D2AA38C00716AB0 /* DateFormatter.swift in Sources */,
@@ -1260,6 +1267,7 @@
 				63BCB7202DAFF44F008603D4 /* MainPageOverviewTip.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
 				637B9F662D2974E40010F13B /* FilterScrollView.swift in Sources */,
+				63BDC3402E7C1C2400E92FDC /* SubscriptionLoginView.swift in Sources */,
 				6338FFA92D7C9FE900E9E4C2 /* PreviewData.swift in Sources */,
 				63FD574D2E68B77F00B7B062 /* UserModel.swift in Sources */,
 				632D0DDA2D37E0AE0071684D /* HeightReader.swift in Sources */,

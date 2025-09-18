@@ -57,6 +57,8 @@ struct SubscriptionNavBar: View {
                 backButton
             }
             titleLabel
+            Spacer()
+            restoreButton
         }
     }
     
@@ -76,8 +78,19 @@ struct SubscriptionNavBar: View {
     private var titleLabel: some View {
         Text(title)
             .font(.system(size: 20, weight: .medium))
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(alignment: .leading)
             .padding(.leading, showBackButton ? 8 : 16)
+    }
+    
+    private var restoreButton: some View {
+        Button {
+            // Restore Button Action
+        } label: {
+            Text("Restore purchases")
+                .foregroundStyle(Color.LabelColors.labelPrimary)
+        }
+        .frame(alignment: .trailing)
+        .padding(.horizontal, 16)
     }
 }
 

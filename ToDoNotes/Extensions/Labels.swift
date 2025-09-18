@@ -384,6 +384,7 @@ final class Texts {
         static let selectedCalendarDate = "SelectedCalendarDate"
         static let selectedEntity = "NoSelectedEntity"
         static let floatingButtons = "MainPageFloatingButtons"
+        static let subscriptionButton = "SubscriptionButton"
     }
     
     // MARK: - Accessibility Identifier

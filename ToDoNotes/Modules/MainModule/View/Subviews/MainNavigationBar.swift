@@ -16,9 +16,11 @@ struct MainCustomNavBar: View {
     
     /// The title displayed in the navigation bar.
     private let title: String
+    private let namespace: Namespace.ID
     
-    init(title: String) {
+    init(title: String, namespace: Namespace.ID) {
         self.title = title
+        self.namespace = namespace
     }
     
     // MARK: - Body
@@ -129,6 +131,9 @@ struct MainCustomNavBar: View {
                         .foregroundStyle(Color.LabelColors.labelBlack)
                 }
         }
+        .navigationTransitionSource(
+            id: Texts.NamespaceID.subscriptionButton,
+            namespace: namespace)
     }
     
 }
@@ -136,7 +141,7 @@ struct MainCustomNavBar: View {
 // MARK: - Preview
 
 #Preview {
-    MainCustomNavBar(title: Texts.MainPage.title)
+    MainCustomNavBar(title: Texts.MainPage.title, namespace: Namespace().wrappedValue)
         .environmentObject(MainViewModel())
         .environmentObject(AuthNetworkService())
 }

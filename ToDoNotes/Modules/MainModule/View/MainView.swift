@@ -128,7 +128,7 @@ struct MainView: View {
     /// Displays the navigation bar and task form inside the main screen.
     private var content: some View {
         VStack(spacing: 0) {
-            MainCustomNavBar(title: Texts.MainPage.title)
+            MainCustomNavBar(title: Texts.MainPage.title, namespace: animation)
                 .zIndex(1)
             taskForm
         }

@@ -50,10 +50,14 @@ struct SubscriptionPricesView: View {
             Text(type.title)
                 .font(.system(size: 14, weight: .medium))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
             
             Text("$\(type.price)")
                 .font(.system(size: 25, weight: .bold))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
             
             Text("($\(type.month)/month)")
                 .font(.system(size: 14, weight: .regular))
@@ -87,10 +91,12 @@ struct SubscriptionPricesView: View {
             .textCase(.uppercase)
             .font(.system(size: 11, weight: .medium))
             .foregroundStyle(Color.LabelColors.labelWhite)
+            .minimumScaleFactor(0.5)
+            .lineLimit(1)
         
             .frame(maxWidth: .infinity)
             .frame(height: 13)
-            .padding(.vertical, 8)
+            .padding(8)
         
             .background {
                 RoundedCorner(radius: 10, corners: [.topLeft, .topRight])
@@ -142,7 +148,7 @@ enum SubscriptionPlan {
     internal var month: Int {
         switch self {
         case .annual:
-            12
+            10
         case .monthly:
             15
         }
