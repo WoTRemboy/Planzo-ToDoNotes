@@ -20,6 +20,8 @@ struct SettingsView: View {
     @FetchRequest(entity: TaskEntity.entity(), sortDescriptors: [])
     private var tasksResults: FetchedResults<TaskEntity>
     
+    @Namespace private var namespace
+    
     /// EnvironmentObject providing state management for the settings screen.
     @EnvironmentObject private var viewModel: SettingsViewModel
     @EnvironmentObject private var authService: AuthNetworkService
@@ -29,7 +31,7 @@ struct SettingsView: View {
     
     /// Google authentication service.
     @StateObject private var googleAuthService: GoogleAuthService
-        
+    
     init(networkService: AuthNetworkService) {
         _appleAuthService = StateObject(wrappedValue: AppleAuthService(networkService: networkService))
         
@@ -47,6 +49,9 @@ struct SettingsView: View {
                 settingsList
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        }
+        .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {
+            SubscriptionView(namespace: namespace, networkService: authService)
         }
         .popView(isPresented: $viewModel.showingAppearance, onDismiss: {}) {
             SelectorView<Theme>(
@@ -118,8 +123,7 @@ struct SettingsView: View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 16) {
                 profileButton
-                    .clipShape(.rect(cornerRadius: 10))
-                    .padding([.horizontal, .top])
+                subscriptionPromoteRow
                 
                 VStack(spacing: 0) {
                     appearanceButton
@@ -155,14 +159,17 @@ struct SettingsView: View {
         ZStack {
             if let user = authService.currentUser {
                 CustomNavLink(
-                    destination: SettingAccountView()
-                        .environmentObject(authService),
+                    destination: SettingAccountView(namespace: namespace)
+//                        .environmentObject(authService)
+                        .environmentObject(viewModel),
                     label: {
                         SettingsProfileRow(
                             title: user.name ?? user.email,
                             image: user.avatarUrl,
                             details: authService.currentUser?.subscription.plan,
-                            chevron: true)
+                            chevron: true,
+                            isProfile: true,
+                            last: true)
                     })
                 .transition(.blurReplace)
             } else {
@@ -170,6 +177,8 @@ struct SettingsView: View {
                     .transition(.blurReplace)
             }
         }
+        .clipShape(.rect(cornerRadius: 10))
+        .padding([.horizontal, .top])
         .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
     }
     
@@ -181,7 +190,9 @@ struct SettingsView: View {
                         viewModel.showLoginOptions.toggle()
                     }
                 } label: {
-                    SettingsProfileRow(title: Texts.Authorization.login)
+                    SettingsProfileRow(
+                        title: Texts.Authorization.login,
+                        last: true)
                 }
                 .transition(.blurReplace)
             } else {
@@ -217,6 +228,16 @@ struct SettingsView: View {
                 .font(.system(size: 15, weight: .regular))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
         }
+    }
+    
+    private var subscriptionPromoteRow: some View {
+        Button {
+            viewModel.toggleShowingSubscriptionPage()
+        } label: {
+            SubscriptionPromoteRow()
+        }
+        .clipShape(.rect(cornerRadius: 10))
+        .padding(.horizontal)
     }
     
     /// Button to open appearance customization modal.
@@ -290,8 +311,8 @@ struct SettingsView: View {
                     performResetTasks()
                 } label: {
                     Text(Texts.Settings.Reset.confirm)
+                }
             }
-        }
     }
     
     /// Button linking to task creation page settings.
@@ -360,14 +381,15 @@ struct SettingsView: View {
             }
         }
         .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
-        .confirmationDialog(Texts.Authorization.confirmLogout,
+        .confirmationDialog(
+            Texts.Authorization.confirmLogout,
             isPresented: $viewModel.showingLogoutConfirmation,
             titleVisibility: .visible) {
                 Button(role: .destructive) {
                     viewModel.handleLogout(authService: authService)
                 } label: {
                     Text(Texts.Authorization.logout)
-            }
+                }
         }
     }
     
@@ -430,6 +452,7 @@ struct SettingsView: View {
     SettingsView(networkService: authService)
         .environmentObject(SettingsViewModel(notificationsEnabled: false))
         .environmentObject(authService)
+        .environmentObject(SubscriptionViewModel())
 }
 
 // MARK: - Private Logic

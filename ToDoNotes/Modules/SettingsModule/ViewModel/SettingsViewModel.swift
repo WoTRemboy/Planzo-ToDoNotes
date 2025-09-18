@@ -37,6 +37,8 @@ final class SettingsViewModel: ObservableObject {
     
     // MARK: - UI State Properties
     
+    @Published internal var showingSubscriptionPage: Bool = false
+    @Published internal var showingSubscriptionDetailsPage: Bool = false
     /// Flag to show language alert popup.
     @Published internal var showingLanguageAlert: Bool = false
     @Published internal var showingErrorAlert: Bool = false
@@ -99,6 +101,14 @@ final class SettingsViewModel: ObservableObject {
     }
     
     // MARK: - UI Toggles
+    
+    internal func toggleShowingSubscriptionPage() {
+        showingSubscriptionPage.toggle()
+    }
+    
+    internal func toggleShowingSubscriptionDetailsPage() {
+        showingSubscriptionDetailsPage.toggle()
+    }
     
     internal func toggleShowingErrorAlert() {
         showingErrorAlert.toggle()

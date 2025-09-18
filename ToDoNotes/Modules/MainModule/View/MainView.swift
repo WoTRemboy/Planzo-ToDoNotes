@@ -112,7 +112,6 @@ struct MainView: View {
         }
         .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {
             SubscriptionView(namespace: animation, networkService: authService)
-                .environmentObject(SubscriptionViewModel())
         }
         
         // Configures and attaches pop-up alerts for removing or recovering tasks.
