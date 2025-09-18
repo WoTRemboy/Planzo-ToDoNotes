@@ -50,12 +50,17 @@ struct SubscriptionPricesView: View {
             Text(type.title)
                 .font(.system(size: 14, weight: .medium))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
             
-            Text("$\(type.price)")
+            Text(String(format: "$%.2f", type.price))
                 .font(.system(size: 25, weight: .bold))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
             
-            Text("($\(type.month)/month)")
+            Text("($\(String(format: "%.2f", type.month))/\(Texts.Subscription.Page.month))")
+                .textCase(.lowercase)
                 .font(.system(size: 14, weight: .regular))
                 .foregroundStyle(Color.LabelColors.labelSecondary)
                 .minimumScaleFactor(0.5)
@@ -83,14 +88,16 @@ struct SubscriptionPricesView: View {
     }
     
     private var saveBanner: some View {
-        Text("Save $12")
+        Text("\(Texts.Subscription.Page.save) $12")
             .textCase(.uppercase)
             .font(.system(size: 11, weight: .medium))
             .foregroundStyle(Color.LabelColors.labelWhite)
+            .minimumScaleFactor(0.5)
+            .lineLimit(1)
         
             .frame(maxWidth: .infinity)
             .frame(height: 13)
-            .padding(.vertical, 8)
+            .padding(8)
         
             .background {
                 RoundedCorner(radius: 10, corners: [.topLeft, .topRight])
@@ -130,23 +137,24 @@ enum SubscriptionPlan {
         }
     }
     
-    internal var price: Int {
+    internal var price: Float {
         switch self {
         case .annual:
-            120
+            119.99
         case .monthly:
-            15
+            14.99
         }
     }
     
-    internal var month: Int {
+    internal var month: Float {
         switch self {
         case .annual:
-            12
+            9.99
         case .monthly:
-            15
+            14.99
         }
     }
 }
+
 
 

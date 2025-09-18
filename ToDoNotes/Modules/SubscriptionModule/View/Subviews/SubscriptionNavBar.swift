@@ -13,6 +13,7 @@ struct SubscriptionNavBar: View {
     
     /// Provides access to the environment's dismiss action for navigating back.
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var authService: AuthNetworkService
     
     /// The title text to display in the navigation bar.
     private let title: String
@@ -57,7 +58,13 @@ struct SubscriptionNavBar: View {
                 backButton
             }
             titleLabel
+            Spacer()
+            
+            if authService.isAuthorized {
+                restoreButton
+            }
         }
+        .animation(.easeInOut(duration: 0.2), value: authService.isAuthorized)
     }
     
     /// A button that dismisses the current view when tapped. Shown only if `showBackButton` is `true`.
@@ -76,8 +83,20 @@ struct SubscriptionNavBar: View {
     private var titleLabel: some View {
         Text(title)
             .font(.system(size: 20, weight: .medium))
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(alignment: .leading)
             .padding(.leading, showBackButton ? 8 : 16)
+    }
+    
+    private var restoreButton: some View {
+        Button {
+            // Restore Button Action
+        } label: {
+            Text(Texts.Subscription.Page.restore)
+                .foregroundStyle(Color.LabelColors.labelPrimary)
+        }
+        .transition(.blurReplace)
+        .frame(alignment: .trailing)
+        .padding(.horizontal, 16)
     }
 }
 
@@ -85,4 +104,5 @@ struct SubscriptionNavBar: View {
 
 #Preview {
     SubscriptionNavBar(title: "Pro Plan", showBackButton: true)
+        .environmentObject(AuthNetworkService())
 }

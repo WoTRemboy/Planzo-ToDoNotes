@@ -268,6 +268,7 @@ final class Texts {
     }
     
     enum Authorization {
+        static let title = NSLocalizedString("AuthorizationTitle", comment: "Authorization")
         static let login = NSLocalizedString("AuthorizationLogin", comment: "Sign in or Sign up")
         static let logout = NSLocalizedString("AuthorizationLogout", comment: "Log Out")
         static let confirmLogout = NSLocalizedString("AuthorizationConfirmLogout", comment: "Are you sure you want to log out?")
@@ -275,6 +276,9 @@ final class Texts {
         static let appleLogin = NSLocalizedString("AuthorizationAppleLogin", comment: "Sign in with Apple")
         static let googleLogin = NSLocalizedString("AuthorizationGoogleLogin", comment: "Sign in with Google")
         static let withoutAuth = NSLocalizedString("AuthorizationWithoutAuth", comment: "Without Authorization")
+        
+        static let termsOfService = NSLocalizedString("AuthorizationTermsOfService", comment: "Terms of Service")
+        static let privacyPolicy = NSLocalizedString("AuthorizationPrivacyPolicy", comment: "Privacy Policy")
         
         enum Details {
             static let account = NSLocalizedString("AuthorizationDetailsAccount", comment: "Account")
@@ -306,6 +310,16 @@ final class Texts {
             static let firstDescription = NSLocalizedString("SubscriptionBenefitsFirstDescription", comment: "Share tasks with friends and family.")
             static let secondTitle = NSLocalizedString("SubscriptionBenefitsSecondTitle", comment: "Collaborate with Planzo Pro")
             static let secondDescription = NSLocalizedString("SubscriptionBenefitsSecondDescription", comment: "Grant view-only or editing access.")
+        }
+        
+        enum Page {
+            static let choosePlan = NSLocalizedString("SubscriptionPageChoosePlanTitle", comment: "Choose your Plan")
+            static let continueButton = NSLocalizedString("SubscriptionPageContinueButton", comment: "Continue")
+            static let restore = NSLocalizedString("SubscriptionPageRestoreButton", comment: "Restore purchases")
+            
+            static let trial = NSLocalizedString("SubscriptionPageTrialTitle", comment: "Not sure? Try for free!")
+            static let save = NSLocalizedString("SubscriptionPageSaveButton", comment: "Save")
+            static let month = NSLocalizedString("SubscriptionPageMonth", comment: "Month")
         }
     }
     
@@ -384,6 +398,7 @@ final class Texts {
         static let selectedCalendarDate = "SelectedCalendarDate"
         static let selectedEntity = "NoSelectedEntity"
         static let floatingButtons = "MainPageFloatingButtons"
+        static let subscriptionButton = "SubscriptionButton"
     }
     
     // MARK: - Accessibility Identifier

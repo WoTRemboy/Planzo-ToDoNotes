@@ -15,7 +15,7 @@
 		630F547D2E6F5F1F00DF57E6 /* SettingProfileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F547C2E6F5F1F00DF57E6 /* SettingProfileRow.swift */; };
 		630F547F2E6F72CF00DF57E6 /* SettingLogoutButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F547E2E6F72CF00DF57E6 /* SettingLogoutButton.swift */; };
 		630F54822E6F7BAC00DF57E6 /* SettingAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F54812E6F7BAC00DF57E6 /* SettingAccountView.swift */; };
-		630F54842E6F82C000DF57E6 /* AccountDetailsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F54832E6F82C000DF57E6 /* AccountDetailsRow.swift */; };
+		630F54842E6F82C000DF57E6 /* SubscriptionPromoteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F54832E6F82C000DF57E6 /* SubscriptionPromoteRow.swift */; };
 		631315BB2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631315BA2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift */; };
 		631315BD2D7DE21E0030D446 /* MainTaskRowWithActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631315BC2D7DE21E0030D446 /* MainTaskRowWithActions.swift */; };
 		631A52892E6F501900880B84 /* TokenStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631A52882E6F501800880B84 /* TokenStorageService.swift */; };
@@ -49,7 +49,6 @@
 		635FEF842D24C17B007FFBBA /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF832D24C172007FFBBA /* Labels.swift */; };
 		635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF852D24C255007FFBBA /* OnboardingScreenModel.swift */; };
 		635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */; };
-		63645A5C2D3836FB000095D3 /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 63645A5B2D3836FB000095D3 /* SwiftUIIntrospect */; };
 		63645A5E2D383897000095D3 /* TextFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63645A5D2D383890000095D3 /* TextFieldDelegate.swift */; };
 		63753A7B2E78447E00D75DAF /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63753A7A2E78447E00D75DAF /* LoadingOverlay.swift */; };
 		63753A832E7867C800D75DAF /* ci_pre_xcodebuild.sh in Resources */ = {isa = PBXBuildFile; fileRef = 63753A822E7867C800D75DAF /* ci_pre_xcodebuild.sh */; };
@@ -103,6 +102,9 @@
 		63BCD8B02D77298D0016950F /* PopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD8AF2D77298D0016950F /* PopView.swift */; };
 		63BCD8B22D77400D0016950F /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD8B12D77400D0016950F /* AlertView.swift */; };
 		63BCD8B52D7B666B0016950F /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD8B42D7B66680016950F /* SearchBar.swift */; };
+		63BDC3402E7C1C2400E92FDC /* SubscriptionLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BDC33F2E7C1C2400E92FDC /* SubscriptionLoginView.swift */; };
+		63BDC3422E7C22F600E92FDC /* SupportLinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BDC3412E7C22F200E92FDC /* SupportLinkModel.swift */; };
+		63BDC3452E7C276100E92FDC /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 63BDC3442E7C276100E92FDC /* SwiftUIIntrospect */; };
 		63BF43942E7994CA008F52D0 /* SubscriptionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BF43932E7994C7008F52D0 /* SubscriptionModel.swift */; };
 		63C2DC772D8C47BA00E6E0A0 /* CustomContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C2DC762D8C47BA00E6E0A0 /* CustomContextMenu.swift */; };
 		63C2DC792D8C4ABD00E6E0A0 /* ContextMenuHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C2DC782D8C4AB600E6E0A0 /* ContextMenuHelper.swift */; };
@@ -172,7 +174,7 @@
 		630F547C2E6F5F1F00DF57E6 /* SettingProfileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingProfileRow.swift; sourceTree = "<group>"; };
 		630F547E2E6F72CF00DF57E6 /* SettingLogoutButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingLogoutButton.swift; sourceTree = "<group>"; };
 		630F54812E6F7BAC00DF57E6 /* SettingAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingAccountView.swift; sourceTree = "<group>"; };
-		630F54832E6F82C000DF57E6 /* AccountDetailsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailsRow.swift; sourceTree = "<group>"; };
+		630F54832E6F82C000DF57E6 /* SubscriptionPromoteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPromoteRow.swift; sourceTree = "<group>"; };
 		631315BA2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTaskRowWithActions.swift; sourceTree = "<group>"; };
 		631315BC2D7DE21E0030D446 /* MainTaskRowWithActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTaskRowWithActions.swift; sourceTree = "<group>"; };
 		631A52882E6F501800880B84 /* TokenStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorageService.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 		632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementNavBar.swift; sourceTree = "<group>"; };
 		632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementShareView.swift; sourceTree = "<group>"; };
 		632D0DD92D37E0A90071684D /* HeightReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightReader.swift; sourceTree = "<group>"; };
+		632F9CA92E7CAE3000DBDAF0 /* SubscriptionsConfiguration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = SubscriptionsConfiguration.storekit; sourceTree = "<group>"; };
 		6338FFA82D7C9FE400E9E4C2 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		634877AB2D369B21009110B0 /* SettingFormRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingFormRow.swift; sourceTree = "<group>"; };
 		635DBBB22D64E88D0050476C /* TaskSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSectionModel.swift; sourceTree = "<group>"; };
@@ -260,6 +263,8 @@
 		63BCD8AF2D77298D0016950F /* PopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopView.swift; sourceTree = "<group>"; };
 		63BCD8B12D77400D0016950F /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		63BCD8B42D7B66680016950F /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		63BDC33F2E7C1C2400E92FDC /* SubscriptionLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionLoginView.swift; sourceTree = "<group>"; };
+		63BDC3412E7C22F200E92FDC /* SupportLinkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportLinkModel.swift; sourceTree = "<group>"; };
 		63BF43932E7994C7008F52D0 /* SubscriptionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionModel.swift; sourceTree = "<group>"; };
 		63C2DC762D8C47BA00E6E0A0 /* CustomContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomContextMenu.swift; sourceTree = "<group>"; };
 		63C2DC782D8C4AB600E6E0A0 /* ContextMenuHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuHelper.swift; sourceTree = "<group>"; };
@@ -305,7 +310,7 @@
 				63C5A8CF2D31BECD00154101 /* GoogleSignIn in Frameworks */,
 				63C5A8D12D31BECD00154101 /* GoogleSignInSwift in Frameworks */,
 				63958D2D2D33D8FE00A1913A /* SwiftUIPager in Frameworks */,
-				63645A5C2D3836FB000095D3 /* SwiftUIIntrospect in Frameworks */,
+				63BDC3452E7C276100E92FDC /* SwiftUIIntrospect in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,10 +337,10 @@
 		630F54802E6F736C00DF57E6 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				630F54832E6F82C000DF57E6 /* AccountDetailsRow.swift */,
 				630F547C2E6F5F1F00DF57E6 /* SettingProfileRow.swift */,
 				630F547E2E6F72CF00DF57E6 /* SettingLogoutButton.swift */,
 				6307CD642E773F96005836D5 /* EmailInitialCircleView.swift */,
+				630F54832E6F82C000DF57E6 /* SubscriptionPromoteRow.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -400,6 +405,7 @@
 			children = (
 				63BF43932E7994C7008F52D0 /* SubscriptionModel.swift */,
 				63286AF22E7B3A0D00483810 /* SubscriptionCarouselModel.swift */,
+				63BDC3412E7C22F200E92FDC /* SupportLinkModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -428,6 +434,7 @@
 				63286AF02E7B39DB00483810 /* SubscriptionBenefitsCarousel.swift */,
 				63286AF72E7B48C800483810 /* SubscriptionTrialToggle.swift */,
 				63286AF92E7B495A00483810 /* SubscriptionPricesView.swift */,
+				63BDC33F2E7C1C2400E92FDC /* SubscriptionLoginView.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -578,6 +585,7 @@
 			children = (
 				63753A842E7868F900D75DAF /* Secrets.json */,
 				635FEF682D24B71C007FFBBA /* Assets.xcassets */,
+				632F9CA92E7CAE3000DBDAF0 /* SubscriptionsConfiguration.storekit */,
 			);
 			path = SupportingFiles;
 			sourceTree = "<group>";
@@ -1093,7 +1101,7 @@
 				63C5A8CE2D31BECD00154101 /* GoogleSignIn */,
 				63C5A8D02D31BECD00154101 /* GoogleSignInSwift */,
 				63958D2C2D33D8FE00A1913A /* SwiftUIPager */,
-				63645A5B2D3836FB000095D3 /* SwiftUIIntrospect */,
+				63BDC3442E7C276100E92FDC /* SwiftUIIntrospect */,
 			);
 			productName = ToDoNotes;
 			productReference = 635FEF552D24B715007FFBBA /* ToDoNotes.app */;
@@ -1153,7 +1161,7 @@
 			packageReferences = (
 				63C5A8CD2D31BECD00154101 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				63958D2B2D33D8FE00A1913A /* XCRemoteSwiftPackageReference "SwiftUIPager" */,
-				63645A5A2D3836FB000095D3 /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
+				63BDC3432E7C276100E92FDC /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 635FEF562D24B715007FFBBA /* Products */;
@@ -1194,11 +1202,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				63A092962D7C634E0026A64D /* TaskService.swift in Sources */,
+				63BDC3422E7C22F600E92FDC /* SupportLinkModel.swift in Sources */,
 				6378A7532D3EB6B100C1B858 /* ImmediateKeyboardModifier.swift in Sources */,
 				634877AC2D369B2C009110B0 /* SettingFormRow.swift in Sources */,
 				63F6C7022D2AA38C00716AB0 /* DateFormatter.swift in Sources */,
 				635DBBB52D6A1E4A0050476C /* NavigationTransitionModifier.swift in Sources */,
-				630F54842E6F82C000DF57E6 /* AccountDetailsRow.swift in Sources */,
+				630F54842E6F82C000DF57E6 /* SubscriptionPromoteRow.swift in Sources */,
 				6378A7552D3FCBE500C1B858 /* TaskDateSelectorView.swift in Sources */,
 				635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */,
 				637B9F4C2D295B290010F13B /* MainView.swift in Sources */,
@@ -1260,6 +1269,7 @@
 				63BCB7202DAFF44F008603D4 /* MainPageOverviewTip.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
 				637B9F662D2974E40010F13B /* FilterScrollView.swift in Sources */,
+				63BDC3402E7C1C2400E92FDC /* SubscriptionLoginView.swift in Sources */,
 				6338FFA92D7C9FE900E9E4C2 /* PreviewData.swift in Sources */,
 				63FD574D2E68B77F00B7B062 /* UserModel.swift in Sources */,
 				632D0DDA2D37E0AE0071684D /* HeightReader.swift in Sources */,
@@ -1610,20 +1620,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		63645A5A2D3836FB000095D3 /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/siteline/swiftui-introspect";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.3.0;
-			};
-		};
 		63958D2B2D33D8FE00A1913A /* XCRemoteSwiftPackageReference "SwiftUIPager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/fermoya/SwiftUIPager.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.5.0;
+			};
+		};
+		63BDC3432E7C276100E92FDC /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/swiftui-introspect";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 26.0.0;
 			};
 		};
 		63C5A8CD2D31BECD00154101 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
@@ -1637,15 +1647,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		63645A5B2D3836FB000095D3 /* SwiftUIIntrospect */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 63645A5A2D3836FB000095D3 /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
-			productName = SwiftUIIntrospect;
-		};
 		63958D2C2D33D8FE00A1913A /* SwiftUIPager */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 63958D2B2D33D8FE00A1913A /* XCRemoteSwiftPackageReference "SwiftUIPager" */;
 			productName = SwiftUIPager;
+		};
+		63BDC3442E7C276100E92FDC /* SwiftUIIntrospect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 63BDC3432E7C276100E92FDC /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
+			productName = SwiftUIIntrospect;
 		};
 		63C5A8CE2D31BECD00154101 /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;

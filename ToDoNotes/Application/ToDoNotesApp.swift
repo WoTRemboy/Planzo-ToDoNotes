@@ -29,6 +29,7 @@ struct ToDoNotesApp: App {
     // Inject global AuthNetworkService for secure profile and auth state management
     @StateObject private var authService = AuthNetworkService()
     @StateObject private var tokenService = TokenStorageService()
+    @StateObject private var subscriptionService = SubscriptionViewModel()
     
     /// The app's main scene, launching with the splash screen and setting up appearance and context.
     internal var body: some Scene {
@@ -47,6 +48,7 @@ struct ToDoNotesApp: App {
                 .environment(\.managedObjectContext, CoreDataProvider.shared.persistentContainer.viewContext)
                 .environmentObject(authService)
                 .environmentObject(tokenService)
+                .environmentObject(subscriptionService)
         }
     }
     

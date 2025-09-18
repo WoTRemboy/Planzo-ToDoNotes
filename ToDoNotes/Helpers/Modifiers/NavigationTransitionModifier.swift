@@ -95,7 +95,7 @@ extension View {
     ///   - namespace: The namespace associated with the transition.
     ///   - enable: A Boolean flag that enables or disables the transition.
     /// - Returns: A view with the navigation transition applied.
-    internal func navigationTransition(id: String, namespace: Namespace.ID, enable: Bool) -> some View {
+    internal func navigationTransition(id: String, namespace: Namespace.ID, enable: Bool = true) -> some View {
         self.modifier(NavigationTransitionModifier(id: id, namespace: namespace, enable: enable))
     }
     
