@@ -10,6 +10,8 @@ import SwiftUI
 struct SubscriptionLoginView: View {
     
     @EnvironmentObject private var viewModel: SubscriptionViewModel
+    @ObservedObject var appleAuthService: AppleAuthService
+    @ObservedObject var googleAuthService: GoogleAuthService
     
     internal var body: some View {
         VStack(spacing: 16) {
@@ -27,13 +29,21 @@ struct SubscriptionLoginView: View {
     
     private var loginButtons: some View {
         VStack(spacing: 16) {
-            LoginButtonView(type: .apple) {}
-            LoginButtonView(type: .google) {}
+            LoginButtonView(type: .apple) {
+                viewModel.handleAppleSignIn(appleAuthService: appleAuthService)
+            }
+            LoginButtonView(type: .google) {
+                viewModel.handleGoogleSignIn(googleAuthService: googleAuthService)
+            }
         }
     }
 }
 
 #Preview {
-    SubscriptionLoginView()
+    let networkService = AuthNetworkService()
+    SubscriptionLoginView(
+        appleAuthService: AppleAuthService(networkService: networkService),
+        googleAuthService: GoogleAuthService(networkService: networkService)
+    )
         .environmentObject(SubscriptionViewModel())
 }

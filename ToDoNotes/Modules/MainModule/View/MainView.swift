@@ -23,6 +23,7 @@ struct MainView: View {
     // MARK: - Environment
     
     @EnvironmentObject private var viewModel: MainViewModel
+    @EnvironmentObject private var authService: AuthNetworkService
     
     // MARK: - Properties
     
@@ -110,7 +111,7 @@ struct MainView: View {
                 }
         }
         .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {
-            SubscriptionView(namespace: animation)
+            SubscriptionView(namespace: animation, networkService: authService)
                 .environmentObject(SubscriptionViewModel())
         }
         
@@ -357,6 +358,7 @@ extension MainView {
 #Preview {
     MainView()
         .environmentObject(MainViewModel())
+        .environmentObject(AuthNetworkService())
         .task {
             try? Tips.resetDatastore()
             try? Tips.configure([
