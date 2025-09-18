@@ -49,7 +49,6 @@
 		635FEF842D24C17B007FFBBA /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF832D24C172007FFBBA /* Labels.swift */; };
 		635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF852D24C255007FFBBA /* OnboardingScreenModel.swift */; };
 		635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */; };
-		63645A5C2D3836FB000095D3 /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 63645A5B2D3836FB000095D3 /* SwiftUIIntrospect */; };
 		63645A5E2D383897000095D3 /* TextFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63645A5D2D383890000095D3 /* TextFieldDelegate.swift */; };
 		63753A7B2E78447E00D75DAF /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63753A7A2E78447E00D75DAF /* LoadingOverlay.swift */; };
 		63753A832E7867C800D75DAF /* ci_pre_xcodebuild.sh in Resources */ = {isa = PBXBuildFile; fileRef = 63753A822E7867C800D75DAF /* ci_pre_xcodebuild.sh */; };
@@ -105,6 +104,7 @@
 		63BCD8B52D7B666B0016950F /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BCD8B42D7B66680016950F /* SearchBar.swift */; };
 		63BDC3402E7C1C2400E92FDC /* SubscriptionLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BDC33F2E7C1C2400E92FDC /* SubscriptionLoginView.swift */; };
 		63BDC3422E7C22F600E92FDC /* SupportLinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BDC3412E7C22F200E92FDC /* SupportLinkModel.swift */; };
+		63BDC3452E7C276100E92FDC /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 63BDC3442E7C276100E92FDC /* SwiftUIIntrospect */; };
 		63BF43942E7994CA008F52D0 /* SubscriptionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BF43932E7994C7008F52D0 /* SubscriptionModel.swift */; };
 		63C2DC772D8C47BA00E6E0A0 /* CustomContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C2DC762D8C47BA00E6E0A0 /* CustomContextMenu.swift */; };
 		63C2DC792D8C4ABD00E6E0A0 /* ContextMenuHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C2DC782D8C4AB600E6E0A0 /* ContextMenuHelper.swift */; };
@@ -309,7 +309,7 @@
 				63C5A8CF2D31BECD00154101 /* GoogleSignIn in Frameworks */,
 				63C5A8D12D31BECD00154101 /* GoogleSignInSwift in Frameworks */,
 				63958D2D2D33D8FE00A1913A /* SwiftUIPager in Frameworks */,
-				63645A5C2D3836FB000095D3 /* SwiftUIIntrospect in Frameworks */,
+				63BDC3452E7C276100E92FDC /* SwiftUIIntrospect in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1099,7 +1099,7 @@
 				63C5A8CE2D31BECD00154101 /* GoogleSignIn */,
 				63C5A8D02D31BECD00154101 /* GoogleSignInSwift */,
 				63958D2C2D33D8FE00A1913A /* SwiftUIPager */,
-				63645A5B2D3836FB000095D3 /* SwiftUIIntrospect */,
+				63BDC3442E7C276100E92FDC /* SwiftUIIntrospect */,
 			);
 			productName = ToDoNotes;
 			productReference = 635FEF552D24B715007FFBBA /* ToDoNotes.app */;
@@ -1159,7 +1159,7 @@
 			packageReferences = (
 				63C5A8CD2D31BECD00154101 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				63958D2B2D33D8FE00A1913A /* XCRemoteSwiftPackageReference "SwiftUIPager" */,
-				63645A5A2D3836FB000095D3 /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
+				63BDC3432E7C276100E92FDC /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 635FEF562D24B715007FFBBA /* Products */;
@@ -1618,20 +1618,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		63645A5A2D3836FB000095D3 /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/siteline/swiftui-introspect";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.3.0;
-			};
-		};
 		63958D2B2D33D8FE00A1913A /* XCRemoteSwiftPackageReference "SwiftUIPager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/fermoya/SwiftUIPager.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.5.0;
+			};
+		};
+		63BDC3432E7C276100E92FDC /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/swiftui-introspect";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 26.0.0;
 			};
 		};
 		63C5A8CD2D31BECD00154101 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
@@ -1645,15 +1645,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		63645A5B2D3836FB000095D3 /* SwiftUIIntrospect */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 63645A5A2D3836FB000095D3 /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
-			productName = SwiftUIIntrospect;
-		};
 		63958D2C2D33D8FE00A1913A /* SwiftUIPager */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 63958D2B2D33D8FE00A1913A /* XCRemoteSwiftPackageReference "SwiftUIPager" */;
 			productName = SwiftUIPager;
+		};
+		63BDC3442E7C276100E92FDC /* SwiftUIIntrospect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 63BDC3432E7C276100E92FDC /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
+			productName = SwiftUIIntrospect;
 		};
 		63C5A8CE2D31BECD00154101 /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;

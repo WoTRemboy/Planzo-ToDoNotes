@@ -119,7 +119,7 @@ struct TaskChecklistView: View {
         
         .submitLabel(.next)
         .focused($focusedItemID, equals: item.id)
-        .introspect(.textField, on: .iOS(.v16, .v17, .v18)) { textField in
+        .introspect(.textField, on: .iOS(.v16, .v17, .v18, .v26)) { textField in
             setupDelegate(for: textField, itemID: item.id)
         }
     }
