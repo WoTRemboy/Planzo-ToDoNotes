@@ -22,7 +22,7 @@ struct SubscriptionLoginView: View {
     }
     
     private var titleView: some View {
-        Text("Authorization")
+        Text(Texts.Authorization.title)
             .font(.system(size: 20, weight: .medium))
             .foregroundColor(Color.LabelColors.labelPrimary)
     }

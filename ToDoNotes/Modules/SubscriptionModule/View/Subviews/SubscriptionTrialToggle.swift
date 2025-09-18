@@ -13,7 +13,7 @@ struct SubscriptionTrialToggle: View {
     
     internal var body: some View {
         ZStack(alignment: .trailing) {
-            Text("Not sure? Try it for free!")
+            Text(Texts.Subscription.Page.trial)
                 .font(.system(size: 16, weight: .medium))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.trailing, 60)

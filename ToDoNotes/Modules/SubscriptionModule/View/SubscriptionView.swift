@@ -108,7 +108,7 @@ struct SubscriptionView: View {
     }
     
     private var planTitle: some View {
-        Text("Choose Your Plan")
+        Text(Texts.Subscription.Page.choosePlan)
             .font(.system(size: 20, weight: .medium))
             .foregroundColor(Color.LabelColors.labelPrimary)
     }
@@ -128,7 +128,7 @@ struct SubscriptionView: View {
         Button {
             // Continue Button Action
         } label: {
-            Text("Continue")
+            Text(Texts.Subscription.Page.continueButton)
                 .font(.system(size: 17, weight: .medium))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             

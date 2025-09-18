@@ -91,7 +91,7 @@ struct SubscriptionNavBar: View {
         Button {
             // Restore Button Action
         } label: {
-            Text("Restore purchases")
+            Text(Texts.Subscription.Page.restore)
                 .foregroundStyle(Color.LabelColors.labelPrimary)
         }
         .transition(.blurReplace)

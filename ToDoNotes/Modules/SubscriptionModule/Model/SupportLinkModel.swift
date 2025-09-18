@@ -12,9 +12,9 @@ enum SupportLink {
     internal var title: String {
         switch self {
         case .termsOfService:
-            return "Terms of Service"
+            Texts.Authorization.termsOfService
         case .privacyPolicy:
-            return "Privacy Policy"
+            Texts.Authorization.privacyPolicy
         }
     }
     

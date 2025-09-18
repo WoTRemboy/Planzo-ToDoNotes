@@ -59,7 +59,8 @@ struct SubscriptionPricesView: View {
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
             
-            Text("($\(type.month)/month)")
+            Text("($\(type.month)/\(Texts.Subscription.Page.month))")
+                .textCase(.lowercase)
                 .font(.system(size: 14, weight: .regular))
                 .foregroundStyle(Color.LabelColors.labelSecondary)
                 .minimumScaleFactor(0.5)
@@ -87,7 +88,7 @@ struct SubscriptionPricesView: View {
     }
     
     private var saveBanner: some View {
-        Text("Save $12")
+        Text("\(Texts.Subscription.Page.save) $12")
             .textCase(.uppercase)
             .font(.system(size: 11, weight: .medium))
             .foregroundStyle(Color.LabelColors.labelWhite)
