@@ -31,6 +31,7 @@
 		63286AF82E7B48C800483810 /* SubscriptionTrialToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63286AF72E7B48C800483810 /* SubscriptionTrialToggle.swift */; };
 		63286AFA2E7B495A00483810 /* SubscriptionPricesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63286AF92E7B495A00483810 /* SubscriptionPricesView.swift */; };
 		63286AFC2E7B506F00483810 /* RoundedCornersShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63286AFB2E7B506F00483810 /* RoundedCornersShape.swift */; };
+		632C002C2E81B2D60099C7FD /* ListNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632C002B2E81B2D60099C7FD /* ListNetworkService.swift */; };
 		632D0DD02D36B9760071684D /* TaskManagementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DCF2D36B9700071684D /* TaskManagementModel.swift */; };
 		632D0DD22D36BAF50071684D /* CustomNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD12D36BAEF0071684D /* CustomNavBar.swift */; };
 		632D0DD42D36BB270071684D /* TaskManagementNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */; };
@@ -190,6 +191,7 @@
 		63286AF72E7B48C800483810 /* SubscriptionTrialToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionTrialToggle.swift; sourceTree = "<group>"; };
 		63286AF92E7B495A00483810 /* SubscriptionPricesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPricesView.swift; sourceTree = "<group>"; };
 		63286AFB2E7B506F00483810 /* RoundedCornersShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCornersShape.swift; sourceTree = "<group>"; };
+		632C002B2E81B2D60099C7FD /* ListNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListNetworkService.swift; sourceTree = "<group>"; };
 		632D0DCF2D36B9700071684D /* TaskManagementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementModel.swift; sourceTree = "<group>"; };
 		632D0DD12D36BAEF0071684D /* CustomNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavBar.swift; sourceTree = "<group>"; };
 		632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementNavBar.swift; sourceTree = "<group>"; };
@@ -359,6 +361,7 @@
 				63FD57522E68B84900B7B062 /* AuthNetworkService.swift */,
 				63FD574E2E68B83400B7B062 /* AppleAuthService.swift */,
 				63FD57502E68B83900B7B062 /* GoogleAuthService.swift */,
+				632C002B2E81B2D60099C7FD /* ListNetworkService.swift */,
 			);
 			path = AuthService;
 			sourceTree = "<group>";
@@ -1267,6 +1270,7 @@
 				63F6C6F92D29B78400716AB0 /* FoldersScrollView.swift in Sources */,
 				63F39F812E7A07600089E1AE /* SubscriptionNetworkService.swift in Sources */,
 				63BCB7202DAFF44F008603D4 /* MainPageOverviewTip.swift in Sources */,
+				632C002C2E81B2D60099C7FD /* ListNetworkService.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
 				637B9F662D2974E40010F13B /* FilterScrollView.swift in Sources */,
 				63BDC3402E7C1C2400E92FDC /* SubscriptionLoginView.swift in Sources */,
