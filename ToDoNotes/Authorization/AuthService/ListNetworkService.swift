@@ -47,7 +47,7 @@ final class ListNetworkService {
 
     /// Fetches lists from the server, optionally since a specific date.
     /// - Parameters:
-    ///   - since: ISO8601 string for incremental sync. Pass nil for full fetch.
+    ///   - since: String for incremental sync.
     ///   - completion: Completion handler with result containing ListSyncResponse or error.
     func fetchLists(since: String? = nil, completion: @escaping (Result<ListSyncResponse, Error>) -> Void) {
         guard let accessToken = tokenStorage.load(type: .accessToken) else {
@@ -85,6 +85,7 @@ final class ListNetworkService {
                 DispatchQueue.main.async {
                     completion(.success(decoded))
                 }
+                print(decoded)
             } catch {
                 logger.error("Failed to decode list fetch response: \(error.localizedDescription)")
                 DispatchQueue.main.async {
@@ -168,8 +169,8 @@ extension ListNetworkService {
     /// Updates an existing list on the server.
     /// - Parameters:
     ///   - id: The id of the list to update.
-    ///   - name: New name for the list (optional).
-    ///   - archived: New archived value (optional).
+    ///   - name: New name for the list.
+    ///   - archived: New archived value.
     ///   - completion: Completion handler with result containing updated ListItem or error.
     func updateList(id: String, name: String? = nil, archived: Bool? = nil, completion: @escaping (Result<ListItem, Error>) -> Void) {
         guard let accessToken = tokenStorage.load(type: .accessToken) else {
