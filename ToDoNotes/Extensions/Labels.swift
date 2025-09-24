@@ -321,6 +321,12 @@ final class Texts {
             static let save = NSLocalizedString("SubscriptionPageSaveButton", comment: "Save")
             static let month = NSLocalizedString("SubscriptionPageMonth", comment: "Month")
         }
+        
+        enum Promo {
+            static let title = NSLocalizedString("SubscriptionPromoTitle", comment: "Upgrade to Planzo")
+            static let pro = NSLocalizedString("SubscriptionPromoPro", comment: "Pro")
+            static let description = NSLocalizedString("SubscriptionPromoDescription", comment: "Share tasks, customize your calendar, track progress, and more.")
+        }
     }
     
     // MARK: - Toasts Module Texts
