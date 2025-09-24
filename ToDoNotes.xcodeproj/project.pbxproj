@@ -37,6 +37,7 @@
 		632D0DD42D36BB270071684D /* TaskManagementNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */; };
 		632D0DD72D37D6D70071684D /* TaskManagementShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */; };
 		632D0DDA2D37E0AE0071684D /* HeightReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD92D37E0A90071684D /* HeightReader.swift */; };
+		6337C6312E8468D8008D5DA1 /* ShareNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */; };
 		6338FFA92D7C9FE900E9E4C2 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6338FFA82D7C9FE400E9E4C2 /* PreviewData.swift */; };
 		634877AC2D369B2C009110B0 /* SettingFormRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634877AB2D369B21009110B0 /* SettingFormRow.swift */; };
 		635DBBB32D64E89A0050476C /* TaskSectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635DBBB22D64E88D0050476C /* TaskSectionModel.swift */; };
@@ -199,6 +200,7 @@
 		632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementShareView.swift; sourceTree = "<group>"; };
 		632D0DD92D37E0A90071684D /* HeightReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightReader.swift; sourceTree = "<group>"; };
 		632F9CA92E7CAE3000DBDAF0 /* SubscriptionsConfiguration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = SubscriptionsConfiguration.storekit; sourceTree = "<group>"; };
+		6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNetworkService.swift; sourceTree = "<group>"; };
 		6338FFA82D7C9FE400E9E4C2 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		634877AB2D369B21009110B0 /* SettingFormRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingFormRow.swift; sourceTree = "<group>"; };
 		635DBBB22D64E88D0050476C /* TaskSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSectionModel.swift; sourceTree = "<group>"; };
@@ -365,6 +367,7 @@
 				63FD57502E68B83900B7B062 /* GoogleAuthService.swift */,
 				632C002B2E81B2D60099C7FD /* ListNetworkService.swift */,
 				63BFBF662E82FCAF0061C3DA /* ListItemNetworkService.swift */,
+				6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */,
 			);
 			path = AuthService;
 			sourceTree = "<group>";
@@ -1249,6 +1252,7 @@
 				63BFBF672E82FCB00061C3DA /* ListItemNetworkService.swift in Sources */,
 				63AE658C2D731EDF009A3541 /* CustomNavBarPreferenceKeys.swift in Sources */,
 				63286AF62E7B3E6200483810 /* SubscriptionViewModel.swift in Sources */,
+				6337C6312E8468D8008D5DA1 /* ShareNetworkService.swift in Sources */,
 				632D0DD02D36B9760071684D /* TaskManagementModel.swift in Sources */,
 				63F6C71C2D2B19A200716AB0 /* CustomCalendarModel.swift in Sources */,
 				63A0928E2D7C5EF20026A64D /* RootView.swift in Sources */,
