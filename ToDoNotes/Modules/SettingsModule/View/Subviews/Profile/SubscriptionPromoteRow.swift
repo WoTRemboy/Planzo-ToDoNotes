@@ -35,9 +35,8 @@ struct SubscriptionPromoteRow: View {
     
     private var titleView: some View {
         HStack(alignment: .center, spacing: 4) {
-            Text("Upgrade to")
+            Text(Texts.Subscription.Promo.title)
             proCapsuleView
-            Text("or start Free Trial")
         }
         .font(.system(size: 17, weight: .regular))
         .foregroundStyle(Color.LabelColors.labelPrimary)
@@ -45,7 +44,7 @@ struct SubscriptionPromoteRow: View {
     }
     
     private var proCapsuleView: some View {
-        Text("PRO")
+        Text(Texts.Subscription.Promo.pro)
             .font(.system(size: 14, weight: .medium))
             .foregroundStyle(Color.LabelColors.labelBlack)
         
@@ -58,7 +57,7 @@ struct SubscriptionPromoteRow: View {
     }
     
     private var detailsLabel: some View {
-        Text("Share tasks, customize your calendar, track progress, and more.")
+        Text(Texts.Subscription.Promo.description)
             .font(.system(size: 13,
                           weight: .regular))
             .foregroundStyle(Color.LabelColors.labelSecondary)

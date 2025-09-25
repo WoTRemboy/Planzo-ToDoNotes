@@ -31,11 +31,13 @@
 		63286AF82E7B48C800483810 /* SubscriptionTrialToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63286AF72E7B48C800483810 /* SubscriptionTrialToggle.swift */; };
 		63286AFA2E7B495A00483810 /* SubscriptionPricesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63286AF92E7B495A00483810 /* SubscriptionPricesView.swift */; };
 		63286AFC2E7B506F00483810 /* RoundedCornersShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63286AFB2E7B506F00483810 /* RoundedCornersShape.swift */; };
+		632C002C2E81B2D60099C7FD /* ListNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632C002B2E81B2D60099C7FD /* ListNetworkService.swift */; };
 		632D0DD02D36B9760071684D /* TaskManagementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DCF2D36B9700071684D /* TaskManagementModel.swift */; };
 		632D0DD22D36BAF50071684D /* CustomNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD12D36BAEF0071684D /* CustomNavBar.swift */; };
 		632D0DD42D36BB270071684D /* TaskManagementNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */; };
 		632D0DD72D37D6D70071684D /* TaskManagementShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */; };
 		632D0DDA2D37E0AE0071684D /* HeightReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD92D37E0A90071684D /* HeightReader.swift */; };
+		6337C6312E8468D8008D5DA1 /* ShareNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */; };
 		6338FFA92D7C9FE900E9E4C2 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6338FFA82D7C9FE400E9E4C2 /* PreviewData.swift */; };
 		634877AC2D369B2C009110B0 /* SettingFormRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634877AB2D369B21009110B0 /* SettingFormRow.swift */; };
 		635DBBB32D64E89A0050476C /* TaskSectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635DBBB22D64E88D0050476C /* TaskSectionModel.swift */; };
@@ -106,6 +108,7 @@
 		63BDC3422E7C22F600E92FDC /* SupportLinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BDC3412E7C22F200E92FDC /* SupportLinkModel.swift */; };
 		63BDC3452E7C276100E92FDC /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 63BDC3442E7C276100E92FDC /* SwiftUIIntrospect */; };
 		63BF43942E7994CA008F52D0 /* SubscriptionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BF43932E7994C7008F52D0 /* SubscriptionModel.swift */; };
+		63BFBF672E82FCB00061C3DA /* ListItemNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BFBF662E82FCAF0061C3DA /* ListItemNetworkService.swift */; };
 		63C2DC772D8C47BA00E6E0A0 /* CustomContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C2DC762D8C47BA00E6E0A0 /* CustomContextMenu.swift */; };
 		63C2DC792D8C4ABD00E6E0A0 /* ContextMenuHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C2DC782D8C4AB600E6E0A0 /* ContextMenuHelper.swift */; };
 		63C5A8CF2D31BECD00154101 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 63C5A8CE2D31BECD00154101 /* GoogleSignIn */; };
@@ -190,12 +193,14 @@
 		63286AF72E7B48C800483810 /* SubscriptionTrialToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionTrialToggle.swift; sourceTree = "<group>"; };
 		63286AF92E7B495A00483810 /* SubscriptionPricesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionPricesView.swift; sourceTree = "<group>"; };
 		63286AFB2E7B506F00483810 /* RoundedCornersShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCornersShape.swift; sourceTree = "<group>"; };
+		632C002B2E81B2D60099C7FD /* ListNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListNetworkService.swift; sourceTree = "<group>"; };
 		632D0DCF2D36B9700071684D /* TaskManagementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementModel.swift; sourceTree = "<group>"; };
 		632D0DD12D36BAEF0071684D /* CustomNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavBar.swift; sourceTree = "<group>"; };
 		632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementNavBar.swift; sourceTree = "<group>"; };
 		632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementShareView.swift; sourceTree = "<group>"; };
 		632D0DD92D37E0A90071684D /* HeightReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightReader.swift; sourceTree = "<group>"; };
 		632F9CA92E7CAE3000DBDAF0 /* SubscriptionsConfiguration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = SubscriptionsConfiguration.storekit; sourceTree = "<group>"; };
+		6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNetworkService.swift; sourceTree = "<group>"; };
 		6338FFA82D7C9FE400E9E4C2 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		634877AB2D369B21009110B0 /* SettingFormRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingFormRow.swift; sourceTree = "<group>"; };
 		635DBBB22D64E88D0050476C /* TaskSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSectionModel.swift; sourceTree = "<group>"; };
@@ -266,6 +271,7 @@
 		63BDC33F2E7C1C2400E92FDC /* SubscriptionLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionLoginView.swift; sourceTree = "<group>"; };
 		63BDC3412E7C22F200E92FDC /* SupportLinkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportLinkModel.swift; sourceTree = "<group>"; };
 		63BF43932E7994C7008F52D0 /* SubscriptionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionModel.swift; sourceTree = "<group>"; };
+		63BFBF662E82FCAF0061C3DA /* ListItemNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemNetworkService.swift; sourceTree = "<group>"; };
 		63C2DC762D8C47BA00E6E0A0 /* CustomContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomContextMenu.swift; sourceTree = "<group>"; };
 		63C2DC782D8C4AB600E6E0A0 /* ContextMenuHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuHelper.swift; sourceTree = "<group>"; };
 		63CD66972D367EBD0053C93C /* TaskManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementViewModel.swift; sourceTree = "<group>"; };
@@ -359,6 +365,9 @@
 				63FD57522E68B84900B7B062 /* AuthNetworkService.swift */,
 				63FD574E2E68B83400B7B062 /* AppleAuthService.swift */,
 				63FD57502E68B83900B7B062 /* GoogleAuthService.swift */,
+				632C002B2E81B2D60099C7FD /* ListNetworkService.swift */,
+				63BFBF662E82FCAF0061C3DA /* ListItemNetworkService.swift */,
+				6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */,
 			);
 			path = AuthService;
 			sourceTree = "<group>";
@@ -1240,8 +1249,10 @@
 				637B9F5C2D2969C30010F13B /* SettingsView.swift in Sources */,
 				631A52892E6F501900880B84 /* TokenStorageService.swift in Sources */,
 				63BCD8B22D77400D0016950F /* AlertView.swift in Sources */,
+				63BFBF672E82FCB00061C3DA /* ListItemNetworkService.swift in Sources */,
 				63AE658C2D731EDF009A3541 /* CustomNavBarPreferenceKeys.swift in Sources */,
 				63286AF62E7B3E6200483810 /* SubscriptionViewModel.swift in Sources */,
+				6337C6312E8468D8008D5DA1 /* ShareNetworkService.swift in Sources */,
 				632D0DD02D36B9760071684D /* TaskManagementModel.swift in Sources */,
 				63F6C71C2D2B19A200716AB0 /* CustomCalendarModel.swift in Sources */,
 				63A0928E2D7C5EF20026A64D /* RootView.swift in Sources */,
@@ -1267,6 +1278,7 @@
 				63F6C6F92D29B78400716AB0 /* FoldersScrollView.swift in Sources */,
 				63F39F812E7A07600089E1AE /* SubscriptionNetworkService.swift in Sources */,
 				63BCB7202DAFF44F008603D4 /* MainPageOverviewTip.swift in Sources */,
+				632C002C2E81B2D60099C7FD /* ListNetworkService.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
 				637B9F662D2974E40010F13B /* FilterScrollView.swift in Sources */,
 				63BDC3402E7C1C2400E92FDC /* SubscriptionLoginView.swift in Sources */,
