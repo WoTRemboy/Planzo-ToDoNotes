@@ -47,10 +47,12 @@ struct TabItems {
     }
     
     /// Creates the settings tab view.
-    /// - Parameter isSelected: A boolean indicating whether the tab is currently selected.
+    /// - Parameters:
+    ///   - isSelected: A boolean indicating whether the tab is currently selected.
+    ///   - networkService: An instance of `AuthNetworkService` required for settings.
     /// - Returns: A `SettingsView` wrapped in a tab item.
-    static func settingsTab(isSelected: Bool) -> some View {
-        SettingsView()
+    static func settingsTab(isSelected: Bool, networkService: AuthNetworkService) -> some View {
+        SettingsView(networkService: networkService)
             .tabItem {
                 isSelected ? Image.TabBar.Selected.settings : Image.TabBar.Unselected.settings
                     .renderingMode(.template)
@@ -58,3 +60,4 @@ struct TabItems {
             }
     }
 }
+

@@ -23,6 +23,7 @@ struct MainView: View {
     // MARK: - Environment
     
     @EnvironmentObject private var viewModel: MainViewModel
+    @EnvironmentObject private var authService: AuthNetworkService
     
     // MARK: - Properties
     
@@ -109,6 +110,10 @@ struct MainView: View {
                     viewModel.toggleShowingTaskEditView()
                 }
         }
+        .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {
+            SubscriptionView(namespace: animation, networkService: authService)
+        }
+        
         // Configures and attaches pop-up alerts for removing or recovering tasks.
         .popView(isPresented: $viewModel.showingTaskRemoveAlert, onDismiss: {}) {
             removeAlert
@@ -123,7 +128,7 @@ struct MainView: View {
     /// Displays the navigation bar and task form inside the main screen.
     private var content: some View {
         VStack(spacing: 0) {
-            MainCustomNavBar(title: Texts.MainPage.title)
+            MainCustomNavBar(title: Texts.MainPage.title, namespace: animation)
                 .zIndex(1)
             taskForm
         }
@@ -352,6 +357,7 @@ extension MainView {
 #Preview {
     MainView()
         .environmentObject(MainViewModel())
+        .environmentObject(AuthNetworkService())
         .task {
             try? Tips.resetDatastore()
             try? Tips.configure([

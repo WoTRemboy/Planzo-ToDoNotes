@@ -192,5 +192,6 @@ struct MainTaskRowWithActions: View {
 
 #Preview {
     MainTaskRowWithActions(entity: TaskEntity(), isLast: false)
+        .environmentObject(MainViewModel())
 }
 

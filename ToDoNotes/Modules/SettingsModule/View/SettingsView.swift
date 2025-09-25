@@ -20,9 +20,23 @@ struct SettingsView: View {
     @FetchRequest(entity: TaskEntity.entity(), sortDescriptors: [])
     private var tasksResults: FetchedResults<TaskEntity>
     
+    @Namespace private var namespace
+    
     /// EnvironmentObject providing state management for the settings screen.
     @EnvironmentObject private var viewModel: SettingsViewModel
     @EnvironmentObject private var authService: AuthNetworkService
+    
+    /// Apple authentication service.
+    @StateObject private var appleAuthService: AppleAuthService
+    
+    /// Google authentication service.
+    @StateObject private var googleAuthService: GoogleAuthService
+    
+    init(networkService: AuthNetworkService) {
+        _appleAuthService = StateObject(wrappedValue: AppleAuthService(networkService: networkService))
+        
+        _googleAuthService = StateObject(wrappedValue: GoogleAuthService(networkService: networkService))
+    }
     
     // MARK: - Body
     
@@ -35,6 +49,9 @@ struct SettingsView: View {
                 settingsList
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        }
+        .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {
+            SubscriptionView(namespace: namespace, networkService: authService)
         }
         .popView(isPresented: $viewModel.showingAppearance, onDismiss: {}) {
             SelectorView<Theme>(
@@ -96,6 +113,9 @@ struct SettingsView: View {
         .popView(isPresented: $viewModel.showingResetResult, onDismiss: {}) {
             resetAlert
         }
+        .popView(isPresented: $viewModel.showingErrorAlert, onDismiss: {}) {
+            errorAlert
+        }
     }
     
     /// Scrollable content with grouped setting options.
@@ -103,8 +123,7 @@ struct SettingsView: View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 16) {
                 profileButton
-                    .clipShape(.rect(cornerRadius: 10))
-                    .padding([.horizontal, .top])
+                subscriptionPromoteRow
                 
                 VStack(spacing: 0) {
                     appearanceButton
@@ -127,10 +146,7 @@ struct SettingsView: View {
                 .padding([.horizontal])
                 
                 aboutAppButton
-                
-                if let _ = authService.currentUser {
-                    logoutButton
-                }
+                logoutButton
             }
             .padding(.bottom)
         }
@@ -140,26 +156,88 @@ struct SettingsView: View {
     // MARK: - Individual Setting Items
     
     private var profileButton: some View {
-        Group {
+        ZStack {
             if let user = authService.currentUser {
                 CustomNavLink(
-                    destination: SettingAccountView()
-                        .environmentObject(authService),
+                    destination: SettingAccountView(namespace: namespace)
+//                        .environmentObject(authService)
+                        .environmentObject(viewModel),
                     label: {
                         SettingsProfileRow(
-                            title: user.name,
+                            title: user.name ?? user.email,
                             image: user.avatarUrl,
-                            details: Texts.Authorization.Details.freePlan,
-                            chevron: true)
+                            details: authService.currentUser?.subscription.plan,
+                            chevron: true,
+                            isProfile: true,
+                            last: true)
                     })
+                .transition(.blurReplace)
             } else {
-                Button {
-                    // Sign In Button Action
-                } label: {
-                    SettingsProfileRow()
-                }
+                loginOptionsView
+                    .transition(.blurReplace)
             }
         }
+        .clipShape(.rect(cornerRadius: 10))
+        .padding([.horizontal, .top])
+        .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
+    }
+    
+    private var loginOptionsView: some View {
+        VStack(spacing: 12) {
+            if !viewModel.showLoginOptions {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        viewModel.showLoginOptions.toggle()
+                    }
+                } label: {
+                    SettingsProfileRow(
+                        title: Texts.Authorization.login,
+                        last: true)
+                }
+                .transition(.blurReplace)
+            } else {
+                VStack(spacing: 12) {
+                    appleLoginButton
+                    googleLoginButton
+                    closeButton
+                }
+                .transition(.blurReplace.combined(with: .move(edge: .top)))
+            }
+        }
+    }
+    
+    private var appleLoginButton: some View {
+        LoginButtonView(type: .apple) {
+            viewModel.handleAppleSignIn(appleAuthService: appleAuthService)
+        }
+    }
+    
+    private var googleLoginButton: some View {
+        LoginButtonView(type: .google) {
+            viewModel.handleGoogleSignIn(googleAuthService: googleAuthService)
+        }
+    }
+    
+    private var closeButton: some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.25)) {
+                viewModel.showLoginOptions.toggle()
+            }
+        } label: {
+            Text(Texts.Settings.hide)
+                .font(.system(size: 15, weight: .regular))
+                .foregroundStyle(Color.LabelColors.labelPrimary)
+        }
+    }
+    
+    private var subscriptionPromoteRow: some View {
+        Button {
+            viewModel.toggleShowingSubscriptionPage()
+        } label: {
+            SubscriptionPromoteRow()
+        }
+        .clipShape(.rect(cornerRadius: 10))
+        .padding(.horizontal)
     }
     
     /// Button to open appearance customization modal.
@@ -225,15 +303,16 @@ struct SettingsView: View {
                            image: Image.Settings.reset,
                            chevron: true)
         }
-        .confirmationDialog(Texts.Settings.Reset.warning,
-                            isPresented: $viewModel.showingResetDialog,
-                            titleVisibility: .visible) {
-            Button(role: .destructive) {
-                performResetTasks()
-            } label: {
-                Text(Texts.Settings.Reset.confirm)
+        .confirmationDialog(
+            Texts.Settings.Reset.warning,
+            isPresented: $viewModel.showingResetDialog,
+            titleVisibility: .visible) {
+                Button(role: .destructive) {
+                    performResetTasks()
+                } label: {
+                    Text(Texts.Settings.Reset.confirm)
+                }
             }
-        }
     }
     
     /// Button linking to task creation page settings.
@@ -289,13 +368,29 @@ struct SettingsView: View {
     }
     
     private var logoutButton: some View {
-        Button {
-            authService.logout(accessToken: authService.accessToken ?? String())
-        } label: {
-            SettingLogoutButton()
+        ZStack {
+            if authService.currentUser != nil {
+                Button {
+                    viewModel.toggleShowingLogoutConfirmation()
+                } label: {
+                    SettingLogoutButton()
+                }
+                .clipShape(.rect(cornerRadius: 10))
+                .padding(.horizontal)
+                .transition(.blurReplace)
+            }
         }
-        .clipShape(.rect(cornerRadius: 10))
-        .padding(.horizontal)
+        .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
+        .confirmationDialog(
+            Texts.Authorization.confirmLogout,
+            isPresented: $viewModel.showingLogoutConfirmation,
+            titleVisibility: .visible) {
+                Button(role: .destructive) {
+                    viewModel.handleLogout(authService: authService)
+                } label: {
+                    Text(Texts.Authorization.logout)
+                }
+        }
     }
     
     // MARK: - Alerts
@@ -338,14 +433,26 @@ struct SettingsView: View {
                 viewModel.toggleShowingResetResult()
             })
     }
+    
+    private var errorAlert: some View {
+        CustomAlertView(
+            title: Texts.Authorization.Error.authorizationFailed,
+            message: Texts.Authorization.Error.retryLater,
+            primaryButtonTitle: Texts.Settings.ok,
+            primaryAction: {
+                viewModel.toggleShowingErrorAlert()
+            })
+    }
 }
 
 // MARK: - Preview
 
 #Preview {
-    SettingsView()
+    let authService = AuthNetworkService()
+    SettingsView(networkService: authService)
         .environmentObject(SettingsViewModel(notificationsEnabled: false))
-        .environmentObject(AuthNetworkService())
+        .environmentObject(authService)
+        .environmentObject(SubscriptionViewModel())
 }
 
 // MARK: - Private Logic
@@ -403,3 +510,4 @@ extension SettingsView {
         }
     }
 }
+

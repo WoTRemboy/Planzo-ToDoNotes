@@ -21,6 +21,8 @@ struct ContentView: View {
     @StateObject private var calendarVM = CalendarViewModel()
     @StateObject private var settingsVM: SettingsViewModel
     
+    @EnvironmentObject private var networkService: AuthNetworkService
+    
     // MARK: - Initialization
     
     /// Initializes the view and configures tab bar appearance and initial settings state.
@@ -33,13 +35,12 @@ struct ContentView: View {
         // Initializes SettingsViewModel based on permission status
         self._settingsVM = StateObject(wrappedValue: SettingsViewModel(notificationsEnabled: notificationsStatus == .allowed))
         
-        // Configures tab bar appearance
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = UIColor.TabBar.background
         appearance.shadowImage = nil
         appearance.shadowColor = nil
-        
+
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
@@ -62,7 +63,7 @@ struct ContentView: View {
                     .environmentObject(calendarVM)
                     .tag(TabRouter.Tab.calendar)
                 
-                TabItems.settingsTab(isSelected: router.selectedTab == .settings)
+                TabItems.settingsTab(isSelected: router.selectedTab == .settings, networkService: networkService)
                     .environmentObject(settingsVM)
                     .tag(TabRouter.Tab.settings)
             }
@@ -86,7 +87,10 @@ struct ContentView: View {
 extension UITabBarController {
     public override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-
+        tabBarShadowSetup()
+    }
+    
+    private func tabBarShadowSetup() {
         if let shadowView = view.subviews.first(where: { $0.accessibilityIdentifier == Texts.AccessibilityIdentifier.tabBarShadow }) {
             // Updates the frame if shadow view already exists
             shadowView.frame = tabBar.frame
@@ -107,3 +111,4 @@ extension UITabBarController {
         }
     }
 }
+

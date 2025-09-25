@@ -6,7 +6,7 @@
 //
 
 /// Represents the user information returned by the authorization response.
-internal struct User: Codable {
+internal struct User: Codable, Equatable {
     let id: String
     let provider: String
     let sub: String
@@ -14,9 +14,33 @@ internal struct User: Codable {
     let name: String?
     let email: String?
     let avatarUrl: String?
+    let subscription: SubscriptionType
     
     private enum CodingKeys: String, CodingKey {
-        case id, provider, sub, createdAt, name, email, avatarUrl
+        case id, provider, sub, createdAt, name, email, avatarUrl, subscription
+    }
+    
+    internal init(id: String, provider: String, sub: String, createdAt: String, name: String? = nil, email: String? = nil, avatarUrl: String? = nil, subscription: SubscriptionType = .free) {
+        self.id = id
+        self.provider = provider
+        self.sub = sub
+        self.createdAt = createdAt
+        self.name = name
+        self.email = email
+        self.avatarUrl = avatarUrl
+        self.subscription = subscription
+    }
+    
+    internal init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        provider = try container.decode(String.self, forKey: .provider)
+        sub = try container.decode(String.self, forKey: .sub)
+        createdAt = try container.decode(String.self, forKey: .createdAt)
+        name = try container.decodeIfPresent(String.self, forKey: .name)
+        email = try container.decodeIfPresent(String.self, forKey: .email)
+        avatarUrl = try container.decodeIfPresent(String.self, forKey: .avatarUrl)
+        subscription = try container.decodeIfPresent(SubscriptionType.self, forKey: .subscription) ?? .free
     }
 }
 

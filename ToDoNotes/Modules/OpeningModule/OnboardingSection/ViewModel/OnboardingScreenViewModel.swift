@@ -26,7 +26,9 @@ final class OnboardingViewModel: NSObject, ObservableObject {
     private(set) var steps = OnboardingStep.stepsSetup()
     
     /// Stores an error to be displayed in alerts.
-    @Published var alertError: IdentifiableError?
+    @Published internal var alertError: IdentifiableError?
+    @Published internal var showingErrorAlert: Bool = false
+    @Published internal var isAuthorizing: Bool = false
     
     // MARK: - Computed Properties
     
@@ -36,6 +38,16 @@ final class OnboardingViewModel: NSObject, ObservableObject {
     }
     
     // MARK: - Methods
+    
+    internal func toggleShowingErrorAlert() {
+        showingErrorAlert.toggle()
+    }
+    
+    internal func toggleShowingIsAuthorizing(to value: Bool) {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            isAuthorizing = value
+        }
+    }
     
     /// Determines if the given page index corresponds to the last onboarding page.
     /// - Parameter current: The current page index.
@@ -63,17 +75,50 @@ final class OnboardingViewModel: NSObject, ObservableObject {
             logger.error("Top view controller not found for Google Sign-In presentation.")
             return
         }
+        toggleShowingIsAuthorizing(to: true)
         googleAuthService.signInWithGoogle(presentingViewController: topVC) { [weak self] result in
-            switch result {
-            case .success:
-                DispatchQueue.main.async {
-                    self?.transferToMainPage()
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self?.alertError = IdentifiableError(wrapped: error)
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                
+                self.toggleShowingIsAuthorizing(to: false)
+                switch result {
+                case .success:
+                    self.transferToMainPage()
+                case .failure(let error):
+                    self.alertError = IdentifiableError(wrapped: error)
+                    self.showingErrorAlert = true
                 }
             }
         }
     }
+    
+    internal func handleAppleSignIn(appleAuthService: AppleAuthService) {
+        toggleShowingIsAuthorizing(to: true)
+        appleAuthService.onBackendAuthResult = { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                self.toggleShowingIsAuthorizing(to: false)
+                
+                switch result {
+                case .success:
+                    self.transferToMainPage()
+                case .failure(let error):
+                    self.alertError = IdentifiableError(wrapped: error)
+                    self.showingErrorAlert = true
+                    self.logger.error("Apple Sign-In backend failed: \(error.localizedDescription)")
+                }
+            }
+        }
+        appleAuthService.onAuthError = { [weak self] error in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                
+                self.toggleShowingIsAuthorizing(to: false)
+                self.showingErrorAlert = true
+                self.logger.error("Apple Sign-In failed: \(error.localizedDescription)")
+            }
+        }
+        appleAuthService.startAppleSignIn()
+    }
 }
+

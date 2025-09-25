@@ -37,13 +37,18 @@ final class SettingsViewModel: ObservableObject {
     
     // MARK: - UI State Properties
     
+    @Published internal var showingSubscriptionPage: Bool = false
+    @Published internal var showingSubscriptionDetailsPage: Bool = false
     /// Flag to show language alert popup.
     @Published internal var showingLanguageAlert: Bool = false
+    @Published internal var showingErrorAlert: Bool = false
     /// Flag to show appearance selector popup.
     @Published internal var showingAppearance: Bool = false
     @Published internal var showingTimeFormat: Bool = false
     @Published internal var showingWeekFirstDay: Bool = false
     
+    @Published internal var showLoginOptions: Bool = false
+    @Published internal var showingLogoutConfirmation: Bool = false
     /// Flag to show reset confirmation dialog.
     @Published internal var showingResetDialog: Bool = false
     /// Flag to show reset result popup.
@@ -97,6 +102,18 @@ final class SettingsViewModel: ObservableObject {
     
     // MARK: - UI Toggles
     
+    internal func toggleShowingSubscriptionPage() {
+        showingSubscriptionPage.toggle()
+    }
+    
+    internal func toggleShowingSubscriptionDetailsPage() {
+        showingSubscriptionDetailsPage.toggle()
+    }
+    
+    internal func toggleShowingErrorAlert() {
+        showingErrorAlert.toggle()
+    }
+    
     /// Toggles the display of the language alert.
     internal func toggleShowingLanguageAlert() {
         showingLanguageAlert.toggle()
@@ -120,6 +137,10 @@ final class SettingsViewModel: ObservableObject {
         showingResetDialog.toggle()
     }
     
+    internal func toggleShowingLogoutConfirmation() {
+        showingLogoutConfirmation.toggle()
+    }
+    
     /// Toggles the display of the reset result popup.
     internal func toggleShowingResetResult() {
         showingResetResult.toggle()
@@ -131,6 +152,86 @@ final class SettingsViewModel: ObservableObject {
     }
     
     // MARK: - Functional Actions
+    
+    internal func handleGoogleSignIn(googleAuthService: GoogleAuthService) {
+        guard let topVC = UIApplication.shared.connectedScenes
+            .compactMap({ ($0 as? UIWindowScene)?.windows.first(where: { $0.isKeyWindow }) })
+            .first?.rootViewController else {
+            logger.error("Top view controller not found for Google Sign-In presentation.")
+            return
+        }
+        hideLoginOptions()
+        
+        googleAuthService.signInWithGoogle(presentingViewController: topVC) { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                switch result {
+                case .success:
+                    break
+                case .failure(let error):
+                    self.showingErrorAlert = true
+                    logger.error("Google Sign-In failed: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    internal func handleAppleSignIn(appleAuthService: AppleAuthService) {
+        hideLoginOptions()
+        LoadingOverlay.shared.show()
+        
+        appleAuthService.onBackendAuthResult = { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                
+                LoadingOverlay.shared.hide()
+                switch result {
+                case .success:
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        self.hideLoginOptions()
+                    }
+                case .failure(let error):
+                    self.showingErrorAlert = true
+                    logger.error("Apple Sign-In backend failed: \(error.localizedDescription)")
+                }
+            }
+        }
+        appleAuthService.onAuthError = { [weak self] error in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                
+                LoadingOverlay.shared.hide()
+                self.showingErrorAlert = true
+                logger.error("Apple Sign-In failed: \(error.localizedDescription)")
+            }
+        }
+        appleAuthService.startAppleSignIn()
+    }
+    
+    /// Handles logout with animation and error reporting.
+    internal func handleLogout(authService: AuthNetworkService) {
+        LoadingOverlay.shared.show()
+        authService.logout { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                
+                LoadingOverlay.shared.hide()
+                switch result {
+                case .success:
+                    break
+                case .failure(let error):
+                    self.showingErrorAlert = true
+                    logger.error("Logout failed: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    private func hideLoginOptions() {
+        withAnimation(.easeInOut(duration: 0.25)) {
+            showLoginOptions = false
+        }
+    }
     
     /// Changes the application's appearance theme with a smooth transition.
     /// - Parameter theme: The selected `Theme`.
@@ -197,3 +298,4 @@ final class SettingsViewModel: ObservableObject {
         logger.debug("User changed time format to: \(format.rawValue)")
     }
 }
+

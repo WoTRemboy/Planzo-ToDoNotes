@@ -11,13 +11,16 @@ import SwiftUI
 /// Displays either a title with action buttons or a search bar, depending on the search state.
 struct MainCustomNavBar: View {
     
+    @EnvironmentObject private var authService: AuthNetworkService
     @EnvironmentObject private var viewModel: MainViewModel
     
     /// The title displayed in the navigation bar.
     private let title: String
+    private let namespace: Namespace.ID
     
-    init(title: String) {
+    init(title: String, namespace: Namespace.ID) {
         self.title = title
+        self.namespace = namespace
     }
     
     // MARK: - Body
@@ -64,10 +67,19 @@ struct MainCustomNavBar: View {
     
     /// Displays the main title on the navigation bar.
     private var titleLabel: some View {
-        Text(title)
-            .font(.system(size: 25, weight: .bold))
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.leading, 16)
+        HStack(spacing: 6) {
+            Text(title)
+                .font(.system(size: 25, weight: .bold))
+                .frame(alignment: .leading)
+                .padding(.leading, 16)
+            
+            if authService.currentUser?.isPro == true {
+                Text(Texts.Subscription.SubType.pro)
+                    .font(.system(size: 25, weight: .bold))
+                    .foregroundStyle(Color.LabelColors.labelSubscription)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     // MARK: - Action Buttons
@@ -75,6 +87,10 @@ struct MainCustomNavBar: View {
     /// Action buttons for search and importance toggle.
     private var buttons: some View {
         HStack(spacing: 20) {
+            if authService.currentUser?.isFree == true || authService.currentUser == nil {
+                subscriptionButton
+            }
+            
             // Search Button
             Button {
                 withAnimation(.easeInOut(duration: 0.2)) {
@@ -102,11 +118,30 @@ struct MainCustomNavBar: View {
         .padding(.horizontal, 16)
     }
     
+    private var subscriptionButton: some View {
+        Button {
+            viewModel.toggleShowingSubscriptionPage()
+        } label: {
+            RoundedRectangle(cornerRadius: 5)
+                .foregroundStyle(Color.LabelColors.labelSubscription)
+                .frame(width: 48, height: 26)
+                .overlay {
+                    Text(Texts.Subscription.SubType.pro)
+                        .font(.system(size: 20, weight: .regular))
+                        .foregroundStyle(Color.LabelColors.labelBlack)
+                }
+        }
+        .navigationTransitionSource(
+            id: Texts.NamespaceID.subscriptionButton,
+            namespace: namespace)
+    }
+    
 }
 
 // MARK: - Preview
 
 #Preview {
-    MainCustomNavBar(title: Texts.MainPage.title)
+    MainCustomNavBar(title: Texts.MainPage.title, namespace: Namespace().wrappedValue)
         .environmentObject(MainViewModel())
+        .environmentObject(AuthNetworkService())
 }
