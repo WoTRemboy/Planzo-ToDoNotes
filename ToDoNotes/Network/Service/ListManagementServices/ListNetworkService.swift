@@ -8,39 +8,6 @@ import OSLog
 
 private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListNetworkService")
 
-// MARK: - List Models
-
-struct ShareLink: Codable {
-    let id: String
-    let createdAt: String
-    let expiresAt: String
-    let revoked: Bool
-    let scope: String
-}
-
-struct ListItem: Codable {
-    let id: String
-    let ownerSub: String
-    let name: String
-    let archived: Bool
-    let updatedAt: String
-    let shareLinks: [ShareLink]
-}
-
-struct ListDelete: Codable {
-    let id: String
-    let deletedAt: String
-}
-
-struct ListSyncResponse: Codable {
-    let since: String
-    let now: String
-    let upserts: [ListItem]
-    let deletes: [ListDelete]
-}
-
-// MARK: - List Network Service
-
 final class ListNetworkService {
     static let shared = ListNetworkService()
     private let tokenStorage = TokenStorageService()

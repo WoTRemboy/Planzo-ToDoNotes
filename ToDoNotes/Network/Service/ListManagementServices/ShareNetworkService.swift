@@ -10,20 +10,12 @@ import OSLog
 
 private let shareLogger = Logger(subsystem: "com.todonotes.opening", category: "ShareNetworkService")
 
-struct ShareResponse: Codable, Identifiable {
-    let id: String
-    let createdAt: String
-    let expiresAt: String
-    let revoked: Bool
-    let scope: String
-}
-
 final class ShareNetworkService: ObservableObject {
     private let tokenStorage = TokenStorageService()
     private let baseURL = "https://banana.avoqode.com/api/v1/lists/"
     
     /// Loads share info for a list by id.
-    func getShareInfo(for listId: String, completion: @escaping (Result<[ShareResponse], Error>) -> Void) {
+    func getShareInfo(for listId: String, completion: @escaping (Result<[ShareLink], Error>) -> Void) {
         guard let url = URL(string: baseURL + "\(listId)/share") else {
             shareLogger.error("Invalid share URL for listId: \(listId)")
             completion(.failure(URLError(.badURL)))
@@ -56,7 +48,7 @@ final class ShareNetworkService: ObservableObject {
                 return
             }
             do {
-                let decoded = try JSONDecoder().decode([ShareResponse].self, from: data)
+                let decoded = try JSONDecoder().decode([ShareLink].self, from: data)
                 shareLogger.info("Share info loaded for listId: \(listId)")
                 DispatchQueue.main.async {
                     completion(.success(decoded))
@@ -72,7 +64,7 @@ final class ShareNetworkService: ObservableObject {
     }
     
     /// Creates share info for a list by id
-    func createShare(for listId: String, expiresAt: String, completion: @escaping (Result<ShareResponse, Error>) -> Void) {
+    func createShare(for listId: String, expiresAt: String, completion: @escaping (Result<ShareLink, Error>) -> Void) {
         struct Body: Codable { let expiresAt: String }
         guard let url = URL(string: baseURL + "\(listId)/share") else {
             shareLogger.error("Invalid share URL for listId: \(listId)")
@@ -114,7 +106,7 @@ final class ShareNetworkService: ObservableObject {
                 return
             }
             do {
-                let decoded = try JSONDecoder().decode(ShareResponse.self, from: data)
+                let decoded = try JSONDecoder().decode(ShareLink.self, from: data)
                 shareLogger.info("Share link created for listId: \(listId)")
                 DispatchQueue.main.async {
                     completion(.success(decoded))
