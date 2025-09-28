@@ -14,6 +14,7 @@ struct TodayView: View {
     // MARK: - Properties
     
     @EnvironmentObject private var viewModel: TodayViewModel
+    @EnvironmentObject private var authService: AuthNetworkService
     /// Used for smooth matched geometry transitions between floating buttons and task management screens.
     @Namespace private var animation
     
@@ -41,7 +42,7 @@ struct TodayView: View {
             SelectorView<Folder>(
                 title: Texts.MainPage.Folders.title,
                 label: { $0.name },
-                options: Folder.selectCases,
+                options: Folder.availableCases(isAuthorized: authService.isAuthorized),
                 selected: $viewModel.selectedTaskFolder,
                 onCancel: {
                     viewModel.toggleShowingFolderSetupView()
@@ -254,6 +255,7 @@ extension TodayView {
 #Preview {
     TodayView()
         .environmentObject(TodayViewModel())
+        .environmentObject(AuthNetworkService())
         .task {
             try? Tips.resetDatastore()
             try? Tips.configure([

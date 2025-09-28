@@ -102,6 +102,9 @@ struct TaskManagementView: View {
             if entity == nil, folder == .tasks {
                 viewModel.check = .unchecked
             }
+            if let entity = entity {
+                ListItemNetworkService.shared.syncChecklistForTaskEntity(entity)
+            }
         }
         // Share Sheet Presentation
         .sheet(isPresented: $viewModel.showingShareSheet) {
@@ -458,3 +461,4 @@ extension TaskManagementView {
         }
     }
 }
+

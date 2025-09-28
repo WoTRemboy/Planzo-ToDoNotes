@@ -1,7 +1,7 @@
 //  SubscriptionNetworkService.swift
 //  ToDoNotes
 //
-//  Created by Assistant on 17/09/2025.
+//  Created by Roman Tverdokhleb on 17/09/2025.
 
 import Foundation
 import OSLog
@@ -72,7 +72,6 @@ final class SubscriptionNetworkService {
             }
             do {
                 let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
-                print(authResponse)
                 logger.info("Successfully started trial for \(days) days")
                 return authResponse
             } catch {
@@ -101,7 +100,6 @@ final class SubscriptionNetworkService {
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-            print(String(data: data, encoding: .utf8)!)
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
                 logger.error("Invalid response when checking subscription: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
                 throw SubscriptionAPIError.invalidResponse

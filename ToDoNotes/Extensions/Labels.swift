@@ -317,7 +317,7 @@ final class Texts {
             static let continueButton = NSLocalizedString("SubscriptionPageContinueButton", comment: "Continue")
             static let restore = NSLocalizedString("SubscriptionPageRestoreButton", comment: "Restore purchases")
             
-            static let trial = NSLocalizedString("SubscriptionPageTrialTitle", comment: "Not sure? Try for free!")
+            static let trial = NSLocalizedString("SubscriptionPageTrialTitle", comment: "Get 14 days free with an annual subscription.")
             static let save = NSLocalizedString("SubscriptionPageSaveButton", comment: "Save")
             static let month = NSLocalizedString("SubscriptionPageMonth", comment: "Month")
         }
