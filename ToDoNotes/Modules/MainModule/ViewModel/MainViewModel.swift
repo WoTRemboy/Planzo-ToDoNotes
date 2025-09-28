@@ -159,6 +159,8 @@ final class MainViewModel: ObservableObject {
             return task.folder == Folder.lists.rawValue
         case .other:
             return task.folder == Folder.other.rawValue
+        case .back:
+            return task.folder == Folder.back.rawValue
         }
     }
     

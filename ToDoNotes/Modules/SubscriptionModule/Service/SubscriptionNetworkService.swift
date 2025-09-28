@@ -1,7 +1,7 @@
 //  SubscriptionNetworkService.swift
 //  ToDoNotes
 //
-//  Created by Assistant on 17/09/2025.
+//  Created by Roman Tverdokhleb on 17/09/2025.
 
 import Foundation
 import OSLog

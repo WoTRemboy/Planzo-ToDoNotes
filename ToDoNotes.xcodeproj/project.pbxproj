@@ -35,6 +35,7 @@
 		6328D5BC2E881299000574AE /* ListItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6328D5BB2E881295000574AE /* ListItemModel.swift */; };
 		6328D5BE2E8812B8000574AE /* ShareModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6328D5BD2E8812B3000574AE /* ShareModel.swift */; };
 		6328D5C22E881516000574AE /* AccessTokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6328D5C12E881516000574AE /* AccessTokenManager.swift */; };
+		6328D5C52E8939EC000574AE /* ListNetworkAppliedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6328D5C42E8939E0000574AE /* ListNetworkAppliedService.swift */; };
 		632C002C2E81B2D60099C7FD /* ListNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632C002B2E81B2D60099C7FD /* ListNetworkService.swift */; };
 		632D0DD02D36B9760071684D /* TaskManagementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DCF2D36B9700071684D /* TaskManagementModel.swift */; };
 		632D0DD22D36BAF50071684D /* CustomNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD12D36BAEF0071684D /* CustomNavBar.swift */; };
@@ -201,6 +202,7 @@
 		6328D5BB2E881295000574AE /* ListItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemModel.swift; sourceTree = "<group>"; };
 		6328D5BD2E8812B3000574AE /* ShareModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareModel.swift; sourceTree = "<group>"; };
 		6328D5C12E881516000574AE /* AccessTokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessTokenManager.swift; sourceTree = "<group>"; };
+		6328D5C42E8939E0000574AE /* ListNetworkAppliedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListNetworkAppliedService.swift; sourceTree = "<group>"; };
 		632C002B2E81B2D60099C7FD /* ListNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListNetworkService.swift; sourceTree = "<group>"; };
 		632D0DCF2D36B9700071684D /* TaskManagementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementModel.swift; sourceTree = "<group>"; };
 		632D0DD12D36BAEF0071684D /* CustomNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavBar.swift; sourceTree = "<group>"; };
@@ -468,7 +470,7 @@
 		6328D5BF2E88132C000574AE /* ListManagementServices */ = {
 			isa = PBXGroup;
 			children = (
-				632C002B2E81B2D60099C7FD /* ListNetworkService.swift */,
+				6328D5C32E8939D2000574AE /* ListNetwork */,
 				63BFBF662E82FCAF0061C3DA /* ListItemNetworkService.swift */,
 				6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */,
 			);
@@ -483,6 +485,15 @@
 				6328D5BF2E88132C000574AE /* ListManagementServices */,
 			);
 			path = Service;
+			sourceTree = "<group>";
+		};
+		6328D5C32E8939D2000574AE /* ListNetwork */ = {
+			isa = PBXGroup;
+			children = (
+				632C002B2E81B2D60099C7FD /* ListNetworkService.swift */,
+				6328D5C42E8939E0000574AE /* ListNetworkAppliedService.swift */,
+			);
+			path = ListNetwork;
 			sourceTree = "<group>";
 		};
 		632D0DCE2D36B96C0071684D /* Model */ = {
@@ -1316,6 +1327,7 @@
 				63FD574D2E68B77F00B7B062 /* UserModel.swift in Sources */,
 				632D0DDA2D37E0AE0071684D /* HeightReader.swift in Sources */,
 				63AE657F2D72172E009A3541 /* TaskCreationPageModel.swift in Sources */,
+				6328D5C52E8939EC000574AE /* ListNetworkAppliedService.swift in Sources */,
 				630F54822E6F7BAC00DF57E6 /* SettingAccountView.swift in Sources */,
 				63BF43942E7994CA008F52D0 /* SubscriptionModel.swift in Sources */,
 				63AE65832D721AED009A3541 /* SettingAboutPageView.swift in Sources */,

@@ -2,7 +2,7 @@
 //  ShareNetworkService.swift
 //  ToDoNotes
 //
-//  Created by Assistant on 24/09/2025.
+//  Created by Roman Tverdokhleb on 24/09/2025.
 //
 
 import Foundation

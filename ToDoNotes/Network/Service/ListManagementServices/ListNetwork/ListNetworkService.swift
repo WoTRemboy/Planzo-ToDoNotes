@@ -1,10 +1,12 @@
+//
 //  ListNetworkService.swift
 //  ToDoNotes
 //
-//  Created by Assistant on 22/09/2025.
+//  Created by Roman Tverdokhleb on 22/09/2025.
 
 import Foundation
 import OSLog
+import CoreData
 
 private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListNetworkService")
 

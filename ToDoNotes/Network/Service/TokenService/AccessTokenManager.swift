@@ -1,7 +1,7 @@
 //  AccessTokenManager.swift
 //  ToDoNotes
 //
-//  Created by Assistant on 27/09/2025.
+//  Created by Roman Tverdokhleb on 27/09/2025.
 
 import Foundation
 

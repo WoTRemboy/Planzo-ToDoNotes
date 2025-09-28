@@ -49,6 +49,14 @@ struct ToDoNotesApp: App {
                 .environmentObject(authService)
                 .environmentObject(tokenService)
                 .environmentObject(subscriptionService)
+                .task {
+                    if authService.isAuthorized {
+                        ListNetworkService.shared.syncAllBackTasks()
+                        logger.info("SyncAllBackTasks started for Backend folder tasks.")
+                    } else {
+                        logger.info("User is not authorized, skipping Backend folder sync.")
+                    }
+                }
         }
     }
     
