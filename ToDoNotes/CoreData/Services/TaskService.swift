@@ -97,6 +97,22 @@ final class TaskService {
         
         try save()
         
+        // If the task is a backend task and has a serverId, sync checklist items to server
+        if task.folder == Folder.back.rawValue, task.serverId != nil {
+            // For each checklist item, create or update it on the server
+            if let checklistEntities = task.checklist?.array as? [ChecklistEntity] {
+                for checklistEntity in checklistEntities {
+                    if checklistEntity.serverId != nil {
+                        // Update existing checklist item on server
+                        ListItemNetworkService.shared.updateChecklistItem(checklistEntity, for: task)
+                    } else {
+                        // Create new checklist item on server
+                        ListItemNetworkService.shared.createChecklistItem(for: task, with: checklistEntity.name ?? String())
+                    }
+                }
+            }
+        }
+        
         if task.folder == Folder.back.rawValue {
             ListNetworkService.shared.syncTasksIfNeeded(for: task)
         }
@@ -459,3 +475,4 @@ extension TaskService {
 enum TaskServiceError: Error {
     case folderIsTheSame
 }
+
