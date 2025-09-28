@@ -158,6 +158,12 @@ extension Date {
         let dateString = Date.fullHourMinutesFormatter.string(from: self)
         return dateString
     }
+    
+    internal static var iso8601DateFormatter: ISO8601DateFormatter {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }
 }
 
 // MARK: - Time Locale Model

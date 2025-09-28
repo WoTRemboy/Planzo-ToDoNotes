@@ -62,10 +62,10 @@ final class AuthNetworkService: ObservableObject {
                 self.saveAuthResponse(authResponse, idToken: idToken)
                 logger.info("Google authorization succeeded, access token received.")
                 DispatchQueue.main.async {
+                    ListNetworkService.shared.syncAllBackTasks()
                     completion(.success(authResponse))
                 }
                 LoadingOverlay.shared.hide()
-//                self?.refreshThenLogout(after: authResponse)
             } catch {
                 logger.error("Failed to decode Google authorization response: \(error.localizedDescription)")
                 DispatchQueue.main.async {
@@ -116,11 +116,11 @@ final class AuthNetworkService: ObservableObject {
             do {
                 let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
                 self.saveAuthResponse(authResponse, idToken: idToken)
+                ListNetworkService.shared.syncAllBackTasks()
                 logger.info("Apple authorization succeeded, access token received.")
                 DispatchQueue.main.async {
                     completion(.success(authResponse))
                 }
-                // self?.refreshThenLogout(after: authResponse)
             } catch {
                 logger.error("Failed to decode Apple authorization response: \(error.localizedDescription)")
                 DispatchQueue.main.async {
@@ -278,6 +278,7 @@ final class AuthNetworkService: ObservableObject {
             UserDefaults.standard.removeObject(forKey: self.userKey)
             self.tokenStorage.delete(type: .accessToken)
             self.tokenStorage.delete(type: .refreshToken)
+            TaskService.deleteAllBackendTasks()
         }
     }
 }
@@ -285,26 +286,6 @@ final class AuthNetworkService: ObservableObject {
 // MARK: - Private helpers
 
 private extension AuthNetworkService {
-    func refreshThenLogout(after authResponse: AuthResponse) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + (self.logoutDelay)) {
-            logger.debug("Starting refresh after authorization...")
-            self.refreshTokens() { [weak self] result in
-                switch result {
-                case .success:
-                    logger.info("Refresh succeeded. Scheduling logout after \(self?.logoutDelay ?? 0) seconds.")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + (self?.logoutDelay ?? 0)) {
-                        self?.logout(completion: nil)
-                    }
-                case .failure(let error):
-                    logger.error("Refresh failed: \(error.localizedDescription). Proceeding to logout with initial access token after delay.")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + (self?.logoutDelay ?? 0)) { [weak self] in
-                        self?.logout(completion: nil)
-                    }
-                }
-            }
-        }
-    }
-    
     func decodeJWTClaims(from idToken: String) -> [String: Any]? {
         let segments = idToken.split(separator: ".")
         guard segments.count > 1,

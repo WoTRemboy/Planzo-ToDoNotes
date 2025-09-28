@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Rectangle 1189.svg",
+      "filename" : "ShareLinkIconDark.svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "ShareLinkIcon 1.svg",
       "idiom" : "universal"
     }
   ],

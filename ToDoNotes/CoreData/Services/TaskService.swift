@@ -96,6 +96,26 @@ final class TaskService {
         }
         
         try save()
+        
+        // If the task is a backend task and has a serverId, sync checklist items to server
+        if task.folder == Folder.back.rawValue, task.serverId != nil {
+            // For each checklist item, create or update it on the server
+            if let checklistEntities = task.checklist?.array as? [ChecklistEntity] {
+                for checklistEntity in checklistEntities {
+                    if checklistEntity.serverId != nil {
+                        // Update existing checklist item on server
+                        ListItemNetworkService.shared.updateChecklistItem(checklistEntity, for: task)
+                    } else {
+                        // Create new checklist item on server
+                        ListItemNetworkService.shared.createChecklistItem(for: task, with: checklistEntity.name ?? String())
+                    }
+                }
+            }
+        }
+        
+        if task.folder == Folder.back.rawValue {
+            ListNetworkService.shared.syncTasksIfNeeded(for: task)
+        }
     }
     
     // MARK: - Task Duplication
@@ -205,6 +225,21 @@ final class TaskService {
         }
     }
     
+    static func deleteAllBackendTasks() {
+        let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "folder == %@", Folder.back.rawValue)
+        do {
+            let backendTasks = try viewContext.fetch(fetchRequest)
+            for task in backendTasks {
+                viewContext.delete(task)
+            }
+            try save()
+            logger.debug("All backend tasks deleted successfully.")
+        } catch {
+            logger.error("Error deleting backend tasks: \(error.localizedDescription)")
+        }
+    }
+    
     // MARK: - Fetch Requests
     
     /// Returns a fetch request for all notifications associated with a given task.
@@ -287,10 +322,17 @@ extension TaskService {
         // Only handle notifications if the removed status actually changed
         if task.removed && !wasRemoved {
             UNUserNotificationCenter.current().removeNotifications(for: task.notifications)
+            
+            if task.folder == Folder.back.rawValue {
+                ListNetworkService.shared.archiveTaskOnServer(for: task, value: true)
+            }
         } else if !task.removed && wasRemoved {
             restoreNotifications(for: task)
+            
+            if task.folder == Folder.back.rawValue {
+                ListNetworkService.shared.archiveTaskOnServer(for: task, value: false)
+            }
         }
-        
         try save()
     }
     
@@ -304,6 +346,9 @@ extension TaskService {
             do {
                 try save()
                 logger.debug("Folder updated and context saved successfully.")
+                if folder == Folder.back.rawValue {
+                    ListNetworkService.shared.syncTasksIfNeeded(for: task)
+                }
             } catch {
                 logger.error("Error saving context after updating folder: \(error.localizedDescription)")
             }
@@ -430,3 +475,4 @@ extension TaskService {
 enum TaskServiceError: Error {
     case folderIsTheSame
 }
+

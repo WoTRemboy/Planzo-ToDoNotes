@@ -51,7 +51,7 @@ struct MainView: View {
             SelectorView<Folder>(
                 title: Texts.MainPage.Folders.title,
                 label: { $0.name },
-                options: Folder.selectCases,
+                options: Folder.availableCases(isAuthorized: authService.isAuthorized),
                 selected: $viewModel.selectedTaskFolder,
                 onCancel: {
                     viewModel.toggleShowingFolderSetupView()

@@ -3427,30 +3427,30 @@
       }
     },
     "SubscriptionPageTrialTitle" : {
-      "comment" : "Not sure? Try for free!",
+      "comment" : "Get 14 days free with an annual subscription.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Not sure? Try for free!"
+            "value" : "Get 14 days free with an Annual subscription."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Probar gratis"
+            "value" : "Obtenga 14 días gratis al comprar una suscripción anual."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Essayer gratuitement"
+            "value" : "Obtenez 14 jours gratuits avec l’achat d’un abonnement annuel."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Попробовать бесплатно"
+            "value" : "Получите бесплатно 14 дней при покупке годовой подписки."
           }
         }
       }

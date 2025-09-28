@@ -9,13 +9,23 @@ import SwiftUI
 
 /// Represents predefined task folders used for categorizing tasks.
 enum Folder: String, CaseIterable {
+    case back = "TaskFoldersBack"
     case all = "TaskFoldersAll"
     case reminders = "TaskFoldersReminders"
     case tasks = "TaskFoldersTasks"
     case lists = "TaskFoldersLists"
     case other = "TaskFoldersNoDate"
     
-    static internal var selectCases: [Folder] = [.reminders, .tasks, .lists, .other]
+    /// Returns a filtered array of folders depending on user authorization.
+    /// - Parameter isAuthorized: Whether user is authorized.
+    static func availableCases(isAuthorized: Bool) -> [Folder] {
+        let all: [Folder] = [.reminders, .tasks, .lists, .other]
+        return isAuthorized ? [.back] + all : all
+    }
+    
+    static func allCases(isAuthorized: Bool) -> [Folder] {
+        [.all] + Folder.availableCases(isAuthorized: isAuthorized)
+    }
     
     /// Returns a localized name for each folder to display in the UI.
     internal var name: String {
@@ -30,6 +40,8 @@ enum Folder: String, CaseIterable {
             return Texts.MainPage.Folders.purchases
         case .other:
             return Texts.MainPage.Folders.other
+        case .back:
+            return "Backend"
         }
     }
     
@@ -37,6 +49,8 @@ enum Folder: String, CaseIterable {
     internal var lockedIcon: Image {
         switch self {
         case .all, .reminders, .tasks, .lists, .other:
+            Image.Folder.unlocked
+        case .back:
             Image.Folder.unlocked
         }
     }
@@ -53,6 +67,8 @@ enum Folder: String, CaseIterable {
         case .lists:
             Color.FolderColors.lists
         case .other:
+            Color.FolderColors.other
+        case .back:
             Color.FolderColors.other
         }
     }
