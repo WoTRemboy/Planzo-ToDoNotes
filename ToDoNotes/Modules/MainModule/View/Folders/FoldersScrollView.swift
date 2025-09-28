@@ -12,6 +12,7 @@ import SwiftUI
 struct FoldersScrollView: View {
     
     @EnvironmentObject private var viewModel: MainViewModel
+    @EnvironmentObject private var authService: AuthNetworkService
     /// Namespace for matched geometry effects between selected folders.
     @Namespace private var animation
     
@@ -45,7 +46,7 @@ struct FoldersScrollView: View {
     @ViewBuilder
     private func scrollContent(proxy: ScrollViewProxy) -> some View {
         HStack(spacing: 0) {
-            ForEach(Folder.allCases, id: \.self) { folder in
+            ForEach(Folder.allCases(isAuthorized: authService.isAuthorized), id: \.self) { folder in
                 FolderCell(folder: folder,
                            selected: viewModel.compareFolders(with: folder), namespace: animation)
                 .id(folder)
@@ -80,7 +81,7 @@ struct FoldersScrollView: View {
         Picker(Texts.MainPage.Folders.title,
                selection: $viewModel.selectedFolder.animation(.easeInOut(duration: 0.2))) {
             
-            ForEach(Folder.allCases, id: \.self) { folder in
+            ForEach(Folder.allCases(isAuthorized: authService.isAuthorized), id: \.self) { folder in
                 Label {
                     Text(folder.name)
                 } icon: {
@@ -96,4 +97,5 @@ struct FoldersScrollView: View {
 #Preview {
     FoldersScrollView()
         .environmentObject(MainViewModel())
+        .environmentObject(AuthNetworkService())
 }

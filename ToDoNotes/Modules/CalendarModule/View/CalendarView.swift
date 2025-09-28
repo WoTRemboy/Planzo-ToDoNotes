@@ -19,6 +19,7 @@ struct CalendarView: View {
     
     /// ViewModel managing the calendar's logic and state.
     @EnvironmentObject private var viewModel: CalendarViewModel
+    @EnvironmentObject private var authService: AuthNetworkService
     /// Namespace for shared matched geometry effects between views.
     @Namespace private var animation
     
@@ -45,7 +46,7 @@ struct CalendarView: View {
             SelectorView<Folder>(
                 title: Texts.MainPage.Folders.title,
                 label: { $0.name },
-                options: Folder.selectCases,
+                options: Folder.availableCases(isAuthorized: authService.isAuthorized),
                 selected: $viewModel.selectedTaskFolder,
                 onCancel: {
                     viewModel.toggleShowingFolderSetupView()
@@ -286,6 +287,7 @@ extension CalendarView {
 #Preview {
     CalendarView()
         .environmentObject(CalendarViewModel())
+        .environmentObject(AuthNetworkService())
         .task {
             try? Tips.resetDatastore()
             try? Tips.configure([

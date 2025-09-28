@@ -16,7 +16,16 @@ enum Folder: String, CaseIterable {
     case lists = "TaskFoldersLists"
     case other = "TaskFoldersNoDate"
     
-    static internal var selectCases: [Folder] = [.reminders, .tasks, .lists, .other, .back]
+    /// Returns a filtered array of folders depending on user authorization.
+    /// - Parameter isAuthorized: Whether user is authorized.
+    static func availableCases(isAuthorized: Bool) -> [Folder] {
+        let all: [Folder] = [.reminders, .tasks, .lists, .other]
+        return isAuthorized ? [.back] + all : all
+    }
+    
+    static func allCases(isAuthorized: Bool) -> [Folder] {
+        [.all] + Folder.availableCases(isAuthorized: isAuthorized)
+    }
     
     /// Returns a localized name for each folder to display in the UI.
     internal var name: String {
