@@ -16,7 +16,10 @@ final class AccessTokenManager {
     func isAccessTokenExpired() -> Bool {
         guard let expiryString = UserDefaults.standard.string(forKey: "AccessTokenExpiresAt") else { return true }
         let formatter = ISO8601DateFormatter()
-        guard let expiryDate = formatter.date(from: expiryString) else { return true }
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        guard let expiryDate = formatter.date(from: expiryString) else {
+            return true
+        }
         return Date() >= expiryDate
     }
 
