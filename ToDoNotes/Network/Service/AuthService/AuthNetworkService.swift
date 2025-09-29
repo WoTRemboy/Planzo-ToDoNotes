@@ -116,9 +116,9 @@ final class AuthNetworkService: ObservableObject {
             do {
                 let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
                 self.saveAuthResponse(authResponse, idToken: idToken)
-                ListNetworkService.shared.syncAllBackTasks()
                 logger.info("Apple authorization succeeded, access token received.")
                 DispatchQueue.main.async {
+                    ListNetworkService.shared.syncAllBackTasks()
                     completion(.success(authResponse))
                 }
             } catch {
