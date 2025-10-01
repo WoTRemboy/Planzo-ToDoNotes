@@ -22,16 +22,37 @@ extension ListNetworkService {
                 switch result {
                 case .success(let syncResult):
                     if let remote = syncResult.upserts.first(where: { $0.id == serverId }) {
-                        let needsUpdate = (remote.name != name) || (remote.archived != task.removed)
-                        guard needsUpdate else { return }
+                        let serverUpdatedAt = Date.iso8601DateFormatter.date(from: remote.updatedAt)
+                        let localUpdatedAt = task.updatedAt ?? Date.distantPast
                         
-                        self.updateList(id: serverId, name: name) { updateResult in
-                            switch updateResult {
-                            case .success(let listItem):
-                                logger.info("Task updated on backend: \(listItem.id)")
-                            case .failure(let error):
-                                logger.error("Failed to update backend task: \(error.localizedDescription)")
+                        if let serverUpdatedAt = serverUpdatedAt {
+                            if serverUpdatedAt > localUpdatedAt {
+                                task.name = remote.name
+                                task.removed = remote.archived
+                                task.updatedAt = serverUpdatedAt
+                                logger.info("Local task updated from server: \(serverId)")
+                                if let context {
+                                    do {
+                                        try context.save()
+                                    } catch {
+                                        logger.error("Failed to save updated local task: \(error.localizedDescription)")
+                                    }
+                                }
+                            } else if localUpdatedAt > serverUpdatedAt {
+                                self.updateList(id: serverId, name: name, archived: task.removed) { updateResult in
+                                    switch updateResult {
+                                    case .success(let listItem):
+                                        logger.info("Task updated on backend from local changes: \(listItem.id)")
+                                    case .failure(let error):
+                                        logger.error("Failed to update backend task from local changes: \(error.localizedDescription)")
+                                    }
+                                }
+                                logger.info("Server task updated from local task: \(serverId)")
+                            } else {
+                                logger.info("Task is synchronized and up to date: \(serverId)")
                             }
+                        } else {
+                            logger.error("Failed to parse server updatedAt date for task id: \(serverId)")
                         }
                     } else {
                         self.createList(name: name) { createResult in
@@ -92,20 +113,27 @@ extension ListNetworkService {
                 for remote in remoteTasks {
                     if let task = localTasks.first(where: { $0.serverId == remote.id }),
                        let serverId = task.serverId {
-                        if task.name != remote.name || task.removed != remote.archived {
+                        
+                        let parsedDate = Date.iso8601DateFormatter.date(from: remote.updatedAt)
+                        let localDate = task.updatedAt ?? Date.distantPast
+                        
+                        if let parsedDate, parsedDate > localDate {
+                            task.name = remote.name
+                            task.removed = remote.archived
+                            task.updatedAt = parsedDate
+                            logger.info("Local task updated from server: \(remote.id)")
+                        } else if let parsedDate, localDate > parsedDate {
                             self.updateList(id: serverId, name: task.name, archived: task.removed) { updateResult in
                                 switch updateResult {
                                 case .success(let listItem):
-                                    logger.info("Task updated on backend: \(listItem.id)")
+                                    logger.info("Task updated on backend from local changes: \(listItem.id)")
                                 case .failure(let error):
-                                    logger.error("Failed to update backend task: \(error.localizedDescription)")
+                                    logger.error("Failed to update backend task from local changes: \(error.localizedDescription)")
                                 }
                             }
-                            logger.info("Local task updated from server: \(remote.id)")
-                        }
-                        
-                        if let parsedDate = Date.iso8601DateFormatter.date(from: remote.updatedAt) {
-                            task.created = parsedDate
+                            logger.info("Server task updated from local task: \(remote.id)")
+                        } else {
+                            logger.info("Task is synchronized and up to date: \(remote.id)")
                         }
                     } else {
                         let newTask = TaskEntity(context: context)
@@ -114,7 +142,7 @@ extension ListNetworkService {
                         newTask.name = remote.name
                         newTask.removed = remote.archived
                         if let parsedDate = Date.iso8601DateFormatter.date(from: remote.updatedAt) {
-                            newTask.created = parsedDate
+                            newTask.updatedAt = parsedDate
                         }
                         newTask.folder = Folder.back.rawValue
                         logger.info("Local task created from server: \(remote.id)")
@@ -150,3 +178,4 @@ extension ListNetworkService {
         }
     }
 }
+
