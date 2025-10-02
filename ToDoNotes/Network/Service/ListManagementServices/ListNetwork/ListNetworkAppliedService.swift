@@ -143,6 +143,7 @@ extension ListNetworkService {
                         newTask.removed = remote.archived
                         if let parsedDate = Date.iso8601DateFormatter.date(from: remote.updatedAt) {
                             newTask.updatedAt = parsedDate
+                            newTask.created = parsedDate
                         }
                         newTask.folder = Folder.back.rawValue
                         logger.info("Local task created from server: \(remote.id)")

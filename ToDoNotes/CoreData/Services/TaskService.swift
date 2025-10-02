@@ -128,7 +128,7 @@ final class TaskService {
         let newTask = TaskEntity(context: viewContext)
         newTask.id = UUID()
         newTask.created = task.created
-        newTask.updatedAt = task.updatedAt
+        newTask.updatedAt = .now
         
         newTask.name = task.name
         newTask.details = task.details
