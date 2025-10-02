@@ -30,4 +30,14 @@
         <relationship name="checklist" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="ChecklistEntity" inverseName="task" inverseEntity="ChecklistEntity"/>
         <relationship name="notifications" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="NotificationEntity" inverseName="task" inverseEntity="NotificationEntity"/>
     </entity>
+    <entity name="UserEntity" representedClassName="UserEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="avatarURL" optional="YES" attributeType="String"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="email" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="provider" optional="YES" attributeType="String"/>
+        <attribute name="sub" optional="YES" attributeType="String"/>
+        <attribute name="subscription" optional="YES" attributeType="String"/>
+    </entity>
 </model>
