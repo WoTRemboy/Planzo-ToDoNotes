@@ -45,6 +45,7 @@
 		6337C6312E8468D8008D5DA1 /* ShareNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */; };
 		6338FFA92D7C9FE900E9E4C2 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6338FFA82D7C9FE400E9E4C2 /* PreviewData.swift */; };
 		634877AC2D369B2C009110B0 /* SettingFormRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634877AB2D369B21009110B0 /* SettingFormRow.swift */; };
+		634F64912E8EE66C009AF27F /* UserCoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634F64902E8EE66C009AF27F /* UserCoreDataService.swift */; };
 		635DBBB32D64E89A0050476C /* TaskSectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635DBBB22D64E88D0050476C /* TaskSectionModel.swift */; };
 		635DBBB52D6A1E4A0050476C /* NavigationTransitionModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635DBBB42D6A1E2C0050476C /* NavigationTransitionModifier.swift */; };
 		635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF6A2D24B71C007FFBBA /* ToDoNotesApp.swift */; };
@@ -214,6 +215,7 @@
 		6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNetworkService.swift; sourceTree = "<group>"; };
 		6338FFA82D7C9FE400E9E4C2 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		634877AB2D369B21009110B0 /* SettingFormRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingFormRow.swift; sourceTree = "<group>"; };
+		634F64902E8EE66C009AF27F /* UserCoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCoreDataService.swift; sourceTree = "<group>"; };
 		635DBBB22D64E88D0050476C /* TaskSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSectionModel.swift; sourceTree = "<group>"; };
 		635DBBB42D6A1E2C0050476C /* NavigationTransitionModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTransitionModifier.swift; sourceTree = "<group>"; };
 		635FEF552D24B715007FFBBA /* ToDoNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -552,6 +554,7 @@
 		635DBBB12D64E8710050476C /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				634F64902E8EE66C009AF27F /* UserCoreDataService.swift */,
 				63A092932D7C60E00026A64D /* CoreDataProvider.swift */,
 				63A092952D7C63470026A64D /* TaskService.swift */,
 			);
@@ -1331,6 +1334,7 @@
 				63F39F812E7A07600089E1AE /* SubscriptionNetworkService.swift in Sources */,
 				63BCB7202DAFF44F008603D4 /* MainPageOverviewTip.swift in Sources */,
 				632C002C2E81B2D60099C7FD /* ListNetworkService.swift in Sources */,
+				634F64912E8EE66C009AF27F /* UserCoreDataService.swift in Sources */,
 				635FEF6D2D24B71C007FFBBA /* ToDoNotesApp.swift in Sources */,
 				637B9F662D2974E40010F13B /* FilterScrollView.swift in Sources */,
 				63BDC3402E7C1C2400E92FDC /* SubscriptionLoginView.swift in Sources */,

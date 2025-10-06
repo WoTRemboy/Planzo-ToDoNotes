@@ -61,6 +61,7 @@ final class TaskService {
         
         task.target = target
         task.hasTargetTime = hasTime
+        task.updatedAt = .now
         
         task.important = importance
         task.pinned = pinned
@@ -127,6 +128,7 @@ final class TaskService {
         let newTask = TaskEntity(context: viewContext)
         newTask.id = UUID()
         newTask.created = task.created
+        newTask.updatedAt = .now
         
         newTask.name = task.name
         newTask.details = task.details
@@ -294,6 +296,7 @@ extension TaskService {
     static func toggleCompleteChecking(for task: TaskEntity) throws {
         let wasCompleted = task.completed == 2
         task.completed = task.completed == 1 ? 2 : 1
+        task.updatedAt = .now
         
         // Only handle notifications if the completion status actually changed
         if task.completed == 2 && !wasCompleted {
@@ -307,17 +310,20 @@ extension TaskService {
     
     static func toggleImportant(for task: TaskEntity) throws {
         task.important.toggle()
+        task.updatedAt = .now
         try save()
     }
     
     static func togglePinned(for task: TaskEntity) throws {
         task.pinned.toggle()
+        task.updatedAt = .now
         try save()
     }
     
     static func toggleRemoved(for task: TaskEntity) throws {
         let wasRemoved = task.removed
         task.removed.toggle()
+        task.updatedAt = .now
         
         // Only handle notifications if the removed status actually changed
         if task.removed && !wasRemoved {
@@ -343,6 +349,7 @@ extension TaskService {
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             task.folder = folder
+            task.updatedAt = .now
             do {
                 try save()
                 logger.debug("Folder updated and context saved successfully.")
