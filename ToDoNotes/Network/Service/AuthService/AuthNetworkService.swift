@@ -7,15 +7,13 @@
 
 import Foundation
 import OSLog
+import CoreData
 
 private let logger = Logger(subsystem: "com.todonotes.opening", category: "AuthNetworkService")
 
 final class AuthNetworkService: ObservableObject {
     
     @Published var currentUser: User? = nil
-
-    // Keys for storing to UserDefaults
-    private let userKey = "CurrentUserProfile"
     
     private let logoutDelay: TimeInterval = 1.5
     private let tokenStorage = TokenStorageService()
@@ -227,11 +225,9 @@ final class AuthNetworkService: ObservableObject {
     }
     
     func loadPersistedProfile() {
-        if let userData = UserDefaults.standard.data(forKey: userKey),
-           let user = try? JSONDecoder().decode(User.self, from: userData) {
-            self.currentUser = user
-            logger.debug("Current user loaded from cache.")
-        }
+        let user = UserCoreDataService.shared.loadUser()
+        self.currentUser = user
+        logger.debug("Current user loaded from Core Data.")
     }
     
     var isAuthorized: Bool {
@@ -251,21 +247,17 @@ final class AuthNetworkService: ObservableObject {
                 email: claims["email"] as? String,
                 avatarUrl: claims["picture"] as? String
             )
-            logger.debug("Current user saved to cache.")
             DispatchQueue.main.async {
                 self.currentUser = user
-                if let encodedUser = try? JSONEncoder().encode(user) {
-                    UserDefaults.standard.set(encodedUser, forKey: self.userKey)
-                }
+                UserCoreDataService.shared.saveUser(user)
                 self.tokenStorage.save(token: authResponse.accessToken, type: .accessToken)
                 self.tokenStorage.save(token: authResponse.refreshToken, type: .refreshToken)
+                logger.debug("Current user saved to Core Data.")
             }
         } else {
             DispatchQueue.main.async {
                 self.currentUser = authResponse.user
-                if let encodedUser = try? JSONEncoder().encode(authResponse.user) {
-                    UserDefaults.standard.set(encodedUser, forKey: self.userKey)
-                }
+                UserCoreDataService.shared.saveUser(authResponse.user)
                 self.tokenStorage.save(token: authResponse.accessToken, type: .accessToken)
                 self.tokenStorage.save(token: authResponse.refreshToken, type: .refreshToken)
             }
@@ -275,7 +267,7 @@ final class AuthNetworkService: ObservableObject {
     private func clearProfile() {
         DispatchQueue.main.async {
             self.currentUser = nil
-            UserDefaults.standard.removeObject(forKey: self.userKey)
+            UserCoreDataService.shared.deleteUser()
             self.tokenStorage.delete(type: .accessToken)
             self.tokenStorage.delete(type: .refreshToken)
             TaskService.deleteAllBackendTasks()
@@ -298,3 +290,4 @@ private extension AuthNetworkService {
         return (try? JSONSerialization.jsonObject(with: payloadData, options: [])) as? [String: Any]
     }
 }
+
