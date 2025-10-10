@@ -271,6 +271,7 @@ final class Texts {
         static let title = NSLocalizedString("AuthorizationTitle", comment: "Authorization")
         static let login = NSLocalizedString("AuthorizationLogin", comment: "Sign in or Sign up")
         static let logout = NSLocalizedString("AuthorizationLogout", comment: "Log Out")
+        static let confirm = NSLocalizedString("AuthorizationConfirm", comment: "Confirm")
         static let confirmLogout = NSLocalizedString("AuthorizationConfirmLogout", comment: "Are you sure you want to log out?")
 
         static let appleLogin = NSLocalizedString("AuthorizationAppleLogin", comment: "Sign in with Apple")

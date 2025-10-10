@@ -62,6 +62,35 @@
         }
       }
     },
+    "AuthorizationConfirm" : {
+      "comment" : "Confirm",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmer"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подтвердить"
+          }
+        }
+      }
+    },
     "AuthorizationConfirmLogout" : {
       "comment" : "Are you sure you want to log out?",
       "localizations" : {
@@ -3432,25 +3461,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get 14 days free with an Annual subscription."
+            "value" : "Not sure? Try for free."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obtenga 14 días gratis al comprar una suscripción anual."
+            "value" : "Probar gratis"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obtenez 14 jours gratuits avec l’achat d’un abonnement annuel."
+            "value" : "Essayer gratuitement"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Получите бесплатно 14 дней при покупке годовой подписки."
+            "value" : "Попробовать бесплатно"
           }
         }
       }

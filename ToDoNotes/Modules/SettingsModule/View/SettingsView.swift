@@ -388,7 +388,7 @@ struct SettingsView: View {
                 Button(role: .destructive) {
                     viewModel.handleLogout(authService: authService)
                 } label: {
-                    Text(Texts.Authorization.logout)
+                    Text(Texts.Authorization.confirm)
                 }
         }
     }
