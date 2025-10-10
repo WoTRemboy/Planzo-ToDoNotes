@@ -61,7 +61,6 @@ extension Color {
         static let supportTextField = Color("SupportTextField")
         static let supportListRow = Color("SupportListRow")
         static let supportButton = Color("SupportButton")
-        static let supportToggle = Color("SupportToggle")
         static let supportPopup = Color("SupportPopup")
         static let supportParamRow = Color("SupportParamRow")
         static let supportSubscription = Color("SupportSubscription")
@@ -95,6 +94,11 @@ extension Color {
         static let duplicate = Color("SwipeActionDuplicate")
         static let folder = Color("SwipeActionFolder")
         static let share = Color("SwipeActionShare")
+    }
+    
+    enum ToggleColors {
+        static let notifications = Color("ToggleNotifications")
+        static let subscriptions = Color("ToggleSubscriptions")
     }
 }
 
