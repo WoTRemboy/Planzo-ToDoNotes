@@ -22,6 +22,8 @@
 		631FBB922DB0114D00BEABD0 /* TodayPageOverviewTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631FBB912DB0114300BEABD0 /* TodayPageOverviewTip.swift */; };
 		631FBB942DB0127E00BEABD0 /* CalendarPageOverviewTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631FBB932DB0127700BEABD0 /* CalendarPageOverviewTip.swift */; };
 		6321FBFF2E5890CA00F0AEA5 /* SelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6321FBFE2E5890CA00F0AEA5 /* SelectorView.swift */; };
+		6326E1B32EA7E20400BF68B2 /* SettingsConfigureFoldersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6326E1B22EA7E20400BF68B2 /* SettingsConfigureFoldersView.swift */; };
+		6326E1B52EA7E34500BF68B2 /* FolderFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6326E1B42EA7E34500BF68B2 /* FolderFormView.swift */; };
 		63278AF72E745170006E0578 /* LoginButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63278AF62E745170006E0578 /* LoginButtonView.swift */; };
 		63286AEC2E7B309800483810 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63286AEB2E7B309800483810 /* SubscriptionView.swift */; };
 		63286AEF2E7B332A00483810 /* SubscriptionNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63286AEE2E7B332A00483810 /* SubscriptionNavBar.swift */; };
@@ -191,6 +193,8 @@
 		631FBB912DB0114300BEABD0 /* TodayPageOverviewTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayPageOverviewTip.swift; sourceTree = "<group>"; };
 		631FBB932DB0127700BEABD0 /* CalendarPageOverviewTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPageOverviewTip.swift; sourceTree = "<group>"; };
 		6321FBFE2E5890CA00F0AEA5 /* SelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorView.swift; sourceTree = "<group>"; };
+		6326E1B22EA7E20400BF68B2 /* SettingsConfigureFoldersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsConfigureFoldersView.swift; sourceTree = "<group>"; };
+		6326E1B42EA7E34500BF68B2 /* FolderFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderFormView.swift; sourceTree = "<group>"; };
 		63278AF62E745170006E0578 /* LoginButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButtonView.swift; sourceTree = "<group>"; };
 		63286AEB2E7B309800483810 /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
 		63286AEE2E7B332A00483810 /* SubscriptionNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionNavBar.swift; sourceTree = "<group>"; };
@@ -403,6 +407,15 @@
 				631FBB932DB0127700BEABD0 /* CalendarPageOverviewTip.swift */,
 			);
 			path = Tips;
+			sourceTree = "<group>";
+		};
+		6326E1B12EA7E1E200BF68B2 /* ConfigureFolders */ = {
+			isa = PBXGroup;
+			children = (
+				6326E1B22EA7E20400BF68B2 /* SettingsConfigureFoldersView.swift */,
+				6326E1B42EA7E34500BF68B2 /* FolderFormView.swift */,
+			);
+			path = ConfigureFolders;
 			sourceTree = "<group>";
 		};
 		63278AF52E74514D006E0578 /* View */ = {
@@ -1061,6 +1074,7 @@
 			isa = PBXGroup;
 			children = (
 				637B9F5B2D2969C30010F13B /* SettingsView.swift */,
+				6326E1B12EA7E1E200BF68B2 /* ConfigureFolders */,
 				634877AF2D36A168009110B0 /* NavigationViews */,
 				63F6C70A2D2AAA8500716AB0 /* Subviews */,
 			);
@@ -1273,6 +1287,7 @@
 				6378A7552D3FCBE500C1B858 /* TaskDateSelectorView.swift in Sources */,
 				635FEF862D24C25A007FFBBA /* OnboardingScreenModel.swift in Sources */,
 				637B9F4C2D295B290010F13B /* MainView.swift in Sources */,
+				6326E1B52EA7E34500BF68B2 /* FolderFormView.swift in Sources */,
 				63F6C7122D2AB71900716AB0 /* CalendarNavBar.swift in Sources */,
 				63F6C6F72D29B41E00716AB0 /* FolderCell.swift in Sources */,
 				6303E2C02D33FF870096DB64 /* RootViewControllerMethods.swift in Sources */,
@@ -1309,6 +1324,7 @@
 				632D0DD02D36B9760071684D /* TaskManagementModel.swift in Sources */,
 				63F6C71C2D2B19A200716AB0 /* CustomCalendarModel.swift in Sources */,
 				6328D5C22E881516000574AE /* AccessTokenManager.swift in Sources */,
+				6326E1B32EA7E20400BF68B2 /* SettingsConfigureFoldersView.swift in Sources */,
 				6328D5BE2E8812B8000574AE /* ShareModel.swift in Sources */,
 				63A0928E2D7C5EF20026A64D /* RootView.swift in Sources */,
 				63D9A1BA2D50F2FF008454E9 /* UserNotificationCenterExtension.swift in Sources */,
