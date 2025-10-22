@@ -32,7 +32,7 @@ struct TaskManagementView: View {
     /// The task entity being edited, if any (nil for task creation).
     private let entity: TaskEntity?
     /// The folder associated with the task.
-    private let folder: Folder?
+    private let folder: FolderEnum?
     /// Animation namespace used for matched geometry transitions.
     private let animation: Namespace.ID
     /// Closure called when the view should be dismissed.
@@ -52,7 +52,7 @@ struct TaskManagementView: View {
     init(taskManagementHeight: Binding<CGFloat>,
          selectedDate: Date? = nil,
          entity: TaskEntity? = nil,
-         folder: Folder? = nil,
+         folder: FolderEnum? = nil,
          namespace: Namespace.ID,
          onDismiss: @escaping () -> Void
     ) {

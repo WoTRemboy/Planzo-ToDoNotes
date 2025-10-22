@@ -14,7 +14,7 @@ struct FolderCell: View {
     // MARK: - Properties
     
     /// Folder data model.
-    private let folder: Folder
+    private let folder: FolderEnum
     /// Indicates whether this folder is currently selected.
     private let selected: Bool
     /// Namespace for matched geometry animations between folders.
@@ -22,7 +22,7 @@ struct FolderCell: View {
     
     // MARK: - Initialization
     
-    init(folder: Folder, selected: Bool, namespace: Namespace.ID) {
+    init(folder: FolderEnum, selected: Bool, namespace: Namespace.ID) {
         self.folder = folder
         self.selected = selected
         self.namespace = namespace

@@ -46,7 +46,7 @@ struct FoldersScrollView: View {
     @ViewBuilder
     private func scrollContent(proxy: ScrollViewProxy) -> some View {
         HStack(spacing: 0) {
-            ForEach(Folder.allCases(isAuthorized: authService.isAuthorized), id: \.self) { folder in
+            ForEach(FolderEnum.allCases(isAuthorized: authService.isAuthorized), id: \.self) { folder in
                 FolderCell(folder: folder,
                            selected: viewModel.compareFolders(with: folder), namespace: animation)
                 .id(folder)
@@ -78,10 +78,10 @@ struct FoldersScrollView: View {
     
     /// The folder picker displayed inside the menu, listing all available folders.
     private var allFoldersPicker: some View {
-        Picker(Texts.MainPage.Folders.title,
+        Picker(Texts.Folders.title,
                selection: $viewModel.selectedFolder.animation(.easeInOut(duration: 0.2))) {
             
-            ForEach(Folder.allCases(isAuthorized: authService.isAuthorized), id: \.self) { folder in
+            ForEach(FolderEnum.allCases(isAuthorized: authService.isAuthorized), id: \.self) { folder in
                 Label {
                     Text(folder.name)
                 } icon: {

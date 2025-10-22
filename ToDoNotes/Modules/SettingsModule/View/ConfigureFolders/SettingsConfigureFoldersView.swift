@@ -13,7 +13,7 @@ struct SettingsConfigureFoldersView: View {
     }
     
     private var dragLabel: some View {
-        Text("Press and hold to drag & reorder")
+        Text(Texts.Folders.Configure.dragAndDrop)
             .foregroundStyle(Color.LabelColors.labelDetails)
             .font(.system(size: 15, weight: .regular))
     }

@@ -40,7 +40,7 @@ final class TaskService {
                          completeCheck: TaskCheck,
                          target: Date?,
                          hasTime: Bool,
-                         folder: Folder? = nil,
+                         folder: FolderEnum? = nil,
                          importance: Bool,
                          pinned: Bool,
                          removed: Bool = false,
@@ -89,17 +89,17 @@ final class TaskService {
         // Determines folder if not set
         if entity == nil {
             task.folder = folder?.rawValue ?? {
-                if !notifications.isEmpty { return Folder.reminders.rawValue }
-                if completeCheck != .none { return Folder.tasks.rawValue }
-                if checklist.count > 0 { return Folder.lists.rawValue }
-                return Folder.other.rawValue
+                if !notifications.isEmpty { return FolderEnum.reminders.rawValue }
+                if completeCheck != .none { return FolderEnum.tasks.rawValue }
+                if checklist.count > 0 { return FolderEnum.lists.rawValue }
+                return FolderEnum.other.rawValue
             }()
         }
         
         try save()
         
         // If the task is a backend task and has a serverId, sync checklist items to server
-        if task.folder == Folder.back.rawValue, task.serverId != nil {
+        if task.folder == FolderEnum.back.rawValue, task.serverId != nil {
             // For each checklist item, create or update it on the server
             if let checklistEntities = task.checklist?.array as? [ChecklistEntity] {
                 for checklistEntity in checklistEntities {
@@ -114,7 +114,7 @@ final class TaskService {
             }
         }
         
-        if task.folder == Folder.back.rawValue {
+        if task.folder == FolderEnum.back.rawValue {
             ListNetworkService.shared.syncTasksIfNeeded(for: task)
         }
     }
@@ -229,7 +229,7 @@ final class TaskService {
     
     static func deleteAllBackendTasks() {
         let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "folder == %@", Folder.back.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "folder == %@", FolderEnum.back.rawValue)
         do {
             let backendTasks = try viewContext.fetch(fetchRequest)
             for task in backendTasks {
@@ -329,13 +329,13 @@ extension TaskService {
         if task.removed && !wasRemoved {
             UNUserNotificationCenter.current().removeNotifications(for: task.notifications)
             
-            if task.folder == Folder.back.rawValue {
+            if task.folder == FolderEnum.back.rawValue {
                 ListNetworkService.shared.archiveTaskOnServer(for: task, value: true)
             }
         } else if !task.removed && wasRemoved {
             restoreNotifications(for: task)
             
-            if task.folder == Folder.back.rawValue {
+            if task.folder == FolderEnum.back.rawValue {
                 ListNetworkService.shared.archiveTaskOnServer(for: task, value: false)
             }
         }
@@ -353,7 +353,7 @@ extension TaskService {
             do {
                 try save()
                 logger.debug("Folder updated and context saved successfully.")
-                if folder == Folder.back.rawValue {
+                if folder == FolderEnum.back.rawValue {
                     ListNetworkService.shared.syncTasksIfNeeded(for: task)
                 }
             } catch {

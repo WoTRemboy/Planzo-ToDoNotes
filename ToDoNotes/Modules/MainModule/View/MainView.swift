@@ -48,10 +48,10 @@ struct MainView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .popView(isPresented: $viewModel.showingFolderSetupView,
                  onDismiss: {}) {
-            SelectorView<Folder>(
-                title: Texts.MainPage.Folders.title,
+            SelectorView<FolderEnum>(
+                title: Texts.Folders.title,
                 label: { $0.name },
-                options: Folder.availableCases(isAuthorized: authService.isAuthorized),
+                options: FolderEnum.availableCases(isAuthorized: authService.isAuthorized),
                 selected: $viewModel.selectedTaskFolder,
                 onCancel: {
                     viewModel.toggleShowingFolderSetupView()

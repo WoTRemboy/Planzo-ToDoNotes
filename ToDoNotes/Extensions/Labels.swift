@@ -59,15 +59,6 @@ final class Texts {
                 static let alertRecover = NSLocalizedString("MainPageRemoveFilterAlertRecover", comment: "Recover")
             }
         }
-        
-        enum Folders {
-            static let title = NSLocalizedString("MainPageFolderTitle", comment: "Folders")
-            static let all = NSLocalizedString("MainPageFolderAll", comment: "All")
-            static let reminders = NSLocalizedString("MainPageFolderReminders", comment: "Reminders")
-            static let tasks = NSLocalizedString("MainPageFolderTasks", comment: "Tasks")
-            static let purchases = NSLocalizedString("MainPageFolderLists", comment: "Lists")
-            static let other = NSLocalizedString("MainPageFolderOther", comment: "Other")
-        }
     }
     
     // MARK: - Today Module Texts
@@ -251,6 +242,19 @@ final class Texts {
         }
     }
     
+    enum Folders {
+        static let title = NSLocalizedString("MainPageFolderTitle", comment: "Folders")
+        static let all = NSLocalizedString("MainPageFolderAll", comment: "All")
+        static let reminders = NSLocalizedString("MainPageFolderReminders", comment: "Reminders")
+        static let tasks = NSLocalizedString("MainPageFolderTasks", comment: "Tasks")
+        static let purchases = NSLocalizedString("MainPageFolderLists", comment: "Lists")
+        static let other = NSLocalizedString("MainPageFolderOther", comment: "Other")
+        
+        enum Configure {
+            static let dragAndDrop = NSLocalizedString("MainPageFolderDragAndDrop", comment: "Press and hold to drag & reorder")
+        }
+    }
+    
     // MARK: - Search Bar Module Texts
     
     enum SearchBar {
@@ -395,6 +399,7 @@ final class Texts {
         static let taskCreation = "TaskCreationPage"
         static let timeFormat = "TimeFormat"
         static let firstDayOfWeek = "FirstDayOfWeek"
+        static let didCreateDefaultFolders = "didCreateDefaultFolders"
     }
     
     // MARK: - Namespace ID Keys

@@ -43,6 +43,7 @@ struct ToDoNotesApp: App {
                 .onAppear {
                     setTheme(style: userTheme.userInterfaceStyle)
                     authService.loadPersistedProfile()
+                    FolderCoreDataService.createDefaultFoldersIfNeeded()
                 }
                 // Injects Core Data context into the environment
                 .environment(\.managedObjectContext, CoreDataProvider.shared.persistentContainer.viewContext)

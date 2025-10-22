@@ -25,7 +25,7 @@ final class MainViewModel: ObservableObject {
     /// Currently selected task filter (e.g., Active, Completed).
     @Published private(set) var selectedFilter: Filter = .active
     /// Currently selected folder (e.g., Reminders, Tasks, Lists).
-    @Published internal var selectedFolder: Folder = .all
+    @Published internal var selectedFolder: FolderEnum = .all
     /// Whether only important tasks are displayed.
     @Published internal var importance: Bool = false
     /// Search text input for filtering tasks.
@@ -43,7 +43,7 @@ final class MainViewModel: ObservableObject {
     
     /// The selected task for editing or viewing.
     @Published internal var selectedTask: TaskEntity? = nil
-    @Published internal var selectedTaskFolder: Folder = .other
+    @Published internal var selectedTaskFolder: FolderEnum = .other
 
     /// The task selected for restoring from deleted.
     @Published internal var removedTask: TaskEntity? = nil
@@ -118,7 +118,7 @@ final class MainViewModel: ObservableObject {
     
     /// Changes the currently active folder with animation.
     /// - Parameter new: The new folder to apply.
-    internal func setFolder(to new: Folder) {
+    internal func setFolder(to new: FolderEnum) {
         withAnimation(.easeInOut(duration: 0.2)) {
             selectedFolder = new
         }
@@ -126,13 +126,13 @@ final class MainViewModel: ObservableObject {
     
     /// Compares a given folder to the currently selected one.
     /// - Returns: `true` if it matches, otherwise `false`.
-    internal func compareFolders(with folder: Folder) -> Bool {
+    internal func compareFolders(with folder: FolderEnum) -> Bool {
         folder == selectedFolder
     }
     
     internal func setTaskFolder(to folder: String?) {
         guard let folder else { return }
-        selectedTaskFolder = Folder(rawValue: folder) ?? .other
+        selectedTaskFolder = FolderEnum(rawValue: folder) ?? .other
     }
     
     /// Toggles the importance-only filter.
@@ -152,15 +152,15 @@ final class MainViewModel: ObservableObject {
         case .all:
             return true
         case .reminders:
-            return task.folder == Folder.reminders.rawValue
+            return task.folder == FolderEnum.reminders.rawValue
         case .tasks:
-            return task.folder == Folder.tasks.rawValue
+            return task.folder == FolderEnum.tasks.rawValue
         case .lists:
-            return task.folder == Folder.lists.rawValue
+            return task.folder == FolderEnum.lists.rawValue
         case .other:
-            return task.folder == Folder.other.rawValue
+            return task.folder == FolderEnum.other.rawValue
         case .back:
-            return task.folder == Folder.back.rawValue
+            return task.folder == FolderEnum.back.rawValue
         }
     }
     

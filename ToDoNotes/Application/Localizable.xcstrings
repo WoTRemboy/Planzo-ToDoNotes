@@ -990,6 +990,35 @@
         }
       }
     },
+    "MainPageFolderDragAndDrop" : {
+      "comment" : "Press and hold to drag & reorder",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Press and hold to drag & reorder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantenga presionado para arrastrar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maintenez pour déplacer"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удерживайте, чтобы перетащить"
+          }
+        }
+      }
+    },
     "MainPageFolderLists" : {
       "comment" : "Lists",
       "localizations" : {

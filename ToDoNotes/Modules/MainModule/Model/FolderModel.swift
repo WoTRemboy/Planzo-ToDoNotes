@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// Represents predefined task folders used for categorizing tasks.
-enum Folder: String, CaseIterable {
+enum FolderEnum: String, CaseIterable {
     case back = "TaskFoldersBack"
     case all = "TaskFoldersAll"
     case reminders = "TaskFoldersReminders"
@@ -18,28 +18,28 @@ enum Folder: String, CaseIterable {
     
     /// Returns a filtered array of folders depending on user authorization.
     /// - Parameter isAuthorized: Whether user is authorized.
-    static func availableCases(isAuthorized: Bool) -> [Folder] {
-        let all: [Folder] = [.reminders, .tasks, .lists, .other]
+    static func availableCases(isAuthorized: Bool) -> [FolderEnum] {
+        let all: [FolderEnum] = [.reminders, .tasks, .lists, .other]
         return isAuthorized ? [.back] + all : all
     }
     
-    static func allCases(isAuthorized: Bool) -> [Folder] {
-        [.all] + Folder.availableCases(isAuthorized: isAuthorized)
+    static func allCases(isAuthorized: Bool) -> [FolderEnum] {
+        [.all] + FolderEnum.availableCases(isAuthorized: isAuthorized)
     }
     
     /// Returns a localized name for each folder to display in the UI.
     internal var name: String {
         switch self {
         case .all:
-            return Texts.MainPage.Folders.all
+            return Texts.Folders.all
         case .reminders:
-            return Texts.MainPage.Folders.reminders
+            return Texts.Folders.reminders
         case .tasks:
-            return Texts.MainPage.Folders.tasks
+            return Texts.Folders.tasks
         case .lists:
-            return Texts.MainPage.Folders.purchases
+            return Texts.Folders.purchases
         case .other:
-            return Texts.MainPage.Folders.other
+            return Texts.Folders.other
         case .back:
             return "Backend"
         }

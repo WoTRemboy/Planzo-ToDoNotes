@@ -24,7 +24,7 @@ final class TodayViewModel: ObservableObject {
     
     /// The currently selected task for editing.
     @Published internal var selectedTask: TaskEntity? = nil
-    @Published internal var selectedTaskFolder: Folder = .other
+    @Published internal var selectedTaskFolder: FolderEnum = .other
     /// Current text entered into the search bar.
     @Published internal var searchText: String = String()
     /// Height of the task management sheet.
@@ -59,7 +59,7 @@ final class TodayViewModel: ObservableObject {
     
     internal func setTaskFolder(to folder: String?) {
         guard let folder else { return }
-        selectedTaskFolder = Folder(rawValue: folder) ?? .other
+        selectedTaskFolder = FolderEnum(rawValue: folder) ?? .other
     }
     
     // MARK: - UI Toggle Methods

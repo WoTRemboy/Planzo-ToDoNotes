@@ -33,7 +33,7 @@ final class CalendarViewModel: ObservableObject {
     
     /// The task currently selected for editing.
     @Published internal var selectedTask: TaskEntity? = nil
-    @Published internal var selectedTaskFolder: Folder = .other
+    @Published internal var selectedTaskFolder: FolderEnum = .other
     /// The date currently selected in the calendar (defaults to today).
     @Published internal var selectedDate: Date = .now.startOfDay
     
@@ -116,6 +116,6 @@ final class CalendarViewModel: ObservableObject {
     
     internal func setTaskFolder(to folder: String?) {
         guard let folder else { return }
-        selectedTaskFolder = Folder(rawValue: folder) ?? .other
+        selectedTaskFolder = FolderEnum(rawValue: folder) ?? .other
     }
 }

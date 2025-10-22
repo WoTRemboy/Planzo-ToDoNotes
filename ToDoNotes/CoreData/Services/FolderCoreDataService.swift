@@ -16,6 +16,44 @@ final class FolderCoreDataService {
         CoreDataProvider.shared.persistentContainer.viewContext
     }
     
+    static func createDefaultFoldersIfNeeded() {
+        let key = Texts.UserDefaults.didCreateDefaultFolders
+        let defaults = UserDefaults.standard
+        guard !defaults.bool(forKey: key) else { return }
+
+        for folderEnum in FolderEnum.allCases {
+            let color = FolderCoreDataService.colorForFolderEnum(folderEnum)
+            let folder = Folder(
+                id: UUID(),
+                name: folderEnum.name,
+                locked: false,
+                serverId: "",
+                visible: true,
+                color: color,
+                order: FolderEnum.allCases.firstIndex(of: folderEnum) ?? 0
+            )
+            FolderCoreDataService.shared.saveFolder(folder, color: color)
+        }
+        defaults.set(true, forKey: key)
+    }
+    
+    private static func colorForFolderEnum(_ folder: FolderEnum) -> FolderColor {
+        switch folder {
+        case .all:
+            return FolderColor(red: 1, green: 1, blue: 1, alpha: 1)
+        case .reminders:
+            return FolderColor(red: 1, green: 0.894, blue: 0.612, alpha: 1)
+        case .tasks:
+            return FolderColor(red: 0.988, green: 0.698, blue: 0.729, alpha: 1)
+        case .lists:
+            return FolderColor(red: 0.655, green: 0.788, blue: 1, alpha: 1)
+        case .other:
+            return FolderColor(red: 0.953, green: 0.882, blue: 0.804, alpha: 1)
+        case .back:
+            return FolderColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
+        }
+    }
+    
     // MARK: - Save Folder
     
     internal func saveFolder(_ folder: Folder, color: FolderColor) {
@@ -29,7 +67,6 @@ final class FolderCoreDataService {
         entity.visible = folder.visible
         entity.order = Int32(folder.order)
         
-        // Создаём/обновляем цвет
         let colorEntity = ColorEntity(context: viewContext)
         colorEntity.red = color.red
         colorEntity.green = color.green
