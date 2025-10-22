@@ -16,10 +16,13 @@
     </entity>
     <entity name="FolderEntity" representedClassName="FolderEntity" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="locked" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="order" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="serverId" optional="YES" attributeType="String"/>
         <attribute name="visible" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <relationship name="color" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ColorEntity" inverseName="folder" inverseEntity="ColorEntity"/>
+        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TaskEntity" inverseName="section" inverseEntity="TaskEntity"/>
     </entity>
     <entity name="NotificationEntity" representedClassName="NotificationEntity" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -43,6 +46,7 @@
         <attribute name="updatedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="checklist" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="ChecklistEntity" inverseName="task" inverseEntity="ChecklistEntity"/>
         <relationship name="notifications" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="NotificationEntity" inverseName="task" inverseEntity="NotificationEntity"/>
+        <relationship name="section" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FolderEntity" inverseName="tasks" inverseEntity="FolderEntity"/>
     </entity>
     <entity name="UserEntity" representedClassName="UserEntity" syncable="YES" codeGenerationType="class">
         <attribute name="avatarURL" optional="YES" attributeType="String"/>
