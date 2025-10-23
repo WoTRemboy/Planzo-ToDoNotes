@@ -38,34 +38,43 @@ struct FolderCell: View {
             } else {
                 emptyRectangle
             }
-            
-            // Folder title
-            nameLabel
-                .padding(.horizontal, 10)
-                .padding(.vertical, 2)
+            folderTitle
         }
     }
     
     // MARK: - Components
     
+    private var folderTitle: some View {
+        HStack(alignment: .bottom, spacing: 2) {
+            if !folder.system || !folder.shared {
+                nameLabel
+            }
+            
+            if folder.shared {
+                sharedIcon
+            }
+        }
+        .background(alignment: .bottom) {
+            underline
+                .offset(y: 4)
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 2)
+    }
+    
     /// Displays the name of the folder with the appropriate color and underline.
     private var nameLabel: some View {
-        let color: Color
-        if selected, folder.system {
-            color = Color.LabelColors.labelReversed     // Reversed color for All folder
-        } else if selected {
-            color = Color.LabelColors.labelBlack        // Black color for selected cell
-        } else {
-            color = Color.LabelColors.labelDetails      // Light grey color for not selected cell
-        }
-        
-        return Text(folder.name)
+        Text(folder.name)
             .font(.system(size: 20, weight: .regular))
-            .foregroundStyle(color)
-            .background(alignment: .bottom) {
-                underline
-                    .offset(y: 4)
-            }
+            .foregroundStyle(textColor)
+    }
+    
+    private var sharedIcon: some View {
+        Image.Folder.shared
+            .renderingMode(.template)
+            .resizable()
+            .foregroundStyle(textColor)
+            .frame(width: 24, height: 24)
     }
     
     /// Displays an underline under the folder name if not selected.
@@ -91,11 +100,21 @@ struct FolderCell: View {
         Rectangle()
             .foregroundStyle(Color.clear)
     }
+    
+    private var textColor: Color {
+        if selected, folder.system {
+            Color.LabelColors.labelReversed     // Reversed color for All folder
+        } else if selected {
+            Color.LabelColors.labelBlack        // Black color for selected cell
+        } else {
+            Color.LabelColors.labelDetails      // Light grey color for not selected cell
+        }
+    }
 }
 
 // MARK: - Preview
 
 #Preview {
-    let mockFolder = Folder.mock
+    let mockFolder = Folder.mock(system: true, shared: true)
     FolderCell(folder: mockFolder, selected: true, namespace: Namespace().wrappedValue)
 }

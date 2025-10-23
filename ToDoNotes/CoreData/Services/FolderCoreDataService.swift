@@ -29,6 +29,7 @@ final class FolderCoreDataService {
                 locked: false,
                 serverId: "",
                 system: folderEnum.system,
+                shared: folderEnum == .shared,
                 visible: true,
                 color: color,
                 order: FolderEnum.allCases.firstIndex(of: folderEnum) ?? 0
@@ -53,6 +54,7 @@ final class FolderCoreDataService {
         entity.locked = folder.locked
         entity.serverId = folder.serverId
         entity.system = folder.system
+        entity.shared = folder.shared
         entity.visible = folder.visible
         entity.order = Int32(folder.order)
         
@@ -122,6 +124,7 @@ extension Folder {
         self.locked = entity.locked
         self.serverId = entity.serverId ?? ""
         self.system = entity.system
+        self.shared = entity.shared
         self.visible = entity.visible
         self.order = Int(entity.order)
         if let colorEntity = entity.color {

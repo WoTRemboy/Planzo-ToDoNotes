@@ -14,12 +14,6 @@ import TipKit
 /// Handles task creation, editing, filtering, and task management UI.
 struct MainView: View {
     
-    // MARK: - Core Data Fetch
-    
-    /// Fetches all task entities without any initial sorting.
-    @FetchRequest(entity: TaskEntity.entity(), sortDescriptors: [])
-    private var tasksResults: FetchedResults<TaskEntity>
-    
     // MARK: - Environment
     
     @EnvironmentObject private var viewModel: MainViewModel
@@ -33,6 +27,10 @@ struct MainView: View {
     private let overviewTip = MainPageOverview()
     @State private var folderSetupTask: TaskEntity?
     
+    // Note: This view expects `viewModel` to provide task data such as `allTasks`,
+    // along with segmented and filtered task arrays.
+    // Please ensure the MainViewModel publishes these properties accordingly.
+    
     // MARK: - Body
     
     internal var body: some View {
@@ -44,7 +42,7 @@ struct MainView: View {
             }
         }
         .animation(.easeInOut(duration: 0.2),
-                   value: tasksResults.isEmpty)
+                   value: viewModel.allTasks.isEmpty)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .popView(isPresented: $viewModel.showingFolderSetupView,
                  onDismiss: {}) {
@@ -168,7 +166,7 @@ struct MainView: View {
         .scrollDisabled(filteredSegmentedTasks.isEmpty)
         
         .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
-        .animation(.easeInOut(duration: 0.1), value: tasksResults.map { $0.folder })
+        .animation(.easeInOut(duration: 0.1), value: viewModel.allTasks.map { $0.folder })
     }
 }
 
@@ -305,50 +303,14 @@ extension MainView {
 
 extension MainView {
     
-    /// Segments and sorts tasks by their associated dates, applying pinning and deadlines.
+    /// Access segmented and sorted tasks from the view model.
     private var segmentedAndSortedTasksArray: [(Date?, [TaskEntity])] {
-        let calendar = Calendar.current
-        let grouped = Dictionary(grouping: tasksResults.lazy) { task -> Date in
-            let refDate = task.target ?? task.created ?? Date.distantPast
-            return calendar.startOfDay(for: refDate)
-        }
-        
-        return grouped.map { (key, tasks) in
-            let sortedTasks = tasks.sorted { t1, t2 in
-                if t1.pinned != t2.pinned {
-                    return t1.pinned && !t2.pinned
-                }
-                
-                let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : (Date.distantFuture + t1.created!.timeIntervalSinceNow)
-                let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : (Date.distantFuture + t2.created!.timeIntervalSinceNow)
-                return d1 < d2
-            }
-            return (key, sortedTasks)
-        }
-        .sorted { ($0.0 ?? Date.distantPast) < ($1.0 ?? Date.distantPast) }
+        viewModel.segmentedAndSortedTasksArray
     }
     
-    /// Applies filters based on search, folder selection, importance, and task status.
+    /// Access filtered segmented tasks from the view model.
     private var filteredSegmentedTasks: [(Date?, [TaskEntity])] {
-        segmentedAndSortedTasksArray.lazy.compactMap { (date, tasks) in
-            let filteredTasks = tasks.lazy.filter { task in
-                if !viewModel.searchText.isEmpty {
-                    let searchTerm = viewModel.searchText
-                    let nameMatches = task.name?.localizedCaseInsensitiveContains(searchTerm) ?? false
-                    let detailsMatches = task.details?.localizedCaseInsensitiveContains(searchTerm) ?? false
-                    if !nameMatches && !detailsMatches {
-                        return false
-                    }
-                }
-                
-//                guard viewModel.taskMatchesFolder(for: task) else { return false }
-                if viewModel.importance && !task.important { return false }
-                return viewModel.taskMatchesFilter(for: task)
-            }
-            
-            return filteredTasks.isEmpty ? nil : (date, Array(filteredTasks))
-        }
-        .sorted { ($0.0 ?? Date.distantPast) < ($1.0 ?? Date.distantPast) }
+        viewModel.filteredSegmentedTasks
     }
 }
 

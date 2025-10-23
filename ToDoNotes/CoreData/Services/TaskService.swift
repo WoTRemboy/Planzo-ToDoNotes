@@ -87,7 +87,7 @@ final class TaskService {
         task.checklist = NSOrderedSet(array: checklistEntities)
         
         // Determines folder if not set
-        if entity == nil, let folder = folder {
+        if entity == nil, let folder = folder, !folder.system {
             // Fetch FolderEntity by id
             let fetchRequest: NSFetchRequest<FolderEntity> = FolderEntity.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %@", folder.id as CVarArg)

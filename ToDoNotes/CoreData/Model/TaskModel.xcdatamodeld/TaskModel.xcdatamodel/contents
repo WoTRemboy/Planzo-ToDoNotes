@@ -20,6 +20,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="order" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="serverId" optional="YES" attributeType="String"/>
+        <attribute name="shared" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="system" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="visible" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <relationship name="color" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ColorEntity" inverseName="folder" inverseEntity="ColorEntity"/>

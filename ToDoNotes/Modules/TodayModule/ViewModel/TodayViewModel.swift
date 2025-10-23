@@ -24,7 +24,7 @@ final class TodayViewModel: ObservableObject {
     
     /// The currently selected task for editing.
     @Published internal var selectedTask: TaskEntity? = nil
-    @Published internal var selectedTaskFolder: Folder = .mock
+    @Published internal var selectedTaskFolder: Folder = .mock()
     /// Current text entered into the search bar.
     @Published internal var searchText: String = String()
     /// Height of the task management sheet.

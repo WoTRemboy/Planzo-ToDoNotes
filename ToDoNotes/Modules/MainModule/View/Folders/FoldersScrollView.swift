@@ -45,7 +45,7 @@ struct FoldersScrollView: View {
     /// Highlights the selected folder with a visual effect.
     @ViewBuilder
     private func scrollContent(proxy: ScrollViewProxy) -> some View {
-        HStack(spacing: 0) {
+        HStack(alignment: .bottom, spacing: 0) {
             ForEach(viewModel.folders, id: \.id) { folder in
                 FolderCell(folder: folder,
                            selected: viewModel.compareFolders(with: folder), namespace: animation)
@@ -85,8 +85,9 @@ struct FoldersScrollView: View {
                 Label {
                     Text(folder.name)
                 } icon: {
-                    folder.locked ? Image.Folder.locked : Image.Folder.unlocked
+                    folder.locked ? Image.Folder.locked : nil
                 }
+                .tag(Optional(folder))
             }
         }
     }

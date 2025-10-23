@@ -16,6 +16,7 @@ struct Folder: Equatable, Hashable {
     var locked: Bool
     var serverId: String
     var system: Bool = false
+    var shared: Bool = false
     var visible: Bool
     var color: FolderColor
     var order: Int
@@ -24,12 +25,14 @@ struct Folder: Equatable, Hashable {
         lhs.id == rhs.id
     }
     
-    static var mock: Folder {
+    static func mock(locked: Bool = false, system: Bool = false, shared: Bool = false) -> Folder {
         Folder(
             id: UUID(),
             name: "Test Folder",
-            locked: false,
+            locked: locked,
             serverId: "123",
+            system: system,
+            shared: shared,
             visible: true,
             color: FolderColor.mock,
             order: 0

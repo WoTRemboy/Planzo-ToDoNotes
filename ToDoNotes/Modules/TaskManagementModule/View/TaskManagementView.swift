@@ -100,7 +100,7 @@ struct TaskManagementView: View {
         .onAppear {
             subscribeToKeyboardNotifications()
             if entity == nil {
-                viewModel.check = .unchecked
+                viewModel.check = .none
             }
             if let entity = entity {
                 ListItemNetworkService.shared.syncChecklistForTaskEntity(entity)
