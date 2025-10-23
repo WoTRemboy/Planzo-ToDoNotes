@@ -7,7 +7,7 @@
 
 import Foundation
 import CoreData
-import UIKit
+import SwiftUI
 
 final class FolderCoreDataService {
     static let shared = FolderCoreDataService()
@@ -20,7 +20,7 @@ final class FolderCoreDataService {
         let key = Texts.UserDefaults.didCreateDefaultFolders
         let defaults = UserDefaults.standard
         guard !defaults.bool(forKey: key) else { return }
-
+        
         for folderEnum in FolderEnum.allCases {
             let color = FolderCoreDataService.colorForFolderEnum(folderEnum)
             let folder = Folder(
@@ -49,8 +49,6 @@ final class FolderCoreDataService {
             return FolderColor(red: 0.655, green: 0.788, blue: 1, alpha: 1)
         case .other:
             return FolderColor(red: 0.953, green: 0.882, blue: 0.804, alpha: 1)
-        case .back:
-            return FolderColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
         }
     }
     
@@ -135,33 +133,18 @@ extension Folder {
         self.visible = entity.visible
         self.order = Int(entity.order)
         if let colorEntity = entity.color {
-            self.color = FolderColor(
-                red: colorEntity.red,
-                green: colorEntity.green,
-                blue: colorEntity.blue,
-                alpha: colorEntity.alpha
-            )
+            self.color = FolderColor(from: colorEntity)
         } else {
             self.color = FolderColor(red: 0, green: 0, blue: 0, alpha: 1)
         }
     }
 }
 
-// MARK: - Folder & FolderColor Models
-
-struct Folder {
-    var id: UUID
-    var name: String
-    var locked: Bool
-    var serverId: String
-    var visible: Bool
-    var color: FolderColor
-    var order: Int
-}
-
-struct FolderColor {
-    var red: Double
-    var green: Double
-    var blue: Double
-    var alpha: Double
+extension FolderColor {
+    init(from entity: ColorEntity) {
+        self.red = entity.red
+        self.green = entity.green
+        self.blue = entity.blue
+        self.alpha = entity.alpha
+    }
 }

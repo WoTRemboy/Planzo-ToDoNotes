@@ -42,22 +42,22 @@ struct TodayView: View {
             SelectorView<FolderEnum>(
                 title: Texts.Folders.title,
                 label: { $0.name },
-                options: FolderEnum.availableCases(isAuthorized: authService.isAuthorized),
+                options: FolderEnum.allCases,
                 selected: $viewModel.selectedTaskFolder,
                 onCancel: {
                     viewModel.toggleShowingFolderSetupView()
                 },
                 onAccept: { _ in
-                    if let task = folderSetupTask {
-                        do {
-                            try TaskService.updateFolder(for: task, to: viewModel.selectedTaskFolder.rawValue)
-                            Toast.shared.present(
-                                title: "\(Texts.Toasts.changedFolder) \(viewModel.selectedTaskFolder.name)")
-                        } catch {
-                            Toast.shared.present(
-                                title: Texts.Toasts.sameFolders)
-                        }
-                    }
+//                    if let task = folderSetupTask {
+//                        do {
+//                            try TaskService.updateFolder(for: task, to: viewModel.selectedTaskFolder.rawValue)
+//                            Toast.shared.present(
+//                                title: "\(Texts.Toasts.changedFolder) \(viewModel.selectedTaskFolder.name)")
+//                        } catch {
+//                            Toast.shared.present(
+//                                title: Texts.Toasts.sameFolders)
+//                        }
+//                    }
                     viewModel.toggleShowingFolderSetupView()
                     folderSetupTask = nil
                 },
@@ -167,7 +167,7 @@ struct TodayView: View {
                     namespace: animation,
                     onShowFolderSetup: { task in
                         folderSetupTask = task
-                        viewModel.setTaskFolder(to: task.folder)
+//                        viewModel.setTaskFolder(to: task.folder)
                         viewModel.toggleShowingFolderSetupView()
                     })
             }

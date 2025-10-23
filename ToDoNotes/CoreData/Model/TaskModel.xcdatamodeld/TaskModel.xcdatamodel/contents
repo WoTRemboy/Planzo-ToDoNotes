@@ -22,7 +22,7 @@
         <attribute name="serverId" optional="YES" attributeType="String"/>
         <attribute name="visible" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <relationship name="color" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ColorEntity" inverseName="folder" inverseEntity="ColorEntity"/>
-        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TaskEntity" inverseName="section" inverseEntity="TaskEntity"/>
+        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TaskEntity" inverseName="folder" inverseEntity="TaskEntity"/>
     </entity>
     <entity name="NotificationEntity" representedClassName="NotificationEntity" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -34,7 +34,6 @@
         <attribute name="completed" optional="YES" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="details" optional="YES" attributeType="String"/>
-        <attribute name="folder" optional="YES" attributeType="String"/>
         <attribute name="hasTargetTime" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="important" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
@@ -45,8 +44,8 @@
         <attribute name="target" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="updatedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="checklist" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="ChecklistEntity" inverseName="task" inverseEntity="ChecklistEntity"/>
+        <relationship name="folder" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FolderEntity" inverseName="tasks" inverseEntity="FolderEntity"/>
         <relationship name="notifications" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="NotificationEntity" inverseName="task" inverseEntity="NotificationEntity"/>
-        <relationship name="section" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FolderEntity" inverseName="tasks" inverseEntity="FolderEntity"/>
     </entity>
     <entity name="UserEntity" representedClassName="UserEntity" syncable="YES" codeGenerationType="class">
         <attribute name="avatarURL" optional="YES" attributeType="String"/>

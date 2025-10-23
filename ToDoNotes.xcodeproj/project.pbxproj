@@ -25,6 +25,8 @@
 		6326E1B32EA7E20400BF68B2 /* SettingsConfigureFoldersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6326E1B22EA7E20400BF68B2 /* SettingsConfigureFoldersView.swift */; };
 		6326E1B52EA7E34500BF68B2 /* FolderFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6326E1B42EA7E34500BF68B2 /* FolderFormView.swift */; };
 		6326E1B72EA921E600BF68B2 /* FolderCoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6326E1B62EA921E600BF68B2 /* FolderCoreDataService.swift */; };
+		6326E1BB2EA93B7E00BF68B2 /* ColorComponentsFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6326E1BA2EA93B7600BF68B2 /* ColorComponentsFormatter.swift */; };
+		6326E1BE2EAA541500BF68B2 /* FolderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6326E1BD2EAA541300BF68B2 /* FolderModel.swift */; };
 		63278AF72E745170006E0578 /* LoginButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63278AF62E745170006E0578 /* LoginButtonView.swift */; };
 		63286AEC2E7B309800483810 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63286AEB2E7B309800483810 /* SubscriptionView.swift */; };
 		63286AEF2E7B332A00483810 /* SubscriptionNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63286AEE2E7B332A00483810 /* SubscriptionNavBar.swift */; };
@@ -70,7 +72,7 @@
 		6378A7532D3EB6B100C1B858 /* ImmediateKeyboardModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6378A7522D3EB6A200C1B858 /* ImmediateKeyboardModifier.swift */; };
 		6378A7552D3FCBE500C1B858 /* TaskDateSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6378A7542D3FCBDA00C1B858 /* TaskDateSelectorView.swift */; };
 		637B9F462D29599B0010F13B /* FilterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F452D2959960010F13B /* FilterModel.swift */; };
-		637B9F482D295A510010F13B /* FolderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F472D295A4D0010F13B /* FolderModel.swift */; };
+		637B9F482D295A510010F13B /* FolderEnumModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F472D295A4D0010F13B /* FolderEnumModel.swift */; };
 		637B9F4C2D295B290010F13B /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F4B2D295B270010F13B /* MainView.swift */; };
 		637B9F4E2D295B490010F13B /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F4D2D295B440010F13B /* MainViewModel.swift */; };
 		637B9F512D295B7F0010F13B /* MainNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F502D295B7F0010F13B /* MainNavigationBar.swift */; };
@@ -197,6 +199,8 @@
 		6326E1B22EA7E20400BF68B2 /* SettingsConfigureFoldersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsConfigureFoldersView.swift; sourceTree = "<group>"; };
 		6326E1B42EA7E34500BF68B2 /* FolderFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderFormView.swift; sourceTree = "<group>"; };
 		6326E1B62EA921E600BF68B2 /* FolderCoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderCoreDataService.swift; sourceTree = "<group>"; };
+		6326E1BA2EA93B7600BF68B2 /* ColorComponentsFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorComponentsFormatter.swift; sourceTree = "<group>"; };
+		6326E1BD2EAA541300BF68B2 /* FolderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderModel.swift; sourceTree = "<group>"; };
 		63278AF62E745170006E0578 /* LoginButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButtonView.swift; sourceTree = "<group>"; };
 		63286AEB2E7B309800483810 /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
 		63286AEE2E7B332A00483810 /* SubscriptionNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionNavBar.swift; sourceTree = "<group>"; };
@@ -244,7 +248,7 @@
 		6378A7522D3EB6A200C1B858 /* ImmediateKeyboardModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmediateKeyboardModifier.swift; sourceTree = "<group>"; };
 		6378A7542D3FCBDA00C1B858 /* TaskDateSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDateSelectorView.swift; sourceTree = "<group>"; };
 		637B9F452D2959960010F13B /* FilterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterModel.swift; sourceTree = "<group>"; };
-		637B9F472D295A4D0010F13B /* FolderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderModel.swift; sourceTree = "<group>"; };
+		637B9F472D295A4D0010F13B /* FolderEnumModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderEnumModel.swift; sourceTree = "<group>"; };
 		637B9F4B2D295B270010F13B /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		637B9F4D2D295B440010F13B /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		637B9F502D295B7F0010F13B /* MainNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationBar.swift; sourceTree = "<group>"; };
@@ -420,6 +424,23 @@
 			path = ConfigureFolders;
 			sourceTree = "<group>";
 		};
+		6326E1B82EA93B4B00BF68B2 /* NavigationStack */ = {
+			isa = PBXGroup;
+			children = (
+				6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */,
+				6377871C2D75E99B006DE892 /* FullSwipeNavigationStack.swift */,
+			);
+			path = NavigationStack;
+			sourceTree = "<group>";
+		};
+		6326E1B92EA93B6000BF68B2 /* Formatters */ = {
+			isa = PBXGroup;
+			children = (
+				6326E1BA2EA93B7600BF68B2 /* ColorComponentsFormatter.swift */,
+			);
+			path = Formatters;
+			sourceTree = "<group>";
+		};
 		63278AF52E74514D006E0578 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -560,6 +581,7 @@
 		635DBBB02D64E8660050476C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				6326E1BD2EAA541300BF68B2 /* FolderModel.swift */,
 				635DBBB22D64E88D0050476C /* TaskSectionModel.swift */,
 				6303E2D02D346BBF0096DB64 /* TaskModel.xcdatamodeld */,
 			);
@@ -711,8 +733,6 @@
 				63F6C7012D2AA37F00716AB0 /* DateFormatter.swift */,
 				63D9A1B92D50F2F2008454E9 /* UserNotificationCenterExtension.swift */,
 				63DA81032D24CE44005CEECB /* ViewExtension.swift */,
-				6303E2BF2D33FF770096DB64 /* RootViewControllerMethods.swift */,
-				6377871C2D75E99B006DE892 /* FullSwipeNavigationStack.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -762,7 +782,7 @@
 			isa = PBXGroup;
 			children = (
 				637B9F452D2959960010F13B /* FilterModel.swift */,
-				637B9F472D295A4D0010F13B /* FolderModel.swift */,
+				637B9F472D295A4D0010F13B /* FolderEnumModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -942,6 +962,8 @@
 		63BCD8AD2D7729460016950F /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				6326E1B92EA93B6000BF68B2 /* Formatters */,
+				6326E1B82EA93B4B00BF68B2 /* NavigationStack */,
 				63753A7C2E78448900D75DAF /* LoadingOverlay */,
 				63A092872D7BA02C0026A64D /* InternalNotifications */,
 				63BCD8B32D7B665C0016950F /* SearchBar */,
@@ -1293,6 +1315,7 @@
 				6326E1B52EA7E34500BF68B2 /* FolderFormView.swift in Sources */,
 				63F6C7122D2AB71900716AB0 /* CalendarNavBar.swift in Sources */,
 				63F6C6F72D29B41E00716AB0 /* FolderCell.swift in Sources */,
+				6326E1BE2EAA541500BF68B2 /* FolderModel.swift in Sources */,
 				6303E2C02D33FF870096DB64 /* RootViewControllerMethods.swift in Sources */,
 				637B9F5F2D296F3D0010F13B /* TabRouter.swift in Sources */,
 				63286AFA2E7B495A00483810 /* SubscriptionPricesView.swift in Sources */,
@@ -1313,7 +1336,7 @@
 				63FD57532E68B84900B7B062 /* AuthNetworkService.swift in Sources */,
 				63A092892D7BA05A0026A64D /* ToastView.swift in Sources */,
 				63F6C71A2D2AF3B900716AB0 /* CustomCalendarCell.swift in Sources */,
-				637B9F482D295A510010F13B /* FolderModel.swift in Sources */,
+				637B9F482D295A510010F13B /* FolderEnumModel.swift in Sources */,
 				63286AFC2E7B506F00483810 /* RoundedCornersShape.swift in Sources */,
 				637B9F462D29599B0010F13B /* FilterModel.swift in Sources */,
 				63286AF12E7B39DB00483810 /* SubscriptionBenefitsCarousel.swift in Sources */,
@@ -1326,6 +1349,7 @@
 				63286AF62E7B3E6200483810 /* SubscriptionViewModel.swift in Sources */,
 				6337C6312E8468D8008D5DA1 /* ShareNetworkService.swift in Sources */,
 				632D0DD02D36B9760071684D /* TaskManagementModel.swift in Sources */,
+				6326E1BB2EA93B7E00BF68B2 /* ColorComponentsFormatter.swift in Sources */,
 				63F6C71C2D2B19A200716AB0 /* CustomCalendarModel.swift in Sources */,
 				6328D5C22E881516000574AE /* AccessTokenManager.swift in Sources */,
 				6326E1B32EA7E20400BF68B2 /* SettingsConfigureFoldersView.swift in Sources */,

@@ -48,10 +48,10 @@ struct MainView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .popView(isPresented: $viewModel.showingFolderSetupView,
                  onDismiss: {}) {
-            SelectorView<FolderEnum>(
+            SelectorView<Folder>(
                 title: Texts.Folders.title,
                 label: { $0.name },
-                options: FolderEnum.availableCases(isAuthorized: authService.isAuthorized),
+                options: viewModel.folders,
                 selected: $viewModel.selectedTaskFolder,
                 onCancel: {
                     viewModel.toggleShowingFolderSetupView()
@@ -59,7 +59,7 @@ struct MainView: View {
                 onAccept: { _ in
                     if let task = folderSetupTask {
                         do {
-                            try TaskService.updateFolder(for: task, to: viewModel.selectedTaskFolder.rawValue)
+                            try TaskService.updateFolder(for: task, to: viewModel.selectedTaskFolder)
                             Toast.shared.present(
                                 title: "\(Texts.Toasts.changedFolder) \(viewModel.selectedTaskFolder.name)")
                         } catch {
@@ -79,7 +79,7 @@ struct MainView: View {
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
-                folder: viewModel.selectedFolder != .all ? viewModel.selectedFolder : nil,
+                folder: viewModel.selectedFolder,
                 namespace: animation) {
                     viewModel.toggleShowingCreateView()
                     viewModel.setFilter(to: .active)
@@ -96,7 +96,7 @@ struct MainView: View {
         .fullScreenCover(isPresented: $viewModel.showingTaskCreateViewFullscreen) {
             TaskManagementView(
                 taskManagementHeight: $viewModel.taskManagementHeight,
-                folder: viewModel.selectedFolder != .all ? viewModel.selectedFolder : nil,
+                folder: viewModel.selectedFolder,
                 namespace: animation) {
                     viewModel.toggleShowingCreateView()
                     viewModel.setFilter(to: .active)
@@ -341,7 +341,7 @@ extension MainView {
                     }
                 }
                 
-                guard viewModel.taskMatchesFolder(for: task) else { return false }
+//                guard viewModel.taskMatchesFolder(for: task) else { return false }
                 if viewModel.importance && !task.important { return false }
                 return viewModel.taskMatchesFilter(for: task)
             }

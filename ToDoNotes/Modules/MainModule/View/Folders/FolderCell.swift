@@ -14,7 +14,7 @@ struct FolderCell: View {
     // MARK: - Properties
     
     /// Folder data model.
-    private let folder: FolderEnum
+    private let folder: Folder
     /// Indicates whether this folder is currently selected.
     private let selected: Bool
     /// Namespace for matched geometry animations between folders.
@@ -22,7 +22,7 @@ struct FolderCell: View {
     
     // MARK: - Initialization
     
-    init(folder: FolderEnum, selected: Bool, namespace: Namespace.ID) {
+    init(folder: Folder, selected: Bool, namespace: Namespace.ID) {
         self.folder = folder
         self.selected = selected
         self.namespace = namespace
@@ -51,9 +51,10 @@ struct FolderCell: View {
     /// Displays the name of the folder with the appropriate color and underline.
     private var nameLabel: some View {
         let color: Color
-        if selected && folder == .all {
-            color = Color.LabelColors.labelReversed     // Reversed color for All folder
-        } else if selected {
+//        if selected && folder == .all {
+//            color = Color.LabelColors.labelReversed     // Reversed color for All folder
+//        } else
+        if selected {
             color = Color.LabelColors.labelBlack        // Black color for selected cell
         } else {
             color = Color.LabelColors.labelDetails      // Light grey color for not selected cell
@@ -71,7 +72,7 @@ struct FolderCell: View {
     /// Displays an underline under the folder name if not selected.
     private var underline: some View {
         Rectangle()
-            .foregroundStyle(selected ? .clear : folder.color)
+            .foregroundStyle(selected ? .clear : folder.color.rgbToColor())
         
             .frame(maxWidth: .infinity)
             .frame(height: 4)
@@ -81,7 +82,7 @@ struct FolderCell: View {
     /// Displays a rounded colored background if the folder is selected.
     private var backgroundRectangle: some View {
         RoundedRectangle(cornerRadius: 16)
-            .foregroundStyle(selected ? folder.color : .clear)
+            .foregroundStyle(selected ? folder.color.rgbToColor() : .clear)
             .animation(.easeInOut(duration: 0.2), value: selected)
             .transition(.blurReplace)
     }
@@ -96,5 +97,6 @@ struct FolderCell: View {
 // MARK: - Preview
 
 #Preview {
-    FolderCell(folder: .lists, selected: true, namespace: Namespace().wrappedValue)
+    let mockFolder = Folder.mock
+    FolderCell(folder: mockFolder, selected: true, namespace: Namespace().wrappedValue)
 }

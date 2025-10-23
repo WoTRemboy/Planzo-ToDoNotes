@@ -83,8 +83,11 @@ struct TaskListRow: View {
     
     /// Displays a colored bar indicating the folder the task belongs to.
     private var folderIndicatior: some View {
-        let folder = FolderEnum(rawValue: entity.folder ?? String())
-        let color = folder?.color ?? .clear
+        var color: Color = .clear
+        let colorEntity = entity.folder?.color
+        if let colorEntity {
+            color = FolderColor.init(from: colorEntity).rgbToColor()
+        }
         return Rectangle()
             .foregroundStyle(color)
             .frame(maxWidth: 6, maxHeight: .infinity)

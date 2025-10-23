@@ -32,7 +32,7 @@ struct TaskManagementView: View {
     /// The task entity being edited, if any (nil for task creation).
     private let entity: TaskEntity?
     /// The folder associated with the task.
-    private let folder: FolderEnum?
+    private let folder: Folder?
     /// Animation namespace used for matched geometry transitions.
     private let animation: Namespace.ID
     /// Closure called when the view should be dismissed.
@@ -52,7 +52,7 @@ struct TaskManagementView: View {
     init(taskManagementHeight: Binding<CGFloat>,
          selectedDate: Date? = nil,
          entity: TaskEntity? = nil,
-         folder: FolderEnum? = nil,
+         folder: Folder? = nil,
          namespace: Namespace.ID,
          onDismiss: @escaping () -> Void
     ) {
@@ -99,7 +99,7 @@ struct TaskManagementView: View {
         // Setup on appear (keyboard events, default check status)
         .onAppear {
             subscribeToKeyboardNotifications()
-            if entity == nil, folder == .tasks {
+            if entity == nil {
                 viewModel.check = .unchecked
             }
             if let entity = entity {
@@ -372,7 +372,7 @@ extension TaskManagementView {
     
     /// Determines whether full-screen content should be displayed.
     private var shouldShowFullScreenContent: Bool {
-        entity != nil || folder == .lists || viewModel.taskCreationFullScreen == .fullScreen
+        entity != nil || viewModel.taskCreationFullScreen == .fullScreen
     }
     
     // MARK: - Keyboard Notifications

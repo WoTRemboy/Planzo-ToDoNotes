@@ -1,5 +1,5 @@
 //
-//  FolderModel.swift
+//  FolderEnumModel.swift
 //  ToDoNotes
 //
 //  Created by Roman Tverdokhleb on 1/4/25.
@@ -9,23 +9,11 @@ import SwiftUI
 
 /// Represents predefined task folders used for categorizing tasks.
 enum FolderEnum: String, CaseIterable {
-    case back = "TaskFoldersBack"
     case all = "TaskFoldersAll"
     case reminders = "TaskFoldersReminders"
     case tasks = "TaskFoldersTasks"
     case lists = "TaskFoldersLists"
     case other = "TaskFoldersNoDate"
-    
-    /// Returns a filtered array of folders depending on user authorization.
-    /// - Parameter isAuthorized: Whether user is authorized.
-    static func availableCases(isAuthorized: Bool) -> [FolderEnum] {
-        let all: [FolderEnum] = [.reminders, .tasks, .lists, .other]
-        return isAuthorized ? [.back] + all : all
-    }
-    
-    static func allCases(isAuthorized: Bool) -> [FolderEnum] {
-        [.all] + FolderEnum.availableCases(isAuthorized: isAuthorized)
-    }
     
     /// Returns a localized name for each folder to display in the UI.
     internal var name: String {
@@ -40,8 +28,6 @@ enum FolderEnum: String, CaseIterable {
             return Texts.Folders.purchases
         case .other:
             return Texts.Folders.other
-        case .back:
-            return "Backend"
         }
     }
     
@@ -49,8 +35,6 @@ enum FolderEnum: String, CaseIterable {
     internal var lockedIcon: Image {
         switch self {
         case .all, .reminders, .tasks, .lists, .other:
-            Image.Folder.unlocked
-        case .back:
             Image.Folder.unlocked
         }
     }
@@ -67,8 +51,6 @@ enum FolderEnum: String, CaseIterable {
         case .lists:
             Color.FolderColors.lists
         case .other:
-            Color.FolderColors.other
-        case .back:
             Color.FolderColors.other
         }
     }

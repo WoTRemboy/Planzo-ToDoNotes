@@ -25,7 +25,7 @@ final class MainViewModel: ObservableObject {
     /// Currently selected task filter (e.g., Active, Completed).
     @Published private(set) var selectedFilter: Filter = .active
     /// Currently selected folder (e.g., Reminders, Tasks, Lists).
-    @Published internal var selectedFolder: FolderEnum = .all
+    @Published internal var selectedFolder: Folder? = nil
     /// Whether only important tasks are displayed.
     @Published internal var importance: Bool = false
     /// Search text input for filtering tasks.
@@ -43,12 +43,36 @@ final class MainViewModel: ObservableObject {
     
     /// The selected task for editing or viewing.
     @Published internal var selectedTask: TaskEntity? = nil
-    @Published internal var selectedTaskFolder: FolderEnum = .other
+    @Published internal var selectedTaskFolder: Folder = .mock
 
     /// The task selected for restoring from deleted.
     @Published internal var removedTask: TaskEntity? = nil
     /// The height of the task management view (dynamic sizing).
     @Published internal var taskManagementHeight: CGFloat = 15
+
+    /// List of folders loaded from Core Data.
+    @Published internal var folders: [Folder] = []
+    
+    // MARK: - Private Properties
+    
+    private var coreDataObserver: NSObjectProtocol? = nil
+    
+    // MARK: - Initializer
+
+    init() {
+        self.reloadFolders()
+        
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        coreDataObserver = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: context, queue: .main) { [weak self] _ in
+            self?.reloadFolders()
+        }
+    }
+    
+    deinit {
+        if let observer = coreDataObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
     
     // MARK: - Computed Properties
     
@@ -57,11 +81,18 @@ final class MainViewModel: ObservableObject {
         Date.now.longDayMonthWeekday
     }
     
+    // MARK: - Methods
+    
+    /// Reload folders from Core Data.
+    internal func reloadFolders() {
+        self.folders = FolderCoreDataService.shared.loadFolders().sorted { $0.order < $1.order }
+    }
+    
     // MARK: - Task Creation Methods
     
     /// Toggles between showing popup or full-screen task creation view.
     internal func toggleShowingCreateView() {
-        taskCreationFullScreen == .fullScreen || selectedFolder == .lists ?
+        taskCreationFullScreen == .fullScreen ?
         showingTaskCreateViewFullscreen.toggle() :
         showingTaskCreateView.toggle()
     }
@@ -118,7 +149,7 @@ final class MainViewModel: ObservableObject {
     
     /// Changes the currently active folder with animation.
     /// - Parameter new: The new folder to apply.
-    internal func setFolder(to new: FolderEnum) {
+    internal func setFolder(to new: Folder) {
         withAnimation(.easeInOut(duration: 0.2)) {
             selectedFolder = new
         }
@@ -126,13 +157,14 @@ final class MainViewModel: ObservableObject {
     
     /// Compares a given folder to the currently selected one.
     /// - Returns: `true` if it matches, otherwise `false`.
-    internal func compareFolders(with folder: FolderEnum) -> Bool {
+    internal func compareFolders(with folder: Folder) -> Bool {
         folder == selectedFolder
     }
     
-    internal func setTaskFolder(to folder: String?) {
-        guard let folder else { return }
-        selectedTaskFolder = FolderEnum(rawValue: folder) ?? .other
+    internal func setTaskFolder(to folderEntity: FolderEntity?) {
+        guard let folderEntity else { return }
+        let folder = Folder.init(from: folderEntity)
+        selectedTaskFolder = folder
     }
     
     /// Toggles the importance-only filter.
@@ -143,26 +175,6 @@ final class MainViewModel: ObservableObject {
     }
     
     // MARK: - Task Filtering Methods
-    
-    /// Checks if a task belongs to the currently selected folder.
-    /// - Parameter task: The task entity to check.
-    /// - Returns: `true` if the task matches the current folder filter.
-    internal func taskMatchesFolder(for task: TaskEntity) -> Bool {
-        switch selectedFolder {
-        case .all:
-            return true
-        case .reminders:
-            return task.folder == FolderEnum.reminders.rawValue
-        case .tasks:
-            return task.folder == FolderEnum.tasks.rawValue
-        case .lists:
-            return task.folder == FolderEnum.lists.rawValue
-        case .other:
-            return task.folder == FolderEnum.other.rawValue
-        case .back:
-            return task.folder == FolderEnum.back.rawValue
-        }
-    }
     
     /// Checks if a task matches the currently selected task filter (e.g., active, completed).
     /// - Parameter task: The task entity to evaluate.

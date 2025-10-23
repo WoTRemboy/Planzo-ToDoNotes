@@ -14,7 +14,6 @@ private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListN
 extension ListNetworkService {
     
     internal func syncTasksIfNeeded(for task: TaskEntity) {
-        guard task.folder == FolderEnum.back.rawValue else { return }
         let name = task.name ?? String()
         let context = task.managedObjectContext
         if let serverId = task.serverId, !serverId.isEmpty {
@@ -95,7 +94,7 @@ extension ListNetworkService {
     internal func syncAllBackTasks() {
         let context = CoreDataProvider.shared.persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "folder == %@", FolderEnum.back.rawValue)
+//        fetchRequest.predicate = NSPredicate(format: "folder == %@", FolderEnum.back.rawValue)
         do {
             let localTasks = try context.fetch(fetchRequest)
             backendSyncAllTasks(context: context, localTasks: localTasks)
@@ -145,7 +144,7 @@ extension ListNetworkService {
                             newTask.updatedAt = parsedDate
                             newTask.created = parsedDate
                         }
-                        newTask.folder = FolderEnum.back.rawValue
+//                        newTask.folder?.name = FolderEnum.back.rawValue
                         logger.info("Local task created from server: \(remote.id)")
                     }
                 }
