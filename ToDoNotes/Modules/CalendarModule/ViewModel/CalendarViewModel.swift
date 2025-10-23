@@ -33,7 +33,7 @@ final class CalendarViewModel: ObservableObject {
     
     /// The task currently selected for editing.
     @Published internal var selectedTask: TaskEntity? = nil
-    @Published internal var selectedTaskFolder: FolderEnum = .other
+    @Published internal var selectedTaskFolder: Folder = .mock
     /// The date currently selected in the calendar (defaults to today).
     @Published internal var selectedDate: Date = .now.startOfDay
     
@@ -53,6 +53,9 @@ final class CalendarViewModel: ObservableObject {
     /// Names of the weekdays with capitalized first letters, localized.
     @Published internal var daysOfWeek: [String] = Date.capitalizedFirstLettersOfWeekdays
     
+    @Published internal var folders: [Folder] = []
+    private var coreDataObserver: NSObjectProtocol? = nil
+    
     // MARK: - Initialization
     
     /// Initializes the ViewModel and sets up the initial days array.
@@ -66,6 +69,13 @@ final class CalendarViewModel: ObservableObject {
                 self.daysOfWeek = newDaysOfWeek
                 self.updateDays()
             }
+        }
+        
+        self.reloadFolders()
+        
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        coreDataObserver = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: context, queue: .main) { [weak self] _ in
+            self?.reloadFolders()
         }
     }
     
@@ -114,8 +124,13 @@ final class CalendarViewModel: ObservableObject {
         showingShareSheet.toggle()
     }
     
-    internal func setTaskFolder(to folder: String?) {
-        guard let folder else { return }
-        selectedTaskFolder = FolderEnum(rawValue: folder) ?? .other
+    internal func setTaskFolder(to folderEntity: FolderEntity?) {
+        guard let folderEntity else { return }
+        let folder = Folder(from: folderEntity)
+        selectedTaskFolder = folder
+    }
+    
+    internal func reloadFolders() {
+        self.folders = FolderCoreDataService.shared.loadFolders().sorted { $0.order < $1.order }
     }
 }

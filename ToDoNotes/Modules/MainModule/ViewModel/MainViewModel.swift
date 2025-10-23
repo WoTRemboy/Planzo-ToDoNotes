@@ -61,6 +61,11 @@ final class MainViewModel: ObservableObject {
 
     init() {
         self.reloadFolders()
+        if let first = folders.first {
+            selectedFolder = first
+        } else {
+            selectedFolder = nil
+        }
         
         let context = CoreDataProvider.shared.persistentContainer.viewContext
         coreDataObserver = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: context, queue: .main) { [weak self] _ in
@@ -163,7 +168,7 @@ final class MainViewModel: ObservableObject {
     
     internal func setTaskFolder(to folderEntity: FolderEntity?) {
         guard let folderEntity else { return }
-        let folder = Folder.init(from: folderEntity)
+        let folder = Folder(from: folderEntity)
         selectedTaskFolder = folder
     }
     
@@ -216,7 +221,6 @@ final class MainViewModel: ObservableObject {
         case .unsorted:
             return true
         case .deleted:
-            // Already handled above
             return false
         }
     }
