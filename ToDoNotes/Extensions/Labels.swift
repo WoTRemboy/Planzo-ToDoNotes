@@ -245,9 +245,11 @@ final class Texts {
     enum Folders {
         static let title = NSLocalizedString("MainPageFolderTitle", comment: "Folders")
         static let all = NSLocalizedString("MainPageFolderAll", comment: "All")
+        static let shared = NSLocalizedString("MainPageFolderShared", comment: "Shared")
         static let reminders = NSLocalizedString("MainPageFolderReminders", comment: "Reminders")
-        static let tasks = NSLocalizedString("MainPageFolderTasks", comment: "Tasks")
-        static let purchases = NSLocalizedString("MainPageFolderLists", comment: "Lists")
+        static let noDate = NSLocalizedString("MainPageFolderNoDate", comment: "No Date")
+        static let lists = NSLocalizedString("MainPageFolderLists", comment: "Lists")
+        static let passwords = NSLocalizedString("MainPageFolderPasswords", comment: "Passwords")
         static let other = NSLocalizedString("MainPageFolderOther", comment: "Other")
         
         enum Configure {

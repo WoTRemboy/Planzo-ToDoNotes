@@ -51,10 +51,9 @@ struct FolderCell: View {
     /// Displays the name of the folder with the appropriate color and underline.
     private var nameLabel: some View {
         let color: Color
-//        if selected && folder == .all {
-//            color = Color.LabelColors.labelReversed     // Reversed color for All folder
-//        } else
-        if selected {
+        if selected, folder.system {
+            color = Color.LabelColors.labelReversed     // Reversed color for All folder
+        } else if selected {
             color = Color.LabelColors.labelBlack        // Black color for selected cell
         } else {
             color = Color.LabelColors.labelDetails      // Light grey color for not selected cell

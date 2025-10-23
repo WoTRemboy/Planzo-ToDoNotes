@@ -70,9 +70,10 @@ extension Color {
     
     enum FolderColors {
         static let all = Color("FolderAll")
-        static let reminders = Color("FolderReminders")
-        static let tasks = Color("FolderTasks")
+        static let shared = Color("FolderShared")
+        static let noDate = Color("FolderNoDate")
         static let lists = Color("FolderLists")
+        static let passwords = Color("FolderPasswords")
         static let other = Color("FolderOther")
     }
     

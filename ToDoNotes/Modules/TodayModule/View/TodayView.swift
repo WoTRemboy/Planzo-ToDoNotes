@@ -128,7 +128,7 @@ struct TodayView: View {
         Form {
             // Display a TipKit tip at the top
             TipView(overviewTip)
-                .tipBackground(Color.FolderColors.tasks
+                .tipBackground(Color.FolderColors.other
                     .opacity(0.3))
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())

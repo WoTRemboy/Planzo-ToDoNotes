@@ -582,6 +582,7 @@
 			isa = PBXGroup;
 			children = (
 				6326E1BD2EAA541300BF68B2 /* FolderModel.swift */,
+				637B9F472D295A4D0010F13B /* FolderEnumModel.swift */,
 				635DBBB22D64E88D0050476C /* TaskSectionModel.swift */,
 				6303E2D02D346BBF0096DB64 /* TaskModel.xcdatamodeld */,
 			);
@@ -782,7 +783,6 @@
 			isa = PBXGroup;
 			children = (
 				637B9F452D2959960010F13B /* FilterModel.swift */,
-				637B9F472D295A4D0010F13B /* FolderEnumModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

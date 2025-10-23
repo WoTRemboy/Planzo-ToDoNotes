@@ -1048,6 +1048,35 @@
         }
       }
     },
+    "MainPageFolderNoDate" : {
+      "comment" : "No Date",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Date"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin fechas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sans dates"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Без дат"
+          }
+        }
+      }
+    },
     "MainPageFolderOther" : {
       "comment" : "Other",
       "localizations" : {
@@ -1073,6 +1102,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Остальные"
+          }
+        }
+      }
+    },
+    "MainPageFolderPasswords" : {
+      "comment" : "Passwords",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passwords"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contraseñas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mots de passe"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пароли"
           }
         }
       }
@@ -1106,31 +1164,31 @@
         }
       }
     },
-    "MainPageFolderTasks" : {
-      "comment" : "Tasks",
+    "MainPageFolderShared" : {
+      "comment" : "Shared",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tasks"
+            "value" : "Shared"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tareas"
+            "value" : "Compartidos"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tâches"
+            "value" : "Partagés"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Задачи"
+            "value" : "Общие"
           }
         }
       }

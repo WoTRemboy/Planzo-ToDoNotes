@@ -15,6 +15,7 @@ struct Folder: Equatable, Hashable {
     var name: String
     var locked: Bool
     var serverId: String
+    var system: Bool = false
     var visible: Bool
     var color: FolderColor
     var order: Int

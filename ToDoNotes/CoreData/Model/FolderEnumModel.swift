@@ -10,32 +10,27 @@ import SwiftUI
 /// Represents predefined task folders used for categorizing tasks.
 enum FolderEnum: String, CaseIterable {
     case all = "TaskFoldersAll"
-    case reminders = "TaskFoldersReminders"
-    case tasks = "TaskFoldersTasks"
+    case shared = "TaskFoldersShared"
+    case noDate = "TaskFoldersNoDate"
     case lists = "TaskFoldersLists"
-    case other = "TaskFoldersNoDate"
+    case passwords = "TaskFoldersPasswords"
+    case other = "TaskFoldersOther"
     
     /// Returns a localized name for each folder to display in the UI.
     internal var name: String {
         switch self {
         case .all:
             return Texts.Folders.all
-        case .reminders:
-            return Texts.Folders.reminders
-        case .tasks:
-            return Texts.Folders.tasks
+        case .shared:
+            return Texts.Folders.shared
+        case .noDate:
+            return Texts.Folders.noDate
         case .lists:
-            return Texts.Folders.purchases
+            return Texts.Folders.lists
+        case .passwords:
+            return Texts.Folders.passwords
         case .other:
             return Texts.Folders.other
-        }
-    }
-    
-    /// Returns the icon associated with the folder.
-    internal var lockedIcon: Image {
-        switch self {
-        case .all, .reminders, .tasks, .lists, .other:
-            Image.Folder.unlocked
         }
     }
     
@@ -44,14 +39,25 @@ enum FolderEnum: String, CaseIterable {
         switch self {
         case .all:
             Color.FolderColors.all
-        case .reminders:
-            Color.FolderColors.reminders
-        case .tasks:
-            Color.FolderColors.tasks
+        case .shared:
+            Color.FolderColors.shared
+        case .noDate:
+            Color.FolderColors.noDate
         case .lists:
             Color.FolderColors.lists
+        case .passwords:
+            Color.FolderColors.passwords
         case .other:
             Color.FolderColors.other
+        }
+    }
+    
+    internal var system: Bool {
+        switch self {
+        case .all, .shared:
+            return true
+        default:
+            return false
         }
     }
 }

@@ -28,6 +28,7 @@ final class FolderCoreDataService {
                 name: folderEnum.name,
                 locked: false,
                 serverId: "",
+                system: folderEnum.system,
                 visible: true,
                 color: color,
                 order: FolderEnum.allCases.firstIndex(of: folderEnum) ?? 0
@@ -38,18 +39,7 @@ final class FolderCoreDataService {
     }
     
     private static func colorForFolderEnum(_ folder: FolderEnum) -> FolderColor {
-        switch folder {
-        case .all:
-            return FolderColor(red: 1, green: 1, blue: 1, alpha: 1)
-        case .reminders:
-            return FolderColor(red: 1, green: 0.894, blue: 0.612, alpha: 1)
-        case .tasks:
-            return FolderColor(red: 0.988, green: 0.698, blue: 0.729, alpha: 1)
-        case .lists:
-            return FolderColor(red: 0.655, green: 0.788, blue: 1, alpha: 1)
-        case .other:
-            return FolderColor(red: 0.953, green: 0.882, blue: 0.804, alpha: 1)
-        }
+        FolderColor.colorToRgb(folder.color)
     }
     
     // MARK: - Save Folder
@@ -62,6 +52,7 @@ final class FolderCoreDataService {
         entity.name = folder.name
         entity.locked = folder.locked
         entity.serverId = folder.serverId
+        entity.system = folder.system
         entity.visible = folder.visible
         entity.order = Int32(folder.order)
         
@@ -130,6 +121,7 @@ extension Folder {
         self.name = entity.name ?? ""
         self.locked = entity.locked
         self.serverId = entity.serverId ?? ""
+        self.system = entity.system
         self.visible = entity.visible
         self.order = Int(entity.order)
         if let colorEntity = entity.color {
