@@ -107,7 +107,7 @@ final class MainViewModelTests: XCTestCase {
     func test_TaskMatchesFolder_ShouldMatchCorrectly() {
         let task = makeDummyTaskEntity()
         
-        task.folder = Folder.tasks.rawValue
+        task.folder = FolderEnum.tasks.rawValue
         viewModel.selectedFolder = .tasks
         XCTAssertTrue(viewModel.taskMatchesFolder(for: task))
         

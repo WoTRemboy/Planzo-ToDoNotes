@@ -24,7 +24,7 @@ final class TodayViewModel: ObservableObject {
     
     /// The currently selected task for editing.
     @Published internal var selectedTask: TaskEntity? = nil
-    @Published internal var selectedTaskFolder: Folder = .other
+    @Published internal var selectedTaskFolder: Folder = .mock()
     /// Current text entered into the search bar.
     @Published internal var searchText: String = String()
     /// Height of the task management sheet.
@@ -41,10 +41,23 @@ final class TodayViewModel: ObservableObject {
     /// Whether to filter tasks to show only important ones.
     @Published internal var importance: Bool = false
     
+    @Published internal var folders: [Folder] = []
+    
     // MARK: - Private Properties
     
     /// The reference date used for today's tasks.
     private(set) var todayDate: Date = Date.now
+    
+    private var coreDataObserver: NSObjectProtocol? = nil
+    
+    init() {
+        self.reloadFolders()
+        
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        coreDataObserver = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: context, queue: .main) { [weak self] _ in
+            self?.reloadFolders()
+        }
+    }
     
     // MARK: - Task Creation Methods
     
@@ -57,9 +70,14 @@ final class TodayViewModel: ObservableObject {
         }
     }
     
-    internal func setTaskFolder(to folder: String?) {
-        guard let folder else { return }
-        selectedTaskFolder = Folder(rawValue: folder) ?? .other
+    internal func setTaskFolder(to folderEntity: FolderEntity?) {
+        guard let folderEntity else { return }
+        let folder = Folder(from: folderEntity)
+        selectedTaskFolder = folder
+    }
+    
+    internal func reloadFolders() {
+        self.folders = FolderCoreDataService.shared.loadFolders().sorted { $0.order < $1.order }
     }
     
     // MARK: - UI Toggle Methods

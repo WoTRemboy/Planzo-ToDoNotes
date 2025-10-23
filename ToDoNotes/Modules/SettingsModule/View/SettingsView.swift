@@ -273,7 +273,7 @@ struct SettingsView: View {
         Toggle(isOn: $viewModel.notificationsEnabled) {}
             .fixedSize()
             .background(Color.SupportColors.supportButton)
-            .tint(Color.SupportColors.supportToggle)
+            .tint(Color.ToggleColors.notifications)
             .scaleEffect(0.8)
         
             .onChange(of: viewModel.notificationsEnabled) { _, newValue in
@@ -388,7 +388,7 @@ struct SettingsView: View {
                 Button(role: .destructive) {
                     viewModel.handleLogout(authService: authService)
                 } label: {
-                    Text(Texts.Authorization.logout)
+                    Text(Texts.Authorization.confirm)
                 }
         }
     }

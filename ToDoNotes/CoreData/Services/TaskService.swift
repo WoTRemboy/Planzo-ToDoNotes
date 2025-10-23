@@ -87,36 +87,37 @@ final class TaskService {
         task.checklist = NSOrderedSet(array: checklistEntities)
         
         // Determines folder if not set
-        if entity == nil {
-            task.folder = folder?.rawValue ?? {
-                if !notifications.isEmpty { return Folder.reminders.rawValue }
-                if completeCheck != .none { return Folder.tasks.rawValue }
-                if checklist.count > 0 { return Folder.lists.rawValue }
-                return Folder.other.rawValue
-            }()
+        if entity == nil, let folder = folder, !folder.system {
+            // Fetch FolderEntity by id
+            let fetchRequest: NSFetchRequest<FolderEntity> = FolderEntity.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "id == %@", folder.id as CVarArg)
+            fetchRequest.fetchLimit = 1
+            if let folderEntity = try? viewContext.fetch(fetchRequest).first {
+                task.folder = folderEntity
+            }
         }
         
         try save()
         
         // If the task is a backend task and has a serverId, sync checklist items to server
-        if task.folder == Folder.back.rawValue, task.serverId != nil {
-            // For each checklist item, create or update it on the server
-            if let checklistEntities = task.checklist?.array as? [ChecklistEntity] {
-                for checklistEntity in checklistEntities {
-                    if checklistEntity.serverId != nil {
-                        // Update existing checklist item on server
-                        ListItemNetworkService.shared.updateChecklistItem(checklistEntity, for: task)
-                    } else {
-                        // Create new checklist item on server
-                        ListItemNetworkService.shared.createChecklistItem(for: task, with: checklistEntity.name ?? String())
-                    }
-                }
-            }
-        }
+//        if task.folder == FolderEnum.back.rawValue, task.serverId != nil {
+//            // For each checklist item, create or update it on the server
+//            if let checklistEntities = task.checklist?.array as? [ChecklistEntity] {
+//                for checklistEntity in checklistEntities {
+//                    if checklistEntity.serverId != nil {
+//                        // Update existing checklist item on server
+//                        ListItemNetworkService.shared.updateChecklistItem(checklistEntity, for: task)
+//                    } else {
+//                        // Create new checklist item on server
+//                        ListItemNetworkService.shared.createChecklistItem(for: task, with: checklistEntity.name ?? String())
+//                    }
+//                }
+//            }
+//        }
         
-        if task.folder == Folder.back.rawValue {
-            ListNetworkService.shared.syncTasksIfNeeded(for: task)
-        }
+//        if task.folder == FolderEnum.back.rawValue {
+//            ListNetworkService.shared.syncTasksIfNeeded(for: task)
+//        }
     }
     
     // MARK: - Task Duplication
@@ -229,7 +230,6 @@ final class TaskService {
     
     static func deleteAllBackendTasks() {
         let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "folder == %@", Folder.back.rawValue)
         do {
             let backendTasks = try viewContext.fetch(fetchRequest)
             for task in backendTasks {
@@ -329,33 +329,44 @@ extension TaskService {
         if task.removed && !wasRemoved {
             UNUserNotificationCenter.current().removeNotifications(for: task.notifications)
             
-            if task.folder == Folder.back.rawValue {
-                ListNetworkService.shared.archiveTaskOnServer(for: task, value: true)
-            }
+//            if task.folder == FolderEnum.back.rawValue {
+//                ListNetworkService.shared.archiveTaskOnServer(for: task, value: true)
+//            }
         } else if !task.removed && wasRemoved {
             restoreNotifications(for: task)
             
-            if task.folder == Folder.back.rawValue {
-                ListNetworkService.shared.archiveTaskOnServer(for: task, value: false)
-            }
+//            if task.folder == FolderEnum.back.rawValue {
+//                ListNetworkService.shared.archiveTaskOnServer(for: task, value: false)
+//            }
         }
         try save()
     }
     
-    static func updateFolder(for task: TaskEntity, to folder: String) throws {
-        guard task.folder != folder else {
+    static func updateFolder(for task: TaskEntity, to folder: Folder) throws {
+        guard task.folder?.id != folder.id else {
             logger.debug("Folders are the same, no need to update.")
             throw TaskServiceError.folderIsTheSame
         }
+        
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<FolderEntity> = FolderEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", folder.id as CVarArg)
+        fetchRequest.fetchLimit = 1
+        let folderEntity = try context.fetch(fetchRequest).first
+        if folderEntity == nil {
+            logger.error("No FolderEntity with id: \(folder.id.uuidString) found.")
+            throw TaskServiceError.folderIsTheSame
+        }
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            task.folder = folder
+            task.folder = folderEntity
             task.updatedAt = .now
             do {
                 try save()
                 logger.debug("Folder updated and context saved successfully.")
-                if folder == Folder.back.rawValue {
-                    ListNetworkService.shared.syncTasksIfNeeded(for: task)
-                }
+//                if folder == FolderEnum.back.rawValue {
+//                    ListNetworkService.shared.syncTasksIfNeeded(for: task)
+//                }
             } catch {
                 logger.error("Error saving context after updating folder: \(error.localizedDescription)")
             }

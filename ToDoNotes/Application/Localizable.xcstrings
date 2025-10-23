@@ -62,6 +62,35 @@
         }
       }
     },
+    "AuthorizationConfirm" : {
+      "comment" : "Confirm",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmer"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подтвердить"
+          }
+        }
+      }
+    },
     "AuthorizationConfirmLogout" : {
       "comment" : "Are you sure you want to log out?",
       "localizations" : {
@@ -961,6 +990,35 @@
         }
       }
     },
+    "MainPageFolderDragAndDrop" : {
+      "comment" : "Press and hold to drag & reorder",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Press and hold to drag & reorder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantenga presionado para arrastrar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maintenez pour déplacer"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удерживайте, чтобы перетащить"
+          }
+        }
+      }
+    },
     "MainPageFolderLists" : {
       "comment" : "Lists",
       "localizations" : {
@@ -986,6 +1044,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Списки"
+          }
+        }
+      }
+    },
+    "MainPageFolderNoDate" : {
+      "comment" : "No Date",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Date"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin fechas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sans dates"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Без дат"
           }
         }
       }
@@ -1019,6 +1106,35 @@
         }
       }
     },
+    "MainPageFolderPasswords" : {
+      "comment" : "Passwords",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passwords"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contraseñas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mots de passe"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пароли"
+          }
+        }
+      }
+    },
     "MainPageFolderReminders" : {
       "comment" : "Reminders",
       "localizations" : {
@@ -1048,31 +1164,31 @@
         }
       }
     },
-    "MainPageFolderTasks" : {
-      "comment" : "Tasks",
+    "MainPageFolderShared" : {
+      "comment" : "Shared",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tasks"
+            "value" : "Shared"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tareas"
+            "value" : "Compartidos"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tâches"
+            "value" : "Partagés"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Задачи"
+            "value" : "Общие"
           }
         }
       }
@@ -3432,25 +3548,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get 14 days free with an Annual subscription."
+            "value" : "Not sure? Try for free."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obtenga 14 días gratis al comprar una suscripción anual."
+            "value" : "Probar gratis"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obtenez 14 jours gratuits avec l’achat d’un abonnement annuel."
+            "value" : "Essayer gratuitement"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Получите бесплатно 14 дней при покупке годовой подписки."
+            "value" : "Попробовать бесплатно"
           }
         }
       }

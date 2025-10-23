@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 /// ViewModel responsible for managing the main screen's filters, folders, search, and task creation behavior.
 final class MainViewModel: ObservableObject {
@@ -25,7 +26,9 @@ final class MainViewModel: ObservableObject {
     /// Currently selected task filter (e.g., Active, Completed).
     @Published private(set) var selectedFilter: Filter = .active
     /// Currently selected folder (e.g., Reminders, Tasks, Lists).
-    @Published internal var selectedFolder: Folder = .all
+    @Published internal var selectedFolder: Folder? = nil {
+        didSet { fetchTasks() }
+    }
     /// Whether only important tasks are displayed.
     @Published internal var importance: Bool = false
     /// Search text input for filtering tasks.
@@ -43,12 +46,18 @@ final class MainViewModel: ObservableObject {
     
     /// The selected task for editing or viewing.
     @Published internal var selectedTask: TaskEntity? = nil
-    @Published internal var selectedTaskFolder: Folder = .other
-
+    @Published internal var selectedTaskFolder: Folder = .mock()
+    
     /// The task selected for restoring from deleted.
     @Published internal var removedTask: TaskEntity? = nil
     /// The height of the task management view (dynamic sizing).
     @Published internal var taskManagementHeight: CGFloat = 15
+    
+    /// List of folders loaded from Core Data.
+    @Published internal var folders: [Folder] = []
+    
+    /// All tasks loaded from Core Data.
+    @Published internal var allTasks: [TaskEntity] = []
     
     // MARK: - Computed Properties
     
@@ -57,11 +66,118 @@ final class MainViewModel: ObservableObject {
         Date.now.longDayMonthWeekday
     }
     
+    /// Tasks segmented and sorted by date, pin, and deadline.
+    internal var segmentedAndSortedTasksArray: [(Date?, [TaskEntity])] {
+        let calendar = Calendar.current
+        // Optionally filter by folder
+        let filteredTasks = allTasks.filter { task in
+            !task.removed // Only not deleted
+        }
+        let grouped = Dictionary(grouping: filteredTasks.lazy) { task -> Date in
+            let refDate = task.target ?? task.created ?? Date.distantPast
+            return calendar.startOfDay(for: refDate)
+        }
+        // Group by normalized day (or nil if no target)
+        return grouped.map { (key, tasks) in
+            let sortedTasks = tasks.sorted { t1, t2 in
+                if t1.pinned != t2.pinned {
+                    return t1.pinned && !t2.pinned
+                }
+                
+                let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : (Date.distantFuture + t1.created!.timeIntervalSinceNow)
+                let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : (Date.distantFuture + t2.created!.timeIntervalSinceNow)
+                return d1 < d2
+            }
+            return (key, sortedTasks)
+        }
+        .sorted { ($0.0 ?? Date.distantPast) < ($1.0 ?? Date.distantPast) }
+    }
+    
+    /// Tasks filtered by search text, importance, filter, and folder.
+    internal var filteredSegmentedTasks: [(Date?, [TaskEntity])] {
+        segmentedAndSortedTasksArray.lazy.compactMap { (date, tasks) in
+            let filteredTasks = tasks.lazy.filter { task in
+                if !self.searchText.isEmpty {
+                    let searchTerm = self.searchText
+                    let nameMatches = task.name?.localizedCaseInsensitiveContains(searchTerm) ?? false
+                    let detailsMatches = task.details?.localizedCaseInsensitiveContains(searchTerm) ?? false
+                    if !nameMatches && !detailsMatches {
+                        return false
+                    }
+                }
+                if self.importance && !task.important { return false }
+                return self.taskMatchesFilter(for: task)
+            }
+            
+            return filteredTasks.isEmpty ? nil : (date, Array(filteredTasks))
+        }
+        .sorted { ($0.0 ?? Date.distantPast) < ($1.0 ?? Date.distantPast) }
+    }
+    
+    // MARK: - Private Properties
+    
+    private var coreDataObserver: NSObjectProtocol? = nil
+    
+    // MARK: - Initializer
+
+    init() {
+        self.reloadFolders()
+        self.fetchTasks()
+        
+        if let first = folders.first {
+            selectedFolder = first
+        } else {
+            selectedFolder = nil
+        }
+        
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        
+        coreDataObserver = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: context, queue: .main) { [weak self] _ in
+            self?.reloadFolders()
+            self?.fetchTasks()
+        }
+    }
+    
+    deinit {
+        if let observer = coreDataObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+    
+    // MARK: - Methods
+    
+    /// Reload folders from Core Data.
+    internal func reloadFolders() {
+        self.folders = FolderCoreDataService.shared.loadFolders().sorted { $0.order < $1.order }
+    }
+    
+    /// Fetch tasks from Core Data and assign to allTasks.
+    internal func fetchTasks() {
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        let request: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \TaskEntity.target, ascending: true)]
+        
+        if let folder = selectedFolder, folder.system, !folder.shared {
+            request.predicate = nil
+        } else if let folder = selectedFolder {
+            request.predicate = NSPredicate(format: "folder.id == %@", folder.id as CVarArg)
+        }
+        
+        do {
+            let tasks = try context.fetch(request)
+            DispatchQueue.main.async {
+                self.allTasks = tasks
+            }
+        } catch {
+            print("Failed to fetch tasks: \(error)")
+        }
+    }
+    
     // MARK: - Task Creation Methods
     
     /// Toggles between showing popup or full-screen task creation view.
     internal func toggleShowingCreateView() {
-        taskCreationFullScreen == .fullScreen || selectedFolder == .lists ?
+        taskCreationFullScreen == .fullScreen ?
         showingTaskCreateViewFullscreen.toggle() :
         showingTaskCreateView.toggle()
     }
@@ -130,9 +246,10 @@ final class MainViewModel: ObservableObject {
         folder == selectedFolder
     }
     
-    internal func setTaskFolder(to folder: String?) {
-        guard let folder else { return }
-        selectedTaskFolder = Folder(rawValue: folder) ?? .other
+    internal func setTaskFolder(to folderEntity: FolderEntity?) {
+        guard let folderEntity else { return }
+        let folder = Folder(from: folderEntity)
+        selectedTaskFolder = folder
     }
     
     /// Toggles the importance-only filter.
@@ -143,26 +260,6 @@ final class MainViewModel: ObservableObject {
     }
     
     // MARK: - Task Filtering Methods
-    
-    /// Checks if a task belongs to the currently selected folder.
-    /// - Parameter task: The task entity to check.
-    /// - Returns: `true` if the task matches the current folder filter.
-    internal func taskMatchesFolder(for task: TaskEntity) -> Bool {
-        switch selectedFolder {
-        case .all:
-            return true
-        case .reminders:
-            return task.folder == Folder.reminders.rawValue
-        case .tasks:
-            return task.folder == Folder.tasks.rawValue
-        case .lists:
-            return task.folder == Folder.lists.rawValue
-        case .other:
-            return task.folder == Folder.other.rawValue
-        case .back:
-            return task.folder == Folder.back.rawValue
-        }
-    }
     
     /// Checks if a task matches the currently selected task filter (e.g., active, completed).
     /// - Parameter task: The task entity to evaluate.
@@ -179,8 +276,15 @@ final class MainViewModel: ObservableObject {
             if let target = task.target, task.hasTargetTime, target < .now {
                 return false
             }
+            if let target = task.target, !task.hasTargetTime, target < Calendar.current.startOfDay(for: .now) {
+                return false
+            }
+            
             if let count = task.notifications?.count, count > 0,
                let target = task.target, target < .now { return false }
+            
+            if let target = task.created, task.target == nil, !task.hasTargetTime,
+               target < Calendar.current.startOfDay(for: .now) { return false }
             return true
             
         case .outdated:
@@ -197,14 +301,22 @@ final class MainViewModel: ObservableObject {
             if let target = task.target, task.hasTargetTime, target < .now {
                 return task.completed == 0
             }
+            if let target = task.target, !task.hasTargetTime, target < Calendar.current.startOfDay(for: .now) {
+                return true
+            }
+            
             if let count = task.notifications?.count, count > 0,
                let target = task.target, target < .now { return true }
+            
+            if let target = task.created, task.target == nil, !task.hasTargetTime,
+               target < Calendar.current.startOfDay(for: .now) {
+                return true
+            }
             return false
             
         case .unsorted:
             return true
         case .deleted:
-            // Already handled above
             return false
         }
     }
