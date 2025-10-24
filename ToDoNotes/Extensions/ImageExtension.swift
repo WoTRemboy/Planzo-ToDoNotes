@@ -78,6 +78,7 @@ extension Image {
         static let unlocked = Image("FolderUnlockIcon")
         static let hidden = Image("FolderHiddenIcon")
         static let shared = Image("FolderSharedIcon")
+        static let config = Image("FolderConfigIcon")
     }
     
     // MARK: - Settings Images

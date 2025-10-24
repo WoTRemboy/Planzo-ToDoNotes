@@ -45,7 +45,7 @@ struct CalendarView: View {
                  onDismiss: {}) {
             SelectorView<Folder>(
                 title: Texts.Folders.title,
-                label: { $0.name },
+                label: { $0.localizedName },
                 options: viewModel.folders,
                 selected: $viewModel.selectedTaskFolder,
                 onCancel: {

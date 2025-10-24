@@ -253,6 +253,7 @@ final class Texts {
         static let other = NSLocalizedString("MainPageFolderOther", comment: "Other")
         
         enum Configure {
+            static let title = NSLocalizedString("MainPageFolderConfigureTitle", comment: "Configure")
             static let dragAndDrop = NSLocalizedString("MainPageFolderDragAndDrop", comment: "Press and hold to drag & reorder")
         }
     }

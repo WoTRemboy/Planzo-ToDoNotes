@@ -21,6 +21,15 @@ struct Folder: Equatable, Hashable {
     var color: FolderColor
     var order: Int
     
+    internal var localizedName: String {
+        if system, !shared {
+            return Texts.Folders.all
+        } else if system, shared {
+            return Texts.Folders.shared
+        }
+        return name
+    }
+    
     static func == (lhs: Folder, rhs: Folder) -> Bool {
         lhs.id == rhs.id
     }

@@ -990,6 +990,35 @@
         }
       }
     },
+    "MainPageFolderConfigureTitle" : {
+      "comment" : "Configure",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurer"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настроить"
+          }
+        }
+      }
+    },
     "MainPageFolderDragAndDrop" : {
       "comment" : "Press and hold to drag & reorder",
       "localizations" : {
