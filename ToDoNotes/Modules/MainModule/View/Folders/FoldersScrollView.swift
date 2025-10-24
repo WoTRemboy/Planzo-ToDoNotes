@@ -66,6 +66,7 @@ struct FoldersScrollView: View {
                 }
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: viewModel.folders)
         .frame(height: 36)
         .padding(.horizontal)
     }
@@ -98,9 +99,9 @@ struct FoldersScrollView: View {
             }
         }
         
-        Button(action: {
-            viewModel.showingFolderSetupView.toggle()
-        }) {
+        CustomNavLink(
+            destination: ConfigureFoldersView()
+        ) {
             Label {
                 Text(Texts.Folders.Configure.title)
             } icon: {
@@ -110,9 +111,9 @@ struct FoldersScrollView: View {
     }
     
     private var configFoldersButton: some View {
-        Button(action: {
-            viewModel.showingFolderSetupView.toggle()
-        }) {
+        CustomNavLink(
+            destination: ConfigureFoldersView()
+        ) {
             Image.Folder.config
                 .resizable()
                 .scaledToFit()

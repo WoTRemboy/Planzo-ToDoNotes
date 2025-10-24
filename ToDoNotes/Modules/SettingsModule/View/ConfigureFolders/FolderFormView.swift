@@ -11,25 +11,14 @@ struct FolderFormView: View {
     
     // MARK: - Properties
     
-    /// Title displayed in the row.
-    private let title: String
-    /// Optional color displayed on the left.
-    private let color: Color?
-    
-    private let hidden: Bool
-    private let locked: Bool
+    private let folder: Folder
     /// Flag indicating whether this is the last row (hides bottom divider).
     private let last: Bool
     
     // MARK: - Initialization
         
-    init(title: String, color: Color? = nil,
-         hidden: Bool = false, locked: Bool = false,
-         last: Bool = false) {
-        self.title = title
-        self.color = color
-        self.hidden = hidden
-        self.locked = locked
+    init(folder: Folder, last: Bool = false) {
+        self.folder = folder
         self.last = last
     }
     
@@ -40,14 +29,14 @@ struct FolderFormView: View {
             leftLabel
             
             Spacer()
-            if hidden {
+            if !folder.visible {
                 Image.Folder.hidden
                     .renderingMode(.template)
                     .foregroundStyle(Color.LabelColors.labelSecondary)
                     .frame(width: 20, height: 20)
             }
             
-            if locked {
+            if folder.locked {
                 Image.Folder.unlocked
                     .renderingMode(.template)
                     .foregroundStyle(Color.LabelColors.labelSecondary)
@@ -78,27 +67,28 @@ struct FolderFormView: View {
     /// Label view displaying the optional image and title on the left.
     private var leftLabel: some View {
         HStack(alignment: .center, spacing: 8) {
-            if let color {
-                color
-                    .clipShape(.circle)
-                    .frame(width: 20, height: 20)
-            }
+            color
+                .clipShape(.circle)
+                .frame(width: 20, height: 20)
             
-            Text(title)
+            Text(folder.localizedName)
                 .font(.system(size: 17, weight: .regular))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
                 .lineLimit(1)
         }
+    }
+    
+    private var color: Color {
+        if folder.system {
+            return Color.FolderColors.all
+        }
+        return folder.color.rgbToColor()
     }
 }
 
 // MARK: - Preview
 
 #Preview {
-    FolderFormView(title: "Title",
-                   color: .blue,
-                   hidden: true,
-                   locked: true,
-                   last: false)
+    FolderFormView(folder: Folder.mock(), last: false)
 }
 

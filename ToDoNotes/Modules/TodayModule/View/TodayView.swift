@@ -42,7 +42,7 @@ struct TodayView: View {
             SelectorView<Folder>(
                 title: Texts.Folders.title,
                 label: { $0.localizedName },
-                options: viewModel.folders,
+                options: viewModel.folders.filter { !$0.system },
                 selected: $viewModel.selectedTaskFolder,
                 onCancel: {
                     viewModel.toggleShowingFolderSetupView()

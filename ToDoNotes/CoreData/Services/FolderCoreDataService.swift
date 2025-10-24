@@ -69,10 +69,45 @@ final class FolderCoreDataService {
         saveContext()
     }
     
+    internal func updateFolder(_ folder: Folder, color: FolderColor) {
+        let fetchRequest: NSFetchRequest<FolderEntity> = FolderEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", folder.id as CVarArg)
+        fetchRequest.fetchLimit = 1
+        if let entity = try? viewContext.fetch(fetchRequest).first {
+            entity.name = folder.name
+            entity.locked = folder.locked
+            entity.serverId = folder.serverId
+            entity.system = folder.system
+            entity.shared = folder.shared
+            entity.visible = folder.visible
+            entity.order = Int32(folder.order)
+            if let colorEntity = entity.color {
+                colorEntity.red = color.red
+                colorEntity.green = color.green
+                colorEntity.blue = color.blue
+                colorEntity.alpha = color.alpha
+            } else {
+                let colorEntity = ColorEntity(context: viewContext)
+                colorEntity.red = color.red
+                colorEntity.green = color.green
+                colorEntity.blue = color.blue
+                colorEntity.alpha = color.alpha
+                colorEntity.folder = entity
+                entity.color = colorEntity
+            }
+            saveContext()
+        }
+    }
+    
     // MARK: - Load Folders
     
-    internal func loadFolders() -> [Folder] {
+    /// Loads folders from Core Data.
+    /// - Parameter onlySystem: If true, loads only system folders; if false, loads only non-system; if nil, loads all folders.
+    internal func loadFolders(onlySystem: Bool? = nil) -> [Folder] {
         let fetchRequest: NSFetchRequest<FolderEntity> = FolderEntity.fetchRequest()
+        if let onlySystem = onlySystem {
+            fetchRequest.predicate = NSPredicate(format: "system == %@", NSNumber(value: onlySystem))
+        }
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "order", ascending: true)]
         if let entities = try? viewContext.fetch(fetchRequest) {
             return entities.map { Folder(from: $0) }

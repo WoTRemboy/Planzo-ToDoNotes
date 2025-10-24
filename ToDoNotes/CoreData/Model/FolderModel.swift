@@ -10,7 +10,7 @@ import SwiftUI
 
 // MARK: - Folder & FolderColor Models
 
-struct Folder: Equatable, Hashable {
+struct Folder: Identifiable, Equatable, Hashable {
     var id: UUID
     var name: String
     var locked: Bool

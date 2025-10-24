@@ -990,6 +990,35 @@
         }
       }
     },
+    "MainPageFolderConfigureFullTitle" : {
+      "comment" : "Configure Folders",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure Folders"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurar carpetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurer les dossiers"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настроить папки"
+          }
+        }
+      }
+    },
     "MainPageFolderConfigureTitle" : {
       "comment" : "Configure",
       "localizations" : {
