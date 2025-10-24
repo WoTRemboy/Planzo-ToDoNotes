@@ -29,6 +29,11 @@ struct FolderFormView: View {
             leftLabel
             
             Spacer()
+            
+            if folder.system {
+                Image.Subscription.premium
+            }
+            
             if !folder.visible {
                 Image.Folder.hidden
                     .renderingMode(.template)

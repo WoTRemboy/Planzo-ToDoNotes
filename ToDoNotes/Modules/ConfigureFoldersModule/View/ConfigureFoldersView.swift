@@ -55,7 +55,11 @@ struct ConfigureFoldersView: View {
     private var reordableVStack: some View {
         ReorderableForEach(folders, active: $active) { item in
             if !item.system {
-                FolderFormView(folder: item, last: item == folders.last)
+                CustomNavLink(
+                    destination: ConfigureSelectedFolderView(folder: item),
+                    label: {
+                        FolderFormView(folder: item, last: item == folders.last)
+                    })
             }
         } preview: { _ in
         } moveAction: { from, to in

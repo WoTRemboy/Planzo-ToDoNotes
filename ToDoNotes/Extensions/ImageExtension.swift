@@ -207,6 +207,7 @@ extension Image {
         static let fourthBenefit = Image("SubscriptionBenefitsFour")
         
         static let check = Image("SubscriptionCheck")
+        static let premium = Image("SubscriptionPremiumIcon")
     }
     
     // MARK: - Login Page Images
