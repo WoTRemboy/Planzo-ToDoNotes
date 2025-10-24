@@ -21,7 +21,7 @@ struct SubscriptionTrialToggle: View {
             Toggle(isOn: $viewModel.selectedFreePlan) {}
                 .fixedSize()
                 .background(Color.SupportColors.supportButton)
-                .tint(Color.ToggleColors.subscriptions)
+                .tint(Color.ToggleColors.main)
                 .scaleEffect(0.8)
         }
         .padding()

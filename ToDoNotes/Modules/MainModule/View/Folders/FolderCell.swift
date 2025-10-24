@@ -64,7 +64,7 @@ struct FolderCell: View {
     
     /// Displays the name of the folder with the appropriate color and underline.
     private var nameLabel: some View {
-        Text(folder.name)
+        Text(folder.localizedName)
             .font(.system(size: 20, weight: .regular))
             .foregroundStyle(textColor)
     }
@@ -80,7 +80,7 @@ struct FolderCell: View {
     /// Displays an underline under the folder name if not selected.
     private var underline: some View {
         Rectangle()
-            .foregroundStyle(selected ? .clear : folder.color.rgbToColor())
+            .foregroundStyle(selected ? .clear : color)
         
             .frame(maxWidth: .infinity)
             .frame(height: 4)
@@ -90,9 +90,17 @@ struct FolderCell: View {
     /// Displays a rounded colored background if the folder is selected.
     private var backgroundRectangle: some View {
         RoundedRectangle(cornerRadius: 16)
-            .foregroundStyle(selected ? folder.color.rgbToColor() : .clear)
+            .foregroundStyle(selected ? color : .clear)
             .animation(.easeInOut(duration: 0.2), value: selected)
             .transition(.blurReplace)
+    }
+    
+    private var color: Color {
+        if folder.system {
+            Color.FolderColors.all
+        } else {
+            folder.color.rgbToColor()
+        }
     }
     
     /// Displays a transparent rectangle when not selected (for layout stability).

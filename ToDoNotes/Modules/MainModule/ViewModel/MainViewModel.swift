@@ -148,7 +148,7 @@ final class MainViewModel: ObservableObject {
     
     /// Reload folders from Core Data.
     internal func reloadFolders() {
-        self.folders = FolderCoreDataService.shared.loadFolders().sorted { $0.order < $1.order }
+        self.folders = FolderCoreDataService.shared.loadFolders()
     }
     
     /// Fetch tasks from Core Data and assign to allTasks.

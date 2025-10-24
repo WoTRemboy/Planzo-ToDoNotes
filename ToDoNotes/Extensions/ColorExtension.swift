@@ -99,7 +99,7 @@ extension Color {
     
     enum ToggleColors {
         static let notifications = Color("ToggleNotifications")
-        static let subscriptions = Color("ToggleSubscriptions")
+        static let main = Color("ToggleSubscriptions")
     }
 }
 

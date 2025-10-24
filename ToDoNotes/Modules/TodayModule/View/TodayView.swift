@@ -41,8 +41,8 @@ struct TodayView: View {
                  onDismiss: {}) {
             SelectorView<Folder>(
                 title: Texts.Folders.title,
-                label: { $0.name },
-                options: viewModel.folders,
+                label: { $0.localizedName },
+                options: viewModel.folders.filter { !$0.system },
                 selected: $viewModel.selectedTaskFolder,
                 onCancel: {
                     viewModel.toggleShowingFolderSetupView()

@@ -36,6 +36,13 @@ struct FoldersScrollView: View {
                 }
             }
             .scrollIndicators(.hidden)
+            
+            Divider()
+                .foregroundStyle(Color.LabelColors.labelPrimary)
+                .frame(height: 36)
+                .offset(x: -8)
+            
+            configFoldersButton
         }
     }
     
@@ -59,6 +66,7 @@ struct FoldersScrollView: View {
                 }
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: viewModel.folders)
         .frame(height: 36)
         .padding(.horizontal)
     }
@@ -77,19 +85,41 @@ struct FoldersScrollView: View {
     }
     
     /// The folder picker displayed inside the menu, listing all available folders.
+    @ViewBuilder
     private var allFoldersPicker: some View {
         Picker(Texts.Folders.title,
                selection: $viewModel.selectedFolder.animation(.easeInOut(duration: 0.2))) {
-            
             ForEach(viewModel.folders, id: \.id) { folder in
                 Label {
-                    Text(folder.name)
+                    Text(folder.localizedName)
                 } icon: {
                     folder.locked ? Image.Folder.locked : nil
                 }
                 .tag(Optional(folder))
             }
         }
+        
+        CustomNavLink(
+            destination: ConfigureFoldersView()
+        ) {
+            Label {
+                Text(Texts.Folders.Configure.title)
+            } icon: {
+                Image.Folder.config
+            }
+        }
+    }
+    
+    private var configFoldersButton: some View {
+        CustomNavLink(
+            destination: ConfigureFoldersView()
+        ) {
+            Image.Folder.config
+                .resizable()
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+        }
+        .padding(.trailing)
     }
 }
 

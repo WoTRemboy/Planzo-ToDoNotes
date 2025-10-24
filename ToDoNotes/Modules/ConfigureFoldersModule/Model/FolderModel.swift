@@ -10,7 +10,7 @@ import SwiftUI
 
 // MARK: - Folder & FolderColor Models
 
-struct Folder: Equatable, Hashable {
+struct Folder: Identifiable, Equatable, Hashable {
     var id: UUID
     var name: String
     var locked: Bool
@@ -20,6 +20,15 @@ struct Folder: Equatable, Hashable {
     var visible: Bool
     var color: FolderColor
     var order: Int
+    
+    internal var localizedName: String {
+        if system, !shared {
+            return Texts.Folders.all
+        } else if system, shared {
+            return Texts.Folders.shared
+        }
+        return name
+    }
     
     static func == (lhs: Folder, rhs: Folder) -> Bool {
         lhs.id == rhs.id

@@ -253,7 +253,18 @@ final class Texts {
         static let other = NSLocalizedString("MainPageFolderOther", comment: "Other")
         
         enum Configure {
+            static let title = NSLocalizedString("MainPageFolderConfigureTitle", comment: "Configure")
+            static let fullTitle = NSLocalizedString("MainPageFolderConfigureFullTitle", comment: "Configure Folders")
             static let dragAndDrop = NSLocalizedString("MainPageFolderDragAndDrop", comment: "Press and hold to drag & reorder")
+        }
+        
+        enum Params {
+            static let name = NSLocalizedString("MainPageFolderName", comment: "Name")
+            static let color = NSLocalizedString("MainPageFolderColor", comment: "Color")
+            static let lock = NSLocalizedString("MainPageFolderLock", comment: "Lock Folder")
+            static let lockDescription = NSLocalizedString("MainPageFolderLockDescription", comment: "Requires Face ID or passcode to open")
+            static let visibility = NSLocalizedString("MainPageFolderVisibility", comment: "Visibile")
+            static let visibilityDescription = NSLocalizedString("MainPageFolderVisibilityDescription", comment: "Visibility mode on the main page")
         }
     }
     
