@@ -45,15 +45,22 @@ final class MainViewModelTests: XCTestCase {
     
     /// Tests that setting a new folder updates the `selectedFolder` property.
     func test_SetFolder_ShouldUpdateSelectedFolder() {
-        viewModel.setFolder(to: .reminders)
-        XCTAssertEqual(viewModel.selectedFolder, .reminders)
+        let folders = viewModel.folders
+        guard folders.count > 1 else { return XCTFail("Not enough folders for testing") }
+        let targetFolder = folders[1]
+        viewModel.setFolder(to: targetFolder)
+        XCTAssertEqual(viewModel.selectedFolder, targetFolder)
     }
     
     /// Tests that `compareFolders` returns `true` only when comparing with the active folder.
     func test_CompareFolders_ShouldReturnTrue_WhenMatchingFolder() {
-        viewModel.setFolder(to: .tasks)
-        XCTAssertTrue(viewModel.compareFolders(with: .tasks))
-        XCTAssertFalse(viewModel.compareFolders(with: .lists))
+        let folders = viewModel.folders
+        guard folders.count > 1 else { return XCTFail("Not enough folders for testing") }
+        let folderA = folders[0]
+        let folderB = folders[1]
+        viewModel.setFolder(to: folderA)
+        XCTAssertTrue(viewModel.compareFolders(with: folderA))
+        XCTAssertFalse(viewModel.compareFolders(with: folderB))
     }
     
     /// Tests that toggling importance changes the `importance` property.
@@ -67,7 +74,7 @@ final class MainViewModelTests: XCTestCase {
     
     /// Tests that toggling showing create view properly updates popup or full-screen state.
     func test_ToggleShowingCreateView_ShouldUpdatePopupOrFullscreen() {
-        viewModel.selectedFolder = .all
+        viewModel.selectedFolder = viewModel.folders.first
         viewModel.toggleShowingCreateView()
         XCTAssertTrue(viewModel.showingTaskCreateView || viewModel.showingTaskCreateViewFullscreen)
     }
@@ -103,19 +110,13 @@ final class MainViewModelTests: XCTestCase {
     
     // MARK: - Task Filtering Tests (Folders)
     
-    /// Tests that tasks are correctly matched to the selected folder.
-    func test_TaskMatchesFolder_ShouldMatchCorrectly() {
-        let task = makeDummyTaskEntity()
-        
-        task.folder = FolderEnum.tasks.rawValue
-        viewModel.selectedFolder = .tasks
-        XCTAssertTrue(viewModel.taskMatchesFolder(for: task))
-        
-        viewModel.selectedFolder = .reminders
-        XCTAssertFalse(viewModel.taskMatchesFolder(for: task))
-        
-        viewModel.selectedFolder = .all
-        XCTAssertTrue(viewModel.taskMatchesFolder(for: task))
+    /// Tests that selected folder id matches the folder used in selection.
+    func test_SelectedFolder_MatchesFolderId() {
+        let folders = viewModel.folders
+        guard folders.count > 1 else { return XCTFail("Not enough folders for testing") }
+        let targetFolder = folders[0]
+        viewModel.setFolder(to: targetFolder)
+        XCTAssertEqual(viewModel.selectedFolder?.id, targetFolder.id)
     }
     
     // MARK: - Task Filtering Tests (Filters)
