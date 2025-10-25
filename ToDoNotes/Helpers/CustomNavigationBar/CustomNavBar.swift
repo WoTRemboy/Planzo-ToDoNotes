@@ -19,15 +19,17 @@ struct CustomNavBar: View {
     private let title: String
     /// A Boolean flag indicating whether a back button should be displayed.
     private let showBackButton: Bool
+    private let position: NavTitlePosition
 
     // MARK: - Initializer
     /// Initializes a new `CustomNavBar`.
     /// - Parameters:
     ///   - title: The title text displayed in the navigation bar.
     ///   - showBackButton: A flag to determine whether to show a back button. Default is `false`.
-    init(title: String, showBackButton: Bool = false) {
+    init(title: String, showBackButton: Bool = false, position: NavTitlePosition) {
         self.title = title
         self.showBackButton = showBackButton
+        self.position = position
     }
 
     // MARK: - Body
@@ -58,6 +60,12 @@ struct CustomNavBar: View {
                 backButton
             }
             titleLabel
+            
+            if showBackButton {
+                Color.clear
+                    .frame(width: 20, height: 20)
+                    .padding(.trailing)
+            }
         }
     }
 
@@ -77,7 +85,7 @@ struct CustomNavBar: View {
     private var titleLabel: some View {
         Text(title)
             .font(.system(size: 20, weight: .medium))
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: position.alignment)
             .padding(.leading, showBackButton ? 8 : 16)
     }
 }
@@ -85,5 +93,19 @@ struct CustomNavBar: View {
 // MARK: - Preview
 
 #Preview {
-    CustomNavBar(title: "Task Creation Page", showBackButton: true)
+    CustomNavBar(title: "Task Creation Page", showBackButton: true, position: .center)
+}
+
+enum NavTitlePosition: String {
+    case leading = "NavTitlePositionLeading"
+    case center = "NavTitlePositionCenter"
+    
+    internal var alignment: Alignment {
+        switch self {
+        case .leading:
+            return .leading
+        case .center:
+            return .center
+        }
+    }
 }

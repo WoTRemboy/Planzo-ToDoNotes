@@ -79,6 +79,7 @@ extension Image {
         static let hidden = Image("FolderHiddenIcon")
         static let shared = Image("FolderSharedIcon")
         static let config = Image("FolderConfigIcon")
+        static let trash = Image("FolderTrashIcon")
     }
     
     // MARK: - Settings Images

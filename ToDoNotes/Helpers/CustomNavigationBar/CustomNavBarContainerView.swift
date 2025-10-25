@@ -17,6 +17,7 @@ struct CustomNavBarContainerView<Content: View>: View {
     @State private var title: String = String()
     /// A flag that indicates whether the back button should be shown in the custom navigation bar.
     @State private var showBackButton: Bool = false
+    @State private var position: NavTitlePosition = .leading
     /// The content view displayed below the navigation bar.
     private let content: Content
     
@@ -35,7 +36,8 @@ struct CustomNavBarContainerView<Content: View>: View {
             // Top navigation bar with dynamic title and back button
             CustomNavBar(
                 title: title,
-                showBackButton: showBackButton)
+                showBackButton: showBackButton,
+                position: position)
             
             content
         }
@@ -46,6 +48,10 @@ struct CustomNavBarContainerView<Content: View>: View {
         .onPreferenceChange(CustomNavBarBackButtonPreferenceKey.self, perform: { value in
             // Updates the back button visibility when preference changes
             self.showBackButton = value
+        })
+        .onPreferenceChange(CustomNavTitlePositionPreferenceKey.self, perform: { value in
+            // Updates the back button visibility when preference changes
+            self.position = value
         })
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }

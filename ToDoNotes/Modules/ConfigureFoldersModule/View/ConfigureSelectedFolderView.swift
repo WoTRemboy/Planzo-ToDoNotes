@@ -9,17 +9,29 @@ import SwiftUI
 
 struct ConfigureSelectedFolderView: View {
     
-    @State private var folder: Folder
+    @State private var folder: Folder?
+    private let title: String
     
-    init(folder: Folder) {
+    init(folder: Folder?) {
         self.folder = folder
+        
+        if let folder {
+            title = folder.localizedName
+        } else {
+            title = Texts.Folders.Configure.newFolder
+        }
     }
     
     internal var body: some View {
-        paramsList
-            .customNavBarItems(
-                title: folder.localizedName,
-                showBackButton: true)
+        VStack(spacing: 24) {
+            paramsList
+            createDeleteButton
+        }
+        .padding()
+        .customNavBarItems(
+            title: title,
+            showBackButton: true,
+            position: .center)
     }
     
     private var paramsList: some View {
@@ -30,7 +42,14 @@ struct ConfigureSelectedFolderView: View {
             }
         }
         .clipShape(.rect(cornerRadius: 10))
-        .padding()
+    }
+    
+    private var createDeleteButton: some View {
+        if folder != nil {
+            CreateDeleteFolderButtonView(type: .delete) {}
+        } else {
+            CreateDeleteFolderButtonView(type: .create) {}
+        }
     }
 }
 

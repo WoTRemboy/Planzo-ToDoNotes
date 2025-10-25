@@ -273,18 +273,18 @@ final class MainViewModel: ObservableObject {
         switch selectedFilter {
         case .active:
             guard task.completed != 2 else { return false }
-            if let target = task.target, task.hasTargetTime, target < .now {
+            if let target = task.target, task.hasTargetTime,
+               let oneDay = Calendar.current.date(byAdding: .day, value: -1, to: .now),
+               target < oneDay {
                 return false
             }
-            if let target = task.target, !task.hasTargetTime, target < Calendar.current.startOfDay(for: .now) {
-                return false
-            }
+//            if let target = task.target, !task.hasTargetTime, target < Calendar.current.startOfDay(for: .now) {
+//                return false
+//            }
             
             if let count = task.notifications?.count, count > 0,
                let target = task.target, target < .now { return false }
             
-            if let target = task.created, task.target == nil, !task.hasTargetTime,
-               target < Calendar.current.startOfDay(for: .now) { return false }
             return true
             
         case .outdated:
@@ -298,20 +298,18 @@ final class MainViewModel: ObservableObject {
         case .archived:
             guard task.completed != 2 else { return false }
             
-            if let target = task.target, task.hasTargetTime, target < .now {
+            if let target = task.target, task.hasTargetTime,
+               let oneDay = Calendar.current.date(byAdding: .day, value: -1, to: .now),
+               target < oneDay {
                 return task.completed == 0
             }
-            if let target = task.target, !task.hasTargetTime, target < Calendar.current.startOfDay(for: .now) {
-                return true
-            }
+//            if let target = task.target, !task.hasTargetTime, target < Calendar.current.startOfDay(for: .now) {
+//                return true
+//            }
             
             if let count = task.notifications?.count, count > 0,
                let target = task.target, target < .now { return true }
             
-            if let target = task.created, task.target == nil, !task.hasTargetTime,
-               target < Calendar.current.startOfDay(for: .now) {
-                return true
-            }
             return false
             
         case .unsorted:

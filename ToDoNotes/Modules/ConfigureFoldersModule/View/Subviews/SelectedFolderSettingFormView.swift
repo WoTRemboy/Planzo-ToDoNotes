@@ -8,15 +8,17 @@
 import SwiftUI
 
 struct SelectedFolderSettingFormView: View {
-    @State private var folder: Folder
+    @State private var folder: Folder = .newFolder
     private let type: FolderConfig
     /// Flag indicating whether this is the last row (hides bottom divider).
     private let last: Bool
     
     // MARK: - Initialization
     
-    init (folder: Folder, type: FolderConfig, last: Bool = false) {
-        self.folder = folder
+    init (folder: Folder?, type: FolderConfig, last: Bool = false) {
+        if let folder {
+            self.folder = folder
+        }
         self.type = type
         self.last = last
     }
