@@ -256,6 +256,10 @@ final class Texts {
             static let title = NSLocalizedString("MainPageFolderConfigureTitle", comment: "Configure")
             static let fullTitle = NSLocalizedString("MainPageFolderConfigureFullTitle", comment: "Configure Folders")
             static let dragAndDrop = NSLocalizedString("MainPageFolderDragAndDrop", comment: "Press and hold to drag & reorder")
+            
+            static let newFolder = NSLocalizedString("MainPageFolderNewFolder", comment: "New Folder")
+            static let create = NSLocalizedString("MainPageFolderCreate", comment: "Create new folder")
+            static let delete = NSLocalizedString("MainPageFolderDelete", comment: "Delete folder")
         }
         
         enum Params {

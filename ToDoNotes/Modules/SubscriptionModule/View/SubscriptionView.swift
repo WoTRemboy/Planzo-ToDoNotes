@@ -77,7 +77,7 @@ struct SubscriptionView: View {
         }
         .frame(maxWidth: .infinity)
         .background {
-            Color.BackColors.backDefault
+            Color.SupportColors.supportNavBar
                 .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: -5)
                 .ignoresSafeArea()
         }

@@ -34,6 +34,20 @@ struct Folder: Identifiable, Equatable, Hashable {
         lhs.id == rhs.id
     }
     
+    static var newFolder: Folder {
+        Folder(
+            id: UUID(),
+            name: Texts.Folders.Configure.newFolder,
+            locked: false,
+            serverId: String(),
+            system: false,
+            shared: false,
+            visible: true,
+            color: FolderColor.mock,
+            order: 0
+        )
+    }
+    
     static func mock(locked: Bool = false, system: Bool = false, shared: Bool = false) -> Folder {
         Folder(
             id: UUID(),

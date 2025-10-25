@@ -22,6 +22,7 @@
 		631FBB922DB0114D00BEABD0 /* TodayPageOverviewTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631FBB912DB0114300BEABD0 /* TodayPageOverviewTip.swift */; };
 		631FBB942DB0127E00BEABD0 /* CalendarPageOverviewTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631FBB932DB0127700BEABD0 /* CalendarPageOverviewTip.swift */; };
 		6321FBFF2E5890CA00F0AEA5 /* SelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6321FBFE2E5890CA00F0AEA5 /* SelectorView.swift */; };
+		632514C62EAD3EBB000B4A3C /* CreateDeleteFolderButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632514C52EAD3EBB000B4A3C /* CreateDeleteFolderButtonView.swift */; };
 		6326E1B32EA7E20400BF68B2 /* ConfigureFoldersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6326E1B22EA7E20400BF68B2 /* ConfigureFoldersView.swift */; };
 		6326E1B52EA7E34500BF68B2 /* FolderFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6326E1B42EA7E34500BF68B2 /* FolderFormView.swift */; };
 		6326E1B72EA921E600BF68B2 /* FolderCoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6326E1B62EA921E600BF68B2 /* FolderCoreDataService.swift */; };
@@ -203,6 +204,7 @@
 		631FBB912DB0114300BEABD0 /* TodayPageOverviewTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayPageOverviewTip.swift; sourceTree = "<group>"; };
 		631FBB932DB0127700BEABD0 /* CalendarPageOverviewTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPageOverviewTip.swift; sourceTree = "<group>"; };
 		6321FBFE2E5890CA00F0AEA5 /* SelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorView.swift; sourceTree = "<group>"; };
+		632514C52EAD3EBB000B4A3C /* CreateDeleteFolderButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDeleteFolderButtonView.swift; sourceTree = "<group>"; };
 		6326E1B22EA7E20400BF68B2 /* ConfigureFoldersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureFoldersView.swift; sourceTree = "<group>"; };
 		6326E1B42EA7E34500BF68B2 /* FolderFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderFormView.swift; sourceTree = "<group>"; };
 		6326E1B62EA921E600BF68B2 /* FolderCoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderCoreDataService.swift; sourceTree = "<group>"; };
@@ -1084,6 +1086,7 @@
 			children = (
 				6326E1B42EA7E34500BF68B2 /* FolderFormView.swift */,
 				63CF11B42EABAD790068C1F9 /* SelectedFolderSettingFormView.swift */,
+				632514C52EAD3EBB000B4A3C /* CreateDeleteFolderButtonView.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -1384,6 +1387,7 @@
 				63286AFA2E7B495A00483810 /* SubscriptionPricesView.swift in Sources */,
 				63286AEC2E7B309800483810 /* SubscriptionView.swift in Sources */,
 				63CF11BE2EABAF6D0068C1F9 /* FolderConfigureEnumModel.swift in Sources */,
+				632514C62EAD3EBB000B4A3C /* CreateDeleteFolderButtonView.swift in Sources */,
 				63A5B6692D49446800B0E408 /* TaskDateParamRow.swift in Sources */,
 				63FD57512E68B83900B7B062 /* GoogleAuthService.swift in Sources */,
 				63CD66982D367EC50053C93C /* TaskManagementViewModel.swift in Sources */,

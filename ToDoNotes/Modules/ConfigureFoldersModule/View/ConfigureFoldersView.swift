@@ -14,13 +14,19 @@ struct ConfigureFoldersView: View {
     @State private var folders: [Folder] = []
     
     internal var body: some View {
-        ScrollView(.vertical) {
-            foldersList
-            dragLabel
+        ZStack {
+            ScrollView(.vertical) {
+                foldersList
+                dragLabel
+            }
+            .safeAreaInset(edge: .bottom) {
+                safeAreaContent
+            }
         }
         .customNavBarItems(
             title: Texts.Folders.Configure.fullTitle,
-            showBackButton: true)
+            showBackButton: true,
+            position: .center)
         .onAppear {
             folders = FolderCoreDataService.shared.loadFolders()
             systemfolders = FolderCoreDataService.shared.loadFolders(onlySystem: true)
@@ -32,6 +38,7 @@ struct ConfigureFoldersView: View {
                 FolderCoreDataService.shared.updateFolder(updated, color: folder.color)
             }
         }
+        
     }
     
     private var foldersList: some View {
@@ -72,6 +79,38 @@ struct ConfigureFoldersView: View {
             .foregroundStyle(Color.LabelColors.labelDetails)
             .font(.system(size: 15, weight: .regular))
             .padding(.top, 8)
+    }
+    
+    private var safeAreaContent: some View {
+        VStack(spacing: 0) {
+            CustomNavLink(
+                destination: ConfigureSelectedFolderView(folder: nil),
+                label: {
+                    createFolderView
+                })
+                .padding(.bottom, hasNotch() ? 0 : 16)
+        }
+        .frame(maxWidth: .infinity)
+        .background {
+            Color.SupportColors.supportNavBar
+                .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: -5)
+                .ignoresSafeArea()
+        }
+    }
+    
+    private var createFolderView: some View {
+        Text(Texts.Folders.Configure.create)
+            .font(.system(size: 17, weight: .medium))
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .lineLimit(1)
+        
+            .foregroundColor(Color.LabelColors.labelReversed)
+            .background(Color.LabelColors.labelPrimary)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        
+            .frame(height: 50)
+            .minimumScaleFactor(0.4)
+            .padding([.horizontal, .top], 16)
     }
     
     var shape: some Shape {
