@@ -45,7 +45,7 @@ struct MainView: View {
                    value: viewModel.allTasks.isEmpty)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .popView(isPresented: $viewModel.showingFolderSetupView,
-                 onDismiss: {}) {
+                 onTap: {}, onDismiss: {}) {
             SelectorView<Folder>(
                 title: Texts.Folders.title,
                 label: { $0.localizedName },
@@ -113,10 +113,10 @@ struct MainView: View {
         }
         
         // Configures and attaches pop-up alerts for removing or recovering tasks.
-        .popView(isPresented: $viewModel.showingTaskRemoveAlert, onDismiss: {}) {
+        .popView(isPresented: $viewModel.showingTaskRemoveAlert, onTap: {}, onDismiss: {}) {
             removeAlert
         }
-        .popView(isPresented: $viewModel.showingTaskEditRemovedAlert, onDismiss: {}) {
+        .popView(isPresented: $viewModel.showingTaskEditRemovedAlert, onTap: {}, onDismiss: {}) {
             editAlert
         }
     }

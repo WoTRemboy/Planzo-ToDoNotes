@@ -6,13 +6,12 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ConfigureFoldersView: View {
     
-    @State private var active: Folder?
-    @State private var systemfolders: [Folder] = []
-    @State private var folders: [Folder] = []
-    
+    @StateObject private var viewModel = ConfigureFoldersViewModel()
+        
     internal var body: some View {
         ZStack {
             ScrollView(.vertical) {
@@ -27,16 +26,8 @@ struct ConfigureFoldersView: View {
             title: Texts.Folders.Configure.fullTitle,
             showBackButton: true,
             position: .center)
-        .onAppear {
-            folders = FolderCoreDataService.shared.loadFolders()
-            systemfolders = FolderCoreDataService.shared.loadFolders(onlySystem: true)
-        }
         .onDisappear {
-            for (index, folder) in folders.enumerated() {
-                var updated = folder
-                updated.order = index
-                FolderCoreDataService.shared.updateFolder(updated, color: folder.color)
-            }
+            viewModel.updateFoldersOrderOnDisappear()
         }
         
     }
@@ -49,28 +40,28 @@ struct ConfigureFoldersView: View {
         .clipShape(.rect(cornerRadius: 10))
         .padding()
         .scrollContentBackground(.hidden)
-        .reorderableForEachContainer(active: $active)
+        .reorderableForEachContainer(active: $viewModel.active)
     }
     
     @ViewBuilder
     private var systemVStack: some View {
-        ForEach(systemfolders, id: \.self) { item in
+        ForEach(viewModel.systemfolders, id: \.self) { item in
             FolderFormView(folder: item)
         }
     }
     
     private var reordableVStack: some View {
-        ReorderableForEach(folders, active: $active) { item in
+        ReorderableForEach(viewModel.folders, active: $viewModel.active) { item in
             if !item.system {
                 CustomNavLink(
-                    destination: ConfigureSelectedFolderView(folder: item),
+                    destination: ConfigureSelectedFolderView(viewModel: viewModel, folder: item),
                     label: {
-                        FolderFormView(folder: item, last: item == folders.last)
+                        FolderFormView(folder: item, last: item == viewModel.folders.last)
                     })
             }
         } preview: { _ in
         } moveAction: { from, to in
-            folders.move(fromOffsets: from, toOffset: to)
+            viewModel.moveFolder(fromOffsets: from, toOffset: to)
         }
     }
     
@@ -84,7 +75,7 @@ struct ConfigureFoldersView: View {
     private var safeAreaContent: some View {
         VStack(spacing: 0) {
             CustomNavLink(
-                destination: ConfigureSelectedFolderView(folder: nil),
+                destination: ConfigureSelectedFolderView(viewModel: viewModel, folder: nil),
                 label: {
                     createFolderView
                 })

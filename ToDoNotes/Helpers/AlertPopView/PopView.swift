@@ -29,6 +29,7 @@ extension View {
     internal func popView<Content: View>(
         config: Config = .init(),
         isPresented: Binding<Bool>,
+        onTap: @escaping () -> (),
         onDismiss: @escaping () -> (),
         @ViewBuilder content: @escaping () -> Content
     ) -> some View {
@@ -38,6 +39,7 @@ extension View {
                     viewContent: content,
                     isPresented: isPresented,
                     config: config,
+                    onTap: onTap,
                     onDismiss: onDismiss))
     }
 }
@@ -55,6 +57,7 @@ fileprivate struct PopViewHelper<ViewContent: View>: ViewModifier {
     @Binding var isPresented: Bool
     /// Pop-up configuration parameters.
     var config: Config
+    var onTap: () -> ()
     /// Closure to execute when the pop-up is dismissed.
     var onDismiss: () -> ()
 
@@ -85,6 +88,7 @@ fileprivate struct PopViewHelper<ViewContent: View>: ViewModifier {
                             .onTapGesture {
                                 // Dismisses pop view when background is tapped
                                 isPresented = false
+                                onTap()
                             }
 
                         // Main pop-up content with vertical animation

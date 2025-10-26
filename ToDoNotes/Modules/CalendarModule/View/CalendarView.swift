@@ -38,11 +38,11 @@ struct CalendarView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         
         // Calendar month selector modal
-        .popView(isPresented: $viewModel.showingCalendarSelector, onDismiss: {}) {
+        .popView(isPresented: $viewModel.showingCalendarSelector, onTap: {}, onDismiss: {}) {
             CalendarMonthSelector()
         }
         .popView(isPresented: $viewModel.showingFolderSetupView,
-                 onDismiss: {}) {
+                 onTap: {}, onDismiss: {}) {
             SelectorView<Folder>(
                 title: Texts.Folders.title,
                 label: { $0.localizedName },

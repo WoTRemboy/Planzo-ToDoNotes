@@ -260,6 +260,10 @@ final class Texts {
             static let newFolder = NSLocalizedString("MainPageFolderNewFolder", comment: "New Folder")
             static let create = NSLocalizedString("MainPageFolderCreate", comment: "Create new folder")
             static let delete = NSLocalizedString("MainPageFolderDelete", comment: "Delete folder")
+            
+            static let save = NSLocalizedString("MainPageFolderSave", comment: "Save")
+            static let cancel = NSLocalizedString("MainPageFolderCancel", comment: "Cancel")
+            static let changeName = NSLocalizedString("MainPageFolderChangeName", comment: "Change Name")
         }
         
         enum Params {

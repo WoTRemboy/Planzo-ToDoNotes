@@ -42,7 +42,7 @@ struct SubscriptionView: View {
         .safeAreaInset(edge: .bottom) {
             safeAreaContent
         }
-        .popView(isPresented: $viewModel.showingErrorAlert, onDismiss: {}) {
+        .popView(isPresented: $viewModel.showingErrorAlert, onTap: {}, onDismiss: {}) {
             errorAlert
         }
         .navigationTransition(

@@ -50,5 +50,5 @@ struct CreateDeleteFolderButtonView: View {
 }
 
 #Preview {
-    CreateDeleteFolderButtonView(type: .create) {}
+    CreateDeleteFolderButtonView(type: .change) {}
 }

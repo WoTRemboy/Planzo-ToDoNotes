@@ -50,13 +50,13 @@ enum FolderConfig: CaseIterable {
 
 enum FolderMethod {
     case create
-    case delete
+    case change
     
     internal var name: String {
         switch self {
         case .create:
             return Texts.Folders.Configure.create
-        case .delete:
+        case .change:
             return Texts.Folders.Configure.delete
         }
     }
@@ -65,7 +65,7 @@ enum FolderMethod {
         switch self {
         case .create:
             nil
-        case .delete:
+        case .change:
             Image.Folder.trash
         }
     }
@@ -74,7 +74,7 @@ enum FolderMethod {
         switch self {
         case .create:
             Color.LabelColors.labelPrimary
-        case .delete:
+        case .change:
             Color.LabelColors.labelLogout
         }
     }

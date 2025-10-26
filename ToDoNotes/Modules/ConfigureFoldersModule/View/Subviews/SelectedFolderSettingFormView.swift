@@ -15,7 +15,7 @@ struct SelectedFolderSettingFormView: View {
     
     // MARK: - Initialization
     
-    init (folder: Folder?, type: FolderConfig, last: Bool = false) {
+    init(folder: Folder?, type: FolderConfig, last: Bool = false) {
         if let folder {
             self.folder = folder
         }
