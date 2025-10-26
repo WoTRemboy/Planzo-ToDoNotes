@@ -9,17 +9,14 @@ import SwiftUI
 
 struct ConfigureSelectedFolderView: View {
     
-    @State private var folder: Folder?
-    private let title: String
+    @ObservedObject var viewModel: ConfigureFoldersViewModel
+    private let folder: Folder?
     
-    init(folder: Folder?) {
+    @State private var titleFocused: Bool = false
+    
+    init(viewModel: ConfigureFoldersViewModel, folder: Folder?) {
+        self.viewModel = viewModel
         self.folder = folder
-        
-        if let folder {
-            title = folder.localizedName
-        } else {
-            title = Texts.Folders.Configure.newFolder
-        }
     }
     
     internal var body: some View {
@@ -29,16 +26,25 @@ struct ConfigureSelectedFolderView: View {
         }
         .padding()
         .customNavBarItems(
-            title: title,
+            title: folder?.localizedName ?? Texts.Folders.Configure.newFolder,
             showBackButton: true,
             position: .center)
+        .popView(isPresented: $viewModel.showingChangeNameView, onTap: {
+            titleFocused = false
+        }, onDismiss: {} ) {
+            changeTitleView
+        }
     }
     
     private var paramsList: some View {
         VStack(spacing: 0) {
             let params = FolderConfig.allCases
             ForEach(params, id: \.self) { type in
-                SelectedFolderSettingFormView(folder: folder, type: type, last: type == params.last)
+                Button {
+                    viewModel.showingChangeNameViewToggle()
+                } label: {
+                    SelectedFolderSettingFormView(folder: folder, type: type, last: type == params.last)
+                }
             }
         }
         .clipShape(.rect(cornerRadius: 10))
@@ -46,13 +52,25 @@ struct ConfigureSelectedFolderView: View {
     
     private var createDeleteButton: some View {
         if folder != nil {
-            CreateDeleteFolderButtonView(type: .delete) {}
+            CreateDeleteFolderButtonView(type: .change) {}
         } else {
             CreateDeleteFolderButtonView(type: .create) {}
         }
     }
+    
+    private var changeTitleView: some View {
+        ConfigureFolderTitleView(
+            title: folder?.name,
+            focusField: $titleFocused,
+            primaryAction: { title in
+                viewModel.showingChangeNameViewToggle()
+            },
+            secondaryAction: {
+                viewModel.showingChangeNameViewToggle()
+            })
+    }
 }
 
 #Preview {
-    ConfigureSelectedFolderView(folder: .mock())
+    ConfigureSelectedFolderView(viewModel: .init(), folder: .mock())
 }

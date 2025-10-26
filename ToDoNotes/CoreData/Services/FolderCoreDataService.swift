@@ -20,7 +20,8 @@ final class FolderCoreDataService {
         let key = Texts.UserDefaults.didCreateDefaultFolders
         let defaults = UserDefaults.standard
         guard !defaults.bool(forKey: key) else { return }
-        
+        FolderCoreDataService.shared.deleteAllFolders()
+
         for folderEnum in FolderEnum.allCases {
             let color = FolderCoreDataService.colorForFolderEnum(folderEnum)
             let folder = Folder(
@@ -130,6 +131,19 @@ final class FolderCoreDataService {
     internal func deleteFolder(by id: UUID) {
         let fetchRequest: NSFetchRequest<FolderEntity> = FolderEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        if let results = try? viewContext.fetch(fetchRequest) {
+            for obj in results {
+                if let color = obj.color {
+                    viewContext.delete(color)
+                }
+                viewContext.delete(obj)
+            }
+            saveContext()
+        }
+    }
+    
+    private func deleteAllFolders() {
+        let fetchRequest: NSFetchRequest<FolderEntity> = FolderEntity.fetchRequest()
         if let results = try? viewContext.fetch(fetchRequest) {
             for obj in results {
                 if let color = obj.color {

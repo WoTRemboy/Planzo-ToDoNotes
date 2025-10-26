@@ -79,7 +79,7 @@ struct OnboardingScreenView: View {
             }
             .padding(.vertical)
             
-            .popView(isPresented: $viewModel.showingErrorAlert, onDismiss: {}) {
+            .popView(isPresented: $viewModel.showingErrorAlert, onTap: {}, onDismiss: {}) {
                 errorAlert
             }
             .overlay(

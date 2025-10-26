@@ -56,7 +56,7 @@ struct TaskCalendarSelectorView: View {
         .onAppear {
             viewModel.readNotificationStatus()
         }
-        .popView(isPresented: $viewModel.showingNotificationAlert, onDismiss: {}) {
+        .popView(isPresented: $viewModel.showingNotificationAlert, onTap: {}, onDismiss: {}) {
             if viewModel.notificationsStatus == .disabled {
                 disabledAlert
             } else {

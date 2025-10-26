@@ -11,9 +11,8 @@ import SwiftUI
 enum FolderEnum: String, CaseIterable {
     case all = "TaskFoldersAll"
     case shared = "TaskFoldersShared"
-    case noDate = "TaskFoldersNoDate"
     case lists = "TaskFoldersLists"
-    case passwords = "TaskFoldersPasswords"
+    case tasks = "TaskFoldersTasks"
     case other = "TaskFoldersOther"
     
     /// Returns a localized name for each folder to display in the UI.
@@ -23,12 +22,10 @@ enum FolderEnum: String, CaseIterable {
             return Texts.Folders.all
         case .shared:
             return Texts.Folders.shared
-        case .noDate:
-            return Texts.Folders.noDate
+        case .tasks:
+            return Texts.Folders.tasks
         case .lists:
             return Texts.Folders.lists
-        case .passwords:
-            return Texts.Folders.passwords
         case .other:
             return Texts.Folders.other
         }
@@ -41,12 +38,10 @@ enum FolderEnum: String, CaseIterable {
             Color.FolderColors.all
         case .shared:
             Color.FolderColors.shared
-        case .noDate:
-            Color.FolderColors.noDate
+        case .tasks:
+            Color.FolderColors.tasks
         case .lists:
             Color.FolderColors.lists
-        case .passwords:
-            Color.FolderColors.passwords
         case .other:
             Color.FolderColors.other
         }
