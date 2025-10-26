@@ -38,11 +38,11 @@ struct TodayView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .popView(isPresented: $viewModel.showingFolderSetupView,
-                 onDismiss: {}) {
+                 onTap: {}, onDismiss: {}) {
             SelectorView<Folder>(
-                title: Texts.MainPage.Folders.title,
-                label: { $0.name },
-                options: Folder.availableCases(isAuthorized: authService.isAuthorized),
+                title: Texts.Folders.title,
+                label: { $0.localizedName },
+                options: viewModel.folders.filter { !$0.system },
                 selected: $viewModel.selectedTaskFolder,
                 onCancel: {
                     viewModel.toggleShowingFolderSetupView()
@@ -50,7 +50,7 @@ struct TodayView: View {
                 onAccept: { _ in
                     if let task = folderSetupTask {
                         do {
-                            try TaskService.updateFolder(for: task, to: viewModel.selectedTaskFolder.rawValue)
+                            try TaskService.updateFolder(for: task, to: viewModel.selectedTaskFolder)
                             Toast.shared.present(
                                 title: "\(Texts.Toasts.changedFolder) \(viewModel.selectedTaskFolder.name)")
                         } catch {
@@ -128,7 +128,7 @@ struct TodayView: View {
         Form {
             // Display a TipKit tip at the top
             TipView(overviewTip)
-                .tipBackground(Color.FolderColors.tasks
+                .tipBackground(Color.FolderColors.other
                     .opacity(0.3))
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())

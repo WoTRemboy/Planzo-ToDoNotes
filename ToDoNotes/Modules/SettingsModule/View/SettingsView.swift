@@ -53,7 +53,7 @@ struct SettingsView: View {
         .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {
             SubscriptionView(namespace: namespace, networkService: authService)
         }
-        .popView(isPresented: $viewModel.showingAppearance, onDismiss: {}) {
+        .popView(isPresented: $viewModel.showingAppearance, onTap: {}, onDismiss: {}) {
             SelectorView<Theme>(
                 title: Texts.Settings.Appearance.title,
                 label: { $0.name },
@@ -70,7 +70,7 @@ struct SettingsView: View {
                 acceptTitle: Texts.Settings.accept
             )
         }
-        .popView(isPresented: $viewModel.showingTimeFormat, onDismiss: {}) {
+        .popView(isPresented: $viewModel.showingTimeFormat, onTap: {}, onDismiss: {}) {
             SelectorView<TimeFormat>(
                 title: Texts.Settings.TimeFormat.title,
                 label: { $0.name },
@@ -87,7 +87,7 @@ struct SettingsView: View {
                 acceptTitle: Texts.Settings.accept
             )
         }
-        .popView(isPresented: $viewModel.showingWeekFirstDay, onDismiss: {}) {
+        .popView(isPresented: $viewModel.showingWeekFirstDay, onTap: {}, onDismiss: {}) {
             SelectorView<WeekFirstDay>(
                 title: Texts.Settings.WeekFirstDay.title,
                 label: { $0.name },
@@ -104,16 +104,16 @@ struct SettingsView: View {
                 acceptTitle: Texts.Settings.accept
             )
         }
-        .popView(isPresented: $viewModel.showingLanguageAlert, onDismiss: {}) {
+        .popView(isPresented: $viewModel.showingLanguageAlert, onTap: {}, onDismiss: {}) {
             languageAlert
         }
-        .popView(isPresented: $viewModel.showingNotificationAlert, onDismiss: {}) {
+        .popView(isPresented: $viewModel.showingNotificationAlert, onTap: {}, onDismiss: {}) {
             notificationAlert
         }
-        .popView(isPresented: $viewModel.showingResetResult, onDismiss: {}) {
+        .popView(isPresented: $viewModel.showingResetResult, onTap: {}, onDismiss: {}) {
             resetAlert
         }
-        .popView(isPresented: $viewModel.showingErrorAlert, onDismiss: {}) {
+        .popView(isPresented: $viewModel.showingErrorAlert, onTap: {}, onDismiss: {}) {
             errorAlert
         }
     }
@@ -273,7 +273,7 @@ struct SettingsView: View {
         Toggle(isOn: $viewModel.notificationsEnabled) {}
             .fixedSize()
             .background(Color.SupportColors.supportButton)
-            .tint(Color.SupportColors.supportToggle)
+            .tint(Color.ToggleColors.notifications)
             .scaleEffect(0.8)
         
             .onChange(of: viewModel.notificationsEnabled) { _, newValue in
@@ -388,7 +388,7 @@ struct SettingsView: View {
                 Button(role: .destructive) {
                     viewModel.handleLogout(authService: authService)
                 } label: {
-                    Text(Texts.Authorization.logout)
+                    Text(Texts.Authorization.confirm)
                 }
         }
     }

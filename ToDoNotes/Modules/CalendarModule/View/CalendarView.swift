@@ -38,15 +38,15 @@ struct CalendarView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         
         // Calendar month selector modal
-        .popView(isPresented: $viewModel.showingCalendarSelector, onDismiss: {}) {
+        .popView(isPresented: $viewModel.showingCalendarSelector, onTap: {}, onDismiss: {}) {
             CalendarMonthSelector()
         }
         .popView(isPresented: $viewModel.showingFolderSetupView,
-                 onDismiss: {}) {
+                 onTap: {}, onDismiss: {}) {
             SelectorView<Folder>(
-                title: Texts.MainPage.Folders.title,
-                label: { $0.name },
-                options: Folder.availableCases(isAuthorized: authService.isAuthorized),
+                title: Texts.Folders.title,
+                label: { $0.localizedName },
+                options: viewModel.folders.filter { !$0.system },
                 selected: $viewModel.selectedTaskFolder,
                 onCancel: {
                     viewModel.toggleShowingFolderSetupView()
@@ -54,7 +54,7 @@ struct CalendarView: View {
                 onAccept: { _ in
                     if let task = folderSetupTask {
                         do {
-                            try TaskService.updateFolder(for: task, to: viewModel.selectedTaskFolder.rawValue)
+                            try TaskService.updateFolder(for: task, to: viewModel.selectedTaskFolder)
                             Toast.shared.present(
                                 title: "\(Texts.Toasts.changedFolder) \(viewModel.selectedTaskFolder.name)")
                         } catch {
@@ -211,7 +211,7 @@ struct CalendarView: View {
     /// Tip view providing contextual help for the user.
     private var overviewTipView: some View {
         TipView(overviewTip)
-            .tipBackground(Color.FolderColors.reminders
+            .tipBackground(Color.FolderColors.tasks
                 .opacity(0.3))
     }
     

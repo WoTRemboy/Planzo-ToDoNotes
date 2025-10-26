@@ -76,6 +76,10 @@ extension Image {
         static let navBar = Image("FoldersNavIcon")
         static let locked = Image("FolderLockIcon")
         static let unlocked = Image("FolderUnlockIcon")
+        static let hidden = Image("FolderHiddenIcon")
+        static let shared = Image("FolderSharedIcon")
+        static let config = Image("FolderConfigIcon")
+        static let trash = Image("FolderTrashIcon")
     }
     
     // MARK: - Settings Images
@@ -204,6 +208,7 @@ extension Image {
         static let fourthBenefit = Image("SubscriptionBenefitsFour")
         
         static let check = Image("SubscriptionCheck")
+        static let premium = Image("SubscriptionPremiumIcon")
     }
     
     // MARK: - Login Page Images

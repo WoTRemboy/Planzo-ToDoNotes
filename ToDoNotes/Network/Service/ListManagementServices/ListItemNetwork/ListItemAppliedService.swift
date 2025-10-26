@@ -14,7 +14,7 @@ private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListI
 extension ListItemNetworkService {
     /// Syncs the checklist items for a backend task with the server.
     internal func syncChecklistIfNeeded(for task: TaskEntity) {
-        guard let serverId = task.serverId, !serverId.isEmpty, task.folder == Folder.back.rawValue else { return }
+        guard let serverId = task.serverId, !serverId.isEmpty else { return }
         guard let context = task.managedObjectContext else { return }
 
         // Fetch items (checklist) from server

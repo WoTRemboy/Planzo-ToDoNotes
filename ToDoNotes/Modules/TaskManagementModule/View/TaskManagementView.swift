@@ -99,8 +99,8 @@ struct TaskManagementView: View {
         // Setup on appear (keyboard events, default check status)
         .onAppear {
             subscribeToKeyboardNotifications()
-            if entity == nil, folder == .tasks {
-                viewModel.check = .unchecked
+            if entity == nil {
+                viewModel.check = .none
             }
             if let entity = entity {
                 ListItemNetworkService.shared.syncChecklistForTaskEntity(entity)
@@ -372,7 +372,7 @@ extension TaskManagementView {
     
     /// Determines whether full-screen content should be displayed.
     private var shouldShowFullScreenContent: Bool {
-        entity != nil || folder == .lists || viewModel.taskCreationFullScreen == .fullScreen
+        entity != nil || viewModel.taskCreationFullScreen == .fullScreen
     }
     
     // MARK: - Keyboard Notifications

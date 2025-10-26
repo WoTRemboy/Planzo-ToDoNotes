@@ -36,6 +36,13 @@ struct FoldersScrollView: View {
                 }
             }
             .scrollIndicators(.hidden)
+            
+//            Divider()
+//                .foregroundStyle(Color.LabelColors.labelPrimary)
+//                .frame(height: 36)
+//                .offset(x: -8)
+//            
+//            configFoldersButton
         }
     }
     
@@ -45,8 +52,8 @@ struct FoldersScrollView: View {
     /// Highlights the selected folder with a visual effect.
     @ViewBuilder
     private func scrollContent(proxy: ScrollViewProxy) -> some View {
-        HStack(spacing: 0) {
-            ForEach(Folder.allCases(isAuthorized: authService.isAuthorized), id: \.self) { folder in
+        HStack(alignment: .bottom, spacing: 0) {
+            ForEach(viewModel.folders.filter { !$0.shared }, id: \.id) { folder in
                 FolderCell(folder: folder,
                            selected: viewModel.compareFolders(with: folder), namespace: animation)
                 .id(folder)
@@ -59,6 +66,7 @@ struct FoldersScrollView: View {
                 }
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: viewModel.folders)
         .frame(height: 36)
         .padding(.horizontal)
     }
@@ -77,18 +85,41 @@ struct FoldersScrollView: View {
     }
     
     /// The folder picker displayed inside the menu, listing all available folders.
+    @ViewBuilder
     private var allFoldersPicker: some View {
-        Picker(Texts.MainPage.Folders.title,
+        Picker(Texts.Folders.title,
                selection: $viewModel.selectedFolder.animation(.easeInOut(duration: 0.2))) {
-            
-            ForEach(Folder.allCases(isAuthorized: authService.isAuthorized), id: \.self) { folder in
+            ForEach(viewModel.folders.filter { !$0.shared }, id: \.id) { folder in
                 Label {
-                    Text(folder.name)
+                    Text(folder.localizedName)
                 } icon: {
-                    folder.lockedIcon
+                    folder.locked ? Image.Folder.locked : nil
                 }
+                .tag(Optional(folder))
             }
         }
+        
+        CustomNavLink(
+            destination: ConfigureFoldersView()
+        ) {
+            Label {
+                Text(Texts.Folders.Configure.title)
+            } icon: {
+                Image.Folder.config
+            }
+        }
+    }
+    
+    private var configFoldersButton: some View {
+        CustomNavLink(
+            destination: ConfigureFoldersView()
+        ) {
+            Image.Folder.config
+                .resizable()
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+        }
+        .padding(.trailing)
     }
 }
 

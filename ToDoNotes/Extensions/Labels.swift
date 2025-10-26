@@ -59,15 +59,6 @@ final class Texts {
                 static let alertRecover = NSLocalizedString("MainPageRemoveFilterAlertRecover", comment: "Recover")
             }
         }
-        
-        enum Folders {
-            static let title = NSLocalizedString("MainPageFolderTitle", comment: "Folders")
-            static let all = NSLocalizedString("MainPageFolderAll", comment: "All")
-            static let reminders = NSLocalizedString("MainPageFolderReminders", comment: "Reminders")
-            static let tasks = NSLocalizedString("MainPageFolderTasks", comment: "Tasks")
-            static let purchases = NSLocalizedString("MainPageFolderLists", comment: "Lists")
-            static let other = NSLocalizedString("MainPageFolderOther", comment: "Other")
-        }
     }
     
     // MARK: - Today Module Texts
@@ -251,6 +242,41 @@ final class Texts {
         }
     }
     
+    enum Folders {
+        static let title = NSLocalizedString("MainPageFolderTitle", comment: "Folders")
+        static let all = NSLocalizedString("MainPageFolderAll", comment: "All")
+        static let shared = NSLocalizedString("MainPageFolderShared", comment: "Shared")
+        static let reminders = NSLocalizedString("MainPageFolderReminders", comment: "Reminders")
+        static let noDate = NSLocalizedString("MainPageFolderNoDate", comment: "No Date")
+        static let tasks = NSLocalizedString("MainPageFolderTasks", comment: "Tasks")
+        static let lists = NSLocalizedString("MainPageFolderLists", comment: "Lists")
+        static let passwords = NSLocalizedString("MainPageFolderPasswords", comment: "Passwords")
+        static let other = NSLocalizedString("MainPageFolderOther", comment: "Other")
+        
+        enum Configure {
+            static let title = NSLocalizedString("MainPageFolderConfigureTitle", comment: "Configure")
+            static let fullTitle = NSLocalizedString("MainPageFolderConfigureFullTitle", comment: "Configure Folders")
+            static let dragAndDrop = NSLocalizedString("MainPageFolderDragAndDrop", comment: "Press and hold to drag & reorder")
+            
+            static let newFolder = NSLocalizedString("MainPageFolderNewFolder", comment: "New Folder")
+            static let create = NSLocalizedString("MainPageFolderCreate", comment: "Create new folder")
+            static let delete = NSLocalizedString("MainPageFolderDelete", comment: "Delete folder")
+            
+            static let save = NSLocalizedString("MainPageFolderSave", comment: "Save")
+            static let cancel = NSLocalizedString("MainPageFolderCancel", comment: "Cancel")
+            static let changeName = NSLocalizedString("MainPageFolderChangeName", comment: "Change Name")
+        }
+        
+        enum Params {
+            static let name = NSLocalizedString("MainPageFolderName", comment: "Name")
+            static let color = NSLocalizedString("MainPageFolderColor", comment: "Color")
+            static let lock = NSLocalizedString("MainPageFolderLock", comment: "Lock Folder")
+            static let lockDescription = NSLocalizedString("MainPageFolderLockDescription", comment: "Requires Face ID or passcode to open")
+            static let visibility = NSLocalizedString("MainPageFolderVisibility", comment: "Visibile")
+            static let visibilityDescription = NSLocalizedString("MainPageFolderVisibilityDescription", comment: "Visibility mode on the main page")
+        }
+    }
+    
     // MARK: - Search Bar Module Texts
     
     enum SearchBar {
@@ -271,6 +297,7 @@ final class Texts {
         static let title = NSLocalizedString("AuthorizationTitle", comment: "Authorization")
         static let login = NSLocalizedString("AuthorizationLogin", comment: "Sign in or Sign up")
         static let logout = NSLocalizedString("AuthorizationLogout", comment: "Log Out")
+        static let confirm = NSLocalizedString("AuthorizationConfirm", comment: "Confirm")
         static let confirmLogout = NSLocalizedString("AuthorizationConfirmLogout", comment: "Are you sure you want to log out?")
 
         static let appleLogin = NSLocalizedString("AuthorizationAppleLogin", comment: "Sign in with Apple")
@@ -394,6 +421,7 @@ final class Texts {
         static let taskCreation = "TaskCreationPage"
         static let timeFormat = "TimeFormat"
         static let firstDayOfWeek = "FirstDayOfWeek"
+        static let didCreateDefaultFolders = "DidCreateDefaultFolders"
     }
     
     // MARK: - Namespace ID Keys

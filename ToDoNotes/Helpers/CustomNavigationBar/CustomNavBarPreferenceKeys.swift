@@ -39,6 +39,22 @@ struct CustomNavBarBackButtonPreferenceKey: PreferenceKey {
     }
 }
 
+/// A `PreferenceKey` for indicating whether a custom navigation bar back button should be shown.
+struct CustomNavTitlePositionPreferenceKey: PreferenceKey {
+    
+    /// The default value for the back button preference key.
+    static var defaultValue: NavTitlePosition = .leading
+    
+    /// Combines multiple values into a single value.
+    /// - Parameters:
+    ///   - value: The current accumulated value.
+    ///   - nextValue: A closure returning the next value to incorporate.
+    static func reduce(value: inout NavTitlePosition, nextValue: () -> NavTitlePosition) {
+        // Always takes the most recent value for the back button visibility.
+        value = nextValue()
+    }
+}
+
 // MARK: - View Extension for Custom Navigation Items
 
 extension View {
@@ -59,15 +75,21 @@ extension View {
         preference(key: CustomNavBarBackButtonPreferenceKey.self, value: show)
     }
     
+    private func customNavigationTitlePosition(_ show: NavTitlePosition) -> some View {
+        // Passes the back button visibility up the view hierarchy using the preference key.
+        preference(key: CustomNavTitlePositionPreferenceKey.self, value: show)
+    }
+    
     /// Sets both the custom navigation title and back button visibility.
     /// - Parameters:
     ///   - title: A `String` for the navigation bar title (default is an empty string).
     ///   - showBackButton: A `Bool` indicating whether the back button should be shown (default is `false`).
     /// - Returns: A modified view that applies both preferences.
-    internal func customNavBarItems(title: String = String(), showBackButton: Bool = false) -> some View {
+    internal func customNavBarItems(title: String = String(), showBackButton: Bool = false, position: NavTitlePosition = .leading) -> some View {
         // Applies both the custom title and back button preferences.
         self
             .customNavigationTitle(title)
             .customNavigationBackButton(showBackButton)
+            .customNavigationTitlePosition(position)
     }
 }
