@@ -69,11 +69,7 @@ final class MainViewModel: ObservableObject {
     /// Tasks segmented and sorted by date, pin, and deadline.
     internal var segmentedAndSortedTasksArray: [(Date?, [TaskEntity])] {
         let calendar = Calendar.current
-        // Optionally filter by folder
-        let filteredTasks = allTasks.filter { task in
-            !task.removed // Only not deleted
-        }
-        let grouped = Dictionary(grouping: filteredTasks.lazy) { task -> Date in
+        let grouped = Dictionary(grouping: allTasks.lazy) { task -> Date in
             let refDate = task.target ?? task.created ?? Date.distantPast
             return calendar.startOfDay(for: refDate)
         }
@@ -84,8 +80,10 @@ final class MainViewModel: ObservableObject {
                     return t1.pinned && !t2.pinned
                 }
                 
-                let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : (Date.distantFuture + t1.created!.timeIntervalSinceNow)
-                let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : (Date.distantFuture + t2.created!.timeIntervalSinceNow)
+                let firstDate = t1.created ?? .now
+                let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target ?? .now : (Date.distantFuture + firstDate.timeIntervalSinceNow)
+                let secondDate = t2.created ?? .now
+                let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target ?? .now : (Date.distantFuture + secondDate.timeIntervalSinceNow)
                 return d1 < d2
             }
             return (key, sortedTasks)
