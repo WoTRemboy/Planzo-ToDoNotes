@@ -42,6 +42,7 @@ extension Color {
         static let labelBlack = Color("LabelBlack")
         static let labelWhite = Color("LabelWhite")
         static let labelSubscription = Color("LabelSubscription")
+        static let labelSubscriptionAd = Color("LabelSubscriptionAd")
         static let labelGreyLight = Color("LabelGreyLight")
         static let labelGreyDark = Color("LabelGreyDark")
         static let labelPlaceholder = Color("LabelPlaceholder")
@@ -71,7 +72,7 @@ extension Color {
     enum FolderColors {
         static let all = Color("FolderAll")
         static let shared = Color("FolderShared")
-        static let noDate = Color("FolderNoDate")
+        static let tasks = Color("FolderTasks")
         static let lists = Color("FolderLists")
         static let passwords = Color("FolderPasswords")
         static let other = Color("FolderOther")

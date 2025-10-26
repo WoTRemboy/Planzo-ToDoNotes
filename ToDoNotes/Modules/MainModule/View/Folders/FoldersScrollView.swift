@@ -37,12 +37,12 @@ struct FoldersScrollView: View {
             }
             .scrollIndicators(.hidden)
             
-            Divider()
-                .foregroundStyle(Color.LabelColors.labelPrimary)
-                .frame(height: 36)
-                .offset(x: -8)
-            
-            configFoldersButton
+//            Divider()
+//                .foregroundStyle(Color.LabelColors.labelPrimary)
+//                .frame(height: 36)
+//                .offset(x: -8)
+//            
+//            configFoldersButton
         }
     }
     
@@ -53,7 +53,7 @@ struct FoldersScrollView: View {
     @ViewBuilder
     private func scrollContent(proxy: ScrollViewProxy) -> some View {
         HStack(alignment: .bottom, spacing: 0) {
-            ForEach(viewModel.folders, id: \.id) { folder in
+            ForEach(viewModel.folders.filter { !$0.shared }, id: \.id) { folder in
                 FolderCell(folder: folder,
                            selected: viewModel.compareFolders(with: folder), namespace: animation)
                 .id(folder)
@@ -89,7 +89,7 @@ struct FoldersScrollView: View {
     private var allFoldersPicker: some View {
         Picker(Texts.Folders.title,
                selection: $viewModel.selectedFolder.animation(.easeInOut(duration: 0.2))) {
-            ForEach(viewModel.folders, id: \.id) { folder in
+            ForEach(viewModel.folders.filter { !$0.shared }, id: \.id) { folder in
                 Label {
                     Text(folder.localizedName)
                 } icon: {

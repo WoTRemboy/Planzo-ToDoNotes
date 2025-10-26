@@ -123,12 +123,12 @@ struct MainCustomNavBar: View {
             viewModel.toggleShowingSubscriptionPage()
         } label: {
             RoundedRectangle(cornerRadius: 5)
-                .foregroundStyle(Color.LabelColors.labelSubscription)
+                .foregroundStyle(Color.LabelColors.labelPrimary)
                 .frame(width: 48, height: 26)
                 .overlay {
                     Text(Texts.Subscription.SubType.pro)
                         .font(.system(size: 20, weight: .regular))
-                        .foregroundStyle(Color.LabelColors.labelBlack)
+                        .foregroundStyle(Color.LabelColors.labelSubscriptionAd)
                 }
         }
         .navigationTransitionSource(

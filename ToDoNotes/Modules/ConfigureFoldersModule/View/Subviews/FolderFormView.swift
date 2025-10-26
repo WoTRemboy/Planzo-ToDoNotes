@@ -48,9 +48,9 @@ struct FolderFormView: View {
                     .frame(width: 20, height: 20)
             }
             
-            Image.Settings.chevron
-                .resizable()
-                .frame(width: 20, height: 20)
+//            Image.Settings.chevron
+//                .resizable()
+//                .frame(width: 20, height: 20)
         }
         
         .padding(.horizontal, 14)

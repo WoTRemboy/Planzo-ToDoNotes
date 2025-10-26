@@ -18,9 +18,9 @@ struct ConfigureFoldersView: View {
                 foldersList
                 dragLabel
             }
-            .safeAreaInset(edge: .bottom) {
-                safeAreaContent
-            }
+//            .safeAreaInset(edge: .bottom) {
+//                safeAreaContent
+//            }
         }
         .customNavBarItems(
             title: Texts.Folders.Configure.fullTitle,
@@ -53,11 +53,12 @@ struct ConfigureFoldersView: View {
     private var reordableVStack: some View {
         ReorderableForEach(viewModel.folders, active: $viewModel.active) { item in
             if !item.system {
-                CustomNavLink(
-                    destination: ConfigureSelectedFolderView(viewModel: viewModel, folder: item),
-                    label: {
-                        FolderFormView(folder: item, last: item == viewModel.folders.last)
-                    })
+//                CustomNavLink(
+//                    destination: ConfigureSelectedFolderView(viewModel: viewModel, folder: item),
+//                    label: {
+//                        FolderFormView(folder: item, last: item == viewModel.folders.last)
+//                    })
+                FolderFormView(folder: item, last: item == viewModel.folders.last)
             }
         } preview: { _ in
         } moveAction: { from, to in

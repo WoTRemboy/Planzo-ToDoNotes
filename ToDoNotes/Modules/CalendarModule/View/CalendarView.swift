@@ -211,7 +211,7 @@ struct CalendarView: View {
     /// Tip view providing contextual help for the user.
     private var overviewTipView: some View {
         TipView(overviewTip)
-            .tipBackground(Color.FolderColors.passwords
+            .tipBackground(Color.FolderColors.tasks
                 .opacity(0.3))
     }
     

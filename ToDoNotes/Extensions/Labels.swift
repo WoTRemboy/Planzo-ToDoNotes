@@ -248,6 +248,7 @@ final class Texts {
         static let shared = NSLocalizedString("MainPageFolderShared", comment: "Shared")
         static let reminders = NSLocalizedString("MainPageFolderReminders", comment: "Reminders")
         static let noDate = NSLocalizedString("MainPageFolderNoDate", comment: "No Date")
+        static let tasks = NSLocalizedString("MainPageFolderTasks", comment: "Tasks")
         static let lists = NSLocalizedString("MainPageFolderLists", comment: "Lists")
         static let passwords = NSLocalizedString("MainPageFolderPasswords", comment: "Passwords")
         static let other = NSLocalizedString("MainPageFolderOther", comment: "Other")
@@ -420,7 +421,7 @@ final class Texts {
         static let taskCreation = "TaskCreationPage"
         static let timeFormat = "TimeFormat"
         static let firstDayOfWeek = "FirstDayOfWeek"
-        static let didCreateDefaultFolders = "didCreateDefaultFolders"
+        static let didCreateDefaultFolders = "DidCreateDefaultFolders"
     }
     
     // MARK: - Namespace ID Keys
