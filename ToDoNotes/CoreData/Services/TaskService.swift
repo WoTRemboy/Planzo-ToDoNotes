@@ -168,7 +168,7 @@ final class TaskService {
             restoreNotifications(for: newTask)
         }
         
-        ListNetworkService.shared.updateTaskOnServer(for: task)
+        ListNetworkService.shared.updateTaskOnServer(for: newTask)
     }
     
     // MARK: - Deletion
@@ -305,18 +305,21 @@ extension TaskService {
         }
         
         try save()
+        ListNetworkService.shared.updateTaskOnServer(for: task)
     }
     
     static func toggleImportant(for task: TaskEntity) throws {
         task.important.toggle()
         task.updatedAt = .now
         try save()
+        ListNetworkService.shared.updateTaskOnServer(for: task)
     }
     
     static func togglePinned(for task: TaskEntity) throws {
         task.pinned.toggle()
         task.updatedAt = .now
         try save()
+        ListNetworkService.shared.updateTaskOnServer(for: task)
     }
     
     static func toggleRemoved(for task: TaskEntity) throws {

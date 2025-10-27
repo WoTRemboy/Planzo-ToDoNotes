@@ -126,16 +126,24 @@ extension ListNetworkService {
                         }
                     }
                 }
-                
                 for remote in remoteTasks {
                     if let task = localTasks.first(where: { $0.serverId == remote.id }),
                        let _ = task.serverId {
                         
+                        let completed: Int16 = remote.done == nil ? 0 : (remote.done ?? false) ? 2 : 1
                         let parsedDate = Date.iso8601DateFormatter.date(from: remote.updatedAt)
                         let localDate = task.updatedAt ?? Date.distantPast
                         
+                        let dueAtDate = Date.iso8601SecondsDateFormatter.date(from: remote.dueAt ?? String())
+                        
                         if let parsedDate, parsedDate > localDate {
                             task.name = remote.name
+                            task.details = remote.details
+                            task.completed = completed
+                            task.important = remote.important
+                            task.pinned = remote.pinned
+                            task.target = dueAtDate
+                            task.hasTargetTime = remote.hasDueTime
                             task.removed = remote.archived
                             task.updatedAt = parsedDate
                             if let folder = remote.folder {
@@ -146,7 +154,7 @@ extension ListNetworkService {
                                     task.folder = foundFolder
                                 }
                             }
-                            logger.info("Local task updated from server: \(remote.id)")
+                            logger.info("Local task updated from server: \(remote.id) \(remote.name)")
                         } else if let parsedDate, localDate > parsedDate {
                             self.updateList(to: task) { updateResult in
                                 switch updateResult {
@@ -159,14 +167,25 @@ extension ListNetworkService {
                             logger.info("Server task updated from local task: \(remote.id)")
                         }
                     } else {
+                        let completed: Int16 = remote.done == nil ? 0 : (remote.done ?? false) ? 2 : 1
+                        let dueAtDate = Date.iso8601SecondsDateFormatter.date(from: remote.dueAt ?? String())
+                        
                         let newTask = TaskEntity(context: context)
                         newTask.id = UUID()
                         newTask.serverId = remote.id
                         newTask.name = remote.name
+                        newTask.details = remote.details
+                        newTask.completed = completed
+                        newTask.important = remote.important
+                        newTask.pinned = remote.pinned
+                        newTask.target = dueAtDate
+                        newTask.hasTargetTime = remote.hasDueTime
                         newTask.removed = remote.archived
                         if let parsedDate = Date.iso8601DateFormatter.date(from: remote.updatedAt) {
-                            newTask.updatedAt = parsedDate
                             newTask.created = parsedDate
+                        }
+                        if let createdDate = Date.iso8601DateFormatter.date(from: remote.createdAt) {
+                            newTask.created = createdDate
                         }
                         if let folder = remote.folder {
                             let folderFetch: NSFetchRequest<FolderEntity> = FolderEntity.fetchRequest()
@@ -193,7 +212,7 @@ extension ListNetworkService {
     internal func updateTaskOnServer(for task: TaskEntity, completion: ((Result<ListItem, Error>) -> Void)? = nil) {
         let context = task.managedObjectContext
         guard let serverId = task.serverId, !serverId.isEmpty else {
-            logger.error("archiveTaskOnServer: serverId is missed")
+            logger.error("updateTaskOnServer: serverId is missed")
             self.createList(for: task) { createResult in
                 switch createResult {
                 case .success(let listItem):

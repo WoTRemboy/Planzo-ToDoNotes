@@ -10,13 +10,6 @@ import CoreData
 
 private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListNetworkService")
 
-private let iso8601MillisecondsFormatter: ISO8601DateFormatter = {
-    let formatter = ISO8601DateFormatter()
-    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    formatter.timeZone = TimeZone(secondsFromGMT: 0)
-    return formatter
-}()
-
 final class ListNetworkService {
     static let shared = ListNetworkService()
     private let tokenStorage = TokenStorageService()
@@ -117,7 +110,7 @@ extension ListNetworkService {
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 
-                let dueAtString = task.target != nil ? iso8601MillisecondsFormatter.string(from: task.target!) : nil
+                let dueAtString = task.target != nil ? Date.iso8601DateFormatter.string(from: task.target!) : nil
                 let body = CreateListRequest(
                     name: task.name,
                     details: task.details,
@@ -186,7 +179,7 @@ extension ListNetworkService {
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 
-                let dueAtString = task.target != nil ? iso8601MillisecondsFormatter.string(from: task.target!) : nil
+                let dueAtString = task.target != nil ? Date.iso8601DateFormatter.string(from: task.target!) : nil
                 let body = UpdateListRequest(
                     id: task.serverId ?? UUID().uuidString,
                     name: task.name,
