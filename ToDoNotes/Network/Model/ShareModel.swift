@@ -11,4 +11,5 @@ struct ShareLink: Codable, Identifiable {
     let expiresAt: String
     let revoked: Bool
     let scope: String
+    let activeNow: Bool
 }

@@ -114,10 +114,7 @@ final class TaskService {
 //                }
 //            }
 //        }
-        
-//        if task.folder == FolderEnum.back.rawValue {
-//            ListNetworkService.shared.syncTasksIfNeeded(for: task)
-//        }
+        ListNetworkService.shared.updateTaskOnServer(for: task)
     }
     
     // MARK: - Task Duplication
@@ -170,6 +167,8 @@ final class TaskService {
         if newTask.completed != 2 {
             restoreNotifications(for: newTask)
         }
+        
+        ListNetworkService.shared.updateTaskOnServer(for: task)
     }
     
     // MARK: - Deletion
@@ -328,18 +327,11 @@ extension TaskService {
         // Only handle notifications if the removed status actually changed
         if task.removed && !wasRemoved {
             UNUserNotificationCenter.current().removeNotifications(for: task.notifications)
-            
-//            if task.folder == FolderEnum.back.rawValue {
-//                ListNetworkService.shared.archiveTaskOnServer(for: task, value: true)
-//            }
         } else if !task.removed && wasRemoved {
             restoreNotifications(for: task)
-            
-//            if task.folder == FolderEnum.back.rawValue {
-//                ListNetworkService.shared.archiveTaskOnServer(for: task, value: false)
-//            }
         }
         try save()
+        ListNetworkService.shared.updateTaskOnServer(for: task)
     }
     
     static func updateFolder(for task: TaskEntity, to folder: Folder) throws {
@@ -364,9 +356,7 @@ extension TaskService {
             do {
                 try save()
                 logger.debug("Folder updated and context saved successfully.")
-//                if folder == FolderEnum.back.rawValue {
-//                    ListNetworkService.shared.syncTasksIfNeeded(for: task)
-//                }
+                ListNetworkService.shared.updateTaskOnServer(for: task)
             } catch {
                 logger.error("Error saving context after updating folder: \(error.localizedDescription)")
             }

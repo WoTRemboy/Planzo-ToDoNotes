@@ -10,6 +10,13 @@ import CoreData
 
 private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListNetworkService")
 
+private let iso8601MillisecondsFormatter: ISO8601DateFormatter = {
+    let formatter = ISO8601DateFormatter()
+    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    formatter.timeZone = TimeZone(secondsFromGMT: 0)
+    return formatter
+}()
+
 final class ListNetworkService {
     static let shared = ListNetworkService()
     private let tokenStorage = TokenStorageService()
@@ -68,12 +75,26 @@ final class ListNetworkService {
 }
 
 struct CreateListRequest: Codable {
-    let name: String
+    let name: String?
+    let details: String?
+    let folder: String?
+    let done: Bool?
+    let important: Bool?
+    let pinned: Bool?
+    let dueAt: String?
+    let hasDueTime: Bool?
 }
 
 struct UpdateListRequest: Codable {
     let id: String
     let name: String?
+    let details: String?
+    let folder: String?
+    let done: Bool?
+    let important: Bool?
+    let pinned: Bool?
+    let dueAt: String?
+    let hasDueTime: Bool?
     let archived: Bool?
 }
 
@@ -82,7 +103,7 @@ extension ListNetworkService {
     /// - Parameters:
     ///   - name: The name for the new list.
     ///   - completion: Completion handler with result containing created ListItem or error.
-    func createList(name: String, completion: @escaping (Result<ListItem, Error>) -> Void) {
+    func createList(for task: TaskEntity, completion: @escaping (Result<ListItem, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
@@ -95,7 +116,17 @@ extension ListNetworkService {
                 request.httpMethod = "POST"
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                let body = CreateListRequest(name: name)
+                
+                let dueAtString = task.target != nil ? iso8601MillisecondsFormatter.string(from: task.target!) : nil
+                let body = CreateListRequest(
+                    name: task.name,
+                    details: task.details,
+                    folder: task.folder?.serverId,
+                    done: task.completed == 0 ? nil : task.completed == 2,
+                    important: task.important,
+                    pinned: task.pinned,
+                    dueAt: dueAtString,
+                    hasDueTime: task.hasTargetTime)
                 do {
                     request.httpBody = try JSONEncoder().encode(body)
                 } catch {
@@ -120,7 +151,6 @@ extension ListNetworkService {
                     }
                     do {
                         let decoded = try JSONDecoder().decode(ListItem.self, from: data)
-                        logger.info("List create succeeded. ID: \(decoded.id)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
                         }
@@ -140,15 +170,13 @@ extension ListNetworkService {
 
     /// Updates an existing list on the server.
     /// - Parameters:
-    ///   - id: The id of the list to update.
-    ///   - name: New name for the list.
-    ///   - archived: New archived value.
+    ///   - task: The TaskEntity to update.
     ///   - completion: Completion handler with result containing updated ListItem or error.
-    func updateList(id: String, name: String? = nil, archived: Bool? = nil, completion: @escaping (Result<ListItem, Error>) -> Void) {
+    func updateList(to task: TaskEntity, completion: @escaping (Result<ListItem, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(id)") else {
+                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(task.serverId ?? "")") else {
                     logger.error("Invalid URL for list update.")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -157,7 +185,19 @@ extension ListNetworkService {
                 request.httpMethod = "PATCH"
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                let body = UpdateListRequest(id: id, name: name, archived: archived)
+                
+                let dueAtString = task.target != nil ? iso8601MillisecondsFormatter.string(from: task.target!) : nil
+                let body = UpdateListRequest(
+                    id: task.serverId ?? UUID().uuidString,
+                    name: task.name,
+                    details: task.details,
+                    folder: task.folder?.serverId,
+                    done: task.completed == 0 ? nil : task.completed == 2,
+                    important: task.important,
+                    pinned: task.pinned,
+                    dueAt: dueAtString,
+                    hasDueTime: task.hasTargetTime,
+                    archived: task.removed)
                 do {
                     request.httpBody = try JSONEncoder().encode(body)
                 } catch {
@@ -182,7 +222,6 @@ extension ListNetworkService {
                     }
                     do {
                         let decoded = try JSONDecoder().decode(ListItem.self, from: data)
-                        logger.info("List update succeeded. ID: \(decoded.id)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
                         }
@@ -200,3 +239,4 @@ extension ListNetworkService {
         }
     }
 }
+

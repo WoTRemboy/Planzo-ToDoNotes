@@ -53,9 +53,9 @@ struct ToDoNotesApp: App {
                 .task {
                     if authService.isAuthorized {
                         ListNetworkService.shared.syncAllBackTasks()
-                        logger.info("SyncAllBackTasks started for Backend folder tasks.")
+                        logger.info("SyncAllBackTasks started for syncing all tasks.")
                     } else {
-                        logger.info("User is not authorized, skipping Backend folder sync.")
+                        logger.info("User is not authorized, skipping server sync.")
                     }
                 }
         }

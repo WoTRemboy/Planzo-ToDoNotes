@@ -10,8 +10,16 @@ struct ListItem: Codable {
     let ownerSub: String
     let name: String
     let archived: Bool
+    let createdAt: String
     let updatedAt: String
     let shareLinks: [ShareLink]
+    let details: String?
+    let folder: String?
+    let done: Bool
+    let important: Bool
+    let pinned: Bool
+    let dueAt: String?
+    let hasDueTime: Bool
 }
 
 struct ListDelete: Codable {
