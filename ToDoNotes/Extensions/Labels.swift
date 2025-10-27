@@ -421,7 +421,7 @@ final class Texts {
         static let taskCreation = "TaskCreationPage"
         static let timeFormat = "TimeFormat"
         static let firstDayOfWeek = "FirstDayOfWeek"
-        static let didCreateDefaultFolders = "DidCreateDefaultFolders"
+        static let didCreateDefaultFolders = "DidCreateDefaultFoldersSet"
     }
     
     // MARK: - Namespace ID Keys

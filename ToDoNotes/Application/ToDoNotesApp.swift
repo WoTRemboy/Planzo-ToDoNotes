@@ -42,7 +42,6 @@ struct ToDoNotesApp: App {
                 // Applies the saved user theme on launch
                 .onAppear {
                     setTheme(style: userTheme.userInterfaceStyle)
-                    authService.loadPersistedProfile()
                     FolderCoreDataService.createDefaultFoldersIfNeeded()
                 }
                 // Injects Core Data context into the environment
@@ -51,6 +50,7 @@ struct ToDoNotesApp: App {
                 .environmentObject(tokenService)
                 .environmentObject(subscriptionService)
                 .task {
+                    authService.loadPersistedProfile()
                     if authService.isAuthorized {
                         ListNetworkService.shared.syncAllBackTasks()
                         logger.info("SyncAllBackTasks started for syncing all tasks.")
@@ -118,4 +118,3 @@ extension ToDoNotesApp {
         }
     }
 }
-
