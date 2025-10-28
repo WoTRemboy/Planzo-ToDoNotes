@@ -80,6 +80,7 @@ final class TaskService {
         // Converts ChecklistItems to Core Data entities
         let checklistEntities = checklist.map { item -> ChecklistEntity in
             let entityItem = ChecklistEntity(context: viewContext)
+            entityItem.serverId = item.serverId
             entityItem.name = item.name
             entityItem.completed = item.completed
             return entityItem
@@ -99,21 +100,27 @@ final class TaskService {
         
         try save()
         
-        // If the task is a backend task and has a serverId, sync checklist items to server
-//        if task.folder == FolderEnum.back.rawValue, task.serverId != nil {
-//            // For each checklist item, create or update it on the server
-//            if let checklistEntities = task.checklist?.array as? [ChecklistEntity] {
-//                for checklistEntity in checklistEntities {
-//                    if checklistEntity.serverId != nil {
-//                        // Update existing checklist item on server
-//                        ListItemNetworkService.shared.updateChecklistItem(checklistEntity, for: task)
-//                    } else {
-//                        // Create new checklist item on server
-//                        ListItemNetworkService.shared.createChecklistItem(for: task, with: checklistEntity.name ?? String())
-//                    }
-//                }
-//            }
-//        }
+        // If the task has a serverId, sync checklist items to server
+        if task.serverId != nil {
+            // For each checklist item, create or update it on the server
+            if let checklistEntities = task.checklist?.array as? [ChecklistEntity] {
+                for checklistEntity in checklistEntities {
+                    if checklistEntity.serverId != nil {
+                        // Update existing checklist item on server
+                        ListItemNetworkService.shared.updateChecklistItem(checklistEntity, for: task)
+                    } else {
+                        ListItemNetworkService.shared.createChecklistItem(for: task, item: checklistEntity) { result in
+                            switch result {
+                            case .success(let serverId):
+                                updateChecklistEntityServerIdAndSave(checklistEntity, serverId: serverId)
+                            case .failure(let error):
+                                logger.error("Failed to save context after updating checklistEntity serverId: \(error.localizedDescription)")
+                            }
+                        }
+                    }
+                }
+            }
+        }
         ListNetworkService.shared.updateTaskOnServer(for: task)
     }
     
@@ -198,6 +205,19 @@ final class TaskService {
             logger.debug("Removed tasks deleted successfully.")
         } catch {
             logger.error("Error deleting removed tasks: \(error.localizedDescription)")
+        }
+    }
+    
+    static private func updateChecklistEntityServerIdAndSave(_ checklistEntity: ChecklistEntity, serverId: String) {
+        guard !serverId.isEmpty else { return }
+        let context = checklistEntity.managedObjectContext!
+        context.perform {
+            checklistEntity.serverId = serverId
+            do {
+                try context.save()
+            } catch {
+                logger.error("Failed to save context after updating checklistEntity serverId: \(error.localizedDescription)")
+            }
         }
     }
     
@@ -486,4 +506,3 @@ extension TaskService {
 enum TaskServiceError: Error {
     case folderIsTheSame
 }
-

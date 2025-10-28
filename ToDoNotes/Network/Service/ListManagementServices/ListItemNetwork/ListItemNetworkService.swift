@@ -76,7 +76,7 @@ final class ListItemNetworkService {
     ///   - notes: Notes for the item
     ///   - dueAt: Due date
     ///   - completion: Completion handler with created ListTaskItem or error
-    func createItem(listId: String, title: String, notes: String, dueAt: String? = nil, completion: @escaping (Result<ListTaskItem, Error>) -> Void) {
+    func createItem(for item: ChecklistEntity, listId: String, completion: @escaping (Result<ListTaskItem, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
@@ -91,7 +91,7 @@ final class ListItemNetworkService {
                 request.httpMethod = "POST"
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                let body = CreateItemRequest(title: title, notes: notes, dueAt: dueAt)
+                let body = CreateItemRequest(title: item.name, notes: "", dueAt: nil)
                 do {
                     request.httpBody = try JSONEncoder().encode(body)
                 } catch {

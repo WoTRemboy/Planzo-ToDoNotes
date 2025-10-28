@@ -8,9 +8,9 @@
 struct ListTaskItem: Codable {
     let id: String
     let listId: String
-    let title: String
+    let title: String?
     let done: Bool
-    let notes: String
+    let notes: String?
     let dueAt: String?
     let updatedAt: String
     let updatedBy: String
@@ -31,8 +31,8 @@ struct ItemSyncResponse: Codable {
 }
 
 struct CreateItemRequest: Codable {
-    let title: String
-    let notes: String
+    let title: String?
+    let notes: String?
     let dueAt: String?
 }
 
