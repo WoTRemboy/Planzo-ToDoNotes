@@ -119,24 +119,14 @@ extension ListItemNetworkService {
     }
 
     /// Deletes a checklist item from the server and locally.
-    internal func deleteChecklistItem(_ checklistItem: ChecklistEntity, for task: TaskEntity, completion: ((Result<Void, Error>) -> Void)? = nil) {
+    static internal func deleteChecklistItem(_ checklistItem: ChecklistItem, for task: TaskEntity, completion: ((Result<Void, Error>) -> Void)? = nil) {
         guard let listServerId = task.serverId, !listServerId.isEmpty, let itemServerId = checklistItem.serverId else {
             completion?(.failure(NSError(domain: "Checklist", code: -4, userInfo: [NSLocalizedDescriptionKey: "No server id for task or item."]))); return
         }
         self.deleteItem(listId: listServerId, id: itemServerId) { result in
             switch result {
             case .success:
-                if let context = checklistItem.managedObjectContext {
-                    context.delete(checklistItem)
-                    do {
-                        try context.save()
-                        completion?(.success(()))
-                    } catch {
-                        completion?(.failure(error))
-                    }
-                } else {
-                    completion?(.success(()))
-                }
+                completion?(.success(()))
             case .failure(let error):
                 completion?(.failure(error))
             }

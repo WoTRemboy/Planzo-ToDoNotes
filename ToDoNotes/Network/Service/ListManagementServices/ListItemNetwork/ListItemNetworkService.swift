@@ -143,7 +143,7 @@ final class ListItemNetworkService {
     ///   - listId: List id
     ///   - id: Item id
     ///   - completion: Completion handler with success or error
-    func deleteItem(listId: String, id: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    static func deleteItem(listId: String, id: String, completion: @escaping (Result<Void, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):

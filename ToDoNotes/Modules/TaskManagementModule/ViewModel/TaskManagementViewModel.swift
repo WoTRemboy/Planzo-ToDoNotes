@@ -511,6 +511,9 @@ final class TaskManagementViewModel: ObservableObject {
         if let sourceIndex = checklistLocal.firstIndex(of: item) {
             checklistLocal.remove(at: sourceIndex)
         }
+        if let entity {
+            ListItemNetworkService.deleteChecklistItem(item, for: entity)
+        }
     }
     
     /// Sets the currently dragged checklist item.
