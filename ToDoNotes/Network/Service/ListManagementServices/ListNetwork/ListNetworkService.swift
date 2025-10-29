@@ -18,7 +18,7 @@ final class ListNetworkService {
     /// - Parameters:
     ///   - since: String for incremental sync.
     ///   - completion: Completion handler with result containing ListSyncResponse or error.
-    func fetchLists(since: String? = nil, completion: @escaping (Result<ListSyncResponse, Error>) -> Void) {
+    func fetchLists(since: String?, completion: @escaping (Result<ListSyncResponse, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
@@ -51,6 +51,7 @@ final class ListNetworkService {
                         logger.info("List fetch succeeded. Upserts: \(decoded.upserts.count), Deletes: \(decoded.deletes.count)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
+                            UserCoreDataService.shared.updateLastSyncAt()
                         }
                     } catch {
                         logger.error("Failed to decode list fetch response: \(error.localizedDescription)")

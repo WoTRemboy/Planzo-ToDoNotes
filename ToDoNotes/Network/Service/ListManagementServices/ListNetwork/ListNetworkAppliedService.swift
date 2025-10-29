@@ -13,10 +13,10 @@ private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListN
 
 extension ListNetworkService {
     
-    internal func syncTasksIfNeeded(for task: TaskEntity) {
+    internal func syncTasksIfNeeded(for task: TaskEntity, since: String?) {
         let context = task.managedObjectContext
         if let serverId = task.serverId, !serverId.isEmpty {
-            self.fetchLists { result in
+            self.fetchLists(since: since) { result in
                 switch result {
                 case .success(let syncResult):
                     if let remote = syncResult.upserts.first(where: { $0.id == serverId }) {
@@ -90,21 +90,35 @@ extension ListNetworkService {
         }
     }
     
-    internal func syncAllBackTasks() {
+    internal func syncAllBackTasks(since: String?) {
         let context = CoreDataProvider.shared.persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
         do {
             let localTasks = try context.fetch(fetchRequest)
-            backendSyncAllTasks(context: context, localTasks: localTasks)
+            backendSyncAllTasks(since: since, context: context, localTasks: localTasks)
         } catch {
             logger.error("Failed to fetch backend tasks for sync: \(error.localizedDescription)")
         }
     }
     
-    private func backendSyncAllTasks(context: NSManagedObjectContext, localTasks: [TaskEntity]) {
-        self.fetchLists { result in
+    private func backendSyncAllTasks(since: String?, context: NSManagedObjectContext, localTasks: [TaskEntity]) {
+        self.fetchLists(since: since) { result in
+            var localTasks = localTasks
+            
             switch result {
             case .success(let syncResult):
+                
+                let deletedTasks = syncResult.deletes
+                for deleted in deletedTasks {
+                    if let taskToDelete = localTasks.first(where: { $0.serverId == deleted.id }) {
+                        context.delete(taskToDelete)
+                        if let index = localTasks.firstIndex(where: { $0 === taskToDelete }) {
+                            localTasks.remove(at: index)
+                        }
+                        logger.info("Deleted local task because it was deleted on server: \(deleted.id)")
+                    }
+                }
+                
                 let remoteTasks = syncResult.upserts
                 
                 let localTasksToUpload = localTasks.filter { local in
@@ -113,6 +127,9 @@ extension ListNetworkService {
                 }
 
                 for local in localTasksToUpload {
+                    let sinceDate = Date.iso8601SecondsDateFormatter.date(from: since ?? "") ?? .distantPast
+                    let updatedDate = local.updatedAt ?? .distantPast
+                    guard updatedDate > sinceDate else { continue }
                     self.createList(for: local) { createResult in
                         switch createResult {
                         case .success(let listItem):
@@ -182,7 +199,7 @@ extension ListNetworkService {
                         newTask.hasTargetTime = remote.hasDueTime
                         newTask.removed = remote.archived
                         if let parsedDate = Date.iso8601DateFormatter.date(from: remote.updatedAt) {
-                            newTask.created = parsedDate
+                            newTask.updatedAt = parsedDate
                         }
                         if let createdDate = Date.iso8601DateFormatter.date(from: remote.createdAt) {
                             newTask.created = createdDate

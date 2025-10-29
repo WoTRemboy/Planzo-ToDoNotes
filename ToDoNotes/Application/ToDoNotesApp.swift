@@ -52,7 +52,7 @@ struct ToDoNotesApp: App {
                 .task {
                     authService.loadPersistedProfile()
                     if authService.isAuthorized {
-                        ListNetworkService.shared.syncAllBackTasks()
+                        ListNetworkService.shared.syncAllBackTasks(since: authService.currentUser?.lastSyncAt)
                         logger.info("SyncAllBackTasks started for syncing all tasks.")
                     } else {
                         logger.info("User is not authorized, skipping server sync.")

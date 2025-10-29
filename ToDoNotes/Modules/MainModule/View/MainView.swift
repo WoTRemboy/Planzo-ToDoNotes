@@ -5,6 +5,7 @@
 //  Created by Roman Tverdokhleb on 1/4/25.
 //
 
+import Foundation
 import SwiftUI
 import TipKit
 
@@ -118,6 +119,13 @@ struct MainView: View {
         }
         .popView(isPresented: $viewModel.showingTaskEditRemovedAlert, onTap: {}, onDismiss: {}) {
             editAlert
+        }
+        .refreshable {
+            guard let lastSyncAt = authService.currentUser?.lastSyncAt else {
+                await refreshAllTasks()
+                return
+            }
+            await refreshTasks(since: lastSyncAt)
         }
     }
     
@@ -311,6 +319,19 @@ extension MainView {
     /// Access filtered segmented tasks from the view model.
     private var filteredSegmentedTasks: [(Date?, [TaskEntity])] {
         viewModel.filteredSegmentedTasks
+    }
+    
+    @MainActor
+    private func refreshAllTasks() async {
+        await refreshTasks(since: nil)
+    }
+    
+    @MainActor
+    private func refreshTasks(since: String?) async {
+        await withCheckedContinuation { continuation in
+            ListNetworkService.shared.syncAllBackTasks(since: since)
+            continuation.resume()
+        }
     }
 }
 
