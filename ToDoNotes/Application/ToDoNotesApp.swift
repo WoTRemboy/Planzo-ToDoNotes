@@ -42,7 +42,6 @@ struct ToDoNotesApp: App {
                 // Applies the saved user theme on launch
                 .onAppear {
                     setTheme(style: userTheme.userInterfaceStyle)
-                    authService.loadPersistedProfile()
                     FolderCoreDataService.createDefaultFoldersIfNeeded()
                 }
                 // Injects Core Data context into the environment
@@ -51,11 +50,12 @@ struct ToDoNotesApp: App {
                 .environmentObject(tokenService)
                 .environmentObject(subscriptionService)
                 .task {
+                    authService.loadPersistedProfile()
                     if authService.isAuthorized {
-                        ListNetworkService.shared.syncAllBackTasks()
-                        logger.info("SyncAllBackTasks started for Backend folder tasks.")
+                        ListNetworkService.shared.syncAllBackTasks(since: authService.currentUser?.lastSyncAt)
+                        logger.info("SyncAllBackTasks started for syncing all tasks.")
                     } else {
-                        logger.info("User is not authorized, skipping Backend folder sync.")
+                        logger.info("User is not authorized, skipping server sync.")
                     }
                 }
         }
@@ -118,4 +118,3 @@ extension ToDoNotesApp {
         }
     }
 }
-

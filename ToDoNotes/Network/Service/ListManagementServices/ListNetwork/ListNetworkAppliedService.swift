@@ -13,11 +13,10 @@ private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListN
 
 extension ListNetworkService {
     
-    internal func syncTasksIfNeeded(for task: TaskEntity) {
-        let name = task.name ?? String()
+    internal func syncTasksIfNeeded(for task: TaskEntity, since: String?) {
         let context = task.managedObjectContext
         if let serverId = task.serverId, !serverId.isEmpty {
-            self.fetchLists { result in
+            self.fetchLists(since: since) { result in
                 switch result {
                 case .success(let syncResult):
                     if let remote = syncResult.upserts.first(where: { $0.id == serverId }) {
@@ -38,7 +37,7 @@ extension ListNetworkService {
                                     }
                                 }
                             } else if localUpdatedAt > serverUpdatedAt {
-                                self.updateList(id: serverId, name: name, archived: task.removed) { updateResult in
+                                self.updateList(to: task) { updateResult in
                                     switch updateResult {
                                     case .success(let listItem):
                                         logger.info("Task updated on backend from local changes: \(listItem.id)")
@@ -54,7 +53,7 @@ extension ListNetworkService {
                             logger.error("Failed to parse server updatedAt date for task id: \(serverId)")
                         }
                     } else {
-                        self.createList(name: name) { createResult in
+                        self.createList(for: task) { createResult in
                             switch createResult {
                             case .success(let listItem):
                                 logger.info("Task created on backend: \(listItem.id)")
@@ -76,7 +75,7 @@ extension ListNetworkService {
                 }
             }
         } else {
-            self.createList(name: name) { createResult in
+            self.createList(for: task) { createResult in
                 switch createResult {
                 case .success(let listItem):
                     logger.info("Task created on backend: \(listItem.id)")
@@ -91,38 +90,90 @@ extension ListNetworkService {
         }
     }
     
-    internal func syncAllBackTasks() {
+    internal func syncAllBackTasks(since: String?) {
         let context = CoreDataProvider.shared.persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
-//        fetchRequest.predicate = NSPredicate(format: "folder == %@", FolderEnum.back.rawValue)
         do {
             let localTasks = try context.fetch(fetchRequest)
-            backendSyncAllTasks(context: context, localTasks: localTasks)
+            backendSyncAllTasks(since: since, context: context, localTasks: localTasks)
         } catch {
             logger.error("Failed to fetch backend tasks for sync: \(error.localizedDescription)")
         }
     }
     
-    private func backendSyncAllTasks(context: NSManagedObjectContext, localTasks: [TaskEntity]) {
-        self.fetchLists { result in
+    private func backendSyncAllTasks(since: String?, context: NSManagedObjectContext, localTasks: [TaskEntity]) {
+        self.fetchLists(since: since) { result in
+            var localTasks = localTasks
+            
             switch result {
             case .success(let syncResult):
+                
+                let deletedTasks = syncResult.deletes
+                for deleted in deletedTasks {
+                    if let taskToDelete = localTasks.first(where: { $0.serverId == deleted.id }) {
+                        context.delete(taskToDelete)
+                        if let index = localTasks.firstIndex(where: { $0 === taskToDelete }) {
+                            localTasks.remove(at: index)
+                        }
+                        logger.info("Deleted local task because it was deleted on server: \(deleted.id)")
+                    }
+                }
+                
                 let remoteTasks = syncResult.upserts
                 
+                let localTasksToUpload = localTasks.filter { local in
+                    guard let serverId = local.serverId, !serverId.isEmpty else { return true }
+                    return !remoteTasks.contains(where: { $0.id == serverId })
+                }
+
+                for local in localTasksToUpload {
+                    let sinceDate = Date.iso8601SecondsDateFormatter.date(from: since ?? "") ?? .distantPast
+                    let updatedDate = local.updatedAt ?? .distantPast
+                    guard updatedDate > sinceDate else { continue }
+                    self.createList(for: local) { createResult in
+                        switch createResult {
+                        case .success(let listItem):
+                            logger.info("Local task uploaded to backend: \(listItem.id)")
+                            local.serverId = listItem.id
+                            do { try context.save() } catch {
+                                logger.error("Failed to save serverId to Core Data: \(error.localizedDescription)")
+                            }
+                        case .failure(let error):
+                            logger.error("Failed to upload local task to backend: \(error.localizedDescription)")
+                        }
+                    }
+                }
                 for remote in remoteTasks {
                     if let task = localTasks.first(where: { $0.serverId == remote.id }),
-                       let serverId = task.serverId {
+                       let _ = task.serverId {
                         
+                        let completed: Int16 = !remote.isTask ? 0 : (remote.done ? 2 : 1)
                         let parsedDate = Date.iso8601DateFormatter.date(from: remote.updatedAt)
                         let localDate = task.updatedAt ?? Date.distantPast
                         
+                        let dueAtDate = Date.iso8601SecondsDateFormatter.date(from: remote.dueAt ?? String())
+                        
                         if let parsedDate, parsedDate > localDate {
                             task.name = remote.name
+                            task.details = remote.details
+                            task.completed = completed
+                            task.important = remote.important
+                            task.pinned = remote.pinned
+                            task.target = dueAtDate
+                            task.hasTargetTime = remote.hasDueTime
                             task.removed = remote.archived
                             task.updatedAt = parsedDate
-                            logger.info("Local task updated from server: \(remote.id)")
+                            if let folder = remote.folder {
+                                let folderFetch: NSFetchRequest<FolderEntity> = FolderEntity.fetchRequest()
+                                folderFetch.predicate = NSPredicate(format: "serverId == %@", folder)
+                                folderFetch.fetchLimit = 1
+                                if let foundFolder = try? context.fetch(folderFetch).first {
+                                    task.folder = foundFolder
+                                }
+                            }
+                            logger.info("Local task updated from server: \(remote.id) \(remote.name)")
                         } else if let parsedDate, localDate > parsedDate {
-                            self.updateList(id: serverId, name: task.name, archived: task.removed) { updateResult in
+                            self.updateList(to: task) { updateResult in
                                 switch updateResult {
                                 case .success(let listItem):
                                     logger.info("Task updated on backend from local changes: \(listItem.id)")
@@ -131,21 +182,36 @@ extension ListNetworkService {
                                 }
                             }
                             logger.info("Server task updated from local task: \(remote.id)")
-                        } else {
-                            logger.info("Task is synchronized and up to date: \(remote.id)")
                         }
                     } else {
+                        let completed: Int16 = !remote.isTask ? 0 : (remote.done ? 2 : 1)
+                        let dueAtDate = Date.iso8601SecondsDateFormatter.date(from: remote.dueAt ?? String())
+                        
                         let newTask = TaskEntity(context: context)
                         newTask.id = UUID()
                         newTask.serverId = remote.id
                         newTask.name = remote.name
+                        newTask.details = remote.details
+                        newTask.completed = completed
+                        newTask.important = remote.important
+                        newTask.pinned = remote.pinned
+                        newTask.target = dueAtDate
+                        newTask.hasTargetTime = remote.hasDueTime
                         newTask.removed = remote.archived
                         if let parsedDate = Date.iso8601DateFormatter.date(from: remote.updatedAt) {
                             newTask.updatedAt = parsedDate
-                            newTask.created = parsedDate
                         }
-//                        newTask.folder?.name = FolderEnum.back.rawValue
-                        logger.info("Local task created from server: \(remote.id)")
+                        if let createdDate = Date.iso8601DateFormatter.date(from: remote.createdAt) {
+                            newTask.created = createdDate
+                        }
+                        if let folder = remote.folder {
+                            let folderFetch: NSFetchRequest<FolderEntity> = FolderEntity.fetchRequest()
+                            folderFetch.predicate = NSPredicate(format: "serverId == %@", folder)
+                            folderFetch.fetchLimit = 1
+                            if let foundFolder = try? context.fetch(folderFetch).first {
+                                newTask.folder = foundFolder
+                            }
+                        }
                     }
                 }
                 
@@ -160,16 +226,34 @@ extension ListNetworkService {
         }
     }
     
-    internal func archiveTaskOnServer(for task: TaskEntity, value: Bool, completion: ((Result<ListItem, Error>) -> Void)? = nil) {
+    internal func updateTaskOnServer(for task: TaskEntity, completion: ((Result<ListItem, Error>) -> Void)? = nil) {
+        let context = task.managedObjectContext
         guard let serverId = task.serverId, !serverId.isEmpty else {
-            logger.error("archiveTaskOnServer: serverId is missed")
-            completion?(.failure(NSError(domain: "ListNetworkService", code: -1, userInfo: [NSLocalizedDescriptionKey: "serverId is missed"])))
+            logger.error("updateTaskOnServer: serverId is missed")
+            self.createList(for: task) { createResult in
+                switch createResult {
+                case .success(let listItem):
+                    logger.info("Task created on backend: \(listItem.id)")
+                    task.serverId = listItem.id
+                    if let context {
+                        do {
+                            try context.save()
+                            completion?(.success(listItem))
+                        } catch {
+                            logger.error("Failed to save serverId to Core Data: \(error.localizedDescription)")
+                        }
+                    }
+                case .failure(let error):
+                    completion?(.failure(error))
+                    logger.error("Failed to create backend task: \(error.localizedDescription)")
+                }
+            }
             return
         }
-        self.updateList(id: serverId, archived: value) { result in
+        self.updateList(to: task) { result in
             switch result {
             case .success(let listItem):
-                logger.info("Task archived on backend: \(listItem.id)")
+                logger.info("Task updated on backend: \(listItem.id)")
                 completion?(.success(listItem))
             case .failure(let error):
                 logger.error("Failed to archive task on backend: \(error.localizedDescription)")

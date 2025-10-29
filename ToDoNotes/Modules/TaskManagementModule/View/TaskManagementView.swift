@@ -102,8 +102,12 @@ struct TaskManagementView: View {
             if entity == nil {
                 viewModel.check = .none
             }
+        }
+        .task {
             if let entity = entity {
-                ListItemNetworkService.shared.syncChecklistForTaskEntity(entity)
+                ListItemNetworkService.shared.syncChecklistForTaskEntity(entity) {
+                    viewModel.reloadChecklist(from: entity.checklist)
+                }
             }
         }
         // Share Sheet Presentation

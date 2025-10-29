@@ -25,11 +25,12 @@ final class UserCoreDataService {
         entity.id = user.id
         entity.provider = user.provider
         entity.sub = user.sub
-        entity.createdAt = ISO8601DateFormatter().date(from: user.createdAt)
+        entity.createdAt = Date.iso8601DateFormatter.date(from: user.createdAt ?? "")
         entity.name = user.name
         entity.email = user.email
         entity.avatarURL = user.avatarUrl
         entity.subscription = user.subscription.rawValue
+        entity.lastSyncAt = user.lastSyncAt
         saveContext()
     }
     
@@ -37,20 +38,36 @@ final class UserCoreDataService {
     
     internal func loadUser() -> User? {
         let fetchRequest: NSFetchRequest<UserEntity> = UserEntity.fetchRequest()
-        fetchRequest.fetchLimit = 1
         if let entity = try? viewContext.fetch(fetchRequest).first {
+            let id = entity.id
+            let provider = entity.provider
+            let sub = entity.sub
+            let createdAt = entity.createdAt
+            let name = entity.name
+            let email = entity.email
+            let avatarURL = entity.avatarURL
+            let subscription = entity.subscription
+            let lastSyncAt = entity.lastSyncAt
             return User(
-                id: entity.id ?? "",
-                provider: entity.provider ?? "",
-                sub: entity.sub ?? "",
-                createdAt: entity.createdAt?.iso8601String ?? "",
-                name: entity.name,
-                email: entity.email,
-                avatarUrl: entity.avatarURL,
-                subscription: SubscriptionType(rawValue: entity.subscription ?? "free") ?? .free
+                id: id,
+                provider: provider,
+                sub: sub,
+                createdAt: createdAt?.iso8601String,
+                name: name,
+                email: email,
+                avatarUrl: avatarURL,
+                subscription: SubscriptionType(rawValue: subscription ?? "free") ?? .free,
+                lastSyncAt: lastSyncAt
             )
         }
         return nil
+    }
+    
+    func updateLastSyncAt(date: Date = Date()) {
+        guard var user = loadUser() else { return }
+        let formatter = ISO8601DateFormatter()
+        user.lastSyncAt = formatter.string(from: date)
+        saveUser(user)
     }
     
     // MARK: - Delete User

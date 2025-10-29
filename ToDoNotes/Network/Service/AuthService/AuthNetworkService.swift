@@ -60,7 +60,7 @@ final class AuthNetworkService: ObservableObject {
                 self.saveAuthResponse(authResponse, idToken: idToken)
                 logger.info("Google authorization succeeded, access token received.")
                 DispatchQueue.main.async {
-                    ListNetworkService.shared.syncAllBackTasks()
+                    ListNetworkService.shared.syncAllBackTasks(since: nil)
                     completion(.success(authResponse))
                 }
                 LoadingOverlay.shared.hide()
@@ -110,13 +110,12 @@ final class AuthNetworkService: ObservableObject {
                 }
                 return
             }
-            
             do {
                 let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
                 self.saveAuthResponse(authResponse, idToken: idToken)
                 logger.info("Apple authorization succeeded, access token received.")
                 DispatchQueue.main.async {
-                    ListNetworkService.shared.syncAllBackTasks()
+                    ListNetworkService.shared.syncAllBackTasks(since: nil)
                     completion(.success(authResponse))
                 }
             } catch {
@@ -245,7 +244,8 @@ final class AuthNetworkService: ObservableObject {
                 createdAt: authResponse.user.createdAt,
                 name: (claims["name"] as? String) ?? (claims["given_name"] as? String),
                 email: claims["email"] as? String,
-                avatarUrl: claims["picture"] as? String
+                avatarUrl: claims["picture"] as? String,
+                lastSyncAt: nil
             )
             DispatchQueue.main.async {
                 self.currentUser = user

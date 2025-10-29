@@ -41,7 +41,8 @@ extension User {
             name: name,
             email: email,
             avatarUrl: avatarUrl,
-            subscription: newType
+            subscription: newType,
+            lastSyncAt: lastSyncAt
         )
     }
     

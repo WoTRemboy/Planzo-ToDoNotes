@@ -472,6 +472,7 @@ final class TaskManagementViewModel: ObservableObject {
         guard let checklistArray = checklist?.compactMap({ $0 as? ChecklistEntity }) else { return }
         for entity in checklistArray {
             let item = ChecklistItem(
+                serverId: entity.serverId,
                 name: entity.name ?? String(),
                 completed: entity.completed)
             checklistLocal.append(item)
@@ -484,6 +485,11 @@ final class TaskManagementViewModel: ObservableObject {
             let emptyItem = ChecklistItem(name: String())
             checklistLocal.append(emptyItem)
         }
+    }
+    
+    internal func reloadChecklist(from checklist: NSOrderedSet?) {
+        self.checklistLocal.removeAll()
+        setupChecklistLocal(checklist)
     }
     
     /// Toggles completion for a checklist item, and moves to top if completed.
@@ -504,6 +510,9 @@ final class TaskManagementViewModel: ObservableObject {
     internal func removeChecklistItem(_ item: ChecklistItem) {
         if let sourceIndex = checklistLocal.firstIndex(of: item) {
             checklistLocal.remove(at: sourceIndex)
+        }
+        if let entity {
+            ListItemNetworkService.deleteChecklistItem(item, for: entity)
         }
     }
     

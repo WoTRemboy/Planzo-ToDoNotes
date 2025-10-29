@@ -34,7 +34,6 @@ final class GoogleAuthService: ObservableObject {
         GIDSignIn.sharedInstance.configuration = config
         GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewController) { signInResult, error in
             if let error = error {
-                logger.error("Google Sign-In failed: \(error.localizedDescription)")
                 completion(.failure(error))
                 return
             }

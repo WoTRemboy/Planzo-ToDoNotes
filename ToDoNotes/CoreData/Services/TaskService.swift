@@ -80,6 +80,7 @@ final class TaskService {
         // Converts ChecklistItems to Core Data entities
         let checklistEntities = checklist.map { item -> ChecklistEntity in
             let entityItem = ChecklistEntity(context: viewContext)
+            entityItem.serverId = item.serverId
             entityItem.name = item.name
             entityItem.completed = item.completed
             return entityItem
@@ -99,25 +100,28 @@ final class TaskService {
         
         try save()
         
-        // If the task is a backend task and has a serverId, sync checklist items to server
-//        if task.folder == FolderEnum.back.rawValue, task.serverId != nil {
-//            // For each checklist item, create or update it on the server
-//            if let checklistEntities = task.checklist?.array as? [ChecklistEntity] {
-//                for checklistEntity in checklistEntities {
-//                    if checklistEntity.serverId != nil {
-//                        // Update existing checklist item on server
-//                        ListItemNetworkService.shared.updateChecklistItem(checklistEntity, for: task)
-//                    } else {
-//                        // Create new checklist item on server
-//                        ListItemNetworkService.shared.createChecklistItem(for: task, with: checklistEntity.name ?? String())
-//                    }
-//                }
-//            }
-//        }
-        
-//        if task.folder == FolderEnum.back.rawValue {
-//            ListNetworkService.shared.syncTasksIfNeeded(for: task)
-//        }
+        // If the task has a serverId, sync checklist items to server
+        if task.serverId != nil {
+            // For each checklist item, create or update it on the server
+            if let checklistEntities = task.checklist?.array as? [ChecklistEntity] {
+                for checklistEntity in checklistEntities {
+                    if checklistEntity.serverId != nil {
+                        // Update existing checklist item on server
+                        ListItemNetworkService.shared.updateChecklistItem(checklistEntity, for: task)
+                    } else {
+                        ListItemNetworkService.shared.createChecklistItem(for: task, item: checklistEntity) { result in
+                            switch result {
+                            case .success(let serverId):
+                                updateChecklistEntityServerIdAndSave(checklistEntity, serverId: serverId)
+                            case .failure(let error):
+                                logger.error("Failed to save context after updating checklistEntity serverId: \(error.localizedDescription)")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        ListNetworkService.shared.updateTaskOnServer(for: task)
     }
     
     // MARK: - Task Duplication
@@ -170,12 +174,25 @@ final class TaskService {
         if newTask.completed != 2 {
             restoreNotifications(for: newTask)
         }
+        
+        ListNetworkService.shared.updateTaskOnServer(for: newTask)
     }
     
     // MARK: - Deletion
     
     /// Permanently deletes a specific task.
     static func deleteRemovedTask(for entity: TaskEntity) throws {
+        if let serverId = entity.serverId {
+            ListNetworkService.shared.deleteList(withId: serverId) { result in
+                switch result {
+                case .success:
+                    logger.info("Task deleted from backend: \(serverId)")
+                case .failure(let error):
+                    logger.error("Failed to delete task from backend: \(error.localizedDescription)")
+                }
+            }
+        }
+        
         viewContext.delete(entity)
         try save()
     }
@@ -184,6 +201,23 @@ final class TaskService {
     static func deleteRemovedTasks() {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Texts.CoreData.entity)
         fetchRequest.predicate = NSPredicate(format: "removed == %@", NSNumber(value: true))
+        
+        let syncFetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        syncFetchRequest.predicate = NSPredicate(format: "removed == YES && serverId != nil")
+        if let tasksToDelete = try? viewContext.fetch(syncFetchRequest) {
+            for task in tasksToDelete {
+                if let serverId = task.serverId {
+                    ListNetworkService.shared.deleteList(withId: serverId) { result in
+                        switch result {
+                        case .success:
+                            logger.info("Task deleted from backend: \(serverId)")
+                        case .failure(let error):
+                            logger.error("Failed to delete task from backend: \(error.localizedDescription)")
+                        }
+                    }
+                }
+            }
+        }
         
         let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         batchDeleteRequest.resultType = .resultTypeObjectIDs
@@ -202,6 +236,19 @@ final class TaskService {
         }
     }
     
+    static private func updateChecklistEntityServerIdAndSave(_ checklistEntity: ChecklistEntity, serverId: String) {
+        guard !serverId.isEmpty else { return }
+        let context = checklistEntity.managedObjectContext!
+        context.perform {
+            checklistEntity.serverId = serverId
+            do {
+                try context.save()
+            } catch {
+                logger.error("Failed to save context after updating checklistEntity serverId: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     /// Deletes all tasks and clears all notifications.
     static func deleteAllTasksAndClearNotifications(completion: ((Bool) -> Void)? = nil) {
         let notificationCenter = UNUserNotificationCenter.current()
@@ -210,6 +257,24 @@ final class TaskService {
         notificationCenter.removeAllDeliveredNotifications()
         
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Texts.CoreData.entity)
+        
+        let syncFetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        syncFetchRequest.predicate = NSPredicate(format: "serverId != nil")
+        if let tasksToDelete = try? viewContext.fetch(syncFetchRequest) {
+            for task in tasksToDelete {
+                if let serverId = task.serverId {
+                    ListNetworkService.shared.deleteList(withId: serverId) { result in
+                        switch result {
+                        case .success:
+                            logger.info("Task deleted from backend: \(serverId)")
+                        case .failure(let error):
+                            logger.error("Failed to delete task from backend: \(error.localizedDescription)")
+                        }
+                    }
+                }
+            }
+        }
+        
         let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         batchDeleteRequest.resultType = .resultTypeObjectIDs
         
@@ -306,18 +371,21 @@ extension TaskService {
         }
         
         try save()
+        ListNetworkService.shared.updateTaskOnServer(for: task)
     }
     
     static func toggleImportant(for task: TaskEntity) throws {
         task.important.toggle()
         task.updatedAt = .now
         try save()
+        ListNetworkService.shared.updateTaskOnServer(for: task)
     }
     
     static func togglePinned(for task: TaskEntity) throws {
         task.pinned.toggle()
         task.updatedAt = .now
         try save()
+        ListNetworkService.shared.updateTaskOnServer(for: task)
     }
     
     static func toggleRemoved(for task: TaskEntity) throws {
@@ -328,18 +396,11 @@ extension TaskService {
         // Only handle notifications if the removed status actually changed
         if task.removed && !wasRemoved {
             UNUserNotificationCenter.current().removeNotifications(for: task.notifications)
-            
-//            if task.folder == FolderEnum.back.rawValue {
-//                ListNetworkService.shared.archiveTaskOnServer(for: task, value: true)
-//            }
         } else if !task.removed && wasRemoved {
             restoreNotifications(for: task)
-            
-//            if task.folder == FolderEnum.back.rawValue {
-//                ListNetworkService.shared.archiveTaskOnServer(for: task, value: false)
-//            }
         }
         try save()
+        ListNetworkService.shared.updateTaskOnServer(for: task)
     }
     
     static func updateFolder(for task: TaskEntity, to folder: Folder) throws {
@@ -364,9 +425,7 @@ extension TaskService {
             do {
                 try save()
                 logger.debug("Folder updated and context saved successfully.")
-//                if folder == FolderEnum.back.rawValue {
-//                    ListNetworkService.shared.syncTasksIfNeeded(for: task)
-//                }
+                ListNetworkService.shared.updateTaskOnServer(for: task)
             } catch {
                 logger.error("Error saving context after updating folder: \(error.localizedDescription)")
             }
