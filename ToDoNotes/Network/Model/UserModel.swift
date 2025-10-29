@@ -7,20 +7,21 @@
 
 /// Represents the user information returned by the authorization response.
 internal struct User: Codable, Equatable {
-    let id: String
-    let provider: String
-    let sub: String
-    let createdAt: String
+    let id: String?
+    let provider: String?
+    let sub: String?
+    let createdAt: String?
     let name: String?
     let email: String?
     let avatarUrl: String?
     let subscription: SubscriptionType
+    var lastSyncAt: String?
     
     private enum CodingKeys: String, CodingKey {
         case id, provider, sub, createdAt, name, email, avatarUrl, subscription
     }
     
-    internal init(id: String, provider: String, sub: String, createdAt: String, name: String? = nil, email: String? = nil, avatarUrl: String? = nil, subscription: SubscriptionType = .free) {
+    internal init(id: String?, provider: String?, sub: String?, createdAt: String?, name: String?, email: String?, avatarUrl: String?, subscription: SubscriptionType = .free, lastSyncAt: String?) {
         self.id = id
         self.provider = provider
         self.sub = sub
@@ -29,6 +30,7 @@ internal struct User: Codable, Equatable {
         self.email = email
         self.avatarUrl = avatarUrl
         self.subscription = subscription
+        self.lastSyncAt = lastSyncAt
     }
     
     internal init(from decoder: Decoder) throws {
@@ -41,6 +43,7 @@ internal struct User: Codable, Equatable {
         email = try container.decodeIfPresent(String.self, forKey: .email)
         avatarUrl = try container.decodeIfPresent(String.self, forKey: .avatarUrl)
         subscription = try container.decodeIfPresent(SubscriptionType.self, forKey: .subscription) ?? .free
+        lastSyncAt = nil
     }
 }
 
