@@ -18,7 +18,7 @@ final class ListNetworkService {
     /// - Parameters:
     ///   - since: String for incremental sync.
     ///   - completion: Completion handler with result containing ListSyncResponse or error.
-    func fetchLists(since: String? = nil, completion: @escaping (Result<ListSyncResponse, Error>) -> Void) {
+    func fetchLists(since: String?, completion: @escaping (Result<ListSyncResponse, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
@@ -51,6 +51,7 @@ final class ListNetworkService {
                         logger.info("List fetch succeeded. Upserts: \(decoded.upserts.count), Deletes: \(decoded.deletes.count)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
+                            UserCoreDataService.shared.updateLastSyncAt()
                         }
                     } catch {
                         logger.error("Failed to decode list fetch response: \(error.localizedDescription)")
@@ -68,13 +69,29 @@ final class ListNetworkService {
 }
 
 struct CreateListRequest: Codable {
-    let name: String
+    let name: String?
+    let details: String?
+    let folder: String?
+    let done: Bool
+    let isTask: Bool
+    let important: Bool
+    let pinned: Bool
+    let dueAt: String?
+    let hasDueTime: Bool
 }
 
 struct UpdateListRequest: Codable {
     let id: String
     let name: String?
-    let archived: Bool?
+    let details: String?
+    let folder: String?
+    let done: Bool
+    let isTask: Bool
+    let important: Bool
+    let pinned: Bool
+    let dueAt: String?
+    let hasDueTime: Bool
+    let archived: Bool
 }
 
 extension ListNetworkService {
@@ -82,7 +99,7 @@ extension ListNetworkService {
     /// - Parameters:
     ///   - name: The name for the new list.
     ///   - completion: Completion handler with result containing created ListItem or error.
-    func createList(name: String, completion: @escaping (Result<ListItem, Error>) -> Void) {
+    func createList(for task: TaskEntity, completion: @escaping (Result<ListItem, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
@@ -95,7 +112,18 @@ extension ListNetworkService {
                 request.httpMethod = "POST"
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                let body = CreateListRequest(name: name)
+                
+                let dueAtString = task.target != nil ? Date.iso8601DateFormatter.string(from: task.target!) : nil
+                let body = CreateListRequest(
+                    name: task.name,
+                    details: task.details,
+                    folder: task.folder?.serverId,
+                    done: task.completed == 2,
+                    isTask: task.completed != 0,
+                    important: task.important,
+                    pinned: task.pinned,
+                    dueAt: dueAtString,
+                    hasDueTime: task.hasTargetTime)
                 do {
                     request.httpBody = try JSONEncoder().encode(body)
                 } catch {
@@ -120,7 +148,6 @@ extension ListNetworkService {
                     }
                     do {
                         let decoded = try JSONDecoder().decode(ListItem.self, from: data)
-                        logger.info("List create succeeded. ID: \(decoded.id)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
                         }
@@ -140,15 +167,13 @@ extension ListNetworkService {
 
     /// Updates an existing list on the server.
     /// - Parameters:
-    ///   - id: The id of the list to update.
-    ///   - name: New name for the list.
-    ///   - archived: New archived value.
+    ///   - task: The TaskEntity to update.
     ///   - completion: Completion handler with result containing updated ListItem or error.
-    func updateList(id: String, name: String? = nil, archived: Bool? = nil, completion: @escaping (Result<ListItem, Error>) -> Void) {
+    func updateList(to task: TaskEntity, completion: @escaping (Result<ListItem, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(id)") else {
+                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(task.serverId ?? "")") else {
                     logger.error("Invalid URL for list update.")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -157,7 +182,20 @@ extension ListNetworkService {
                 request.httpMethod = "PATCH"
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                let body = UpdateListRequest(id: id, name: name, archived: archived)
+                
+                let dueAtString = task.target != nil ? Date.iso8601DateFormatter.string(from: task.target!) : nil
+                let body = UpdateListRequest(
+                    id: task.serverId ?? UUID().uuidString,
+                    name: task.name,
+                    details: task.details,
+                    folder: task.folder?.serverId,
+                    done: task.completed == 2,
+                    isTask: task.completed != 0,
+                    important: task.important,
+                    pinned: task.pinned,
+                    dueAt: dueAtString,
+                    hasDueTime: task.hasTargetTime,
+                    archived: task.removed)
                 do {
                     request.httpBody = try JSONEncoder().encode(body)
                 } catch {
@@ -182,7 +220,6 @@ extension ListNetworkService {
                     }
                     do {
                         let decoded = try JSONDecoder().decode(ListItem.self, from: data)
-                        logger.info("List update succeeded. ID: \(decoded.id)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
                         }
@@ -191,6 +228,42 @@ extension ListNetworkService {
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
+                    }
+                }
+                task.resume()
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    /// Deletes a list (task) from the server by id.
+    /// - Parameters:
+    ///   - id: The id of the list to delete.
+    ///   - completion: Completion handler with result (Void or Error).
+    func deleteList(withId id: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        AccessTokenManager.shared.getValidAccessToken { result in
+            switch result {
+            case .success(let accessToken):
+                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(id)") else {
+                    logger.error("Invalid URL for list deletion.")
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "DELETE"
+                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        logger.error("List delete request failed: \(error.localizedDescription)")
+                        DispatchQueue.main.async {
+                            completion(.failure(error))
+                        }
+                        return
+                    }
+                    logger.info("List delete succeeded. ID: \(id)")
+                    DispatchQueue.main.async {
+                        completion(.success(()))
                     }
                 }
                 task.resume()

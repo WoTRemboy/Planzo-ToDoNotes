@@ -13,9 +13,9 @@ private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListI
 
 extension ListItemNetworkService {
     /// Syncs the checklist items for a backend task with the server.
-    internal func syncChecklistIfNeeded(for task: TaskEntity) {
+    internal func syncChecklistIfNeeded(for task: TaskEntity, completion: (() -> Void)? = nil) {
         guard let serverId = task.serverId, !serverId.isEmpty else { return }
-        guard let context = task.managedObjectContext else { return }
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
 
         // Fetch items (checklist) from server
         self.fetchItems(listId: serverId) { result in
@@ -33,9 +33,11 @@ extension ListItemNetworkService {
                 }
 
                 // Upsert remote checklist items
+                var checklistToAdd = [ChecklistEntity]()
                 for remote in remoteItems {
                     if let localItem = localByServerId[remote.id] {
                         // Update fields
+                        localItem.serverId = remote.id
                         localItem.name = remote.title
                         localItem.completed = remote.done
                     } else {
@@ -45,12 +47,13 @@ extension ListItemNetworkService {
                         newItem.serverId = remote.id
                         newItem.name = remote.title
                         newItem.completed = remote.done
-                        // Relationship: add to task
-                        var checklist = (task.checklist?.array as? [ChecklistEntity]) ?? []
-                        checklist.append(newItem)
-                        task.checklist = NSOrderedSet(array: checklist)
+                        newItem.task = task
+                        checklistToAdd.append(newItem)
                     }
                 }
+                var checklist = (task.checklist?.array as? [ChecklistEntity]) ?? []
+                checklist.append(contentsOf: checklistToAdd)
+                task.checklist = NSOrderedSet(array: checklist)
 
                 // Handle deletes (remote deletions)
                 let deletedIds = Set(syncResult.deletes.map { $0.id })
@@ -70,42 +73,30 @@ extension ListItemNetworkService {
                     logger.error("Failed to save checklist context after sync: \(error.localizedDescription)")
                 }
                 logger.info("Checklist sync finished for task: \(serverId)")
+                completion?()
             case .failure(let error):
                 logger.error("Failed to sync checklist from server: \(error.localizedDescription)")
+                completion?()
             }
         }
     }
 
     /// Syncs checklist items for a specific task entity (for TaskManagementView on open).
-    internal func syncChecklistForTaskEntity(_ task: TaskEntity) {
-        syncChecklistIfNeeded(for: task)
+    internal func syncChecklistForTaskEntity(_ task: TaskEntity, completion: (() -> Void)? = nil) {
+        syncChecklistIfNeeded(for: task, completion: completion)
     }
 
     // MARK: - Checklist Management
 
     /// Creates a new checklist item on the server and locally.
-    internal func createChecklistItem(for task: TaskEntity, with title: String, completion: ((Result<ChecklistEntity, Error>) -> Void)? = nil) {
+    internal func createChecklistItem(for task: TaskEntity, item: ChecklistEntity, completion: ((Result<String, Error>) -> Void)? = nil) {
         guard let listServerId = task.serverId, !listServerId.isEmpty else {
             completion?(.failure(NSError(domain: "Checklist", code: -1, userInfo: [NSLocalizedDescriptionKey: "No serverId for parent task."]))); return
         }
-        self.createItem(listId: listServerId, title: title, notes: "", dueAt: nil) { result in
+        self.createItem(for: item, listId: listServerId) { result in
             switch result {
             case .success(let remoteItem):
-                guard let context = task.managedObjectContext else { completion?(.failure(NSError(domain: "Checklist", code: -2, userInfo: nil))); return }
-                let checklistEntity = ChecklistEntity(context: context)
-                checklistEntity.serverId = remoteItem.id
-                checklistEntity.name = remoteItem.title
-                checklistEntity.completed = remoteItem.done
-                // Add to task's checklist
-                var checklist = (task.checklist?.array as? [ChecklistEntity]) ?? []
-                checklist.append(checklistEntity)
-                task.checklist = NSOrderedSet(array: checklist)
-                do {
-                    try context.save()
-                    completion?(.success(checklistEntity))
-                } catch {
-                    completion?(.failure(error))
-                }
+                completion?(.success(remoteItem.id))
             case .failure(let error):
                 completion?(.failure(error))
             }
@@ -113,21 +104,14 @@ extension ListItemNetworkService {
     }
 
     /// Updates an existing checklist item on the server and locally.
-    internal func updateChecklistItem(_ checklistItem: ChecklistEntity, for task: TaskEntity, completion: ((Result<ChecklistEntity, Error>) -> Void)? = nil) {
+    internal func updateChecklistItem(_ checklistItem: ChecklistEntity, for task: TaskEntity, completion: ((Result<String, Error>) -> Void)? = nil) {
         guard let listServerId = task.serverId, !listServerId.isEmpty, let itemServerId = checklistItem.serverId else {
             completion?(.failure(NSError(domain: "Checklist", code: -3, userInfo: [NSLocalizedDescriptionKey: "No server id for task or item."]))); return
         }
         self.updateItem(listId: listServerId, id: itemServerId, title: checklistItem.name, done: checklistItem.completed, notes: nil, dueAt: nil) { result in
             switch result {
             case .success(let remoteItem):
-                checklistItem.name = remoteItem.title
-                checklistItem.completed = remoteItem.done
-                do {
-                    try checklistItem.managedObjectContext?.save()
-                    completion?(.success(checklistItem))
-                } catch {
-                    completion?(.failure(error))
-                }
+                completion?(.success(remoteItem.id))
             case .failure(let error):
                 completion?(.failure(error))
             }
@@ -135,24 +119,14 @@ extension ListItemNetworkService {
     }
 
     /// Deletes a checklist item from the server and locally.
-    internal func deleteChecklistItem(_ checklistItem: ChecklistEntity, for task: TaskEntity, completion: ((Result<Void, Error>) -> Void)? = nil) {
+    static internal func deleteChecklistItem(_ checklistItem: ChecklistItem, for task: TaskEntity, completion: ((Result<Void, Error>) -> Void)? = nil) {
         guard let listServerId = task.serverId, !listServerId.isEmpty, let itemServerId = checklistItem.serverId else {
             completion?(.failure(NSError(domain: "Checklist", code: -4, userInfo: [NSLocalizedDescriptionKey: "No server id for task or item."]))); return
         }
         self.deleteItem(listId: listServerId, id: itemServerId) { result in
             switch result {
             case .success:
-                if let context = checklistItem.managedObjectContext {
-                    context.delete(checklistItem)
-                    do {
-                        try context.save()
-                        completion?(.success(()))
-                    } catch {
-                        completion?(.failure(error))
-                    }
-                } else {
-                    completion?(.success(()))
-                }
+                completion?(.success(()))
             case .failure(let error):
                 completion?(.failure(error))
             }

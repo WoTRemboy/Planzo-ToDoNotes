@@ -13,6 +13,7 @@ import CoreTransferable
 /// A model representing an individual checklist item inside a task.
 struct ChecklistItem: Identifiable, Equatable, Codable, Transferable {
     var id = UUID()
+    var serverId: String?
     var name: String
     var completed: Bool = false
     

@@ -28,7 +28,7 @@ final class FolderCoreDataService {
                 id: UUID(),
                 name: folderEnum.name,
                 locked: false,
-                serverId: "",
+                serverId: folderEnum.rawValue,
                 system: folderEnum.system,
                 shared: folderEnum == .shared,
                 visible: true,
