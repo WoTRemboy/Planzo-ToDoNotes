@@ -15,7 +15,8 @@ struct ListItem: Codable {
     let shareLinks: [ShareLink]
     let details: String?
     let folder: String?
-    let done: Bool?
+    let done: Bool
+    let isTask: Bool
     let important: Bool
     let pinned: Bool
     let dueAt: String?

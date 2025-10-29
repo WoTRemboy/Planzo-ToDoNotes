@@ -182,6 +182,17 @@ final class TaskService {
     
     /// Permanently deletes a specific task.
     static func deleteRemovedTask(for entity: TaskEntity) throws {
+        if let serverId = entity.serverId {
+            ListNetworkService.shared.deleteList(withId: serverId) { result in
+                switch result {
+                case .success:
+                    logger.info("Task deleted from backend: \(serverId)")
+                case .failure(let error):
+                    logger.error("Failed to delete task from backend: \(error.localizedDescription)")
+                }
+            }
+        }
+        
         viewContext.delete(entity)
         try save()
     }
@@ -190,6 +201,23 @@ final class TaskService {
     static func deleteRemovedTasks() {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Texts.CoreData.entity)
         fetchRequest.predicate = NSPredicate(format: "removed == %@", NSNumber(value: true))
+        
+        let syncFetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        syncFetchRequest.predicate = NSPredicate(format: "removed == YES && serverId != nil")
+        if let tasksToDelete = try? viewContext.fetch(syncFetchRequest) {
+            for task in tasksToDelete {
+                if let serverId = task.serverId {
+                    ListNetworkService.shared.deleteList(withId: serverId) { result in
+                        switch result {
+                        case .success:
+                            logger.info("Task deleted from backend: \(serverId)")
+                        case .failure(let error):
+                            logger.error("Failed to delete task from backend: \(error.localizedDescription)")
+                        }
+                    }
+                }
+            }
+        }
         
         let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         batchDeleteRequest.resultType = .resultTypeObjectIDs
@@ -229,6 +257,24 @@ final class TaskService {
         notificationCenter.removeAllDeliveredNotifications()
         
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Texts.CoreData.entity)
+        
+        let syncFetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        syncFetchRequest.predicate = NSPredicate(format: "serverId != nil")
+        if let tasksToDelete = try? viewContext.fetch(syncFetchRequest) {
+            for task in tasksToDelete {
+                if let serverId = task.serverId {
+                    ListNetworkService.shared.deleteList(withId: serverId) { result in
+                        switch result {
+                        case .success:
+                            logger.info("Task deleted from backend: \(serverId)")
+                        case .failure(let error):
+                            logger.error("Failed to delete task from backend: \(error.localizedDescription)")
+                        }
+                    }
+                }
+            }
+        }
+        
         let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         batchDeleteRequest.resultType = .resultTypeObjectIDs
         
@@ -506,3 +552,4 @@ extension TaskService {
 enum TaskServiceError: Error {
     case folderIsTheSame
 }
+

@@ -71,11 +71,12 @@ struct CreateListRequest: Codable {
     let name: String?
     let details: String?
     let folder: String?
-    let done: Bool?
-    let important: Bool?
-    let pinned: Bool?
+    let done: Bool
+    let isTask: Bool
+    let important: Bool
+    let pinned: Bool
     let dueAt: String?
-    let hasDueTime: Bool?
+    let hasDueTime: Bool
 }
 
 struct UpdateListRequest: Codable {
@@ -83,12 +84,13 @@ struct UpdateListRequest: Codable {
     let name: String?
     let details: String?
     let folder: String?
-    let done: Bool?
-    let important: Bool?
-    let pinned: Bool?
+    let done: Bool
+    let isTask: Bool
+    let important: Bool
+    let pinned: Bool
     let dueAt: String?
-    let hasDueTime: Bool?
-    let archived: Bool?
+    let hasDueTime: Bool
+    let archived: Bool
 }
 
 extension ListNetworkService {
@@ -115,7 +117,8 @@ extension ListNetworkService {
                     name: task.name,
                     details: task.details,
                     folder: task.folder?.serverId,
-                    done: task.completed == 0 ? nil : task.completed == 2,
+                    done: task.completed == 2,
+                    isTask: task.completed != 0,
                     important: task.important,
                     pinned: task.pinned,
                     dueAt: dueAtString,
@@ -185,7 +188,8 @@ extension ListNetworkService {
                     name: task.name,
                     details: task.details,
                     folder: task.folder?.serverId,
-                    done: task.completed == 0 ? nil : task.completed == 2,
+                    done: task.completed == 2,
+                    isTask: task.completed != 0,
                     important: task.important,
                     pinned: task.pinned,
                     dueAt: dueAtString,
@@ -231,5 +235,40 @@ extension ListNetworkService {
             }
         }
     }
+    
+    /// Deletes a list (task) from the server by id.
+    /// - Parameters:
+    ///   - id: The id of the list to delete.
+    ///   - completion: Completion handler with result (Void or Error).
+    func deleteList(withId id: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        AccessTokenManager.shared.getValidAccessToken { result in
+            switch result {
+            case .success(let accessToken):
+                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(id)") else {
+                    logger.error("Invalid URL for list deletion.")
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "DELETE"
+                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        logger.error("List delete request failed: \(error.localizedDescription)")
+                        DispatchQueue.main.async {
+                            completion(.failure(error))
+                        }
+                        return
+                    }
+                    logger.info("List delete succeeded. ID: \(id)")
+                    DispatchQueue.main.async {
+                        completion(.success(()))
+                    }
+                }
+                task.resume()
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 }
-

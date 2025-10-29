@@ -130,7 +130,7 @@ extension ListNetworkService {
                     if let task = localTasks.first(where: { $0.serverId == remote.id }),
                        let _ = task.serverId {
                         
-                        let completed: Int16 = remote.done == nil ? 0 : (remote.done ?? false) ? 2 : 1
+                        let completed: Int16 = !remote.isTask ? 0 : (remote.done ? 2 : 1)
                         let parsedDate = Date.iso8601DateFormatter.date(from: remote.updatedAt)
                         let localDate = task.updatedAt ?? Date.distantPast
                         
@@ -167,7 +167,7 @@ extension ListNetworkService {
                             logger.info("Server task updated from local task: \(remote.id)")
                         }
                     } else {
-                        let completed: Int16 = remote.done == nil ? 0 : (remote.done ?? false) ? 2 : 1
+                        let completed: Int16 = !remote.isTask ? 0 : (remote.done ? 2 : 1)
                         let dueAtDate = Date.iso8601SecondsDateFormatter.date(from: remote.dueAt ?? String())
                         
                         let newTask = TaskEntity(context: context)
