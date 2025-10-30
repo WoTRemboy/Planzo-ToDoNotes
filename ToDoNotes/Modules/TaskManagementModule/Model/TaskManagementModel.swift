@@ -16,6 +16,7 @@ struct ChecklistItem: Identifiable, Equatable, Codable, Transferable {
     var serverId: String?
     var name: String
     var completed: Bool = false
+    var order: Int
     
     /// Toggles the completed state of the checklist item if the new value is different and the name is not empty.
     /// - Parameter active: Boolean indicating the new completed state.

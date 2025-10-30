@@ -435,7 +435,6 @@ final class TaskManagementViewModel: ObservableObject {
     
     /// Adds a checklist item after the given id, or at the end if not found.
     internal func addChecklistItem(after id: UUID) {
-        let newItem = ChecklistItem(name: checkListItemText)
         let index: Int
         if checklistLocal.count < 1 {
             index = 0
@@ -446,6 +445,7 @@ final class TaskManagementViewModel: ObservableObject {
                 index = checklistLocal.count
             }
         }
+        let newItem = ChecklistItem(name: checkListItemText, order: index)
         // Animates the insertion for user feedback.
         withAnimation(.bouncy(duration: 0.2)) {
             checklistLocal.insert(newItem, at: index)
@@ -454,7 +454,7 @@ final class TaskManagementViewModel: ObservableObject {
     
     /// Appends a checklist item to the end.
     internal func appendChecklistItem() {
-        checklistLocal.append(ChecklistItem(name: checkListItemText))
+        checklistLocal.append(ChecklistItem(name: checkListItemText, order: checklistLocal.count))
     }
     
     /// Removes a checklist item by id, if more than one remains.
@@ -465,29 +465,23 @@ final class TaskManagementViewModel: ObservableObject {
         }
     }
     
-    /// Sets up the local checklist from a given NSOrderedSet (from persistence).
-    /// - Parameter checklist: The NSOrderedSet of ChecklistEntity (optional).
-    internal func setupChecklistLocal(_ checklist: NSOrderedSet? = []) {
-        // Converts from NSOrderedSet to array of ChecklistEntity.
-        guard let checklistArray = checklist?.compactMap({ $0 as? ChecklistEntity }) else { return }
+    /// Sets up the local checklist from a given NSSet (from persistence).
+    /// - Parameter checklist: The NSSet of ChecklistEntity (optional).
+    internal func setupChecklistLocal(_ checklist: NSSet? = nil) {
+        guard let checklistSet = checklist as? Set<ChecklistEntity> else { return }
+        let checklistArray = checklistSet.sorted { $0.order < $1.order }
+        checklistLocal.removeAll()
         for entity in checklistArray {
             let item = ChecklistItem(
                 serverId: entity.serverId,
                 name: entity.name ?? String(),
-                completed: entity.completed)
+                completed: entity.completed,
+                order: Int(entity.order))
             checklistLocal.append(item)
         }
     }
     
-    /// Ensures the checklist has at least one empty item.
-    private func setupEmptyChecklistLocal() {
-        if checklistLocal.isEmpty {
-            let emptyItem = ChecklistItem(name: String())
-            checklistLocal.append(emptyItem)
-        }
-    }
-    
-    internal func reloadChecklist(from checklist: NSOrderedSet?) {
+    internal func reloadChecklist(from checklist: NSSet?) {
         self.checklistLocal.removeAll()
         setupChecklistLocal(checklist)
     }
