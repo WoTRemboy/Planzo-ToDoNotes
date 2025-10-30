@@ -22,7 +22,7 @@ extension ListItemNetworkService {
             switch result {
             case .success(let syncResult):
                 let remoteItems = syncResult.upserts
-                let localChecklist = (task.checklist?.array as? [ChecklistEntity]) ?? []
+                let localChecklist = ((task.checklist as? Set<ChecklistEntity>) ?? []).sorted { $0.order < $1.order }
 
                 // Map checklist by serverId for quick lookup
                 var localByServerId: [String: ChecklistEntity] = [:]
@@ -40,6 +40,7 @@ extension ListItemNetworkService {
                         localItem.serverId = remote.id
                         localItem.name = remote.title
                         localItem.completed = remote.done
+                        localItem.order = Int32(remote.order)
                     } else {
                         // Insert new ChecklistEntity if does not exist
                         let newItem = ChecklistEntity(context: context)
@@ -48,12 +49,16 @@ extension ListItemNetworkService {
                         newItem.name = remote.title
                         newItem.completed = remote.done
                         newItem.task = task
+                        newItem.order = Int32(remote.order)
                         checklistToAdd.append(newItem)
                     }
                 }
-                var checklist = (task.checklist?.array as? [ChecklistEntity]) ?? []
+                var checklist = ((task.checklist as? Set<ChecklistEntity>) ?? []).sorted { $0.order < $1.order }
                 checklist.append(contentsOf: checklistToAdd)
-                task.checklist = NSOrderedSet(array: checklist)
+                for (index, item) in checklist.enumerated() {
+                    item.order = Int32(index)
+                }
+                task.checklist = NSSet(array: checklist)
 
                 // Handle deletes (remote deletions)
                 let deletedIds = Set(syncResult.deletes.map { $0.id })
@@ -105,10 +110,10 @@ extension ListItemNetworkService {
 
     /// Updates an existing checklist item on the server and locally.
     internal func updateChecklistItem(_ checklistItem: ChecklistEntity, for task: TaskEntity, completion: ((Result<String, Error>) -> Void)? = nil) {
-        guard let listServerId = task.serverId, !listServerId.isEmpty, let itemServerId = checklistItem.serverId else {
+        guard let listServerId = task.serverId, !listServerId.isEmpty else {
             completion?(.failure(NSError(domain: "Checklist", code: -3, userInfo: [NSLocalizedDescriptionKey: "No server id for task or item."]))); return
         }
-        self.updateItem(listId: listServerId, id: itemServerId, title: checklistItem.name, done: checklistItem.completed, notes: nil, dueAt: nil) { result in
+        self.updateItem(listId: listServerId, item: checklistItem) { result in
             switch result {
             case .success(let remoteItem):
                 completion?(.success(remoteItem.id))
@@ -133,3 +138,4 @@ extension ListItemNetworkService {
         }
     }
 }
+

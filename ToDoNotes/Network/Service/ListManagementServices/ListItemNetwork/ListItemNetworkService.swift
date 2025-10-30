@@ -91,7 +91,7 @@ final class ListItemNetworkService {
                 request.httpMethod = "POST"
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                let body = CreateItemRequest(title: item.name, notes: "", dueAt: nil)
+                let body = CreateItemRequest(title: item.name, notes: "", dueAt: nil, order: Int(item.order))
                 do {
                     request.httpBody = try JSONEncoder().encode(body)
                 } catch {
@@ -188,10 +188,17 @@ final class ListItemNetworkService {
     ///   - notes: New notes
     ///   - dueAt: New due date
     ///   - completion: Completion handler with updated ListTaskItem or error
-    func updateItem(listId: String, id: String, title: String? = nil, done: Bool? = nil, notes: String? = nil, dueAt: String? = nil, completion: @escaping (Result<ListTaskItem, Error>) -> Void) {
+    func updateItem(listId: String, item: ChecklistEntity, completion: @escaping (Result<ListTaskItem, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
+                guard let id = item.serverId else {
+                    logger.error("Invalid server id for checklist item update.")
+                    DispatchQueue.main.async {
+                        completion(.failure(URLError(.badURL)))
+                    }
+                    return
+                }
                 guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/items/\(id)") else {
                     logger.error("Invalid URL for item update.")
                     DispatchQueue.main.async {
@@ -203,7 +210,7 @@ final class ListItemNetworkService {
                 request.httpMethod = "PATCH"
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                let body = UpdateItemRequest(title: title, done: done, notes: notes, dueAt: dueAt)
+                let body = UpdateItemRequest(title: item.name, done: item.completed, notes: "", dueAt: "", order: Int(item.order))
                 do {
                     request.httpBody = try JSONEncoder().encode(body)
                 } catch {

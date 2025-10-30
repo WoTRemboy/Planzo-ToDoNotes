@@ -12,6 +12,7 @@ struct ListTaskItem: Codable {
     let done: Bool
     let notes: String?
     let dueAt: String?
+    let order: Int
     let updatedAt: String
     let updatedBy: String
     let deleted: Bool
@@ -34,11 +35,13 @@ struct CreateItemRequest: Codable {
     let title: String?
     let notes: String?
     let dueAt: String?
+    let order: Int
 }
 
 struct UpdateItemRequest: Codable {
     let title: String?
-    let done: Bool?
+    let done: Bool
     let notes: String?
     let dueAt: String?
+    let order: Int
 }
