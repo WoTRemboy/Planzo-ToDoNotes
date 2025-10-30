@@ -13,16 +13,27 @@ private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListI
 
 extension ListItemNetworkService {
     /// Syncs the checklist items for a backend task with the server.
-    internal func syncChecklistIfNeeded(for task: TaskEntity, completion: (() -> Void)? = nil) {
+    internal func syncChecklistIfNeeded(for task: TaskEntity, since: String?, completion: (() -> Void)? = nil) {
         guard let serverId = task.serverId, !serverId.isEmpty else { return }
         let context = CoreDataProvider.shared.persistentContainer.viewContext
 
         // Fetch items (checklist) from server
-        self.fetchItems(listId: serverId) { result in
+        self.fetchItems(listId: serverId, since: since) { result in
             switch result {
             case .success(let syncResult):
-                let remoteItems = syncResult.upserts
                 let localChecklist = ((task.checklist as? Set<ChecklistEntity>) ?? []).sorted { $0.order < $1.order }
+                // Handle deletes (remote deletions)
+                let deletedIds = Set(syncResult.deletes.map { $0.id })
+                if !deletedIds.isEmpty {
+                    let toRemove = localChecklist.filter { item in
+                        if let sid = item.serverId { return deletedIds.contains(sid) } else { return false }
+                    }
+                    for item in toRemove {
+                        context.delete(item)
+                    }
+                }
+                
+                let remoteItems = syncResult.upserts
 
                 // Map checklist by serverId for quick lookup
                 var localByServerId: [String: ChecklistEntity] = [:]
@@ -36,11 +47,17 @@ extension ListItemNetworkService {
                 var checklistToAdd = [ChecklistEntity]()
                 for remote in remoteItems {
                     if let localItem = localByServerId[remote.id] {
-                        // Update fields
-                        localItem.serverId = remote.id
-                        localItem.name = remote.title
-                        localItem.completed = remote.done
-                        localItem.order = Int32(remote.order)
+                        let updatedRemoteDate = Date.iso8601DateFormatter.date(from: remote.updatedAt) ?? .distantPast
+                        let updatedLocalDate = (task.updatedAt ?? .distantPast).addingTimeInterval(1)
+                        if updatedRemoteDate > updatedLocalDate {
+                            // Update fields
+                            localItem.serverId = remote.id
+                            localItem.name = remote.title
+                            localItem.completed = remote.done
+                            localItem.order = Int32(remote.order)
+                        } else {
+                            self.updateChecklistItem(localItem, for: task)
+                        }
                     } else {
                         // Insert new ChecklistEntity if does not exist
                         let newItem = ChecklistEntity(context: context)
@@ -54,22 +71,14 @@ extension ListItemNetworkService {
                     }
                 }
                 var checklist = ((task.checklist as? Set<ChecklistEntity>) ?? []).sorted { $0.order < $1.order }
-                checklist.append(contentsOf: checklistToAdd)
+                for newItem in checklistToAdd {
+                    let insertIndex = checklist.firstIndex(where: { newItem.order < $0.order }) ?? checklist.count
+                    checklist.insert(newItem, at: insertIndex)
+                }
                 for (index, item) in checklist.enumerated() {
                     item.order = Int32(index)
                 }
                 task.checklist = NSSet(array: checklist)
-
-                // Handle deletes (remote deletions)
-                let deletedIds = Set(syncResult.deletes.map { $0.id })
-                if !deletedIds.isEmpty {
-                    let toRemove = localChecklist.filter { item in
-                        if let sid = item.serverId { return deletedIds.contains(sid) } else { return false }
-                    }
-                    for item in toRemove {
-                        context.delete(item)
-                    }
-                }
 
                 // Save context if there were changes
                 do {
@@ -87,8 +96,8 @@ extension ListItemNetworkService {
     }
 
     /// Syncs checklist items for a specific task entity (for TaskManagementView on open).
-    internal func syncChecklistForTaskEntity(_ task: TaskEntity, completion: (() -> Void)? = nil) {
-        syncChecklistIfNeeded(for: task, completion: completion)
+    internal func syncChecklistForTaskEntity(_ task: TaskEntity, since: String?, completion: (() -> Void)? = nil) {
+        syncChecklistIfNeeded(for: task, since: since, completion: completion)
     }
 
     // MARK: - Checklist Management

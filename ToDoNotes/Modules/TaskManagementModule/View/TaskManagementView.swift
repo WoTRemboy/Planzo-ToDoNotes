@@ -21,6 +21,8 @@ struct TaskManagementView: View {
     /// View model for managing the task's data and UI state.
     @StateObject private var viewModel = TaskManagementViewModel()
     
+    @EnvironmentObject private var authService: AuthNetworkService
+    
     /// Binding to control the dynamic height of the management view (only used in pop-up mode).
     @Binding private var taskManagementHeight: CGFloat
     /// Indicates whether the keyboard is active.
@@ -105,7 +107,7 @@ struct TaskManagementView: View {
         }
         .task {
             if let entity = entity {
-                ListItemNetworkService.shared.syncChecklistForTaskEntity(entity) {
+                ListItemNetworkService.shared.syncChecklistForTaskEntity(entity, since: authService.currentUser?.lastSyncAt) {
                     viewModel.reloadChecklist(from: entity.checklist)
                 }
             }
@@ -354,6 +356,7 @@ struct TaskManagementView_Previews: PreviewProvider {
     static var previews: some View {
         PreviewWrapper()
             .environmentObject(TaskManagementViewModel())
+            .environmentObject(AuthNetworkService())
     }
     
     struct PreviewWrapper: View {
