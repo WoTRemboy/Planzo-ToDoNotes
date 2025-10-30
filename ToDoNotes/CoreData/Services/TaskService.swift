@@ -78,14 +78,15 @@ final class TaskService {
         task.notifications = NSSet(array: notificationEntities)
         
         // Converts ChecklistItems to Core Data entities
-        let checklistEntities = checklist.map { item -> ChecklistEntity in
+        let checklistEntities = checklist.enumerated().map { (index, item) -> ChecklistEntity in
             let entityItem = ChecklistEntity(context: viewContext)
             entityItem.serverId = item.serverId
             entityItem.name = item.name
             entityItem.completed = item.completed
+            entityItem.order = Int32(index)
             return entityItem
         }
-        task.checklist = NSOrderedSet(array: checklistEntities)
+        task.checklist = NSSet(array: checklistEntities)
         
         // Determines folder if not set
         if entity == nil, let folder = folder, !folder.system {
@@ -103,7 +104,7 @@ final class TaskService {
         // If the task has a serverId, sync checklist items to server
         if task.serverId != nil {
             // For each checklist item, create or update it on the server
-            if let checklistEntities = task.checklist?.array as? [ChecklistEntity] {
+            if let checklistEntities = (task.checklist as? Set<ChecklistEntity>)?.sorted(by: { $0.order < $1.order }) {
                 for checklistEntity in checklistEntities {
                     if checklistEntity.serverId != nil {
                         // Update existing checklist item on server
@@ -157,15 +158,16 @@ final class TaskService {
             newTask.notifications = NSSet(array: newNotifications)
         }
         
-        if let checklistArray = task.checklist?.array as? [ChecklistEntity] {
+        if let checklistArray = (task.checklist as? Set<ChecklistEntity>)?.sorted(by: { $0.order < $1.order }) {
             var newChecklist = [ChecklistEntity]()
             for checklistItem in checklistArray {
                 let newItem = ChecklistEntity(context: viewContext)
                 newItem.name = checklistItem.name
                 newItem.completed = checklistItem.completed
+                newItem.order = checklistItem.order
                 newChecklist.append(newItem)
             }
-            newTask.checklist = NSOrderedSet(array: newChecklist)
+            newTask.checklist = NSSet(array: newChecklist)
         }
         
         try save()
@@ -349,7 +351,7 @@ extension TaskService {
     static func haveTextContent(for entity: TaskEntity) -> Bool {
         let details = entity.details ?? String()
         
-        let firstChecklistElement = entity.checklist?.compactMap({ $0 as? ChecklistEntity }).first
+        let firstChecklistElement = (entity.checklist as? Set<ChecklistEntity>)?.sorted(by: { $0.order < $1.order }).first
         let firstChecklistName = firstChecklistElement?.name ?? String()
         let checklistCount = entity.checklist?.count ?? 0
 

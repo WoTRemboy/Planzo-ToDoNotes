@@ -256,8 +256,6 @@ final class AuthNetworkService: ObservableObject {
             }
         } else {
             DispatchQueue.main.async {
-                self.currentUser = authResponse.user
-                UserCoreDataService.shared.saveUser(authResponse.user)
                 self.tokenStorage.save(token: authResponse.accessToken, type: .accessToken)
                 self.tokenStorage.save(token: authResponse.refreshToken, type: .refreshToken)
             }
