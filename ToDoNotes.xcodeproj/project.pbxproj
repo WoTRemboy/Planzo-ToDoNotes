@@ -90,6 +90,7 @@
 		6380EB2D2D8843BA002CB75E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 6380EB2C2D8843BA002CB75E /* Localizable.xcstrings */; };
 		63837AD02EB4F2A80061EB49 /* NotificationNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63837ACF2EB4F2A80061EB49 /* NotificationNetworkService.swift */; };
 		63837AD22EB4F5FD0061EB49 /* NotificationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63837AD12EB4F5F40061EB49 /* NotificationModel.swift */; };
+		63837AD42EB4F6870061EB49 /* NotificationNetworkAppliedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63837AD32EB4F6870061EB49 /* NotificationNetworkAppliedService.swift */; };
 		638E21962D2C209200FB1464 /* TaskManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638E21952D2C209200FB1464 /* TaskManagementView.swift */; };
 		6393E2332DC015CF00025838 /* AppleIDAuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393E2322DC015C300025838 /* AppleIDAuthorizationTests.swift */; };
 		6393E2352DC015DF00025838 /* GoogleAuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393E2342DC015D800025838 /* GoogleAuthorizationTests.swift */; };
@@ -277,6 +278,7 @@
 		6380EB2C2D8843BA002CB75E /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		63837ACF2EB4F2A80061EB49 /* NotificationNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNetworkService.swift; sourceTree = "<group>"; };
 		63837AD12EB4F5F40061EB49 /* NotificationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModel.swift; sourceTree = "<group>"; };
+		63837AD32EB4F6870061EB49 /* NotificationNetworkAppliedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNetworkAppliedService.swift; sourceTree = "<group>"; };
 		638E21952D2C209200FB1464 /* TaskManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementView.swift; sourceTree = "<group>"; };
 		6393E2322DC015C300025838 /* AppleIDAuthorizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleIDAuthorizationTests.swift; sourceTree = "<group>"; };
 		6393E2342DC015D800025838 /* GoogleAuthorizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAuthorizationTests.swift; sourceTree = "<group>"; };
@@ -881,6 +883,7 @@
 			isa = PBXGroup;
 			children = (
 				63837ACF2EB4F2A80061EB49 /* NotificationNetworkService.swift */,
+				63837AD32EB4F6870061EB49 /* NotificationNetworkAppliedService.swift */,
 			);
 			path = NotificationsNetwork;
 			sourceTree = "<group>";
@@ -1452,6 +1455,7 @@
 				63CF11B32EABA9360068C1F9 /* ConfigureSelectedFolderView.swift in Sources */,
 				63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */,
 				63BCD8B02D77298D0016950F /* PopView.swift in Sources */,
+				63837AD42EB4F6870061EB49 /* NotificationNetworkAppliedService.swift in Sources */,
 				637B9F4E2D295B490010F13B /* MainViewModel.swift in Sources */,
 				63BCD8B52D7B666B0016950F /* SearchBar.swift in Sources */,
 				63F849462D38145E00E9D5CE /* TaskChecklistView.swift in Sources */,
