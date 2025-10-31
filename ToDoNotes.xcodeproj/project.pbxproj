@@ -88,6 +88,8 @@
 		637B9F662D2974E40010F13B /* FilterScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F652D2974E40010F13B /* FilterScrollView.swift */; };
 		637B9F692D29754F0010F13B /* FilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637B9F682D29754F0010F13B /* FilterCell.swift */; };
 		6380EB2D2D8843BA002CB75E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 6380EB2C2D8843BA002CB75E /* Localizable.xcstrings */; };
+		63837AD02EB4F2A80061EB49 /* NotificationNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63837ACF2EB4F2A80061EB49 /* NotificationNetworkService.swift */; };
+		63837AD22EB4F5FD0061EB49 /* NotificationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63837AD12EB4F5F40061EB49 /* NotificationModel.swift */; };
 		638E21962D2C209200FB1464 /* TaskManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638E21952D2C209200FB1464 /* TaskManagementView.swift */; };
 		6393E2332DC015CF00025838 /* AppleIDAuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393E2322DC015C300025838 /* AppleIDAuthorizationTests.swift */; };
 		6393E2352DC015DF00025838 /* GoogleAuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393E2342DC015D800025838 /* GoogleAuthorizationTests.swift */; };
@@ -273,6 +275,8 @@
 		637B9F652D2974E40010F13B /* FilterScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterScrollView.swift; sourceTree = "<group>"; };
 		637B9F682D29754F0010F13B /* FilterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCell.swift; sourceTree = "<group>"; };
 		6380EB2C2D8843BA002CB75E /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		63837ACF2EB4F2A80061EB49 /* NotificationNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNetworkService.swift; sourceTree = "<group>"; };
+		63837AD12EB4F5F40061EB49 /* NotificationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModel.swift; sourceTree = "<group>"; };
 		638E21952D2C209200FB1464 /* TaskManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementView.swift; sourceTree = "<group>"; };
 		6393E2322DC015C300025838 /* AppleIDAuthorizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleIDAuthorizationTests.swift; sourceTree = "<group>"; };
 		6393E2342DC015D800025838 /* GoogleAuthorizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAuthorizationTests.swift; sourceTree = "<group>"; };
@@ -399,6 +403,7 @@
 				63FD574C2E68B77D00B7B062 /* UserModel.swift */,
 				6328D5B92E881272000574AE /* ListModel.swift */,
 				6328D5BB2E881295000574AE /* ListItemModel.swift */,
+				63837AD12EB4F5F40061EB49 /* NotificationModel.swift */,
 				6328D5BD2E8812B3000574AE /* ShareModel.swift */,
 			);
 			path = Model;
@@ -521,6 +526,7 @@
 			children = (
 				6328D5C32E8939D2000574AE /* ListNetwork */,
 				636154522E89CB630063C880 /* ListItemNetwork */,
+				63837ACE2EB4F26C0061EB49 /* NotificationsNetwork */,
 				6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */,
 			);
 			path = ListManagementServices;
@@ -869,6 +875,14 @@
 				637B9F682D29754F0010F13B /* FilterCell.swift */,
 			);
 			path = Filter;
+			sourceTree = "<group>";
+		};
+		63837ACE2EB4F26C0061EB49 /* NotificationsNetwork */ = {
+			isa = PBXGroup;
+			children = (
+				63837ACF2EB4F2A80061EB49 /* NotificationNetworkService.swift */,
+			);
+			path = NotificationsNetwork;
 			sourceTree = "<group>";
 		};
 		638E21932D2C206400FB1464 /* TaskManagementModule */ = {
@@ -1393,12 +1407,14 @@
 				632514C62EAD3EBB000B4A3C /* CreateDeleteFolderButtonView.swift in Sources */,
 				63A5B6692D49446800B0E408 /* TaskDateParamRow.swift in Sources */,
 				63FD57512E68B83900B7B062 /* GoogleAuthService.swift in Sources */,
+				63837AD22EB4F5FD0061EB49 /* NotificationModel.swift in Sources */,
 				63CD66982D367EC50053C93C /* TaskManagementViewModel.swift in Sources */,
 				63278AF72E745170006E0578 /* LoginButtonView.swift in Sources */,
 				631315BD2D7DE21E0030D446 /* MainTaskRowWithActions.swift in Sources */,
 				635792102EAE36FD00C179BA /* ConfigureFoldersViewModel.swift in Sources */,
 				637B9F612D296FA90010F13B /* ContentView.swift in Sources */,
 				63C2DC792D8C4ABD00E6E0A0 /* ContextMenuHelper.swift in Sources */,
+				63837AD02EB4F2A80061EB49 /* NotificationNetworkService.swift in Sources */,
 				637B9F5A2D2969AC0010F13B /* CalendarView.swift in Sources */,
 				63AE65882D73181A009A3541 /* CustomNavLink.swift in Sources */,
 				632D0DD42D36BB270071684D /* TaskManagementNavBar.swift in Sources */,

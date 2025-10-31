@@ -120,13 +120,6 @@ struct MainView: View {
         .popView(isPresented: $viewModel.showingTaskEditRemovedAlert, onTap: {}, onDismiss: {}) {
             editAlert
         }
-        .refreshable {
-            guard let lastSyncAt = authService.currentUser?.lastSyncAt else {
-                await refreshAllTasks()
-                return
-            }
-            await refreshTasks(since: lastSyncAt)
-        }
     }
     
     // MARK: - Main Content Layout
@@ -137,6 +130,13 @@ struct MainView: View {
             MainCustomNavBar(title: Texts.MainPage.title, namespace: animation)
                 .zIndex(1)
             taskForm
+        }
+        .refreshable {
+            guard let lastSyncAt = authService.currentUser?.lastSyncAt else {
+                await refreshAllTasks()
+                return
+            }
+            await refreshTasks(since: lastSyncAt)
         }
     }
     
