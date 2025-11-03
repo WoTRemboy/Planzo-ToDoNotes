@@ -71,8 +71,10 @@ final class TaskService {
         let notificationEntities = notifications.map { item -> NotificationEntity in
             let entityItem = NotificationEntity(context: viewContext)
             entityItem.id = item.id
+            entityItem.serverId = item.serverId
             entityItem.type = item.type.rawValue
             entityItem.target = item.target
+            entityItem.updatedAt = .now
             return entityItem
         }
         task.notifications = NSSet(array: notificationEntities)
@@ -101,28 +103,76 @@ final class TaskService {
         
         try save()
         
-        // If the task has a serverId, sync checklist items to server
-        if task.serverId != nil {
-            // For each checklist item, create or update it on the server
-            if let checklistEntities = (task.checklist as? Set<ChecklistEntity>)?.sorted(by: { $0.order < $1.order }) {
-                for checklistEntity in checklistEntities {
-                    if checklistEntity.serverId != nil {
-                        // Update existing checklist item on server
-                        ListItemNetworkService.shared.updateChecklistItem(checklistEntity, for: task)
-                    } else {
-                        ListItemNetworkService.shared.createChecklistItem(for: task, item: checklistEntity) { result in
-                            switch result {
-                            case .success(let serverId):
-                                updateChecklistEntityServerIdAndSave(checklistEntity, serverId: serverId)
-                            case .failure(let error):
-                                logger.error("Failed to save context after updating checklistEntity serverId: \(error.localizedDescription)")
+        ListNetworkService.shared.updateTaskOnServer(for: task) { result in
+            switch result {
+            case .success(_):
+                if let checklistEntities = (task.checklist as? Set<ChecklistEntity>)?.sorted(by: { $0.order < $1.order }) {
+                    for checklistEntity in checklistEntities {
+                        if checklistEntity.serverId != nil {
+                            // Update existing checklist item on server
+                            ListItemNetworkService.shared.updateChecklistItem(checklistEntity, for: task)
+                        } else {
+                            ListItemNetworkService.shared.createChecklistItem(for: task, item: checklistEntity) { result in
+                                switch result {
+                                case .success(let serverId):
+                                    updateChecklistEntityServerIdAndSave(checklistEntity, serverId: serverId)
+                                case .failure(let error):
+                                    logger.error("Failed to save context after updating checklistEntity serverId: \(error.localizedDescription)")
+                                }
                             }
                         }
                     }
                 }
+                
+                for notificationEntity in notificationEntities {
+                    if let serverId = notificationEntity.serverId, !serverId.isEmpty {
+                        NotificationNetworkService.shared.updateNotification(notificationEntity)
+                    } else {
+                        NotificationNetworkService.shared.createNotification(for: task, type: notificationEntity.type ?? "", target: notificationEntity.target ?? Date()) { result in
+                            switch result {
+                            case .success(let serverId):
+                                updateNotificationEntityServerIdAndSave(notificationEntity, serverId: serverId)
+                            case .failure(let error):
+                                logger.error("Failed to save context after updating notificationEntity serverId: \(error.localizedDescription)")
+                            }
+                        }
+                    }
+                }
+                
+                // Clean up server notifications that no longer exist locally
+                guard let serverId = task.serverId, !serverId.isEmpty else { return }
+                
+                NotificationNetworkService.shared.fetchNotifications(listId: serverId) { fetchResult in
+                    switch fetchResult {
+                    case .success(let serverNotificationIds):
+                        let localNotificationServerIds: Set<String> = notificationEntities.compactMap {
+                            if let sid = $0.serverId, !sid.isEmpty {
+                                return sid
+                            }
+                            return nil
+                        }.reduce(into: Set<String>()) { $0.insert($1) }
+                        
+                        for notificationId in serverNotificationIds.upserts.map({ $0.id }) {
+                            if !localNotificationServerIds.contains(notificationId) {
+                                NotificationNetworkService.shared.deleteNotification(listId: serverId, id: notificationId) { deleteResult in
+                                    switch deleteResult {
+                                    case .success:
+                                        logger.debug("Deleted obsolete notification with id \(notificationId) from server list \(serverId).")
+                                    case .failure(let error):
+                                        logger.error("Failed to delete obsolete notification with id \(notificationId): \(error.localizedDescription)")
+                                    }
+                                }
+                            }
+                        }
+                    case .failure(let error):
+                        logger.error("Failed to fetch server notifications for cleanup: \(error.localizedDescription)")
+                    }
+                }
+                
+            case .failure(let error):
+                logger.error("Save task sync error: \(error.localizedDescription)")
             }
         }
-        ListNetworkService.shared.updateTaskOnServer(for: task)
     }
     
     // MARK: - Task Duplication
@@ -146,16 +196,17 @@ final class TaskService {
         newTask.removed = task.removed
         newTask.folder = task.folder
         
+        var notificationEntities = [NotificationEntity]()
         if let notificationsSet = task.notifications as? Set<NotificationEntity> {
-            var newNotifications = [NotificationEntity]()
             for notification in notificationsSet {
                 let newNotification = NotificationEntity(context: viewContext)
-                newNotification.id = UUID() // Generate new UUID for each notification
+                newNotification.id = UUID()
                 newNotification.type = notification.type
                 newNotification.target = notification.target
-                newNotifications.append(newNotification)
+                newNotification.updatedAt = .now
+                notificationEntities.append(newNotification)
             }
-            newTask.notifications = NSSet(array: newNotifications)
+            newTask.notifications = NSSet(array: notificationEntities)
         }
         
         if let checklistArray = (task.checklist as? Set<ChecklistEntity>)?.sorted(by: { $0.order < $1.order }) {
@@ -177,7 +228,40 @@ final class TaskService {
             restoreNotifications(for: newTask)
         }
         
-        ListNetworkService.shared.updateTaskOnServer(for: newTask)
+        ListNetworkService.shared.updateTaskOnServer(for: newTask) { result in
+            switch result {
+            case .success(_):
+                if let checklistEntities = (task.checklist as? Set<ChecklistEntity>)?.sorted(by: { $0.order < $1.order }) {
+                    for checklistEntity in checklistEntities {
+                        ListItemNetworkService.shared.createChecklistItem(for: task, item: checklistEntity) { result in
+                            switch result {
+                            case .success(let serverId):
+                                updateChecklistEntityServerIdAndSave(checklistEntity, serverId: serverId)
+                            case .failure(let error):
+                                logger.error("Failed to save context after updating checklistEntity serverId: \(error.localizedDescription)")
+                            }
+                        }
+                    }
+                }
+                
+                for notificationEntity in notificationEntities {
+                    if let serverId = notificationEntity.serverId, !serverId.isEmpty {
+                        NotificationNetworkService.shared.updateNotification(notificationEntity)
+                    } else {
+                        NotificationNetworkService.shared.createNotification(for: task, type: notificationEntity.type ?? "", target: notificationEntity.target ?? Date()) { result in
+                            switch result {
+                            case .success(let serverId):
+                                updateNotificationEntityServerIdAndSave(notificationEntity, serverId: serverId)
+                            case .failure(let error):
+                                logger.error("Failed to save context after updating notificationEntity serverId: \(error.localizedDescription)")
+                            }
+                        }
+                    }
+                }
+            case .failure(let error):
+                logger.error("Save task sync error: \(error.localizedDescription)")
+            }
+        }
     }
     
     // MARK: - Deletion
@@ -251,6 +335,19 @@ final class TaskService {
         }
     }
     
+    static private func updateNotificationEntityServerIdAndSave(_ notificationEntity: NotificationEntity, serverId: String) {
+        guard !serverId.isEmpty else { return }
+        let context = notificationEntity.managedObjectContext!
+        context.perform {
+            notificationEntity.serverId = serverId
+            do {
+                try context.save()
+            } catch {
+                logger.error("Failed to save context after updating notificationEntity serverId: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     /// Deletes all tasks and clears all notifications.
     static func deleteAllTasksAndClearNotifications(completion: ((Bool) -> Void)? = nil) {
         let notificationCenter = UNUserNotificationCenter.current()
@@ -296,6 +393,10 @@ final class TaskService {
     }
     
     static func deleteAllBackendTasks() {
+        let notificationCenter = UNUserNotificationCenter.current()
+        notificationCenter.removeAllPendingNotificationRequests()
+        notificationCenter.removeAllDeliveredNotifications()
+        
         let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
         do {
             let backendTasks = try viewContext.fetch(fetchRequest)

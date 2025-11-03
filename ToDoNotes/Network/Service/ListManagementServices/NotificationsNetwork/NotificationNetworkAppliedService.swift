@@ -47,7 +47,7 @@ extension NotificationNetworkService {
                     if let localNotif = localByServerId[remote.id] {
                         // Update fields
                         localNotif.type = remote.type
-                        localNotif.target = Date.iso8601DateFormatter.date(from: remote.target)
+                        localNotif.target = Date.iso8601SecondsDateFormatter.date(from: remote.target)
                         localNotif.updatedAt = Date.iso8601DateFormatter.date(from: remote.updatedAt)
                     } else {
                         // Insert new NotificationEntity if does not exist
@@ -55,7 +55,7 @@ extension NotificationNetworkService {
                         newNotif.id = UUID()
                         newNotif.serverId = remote.id
                         newNotif.type = remote.type
-                        newNotif.target = Date.iso8601DateFormatter.date(from: remote.target)
+                        newNotif.target = Date.iso8601SecondsDateFormatter.date(from: remote.target)
                         newNotif.updatedAt = Date.iso8601DateFormatter.date(from: remote.updatedAt)
                         newNotif.task = task
                     }

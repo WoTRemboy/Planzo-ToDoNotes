@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 /// TaskManagementViewModel is the main view model for managing the state and logic of task creation and editing.
 ///
@@ -366,10 +367,15 @@ final class TaskManagementViewModel: ObservableObject {
             notificationsLocal.removeAll()
             return
         }
-        let notification = NotificationItem(type: type,
-                                            target: notificationTargetCalculation(for: type))
+        let notification = NotificationItem(
+            type: type,
+            target: notificationTargetCalculation(for: type)
+        )
         if let item = notificationsLocal.first(where: { $0.type == notification.type }) {
             notificationsLocal.remove(item)
+            if let serverId = item.serverId, let entity = fetchNotificationEntity(with: serverId) {
+                NotificationNetworkService.shared.deleteNotification(entity)
+            }
         } else {
             notificationsLocal.insert(notification)
         }
@@ -486,6 +492,11 @@ final class TaskManagementViewModel: ObservableObject {
         setupChecklistLocal(checklist)
     }
     
+    internal func reloadNotifications(from notifications: NSSet?) {
+        self.notificationsLocal.removeAll()
+        setupNotificationsLocal(notifications)
+    }
+    
     /// Toggles completion for a checklist item, and moves to top if completed.
     /// - Parameter item: A binding to the checklist item.
     internal func toggleChecklistComplete(for item: Binding<ChecklistItem>) {
@@ -595,6 +606,15 @@ final class TaskManagementViewModel: ObservableObject {
                                          to: combinedDateTime)
         }
     }
+    
+    /// Fetches a NotificationEntity by serverId from the current context.
+    private func fetchNotificationEntity(with serverId: String) -> NotificationEntity? {
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        let request: NSFetchRequest<NotificationEntity> = NotificationEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "serverId == %@", serverId)
+        request.fetchLimit = 1
+        return try? context.fetch(request).first
+    }
 }
 
 // MARK: - Notifications Management
@@ -605,14 +625,16 @@ extension TaskManagementViewModel {
     internal func setupNotificationsLocal(_ notifications: NSSet?) {
         guard let notificationsArray = notifications?.compactMap({ $0 as? NotificationEntity }) else { return }
         
-        for entity in notificationsArray {
-            guard let type = entity.type,
-                  let target = entity.target
+        for notification in notificationsArray {
+            guard let type = notification.type,
+                  let target = notification.target
             else { continue }
             let itemType = TaskNotification(rawValue: type) ?? .inTime
             let item = NotificationItem(type: itemType,
-                                        target: target)
+                                        target: target,
+                                        serverId: notification.serverId)
             notificationsLocal.insert(item)
         }
     }
 }
+

@@ -107,8 +107,12 @@ struct TaskManagementView: View {
         }
         .task {
             if let entity = entity {
-                ListItemNetworkService.shared.syncChecklistForTaskEntity(entity, since: authService.currentUser?.lastSyncAt) {
+                let since = authService.currentUser?.lastSyncAt
+                ListItemNetworkService.shared.syncChecklistForTaskEntity(entity, since: since) {
                     viewModel.reloadChecklist(from: entity.checklist)
+                }
+                NotificationNetworkService.shared.syncNotificationsIfNeeded(for: entity, since: since) {
+                    viewModel.reloadNotifications(from: entity.notifications)
                 }
             }
         }
