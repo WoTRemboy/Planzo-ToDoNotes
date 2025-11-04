@@ -118,8 +118,10 @@ struct TaskManagementView: View {
             }
         }
         // Share Sheet Presentation
-        .sheet(isPresented: $viewModel.showingShareSheet) {
-            TaskManagementShareView()
+        .sheet(item: $viewModel.sharingTask) { item in
+            TaskManagementShareView(viewModel: viewModel) {
+                viewModel.setSharingTask(to: nil)
+            }
                 .presentationDetents([.height(285)])
                 .presentationDragIndicator(.visible)
         }

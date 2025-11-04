@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 import OSLog
+import UIKit
 
 private let shareSyncLogger = Logger(subsystem: "com.todonotes.shares", category: "ShareNetworkAppliedService")
 
@@ -104,6 +105,26 @@ extension ShareNetworkService {
                 completion?(.success(()))
             case .failure(let error):
                 shareSyncLogger.error("Failed to delete share on server: \(error.localizedDescription)")
+                completion?(.failure(error))
+            }
+        }
+    }
+
+    /// Creates a share link on the server and presents a share sheet with the generated URL.
+    internal func createShareAndPresentSheet(for task: TaskEntity, expiresAt: String, completion: ((Result<String, Error>) -> Void)? = nil) {
+        self.createShare(for: task, expiresAt: expiresAt) { result in
+            switch result {
+            case .success(let serverID):
+                let urlString = "https://banana.avoqode.com/l/\(serverID)"
+                guard let url = URL(string: urlString) else { return }
+                DispatchQueue.main.async {
+                    guard let rootVC = RootViewControllerMethods.getRootViewController() else { return }
+                    let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                    activityVC.popoverPresentationController?.sourceView = rootVC.view
+                    rootVC.present(activityVC, animated: true, completion: nil)
+                    completion?(.success(serverID))
+                }
+            case .failure(let error):
                 completion?(.failure(error))
             }
         }

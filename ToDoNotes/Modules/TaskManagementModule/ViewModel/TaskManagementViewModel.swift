@@ -7,13 +7,10 @@
 
 import SwiftUI
 import CoreData
+import Foundation
+import OSLog
 
-/// TaskManagementViewModel is the main view model for managing the state and logic of task creation and editing.
-///
-/// - Handles both new and existing (editing) tasks.
-/// - Provides computed properties for UI display.
-/// - Manages checklist and notification items, including drag-and-drop and completion logic.
-/// - Coordinates with UserDefaults and system notification center.
+private let logger = Logger(subsystem: "com.todonotes.task_management", category: "TaskManagementViewModel")
 
 final class TaskManagementViewModel: ObservableObject {
     
@@ -82,6 +79,10 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var showingDatePicker: Bool = false
     /// Whether the notification alert is showing.
     @Published internal var showingNotificationAlert: Bool = false
+    
+    /// The selected share access type for the task.
+    @Published internal var shareAccess: ShareAccess = .viewOnly
+    @Published internal var sharingTask: TaskEntity? = nil
     
     /// Reference to the TaskEntity being edited (if any).
     private var entity: TaskEntity? = nil
@@ -614,6 +615,32 @@ final class TaskManagementViewModel: ObservableObject {
         request.predicate = NSPredicate(format: "serverId == %@", serverId)
         request.fetchLimit = 1
         return try? context.fetch(request).first
+    }
+    
+    /// Handles creation and sharing of a share link for the current task.
+    @MainActor
+    func handleShareLink(expiresAt: String? = nil, completion: @escaping (() -> Void)) {
+        guard let entity = self.entity else { return }
+        let expiration: String
+        if let expiresAt = expiresAt {
+            expiration = expiresAt
+        } else {
+            // Default: 7 days ahead in ISO8601
+            let date = Date().addingTimeInterval(7*24*3600)
+            expiration = Date.iso8601DateFormatter.string(from: date)
+        }
+        ShareNetworkService.shared.createShareAndPresentSheet(for: entity, expiresAt: expiration) { result in
+            switch result {
+            case .success(_):
+                completion()
+            case .failure(let error):
+                logger.error("\(error.localizedDescription)")
+            }
+        }
+    }
+    
+    internal func setSharingTask(to task: TaskEntity?) {
+        sharingTask = task
     }
 }
 

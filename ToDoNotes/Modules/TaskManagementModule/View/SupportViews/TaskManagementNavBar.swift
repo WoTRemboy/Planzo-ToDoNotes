@@ -55,6 +55,9 @@ struct TaskManagementNavBar: View {
                     HStack(spacing: 0) {
                         backButton  // Back button to dismiss the view
                         titleLabel  // Title showing today's date
+                        if entity != nil {
+                            shareButton
+                        }
                         moreButton  // More options button (menu with actions)
                     }
                 }
@@ -95,6 +98,17 @@ struct TaskManagementNavBar: View {
                 .padding(.trailing)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private var shareButton: some View {
+        Button {
+            viewModel.setSharingTask(to: entity)
+        } label: {
+            Image.NavigationBar.share
+                .resizable()
+                .frame(width: 24, height: 24)
+        }
+        .padding(.trailing)
     }
     
     /// The menu button for additional task actions (important, pinned, delete, duplicate).

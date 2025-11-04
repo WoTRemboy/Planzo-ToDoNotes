@@ -80,8 +80,10 @@ struct CalendarView: View {
                 .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
                 .presentationDragIndicator(.visible)
         }
-        .sheet(isPresented: $viewModel.showingShareSheet) {
-            TaskManagementShareView()
+        .sheet(item: $viewModel.sharingTask) { task in
+            TaskManagementShareView(viewModel: TaskManagementViewModel(entity: task)) {
+                viewModel.setSharingTask(to: nil)
+            }
                 .presentationDetents([.height(300)])
                 .presentationDragIndicator(.visible)
         }

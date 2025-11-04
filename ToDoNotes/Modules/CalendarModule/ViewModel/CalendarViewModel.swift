@@ -33,6 +33,7 @@ final class CalendarViewModel: ObservableObject {
     
     /// The task currently selected for editing.
     @Published internal var selectedTask: TaskEntity? = nil
+    @Published internal var sharingTask: TaskEntity? = nil
     @Published internal var selectedTaskFolder: Folder = .mock()
     /// The date currently selected in the calendar (defaults to today).
     @Published internal var selectedDate: Date = .now.startOfDay
@@ -128,6 +129,10 @@ final class CalendarViewModel: ObservableObject {
         guard let folderEntity else { return }
         let folder = Folder(from: folderEntity)
         selectedTaskFolder = folder
+    }
+    
+    internal func setSharingTask(to task: TaskEntity?) {
+        self.sharingTask = task
     }
     
     internal func reloadFolders() {

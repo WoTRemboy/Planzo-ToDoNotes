@@ -46,6 +46,7 @@ final class MainViewModel: ObservableObject {
     
     /// The selected task for editing or viewing.
     @Published internal var selectedTask: TaskEntity? = nil
+    @Published internal var sharingTask: TaskEntity? = nil
     @Published internal var selectedTaskFolder: Folder = .mock()
     
     /// The task selected for restoring from deleted.
@@ -236,6 +237,10 @@ final class MainViewModel: ObservableObject {
         withAnimation(.easeInOut(duration: 0.2)) {
             selectedFolder = new
         }
+    }
+    
+    internal func setSharingTask(to task: TaskEntity?) {
+        sharingTask = task
     }
     
     /// Compares a given folder to the currently selected one.

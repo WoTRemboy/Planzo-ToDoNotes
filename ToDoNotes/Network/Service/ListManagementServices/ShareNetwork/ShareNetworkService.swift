@@ -11,6 +11,7 @@ import OSLog
 private let shareLogger = Logger(subsystem: "com.todonotes.opening", category: "ShareNetworkService")
 
 final class ShareNetworkService: ObservableObject {
+    static let shared = ShareNetworkService()
     private let tokenStorage = TokenStorageService()
     private let baseURL = "https://banana.avoqode.com/api/v1/lists/"
     
