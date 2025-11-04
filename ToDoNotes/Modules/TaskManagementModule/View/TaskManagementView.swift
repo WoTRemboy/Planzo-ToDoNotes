@@ -113,6 +113,7 @@ struct TaskManagementView: View {
                 }
                 NotificationNetworkService.shared.syncNotificationsIfNeeded(for: entity, since: since) {
                     viewModel.reloadNotifications(from: entity.notifications)
+                    UNUserNotificationCenter.current().logNotifications(for: entity.notifications)
                 }
             }
         }

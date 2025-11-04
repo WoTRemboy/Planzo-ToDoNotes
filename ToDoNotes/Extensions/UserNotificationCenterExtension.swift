@@ -96,4 +96,25 @@ extension UNUserNotificationCenter {
         
         logger.debug("Removed notifications with IDs: \(identifiers)")
     }
+    
+    // MARK: - Notification Logging
+    
+    /// Logs notifications for the given optional `NSSet` of `NotificationEntity` objects.
+    /// - Parameter entityNotifications: An optional `NSSet` of `NotificationEntity` objects to log notifications for.
+    internal func logNotifications(for entityNotifications: NSSet?) {
+        guard let notifications = entityNotifications?.compactMap({ $0 as? NotificationEntity }) else {
+            logger.error("Log notifications error: items must be Set<NotificationEntity>")
+            return
+        }
+        let identifiers = notifications.compactMap { $0.id?.uuidString }
+        if identifiers.isEmpty {
+            logger.debug("No notifications found for task")
+        } else {
+            logger.debug("Notifications for task:")
+            for notification in notifications {
+                logger.debug("Notification ID: \(notification.id?.uuidString ?? "nil") Date: \(notification.target?.description ?? "nil") Type: \(notification.type ?? "nil")")
+            }
+            logger.debug("--- End of notifications for task ---")
+        }
+    }
 }
