@@ -91,6 +91,8 @@
 		63837AD02EB4F2A80061EB49 /* NotificationNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63837ACF2EB4F2A80061EB49 /* NotificationNetworkService.swift */; };
 		63837AD22EB4F5FD0061EB49 /* NotificationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63837AD12EB4F5F40061EB49 /* NotificationModel.swift */; };
 		63837AD42EB4F6870061EB49 /* NotificationNetworkAppliedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63837AD32EB4F6870061EB49 /* NotificationNetworkAppliedService.swift */; };
+		638B1B632EBA3CA500EE9DBA /* ShareCoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638B1B622EBA3CA500EE9DBA /* ShareCoreDataService.swift */; };
+		638B1B692EBA3F1F00EE9DBA /* ShareNetworkAppliedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638B1B682EBA3F1F00EE9DBA /* ShareNetworkAppliedService.swift */; };
 		638E21962D2C209200FB1464 /* TaskManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638E21952D2C209200FB1464 /* TaskManagementView.swift */; };
 		6393E2332DC015CF00025838 /* AppleIDAuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393E2322DC015C300025838 /* AppleIDAuthorizationTests.swift */; };
 		6393E2352DC015DF00025838 /* GoogleAuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393E2342DC015D800025838 /* GoogleAuthorizationTests.swift */; };
@@ -279,6 +281,8 @@
 		63837ACF2EB4F2A80061EB49 /* NotificationNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNetworkService.swift; sourceTree = "<group>"; };
 		63837AD12EB4F5F40061EB49 /* NotificationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModel.swift; sourceTree = "<group>"; };
 		63837AD32EB4F6870061EB49 /* NotificationNetworkAppliedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNetworkAppliedService.swift; sourceTree = "<group>"; };
+		638B1B622EBA3CA500EE9DBA /* ShareCoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCoreDataService.swift; sourceTree = "<group>"; };
+		638B1B682EBA3F1F00EE9DBA /* ShareNetworkAppliedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNetworkAppliedService.swift; sourceTree = "<group>"; };
 		638E21952D2C209200FB1464 /* TaskManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementView.swift; sourceTree = "<group>"; };
 		6393E2322DC015C300025838 /* AppleIDAuthorizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleIDAuthorizationTests.swift; sourceTree = "<group>"; };
 		6393E2342DC015D800025838 /* GoogleAuthorizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAuthorizationTests.swift; sourceTree = "<group>"; };
@@ -529,7 +533,7 @@
 				6328D5C32E8939D2000574AE /* ListNetwork */,
 				636154522E89CB630063C880 /* ListItemNetwork */,
 				63837ACE2EB4F26C0061EB49 /* NotificationsNetwork */,
-				6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */,
+				638B1B6A2EBA411400EE9DBA /* ShareNetwork */,
 			);
 			path = ListManagementServices;
 			sourceTree = "<group>";
@@ -611,6 +615,7 @@
 				63A092932D7C60E00026A64D /* CoreDataProvider.swift */,
 				63A092952D7C63470026A64D /* TaskService.swift */,
 				6326E1B62EA921E600BF68B2 /* FolderCoreDataService.swift */,
+				638B1B622EBA3CA500EE9DBA /* ShareCoreDataService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -886,6 +891,15 @@
 				63837AD32EB4F6870061EB49 /* NotificationNetworkAppliedService.swift */,
 			);
 			path = NotificationsNetwork;
+			sourceTree = "<group>";
+		};
+		638B1B6A2EBA411400EE9DBA /* ShareNetwork */ = {
+			isa = PBXGroup;
+			children = (
+				6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */,
+				638B1B682EBA3F1F00EE9DBA /* ShareNetworkAppliedService.swift */,
+			);
+			path = ShareNetwork;
 			sourceTree = "<group>";
 		};
 		638E21932D2C206400FB1464 /* TaskManagementModule */ = {
@@ -1480,6 +1494,7 @@
 				6338FFA92D7C9FE900E9E4C2 /* PreviewData.swift in Sources */,
 				63FD574D2E68B77F00B7B062 /* UserModel.swift in Sources */,
 				632D0DDA2D37E0AE0071684D /* HeightReader.swift in Sources */,
+				638B1B632EBA3CA500EE9DBA /* ShareCoreDataService.swift in Sources */,
 				6357920E2EAE24F000C179BA /* ConfigureFolderTitleView.swift in Sources */,
 				63AE657F2D72172E009A3541 /* TaskCreationPageModel.swift in Sources */,
 				6328D5C52E8939EC000574AE /* ListNetworkAppliedService.swift in Sources */,
@@ -1513,6 +1528,7 @@
 				63DE01122D567D92002A5C4F /* CalendarMonthSelector.swift in Sources */,
 				635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */,
 				63753A882E786C1F00D75DAF /* SecretsManager.swift in Sources */,
+				638B1B692EBA3F1F00EE9DBA /* ShareNetworkAppliedService.swift in Sources */,
 				6302B3582E5C6A6E002E65C1 /* WeekFirstDayModel.swift in Sources */,
 				6328D5BC2E881299000574AE /* ListItemModel.swift in Sources */,
 				637B9F512D295B7F0010F13B /* MainNavigationBar.swift in Sources */,
