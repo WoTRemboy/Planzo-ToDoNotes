@@ -91,7 +91,7 @@ final class ListItemNetworkService {
                 request.httpMethod = "POST"
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                let body = CreateItemRequest(title: item.name, notes: "", dueAt: nil, order: Int(item.order))
+                let body = CreateItemRequest(title: item.name, notes: "", dueAt: nil, order: Int(item.order), done: item.completed)
                 do {
                     request.httpBody = try JSONEncoder().encode(body)
                 } catch {

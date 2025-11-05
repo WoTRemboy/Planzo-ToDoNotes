@@ -36,6 +36,7 @@ struct CreateItemRequest: Codable {
     let notes: String?
     let dueAt: String?
     let order: Int
+    let done: Bool
 }
 
 struct UpdateItemRequest: Codable {
