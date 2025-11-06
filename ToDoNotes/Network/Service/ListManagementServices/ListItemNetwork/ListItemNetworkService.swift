@@ -12,7 +12,6 @@ private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListI
 
 final class ListItemNetworkService {
     static let shared = ListItemNetworkService()
-    private let tokenStorage = TokenStorageService()
 
     /// Fetches items for a given list from the server, optionally since a specific date.
     /// - Parameters:

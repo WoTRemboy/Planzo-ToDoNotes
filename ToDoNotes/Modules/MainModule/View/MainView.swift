@@ -134,11 +134,8 @@ struct MainView: View {
             taskForm
         }
         .refreshable {
-            guard let lastSyncAt = authService.currentUser?.lastSyncAt else {
-                await refreshAllTasks()
-                return
-            }
-            await refreshTasks(since: lastSyncAt)
+            let lastSyncAt = authService.currentUser?.lastSyncAt
+            await viewModel.refreshTasks(since: lastSyncAt)
         }
     }
     
@@ -321,19 +318,6 @@ extension MainView {
     /// Access filtered segmented tasks from the view model.
     private var filteredSegmentedTasks: [(Date?, [TaskEntity])] {
         viewModel.filteredSegmentedTasks
-    }
-    
-    @MainActor
-    private func refreshAllTasks() async {
-        await refreshTasks(since: nil)
-    }
-    
-    @MainActor
-    private func refreshTasks(since: String?) async {
-        await withCheckedContinuation { continuation in
-            ListNetworkService.shared.syncAllBackTasks(since: since)
-            continuation.resume()
-        }
     }
 }
 

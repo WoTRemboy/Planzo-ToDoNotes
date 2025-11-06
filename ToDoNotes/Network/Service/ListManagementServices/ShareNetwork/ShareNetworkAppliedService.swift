@@ -10,7 +10,7 @@ import CoreData
 import OSLog
 import UIKit
 
-private let shareSyncLogger = Logger(subsystem: "com.todonotes.shares", category: "ShareNetworkAppliedService")
+private let logger = Logger(subsystem: "com.todonotes.shares", category: "ShareNetworkAppliedService")
 
 extension ShareNetworkService {
     /// Syncs share links for a backend task (list) with the server.
@@ -21,10 +21,10 @@ extension ShareNetworkService {
             switch result {
             case .success(let serverShares):
                 self.syncShares(for: task, serverShares: serverShares)
-                shareSyncLogger.info("Share sync finished for task: \(listServerId)")
+                logger.info("Share sync finished for task: \(listServerId)")
                 completion?()
             case .failure(let error):
-                shareSyncLogger.error("Failed to sync shares from server: \(error.localizedDescription)")
+                logger.error("Failed to sync shares from server: \(error.localizedDescription)")
                 completion?()
             }
         }
@@ -74,14 +74,14 @@ extension ShareNetworkService {
         do {
             try context.save()
         } catch {
-            shareSyncLogger.error("Failed to save shares context after sync: \(error.localizedDescription)")
+            logger.error("Failed to save shares context after sync: \(error.localizedDescription)")
         }
     }
     
     /// Creates a share link on the server for a given task
     internal func createShare(for task: TaskEntity, expiresAt: String, completion: ((Result<String, Error>) -> Void)? = nil) {
         guard let listServerId = task.serverId, !listServerId.isEmpty else {
-            shareSyncLogger.error("Can't create share: task has no serverId")
+            logger.error("Can't create share: task has no serverId")
             completion?(.failure(NSError(domain: "Share", code: -1, userInfo: [NSLocalizedDescriptionKey: "No serverId for parent task."])));
             return
         }
@@ -90,7 +90,7 @@ extension ShareNetworkService {
             case .success(let shareLink):
                 completion?(.success(shareLink.id))
             case .failure(let error):
-                shareSyncLogger.error("Failed to create share on server: \(error.localizedDescription)")
+                logger.error("Failed to create share on server: \(error.localizedDescription)")
                 completion?(.failure(error))
             }
         }
@@ -99,7 +99,7 @@ extension ShareNetworkService {
     /// Deletes a share link from the server and local storage
     internal func deleteShare(_ share: ShareEntity, completion: ((Result<Void, Error>) -> Void)? = nil) {
         guard let task = share.task, let listServerId = task.serverId, let shareServerId = share.serverId else {
-            shareSyncLogger.error("Can't delete share: missing serverId or parent task")
+            logger.error("Can't delete share: missing serverId or parent task")
             completion?(.failure(NSError(domain: "Share", code: -4, userInfo: [NSLocalizedDescriptionKey: "No server id for task or share."])));
             return
         }
@@ -109,7 +109,7 @@ extension ShareNetworkService {
                 ShareCoreDataService.shared.deleteShare(share)
                 completion?(.success(()))
             case .failure(let error):
-                shareSyncLogger.error("Failed to delete share on server: \(error.localizedDescription)")
+                logger.error("Failed to delete share on server: \(error.localizedDescription)")
                 completion?(.failure(error))
             }
         }

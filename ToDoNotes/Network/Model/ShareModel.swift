@@ -28,3 +28,9 @@ struct ShareLinkRequest: Codable, Identifiable {
         case listId, createdAt, expiresAt, revoked, scope
     }
 }
+
+struct ShareDelete: Codable {
+    let shareId: String
+    let listId: String
+    let deletedAt: String
+}

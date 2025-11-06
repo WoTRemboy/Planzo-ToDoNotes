@@ -38,7 +38,6 @@ struct UpdateListRequest: Codable {
 
 final class ListNetworkService {
     static let shared = ListNetworkService()
-    private let tokenStorage = TokenStorageService()
 
     /// Fetches lists from the server, optionally since a specific date.
     /// - Parameters:
@@ -77,7 +76,6 @@ final class ListNetworkService {
                         logger.info("List fetch succeeded. Upserts: \(decoded.upserts.count), Deletes: \(decoded.deletes.count)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
-                            UserCoreDataService.shared.updateLastSyncAt()
                         }
                     } catch {
                         logger.error("Failed to decode list fetch response: \(error.localizedDescription)")

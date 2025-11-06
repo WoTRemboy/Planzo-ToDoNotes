@@ -68,6 +68,7 @@ final class UserCoreDataService {
         let formatter = ISO8601DateFormatter()
         user.lastSyncAt = formatter.string(from: date)
         saveUser(user)
+        NotificationCenter.default.post(name: .userDidUpdateLastSyncAt, object: user.lastSyncAt)
     }
     
     // MARK: - Delete User
@@ -95,4 +96,8 @@ private extension Date {
     var iso8601String: String {
         ISO8601DateFormatter().string(from: self)
     }
+}
+
+extension Notification.Name {
+    static let userDidUpdateLastSyncAt = Notification.Name("userDidUpdateLastSyncAt")
 }

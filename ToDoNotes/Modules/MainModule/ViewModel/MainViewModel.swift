@@ -7,6 +7,9 @@
 
 import SwiftUI
 import CoreData
+import OSLog
+
+private let logger = Logger(subsystem: "com.todonotes.main", category: "MainViewModel")
 
 /// ViewModel responsible for managing the main screen's filters, folders, search, and task creation behavior.
 final class MainViewModel: ObservableObject {
@@ -319,6 +322,21 @@ final class MainViewModel: ObservableObject {
             return true
         case .deleted:
             return false
+        }
+    }
+    
+    @MainActor
+    internal func refreshTasks(since: String?) async {
+        await withCheckedContinuation { continuation in
+            FullSyncNetworkService.shared.syncDeltaData(since: since) { result in
+                switch result {
+                case .success(_):
+                    logger.info("Delta data sync successful since: \(since ?? "nil")")
+                case .failure(let error):
+                    logger.error("Delta data sync failed with error: \(error)")
+                }
+                continuation.resume()
+            }
         }
     }
 }

@@ -8,11 +8,10 @@
 import Foundation
 import OSLog
 
-private let shareLogger = Logger(subsystem: "com.todonotes.opening", category: "ShareNetworkService")
+private let logger = Logger(subsystem: "com.todonotes.opening", category: "ShareNetworkService")
 
 final class ShareNetworkService: ObservableObject {
     static let shared = ShareNetworkService()
-    private let tokenStorage = TokenStorageService()
     private let baseURL = "https://banana.avoqode.com/api/v1/lists/"
     
     /// Loads share info for a list by id.
@@ -21,7 +20,7 @@ final class ShareNetworkService: ObservableObject {
             switch result {
             case .success(let accessToken):
                 guard let url = URL(string: self.baseURL + "\(listId)/share") else {
-                    shareLogger.error("Invalid share URL for listId: \(listId)")
+                    logger.error("Invalid share URL for listId: \(listId)")
                     completion(.failure(URLError(.badURL)))
                     return
                 }
@@ -32,14 +31,14 @@ final class ShareNetworkService: ObservableObject {
                 
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
-                        shareLogger.error("Share info request failed: \(error.localizedDescription)")
+                        logger.error("Share info request failed: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
                         return
                     }
                     guard let data = data else {
-                        shareLogger.error("Share info response data is nil.")
+                        logger.error("Share info response data is nil.")
                         DispatchQueue.main.async {
                             completion(.failure(URLError(.badServerResponse)))
                         }
@@ -47,12 +46,12 @@ final class ShareNetworkService: ObservableObject {
                     }
                     do {
                         let decoded = try JSONDecoder().decode([ShareLink].self, from: data)
-                        shareLogger.info("Share info loaded for listId: \(listId)")
+                        logger.info("Share info loaded for listId: \(listId)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
                         }
                     } catch {
-                        shareLogger.error("Failed to decode share info: \(error.localizedDescription)")
+                        logger.error("Failed to decode share info: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
@@ -72,7 +71,7 @@ final class ShareNetworkService: ObservableObject {
             switch result {
             case .success(let accessToken):
                 guard let url = URL(string: self.baseURL + "\(listId)/share") else {
-                    shareLogger.error("Invalid share URL for listId: \(listId)")
+                    logger.error("Invalid share URL for listId: \(listId)")
                     completion(.failure(URLError(.badURL)))
                     return
                 }
@@ -86,21 +85,21 @@ final class ShareNetworkService: ObservableObject {
                 do {
                     request.httpBody = try JSONEncoder().encode(body)
                 } catch {
-                    shareLogger.error("Failed to encode share POST body: \(error.localizedDescription)")
+                    logger.error("Failed to encode share POST body: \(error.localizedDescription)")
                     completion(.failure(error))
                     return
                 }
                 
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
-                        shareLogger.error("Share POST request failed: \(error.localizedDescription)")
+                        logger.error("Share POST request failed: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
                         return
                     }
                     guard let data = data else {
-                        shareLogger.error("Share POST response data is nil.")
+                        logger.error("Share POST response data is nil.")
                         DispatchQueue.main.async {
                             completion(.failure(URLError(.badServerResponse)))
                         }
@@ -108,12 +107,12 @@ final class ShareNetworkService: ObservableObject {
                     }
                     do {
                         let decoded = try JSONDecoder().decode(ShareLink.self, from: data)
-                        shareLogger.info("Share link created for listId: \(listId)")
+                        logger.info("Share link created for listId: \(listId)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
                         }
                     } catch {
-                        shareLogger.error("Failed to decode share POST response: \(error.localizedDescription)")
+                        logger.error("Failed to decode share POST response: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
@@ -132,7 +131,7 @@ final class ShareNetworkService: ObservableObject {
             switch result {
             case .success(let accessToken):
                 guard let url = URL(string: self.baseURL + "\(listId)/share/\(shareId)") else {
-                    shareLogger.error("Invalid delete share URL: listId=\(listId), shareId=\(shareId)")
+                    logger.error("Invalid delete share URL: listId=\(listId), shareId=\(shareId)")
                     completion(.failure(URLError(.badURL)))
                     return
                 }
@@ -142,26 +141,26 @@ final class ShareNetworkService: ObservableObject {
                 
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
-                        shareLogger.error("Share DELETE request failed: \(error.localizedDescription)")
+                        logger.error("Share DELETE request failed: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
                         return
                     }
                     guard let httpResponse = response as? HTTPURLResponse else {
-                        shareLogger.error("Share DELETE response is not HTTPURLResponse.")
+                        logger.error("Share DELETE response is not HTTPURLResponse.")
                         DispatchQueue.main.async {
                             completion(.failure(URLError(.badServerResponse)))
                         }
                         return
                     }
                     if httpResponse.statusCode == 204 {
-                        shareLogger.info("Share link deleted for listId: \(listId), shareId: \(shareId)")
+                        logger.info("Share link deleted for listId: \(listId), shareId: \(shareId)")
                         DispatchQueue.main.async {
                             completion(.success(()))
                         }
                     } else {
-                        shareLogger.error("Share DELETE failed with status: \(httpResponse.statusCode)")
+                        logger.error("Share DELETE failed with status: \(httpResponse.statusCode)")
                         DispatchQueue.main.async {
                             completion(.failure(URLError(.cannotRemoveFile)))
                         }

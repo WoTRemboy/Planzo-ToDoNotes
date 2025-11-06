@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 import OSLog
 
-private let notificationSyncLogger = Logger(subsystem: "com.todonotes.notifications", category: "NotificationNetworkAppliedService")
+private let logger = Logger(subsystem: "com.todonotes.notifications", category: "NotificationNetworkAppliedService")
 
 extension NotificationNetworkService {
     /// Syncs the notifications for a backend task (list) with the server.
@@ -70,12 +70,12 @@ extension NotificationNetworkService {
                 do {
                     try context.save()
                 } catch {
-                    notificationSyncLogger.error("Failed to save notifications context after sync: \(error.localizedDescription)")
+                    logger.error("Failed to save notifications context after sync: \(error.localizedDescription)")
                 }
-                notificationSyncLogger.info("Notification sync finished for task: \(listServerId)")
+                logger.info("Notification sync finished for task: \(listServerId)")
                 completion?()
             case .failure(let error):
-                notificationSyncLogger.error("Failed to sync notifications from server: \(error.localizedDescription)")
+                logger.error("Failed to sync notifications from server: \(error.localizedDescription)")
                 completion?()
             }
         }
@@ -83,7 +83,7 @@ extension NotificationNetworkService {
 
     internal func createNotification(for task: TaskEntity, type: String, target: Date, completion: ((Result<String, Error>) -> Void)? = nil) {
         guard let listServerId = task.serverId, !listServerId.isEmpty else {
-            notificationSyncLogger.error("Can't create notification: task has no serverId")
+            logger.error("Can't create notification: task has no serverId")
             completion?(.failure(NSError(domain: "Notification", code: -1, userInfo: [NSLocalizedDescriptionKey: "No serverId for parent task."])))
             return
         }
@@ -93,7 +93,7 @@ extension NotificationNetworkService {
             case .success(let remoteItem):
                 completion?(.success(remoteItem.id))
             case .failure(let error):
-                notificationSyncLogger.error("Failed to create notification on server: \(error.localizedDescription)")
+                logger.error("Failed to create notification on server: \(error.localizedDescription)")
                 completion?(.failure(error))
             }
         }
@@ -101,7 +101,7 @@ extension NotificationNetworkService {
 
     internal func updateNotification(_ notification: NotificationEntity, completion: ((Result<String, Error>) -> Void)? = nil) {
         guard let task = notification.task, let listServerId = task.serverId, let notifServerId = notification.serverId else {
-            notificationSyncLogger.error("Can't update notification: missing serverId or parent task")
+            logger.error("Can't update notification: missing serverId or parent task")
             completion?(.failure(NSError(domain: "Notification", code: -3, userInfo: [NSLocalizedDescriptionKey: "No server id for task or item."])))
             return
         }
@@ -113,7 +113,7 @@ extension NotificationNetworkService {
             case .success(let remoteItem):
                 completion?(.success(remoteItem.id))
             case .failure(let error):
-                notificationSyncLogger.error("Failed to update notification on server: \(error.localizedDescription)")
+                logger.error("Failed to update notification on server: \(error.localizedDescription)")
                 completion?(.failure(error))
             }
         }
@@ -121,7 +121,7 @@ extension NotificationNetworkService {
 
     internal func deleteNotification(_ notification: NotificationEntity, completion: ((Result<Void, Error>) -> Void)? = nil) {
         guard let task = notification.task, let listServerId = task.serverId, let notifServerId = notification.serverId else {
-            notificationSyncLogger.error("Can't delete notification: missing serverId or parent task")
+            logger.error("Can't delete notification: missing serverId or parent task")
             completion?(.failure(NSError(domain: "Notification", code: -4, userInfo: [NSLocalizedDescriptionKey: "No server id for task or item."])))
             return
         }
@@ -130,7 +130,7 @@ extension NotificationNetworkService {
             case .success:
                 completion?(.success(()))
             case .failure(let error):
-                notificationSyncLogger.error("Failed to delete notification on server: \(error.localizedDescription)")
+                logger.error("Failed to delete notification on server: \(error.localizedDescription)")
                 completion?(.failure(error))
             }
         }

@@ -11,6 +11,36 @@ import CoreData
 
 private let logger = Logger(subsystem: "com.todonotes.sync", category: "FullSyncNetworkService")
 
+struct FoldersDelta: Codable {
+    let upserts: [FolderUpsert]
+    let deletes: [FolderDelete]
+}
+
+struct ListsDelta: Codable {
+    let upserts: [ListItem]
+    let deletes: [ListDelete]
+}
+
+struct ItemsDelta: Codable {
+    let upserts: [ListTaskItem]
+    let deletes: [ItemDelete]
+}
+
+struct SharesDelta: Codable {
+    let upserts: [ShareLinkRequest]
+    let deletes: [ShareDelete]
+}
+
+struct FullSyncDeltaResponse: Codable {
+    let since: String
+    let now: String
+    let nextCursor: String?
+    let folders: FoldersDelta
+    let lists: ListsDelta
+    let items: ItemsDelta
+    let shares: SharesDelta
+}
+
 struct FullSyncSnapshotResponse: Codable {
     let now: String
     let nextCursor: String?
@@ -50,10 +80,11 @@ final class FullSyncNetworkService {
                     do {
                         let decoded = try JSONDecoder().decode(FullSyncSnapshotResponse.self, from: data)
                         logger.info("Full sync succeeded. Folders: \(decoded.folders.count), Lists: \(decoded.lists.count), Items: \(decoded.items.count), Shares: \(decoded.shares.count)")
-                        ListNetworkService.shared.syncLists(decoded.lists)
+                        self.syncLists(decoded.lists)
                         self.syncItems(decoded.items)
                         self.syncShares(decoded.shares)
                         DispatchQueue.main.async {
+                            UserCoreDataService.shared.updateLastSyncAt()
                             completion(.success(()))
                         }
                     } catch {
@@ -67,10 +98,58 @@ final class FullSyncNetworkService {
             }
         }
     }
+    
+    func syncDeltaData(since: String?, completion: @escaping (Result<Void, Error>) -> Void) {
+        let formatter = ISO8601DateFormatter()
+        let since: String = since ?? formatter.string(from: .distantPast)
+        AccessTokenManager.shared.getValidAccessToken { result in
+            switch result {
+            case .success(let accessToken):
+                guard let url = URL(string: "https://banana.avoqode.com/api/v1/sync/delta?since=\(since)") else {
+                    logger.error("Invalid URL for delta sync.")
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "GET"
+                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+                request.setValue("application/json", forHTTPHeaderField: "Accept")
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        logger.error("Delta sync request failed: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(error)) }
+                        return
+                    }
+                    guard let data = data else {
+                        logger.error("Delta sync response data is nil.")
+                        DispatchQueue.main.async { completion(.failure(URLError(.badServerResponse))) }
+                        return
+                    }
+                    do {
+                        let decoded = try JSONDecoder().decode(FullSyncDeltaResponse.self, from: data)
+                        logger.info("Delta sync succeeded. Folders: \(decoded.folders.upserts.count)/\(decoded.folders.deletes.count), Lists: \(decoded.lists.upserts.count)/\(decoded.lists.deletes.count), Items: \(decoded.items.upserts.count)/\(decoded.items.deletes.count), Shares: \(decoded.shares.upserts.count)/\(decoded.shares.deletes.count)")
+                        self.syncLists(decoded.lists.upserts, deletes: decoded.lists.deletes, since: since)
+                        self.syncItems(decoded.items.upserts, deletedItems: decoded.items.deletes, since: since)
+                        self.syncShares(decoded.shares.upserts)
+                        DispatchQueue.main.async {
+                            UserCoreDataService.shared.updateLastSyncAt()
+                            completion(.success(()))
+                        }
+                    } catch {
+                        logger.error("Failed to decode delta sync response: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(error)) }
+                    }
+                }
+                task.resume()
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 
     // MARK: - Helper stubs for saving entities to Core Data
     
-    private func syncItems(_ items: [ListTaskItem], deletedItems: [ItemDelete] = []) {
+    private func syncItems(_ items: [ListTaskItem], deletedItems: [ItemDelete] = [], since: String? = nil) {
         guard !items.isEmpty else { return }
         let context = CoreDataProvider.shared.persistentContainer.viewContext
         let grouped = Dictionary(grouping: items, by: { $0.listId })
@@ -80,7 +159,7 @@ final class FullSyncNetworkService {
                 fetch.predicate = NSPredicate(format: "serverId == %@", listId)
                 fetch.fetchLimit = 1
                 if let task = try? context.fetch(fetch).first {
-                    ListItemNetworkService.shared.syncItems(for: task, remoteItems: itemsGroup, since: nil)
+                    ListItemNetworkService.shared.syncItems(for: task, remoteItems: itemsGroup, since: since)
                 } else {
                     logger.error("No TaskEntity found for listId: \(listId)")
                 }
@@ -114,5 +193,9 @@ final class FullSyncNetworkService {
                 }
             }
         }
+    }
+
+    private func syncLists(_ upserts: [ListItem], deletes: [ListDelete] = [], since: String? = nil) {
+        ListNetworkService.shared.syncLists(upserts, deletedTasks: deletes, since: since)
     }
 }

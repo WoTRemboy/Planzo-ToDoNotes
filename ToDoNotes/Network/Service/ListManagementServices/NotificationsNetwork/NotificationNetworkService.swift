@@ -8,13 +8,12 @@
 import Foundation
 import OSLog
 
-private let notificationLogger = Logger(subsystem: "com.todonotes.notifications", category: "NotificationNetworkService")
+private let logger = Logger(subsystem: "com.todonotes.notifications", category: "NotificationNetworkService")
 
 // MARK: - Network Service
 
 final class NotificationNetworkService {
     static let shared = NotificationNetworkService()
-    private let tokenStorage = TokenStorageService()
 
     /// Fetches notifications for a given list from the server, optionally since a specific date.
     /// - Parameters:
@@ -36,14 +35,14 @@ final class NotificationNetworkService {
 
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
-                        notificationLogger.error("Notifications fetch request failed: \(error.localizedDescription)")
+                        logger.error("Notifications fetch request failed: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
                         return
                     }
                     guard let data = data else {
-                        notificationLogger.error("Notifications fetch response data is nil.")
+                        logger.error("Notifications fetch response data is nil.")
                         DispatchQueue.main.async {
                             completion(.failure(URLError(.badServerResponse)))
                         }
@@ -51,12 +50,12 @@ final class NotificationNetworkService {
                     }
                     do {
                         let decoded = try JSONDecoder().decode(NotificationSyncResponse.self, from: data)
-                        notificationLogger.info("Notifications fetch succeeded. Upserts: \(decoded.upserts.count), Deletes: \(decoded.deletes.count)")
+                        logger.info("Notifications fetch succeeded. Upserts: \(decoded.upserts.count), Deletes: \(decoded.deletes.count)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
                         }
                     } catch {
-                        notificationLogger.error("Failed to decode notifications fetch response: \(error.localizedDescription)")
+                        logger.error("Failed to decode notifications fetch response: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
@@ -82,7 +81,7 @@ final class NotificationNetworkService {
             switch result {
             case .success(let accessToken):
                 guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/notifications") else {
-                    notificationLogger.error("Invalid URL for notification creation.")
+                    logger.error("Invalid URL for notification creation.")
                     DispatchQueue.main.async {
                         completion(.failure(URLError(.badURL)))
                     }
@@ -96,7 +95,7 @@ final class NotificationNetworkService {
                 do {
                     request.httpBody = try JSONEncoder().encode(body)
                 } catch {
-                    notificationLogger.error("Failed to encode create notification request: \(error.localizedDescription)")
+                    logger.error("Failed to encode create notification request: \(error.localizedDescription)")
                     DispatchQueue.main.async {
                         completion(.failure(error))
                     }
@@ -104,14 +103,14 @@ final class NotificationNetworkService {
                 }
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
-                        notificationLogger.error("Notification create request failed: \(error.localizedDescription)")
+                        logger.error("Notification create request failed: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
                         return
                     }
                     guard let data = data else {
-                        notificationLogger.error("Notification create response data is nil.")
+                        logger.error("Notification create response data is nil.")
                         DispatchQueue.main.async {
                             completion(.failure(URLError(.badServerResponse)))
                         }
@@ -119,12 +118,12 @@ final class NotificationNetworkService {
                     }
                     do {
                         let decoded = try JSONDecoder().decode(NotificationUpsert.self, from: data)
-                        notificationLogger.info("Notification create succeeded. ID: \(decoded.id)")
+                        logger.info("Notification create succeeded. ID: \(decoded.id)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
                         }
                     } catch {
-                        notificationLogger.error("Failed to decode notification create response: \(error.localizedDescription)")
+                        logger.error("Failed to decode notification create response: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
@@ -149,7 +148,7 @@ final class NotificationNetworkService {
             switch result {
             case .success(let accessToken):
                 guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/notifications/\(id)") else {
-                    notificationLogger.error("Invalid URL for notification deletion.")
+                    logger.error("Invalid URL for notification deletion.")
                     DispatchQueue.main.async {
                         completion(.failure(URLError(.badURL)))
                     }
@@ -160,13 +159,13 @@ final class NotificationNetworkService {
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
-                        notificationLogger.error("Notification delete request failed: \(error.localizedDescription)")
+                        logger.error("Notification delete request failed: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
                         return
                     }
-                    notificationLogger.info("Notification delete succeeded. ID: \(id) in list \(listId)")
+                    logger.info("Notification delete succeeded. ID: \(id) in list \(listId)")
                     DispatchQueue.main.async {
                         completion(.success(()))
                     }
@@ -193,7 +192,7 @@ final class NotificationNetworkService {
             switch result {
             case .success(let accessToken):
                 guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/notifications/\(id)") else {
-                    notificationLogger.error("Invalid URL for notification update.")
+                    logger.error("Invalid URL for notification update.")
                     DispatchQueue.main.async {
                         completion(.failure(URLError(.badURL)))
                     }
@@ -207,7 +206,7 @@ final class NotificationNetworkService {
                 do {
                     request.httpBody = try JSONEncoder().encode(body)
                 } catch {
-                    notificationLogger.error("Failed to encode update notification request: \(error.localizedDescription)")
+                    logger.error("Failed to encode update notification request: \(error.localizedDescription)")
                     DispatchQueue.main.async {
                         completion(.failure(error))
                     }
@@ -215,14 +214,14 @@ final class NotificationNetworkService {
                 }
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
-                        notificationLogger.error("Notification update request failed: \(error.localizedDescription)")
+                        logger.error("Notification update request failed: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
                         return
                     }
                     guard let data = data else {
-                        notificationLogger.error("Notification update response data is nil.")
+                        logger.error("Notification update response data is nil.")
                         DispatchQueue.main.async {
                             completion(.failure(URLError(.badServerResponse)))
                         }
@@ -230,12 +229,12 @@ final class NotificationNetworkService {
                     }
                     do {
                         let decoded = try JSONDecoder().decode(NotificationUpsert.self, from: data)
-                        notificationLogger.info("Notification update succeeded. ID: \(decoded.id)")
+                        logger.info("Notification update succeeded. ID: \(decoded.id)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
                         }
                     } catch {
-                        notificationLogger.error("Failed to decode notification update response: \(error.localizedDescription)")
+                        logger.error("Failed to decode notification update response: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
