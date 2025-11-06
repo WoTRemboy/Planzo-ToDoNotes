@@ -16,54 +16,11 @@ extension ShareNetworkService {
     /// Syncs share links for a backend task (list) with the server.
     internal func syncSharesIfNeeded(for task: TaskEntity, completion: (() -> Void)? = nil) {
         guard let listServerId = task.serverId, !listServerId.isEmpty else { completion?(); return }
-        let context = CoreDataProvider.shared.persistentContainer.viewContext
-
+        
         self.getShareInfo(for: listServerId) { result in
             switch result {
             case .success(let serverShares):
-                // Map local shares by serverId
-                let localShares = (ShareCoreDataService.shared.fetchShareEntities(for: task))
-                var localByServerId: [String: ShareEntity] = [:]
-                for share in localShares {
-                    if let serverId = share.serverId {
-                        localByServerId[serverId] = share
-                    }
-                }
-                let serverIds = Set(serverShares.map { $0.id })
-
-                // Remove deleted shares
-                for (serverId, entity) in localByServerId {
-                    if !serverIds.contains(serverId) {
-                        context.delete(entity)
-                    }
-                }
-                // Upsert or update shares
-                for remote in serverShares {
-                    if let localShare = localByServerId[remote.id] {
-                        // Update local fields if needed
-                        localShare.scope = remote.scope
-                        localShare.activeNow = remote.activeNow
-                        localShare.revoked = remote.revoked
-                        localShare.createdAt = Date.iso8601DateFormatter.date(from: remote.createdAt)
-                        localShare.expiresAt = Date.iso8601DateFormatter.date(from: remote.expiresAt)
-                    } else {
-                        // Insert new ShareEntity
-                        _ = ShareCoreDataService.shared.saveShare(
-                            serverId: remote.id,
-                            scope: remote.scope,
-                            activeNow: remote.activeNow,
-                            revoked: remote.revoked,
-                            createdAt: Date.iso8601DateFormatter.date(from: remote.createdAt),
-                            expiresAt: Date.iso8601DateFormatter.date(from: remote.expiresAt),
-                            task: task
-                        )
-                    }
-                }
-                do {
-                    try context.save()
-                } catch {
-                    shareSyncLogger.error("Failed to save shares context after sync: \(error.localizedDescription)")
-                }
+                self.syncShares(for: task, serverShares: serverShares)
                 shareSyncLogger.info("Share sync finished for task: \(listServerId)")
                 completion?()
             case .failure(let error):
@@ -72,7 +29,55 @@ extension ShareNetworkService {
             }
         }
     }
+    
+    internal func syncShares(for task: TaskEntity, serverShares: [ShareLink]) {
+        // Map local shares by serverId
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
 
+        let localShares = (ShareCoreDataService.shared.fetchShareEntities(for: task))
+        var localByServerId: [String: ShareEntity] = [:]
+        for share in localShares {
+            if let serverId = share.serverId {
+                localByServerId[serverId] = share
+            }
+        }
+        let serverIds = Set(serverShares.map { $0.id })
+        
+        // Remove deleted shares
+        for (serverId, entity) in localByServerId {
+            if !serverIds.contains(serverId) {
+                context.delete(entity)
+            }
+        }
+        // Upsert or update shares
+        for remote in serverShares {
+            if let localShare = localByServerId[remote.id] {
+                // Update local fields if needed
+                localShare.scope = remote.scope
+                localShare.activeNow = remote.activeNow
+                localShare.revoked = remote.revoked
+                localShare.createdAt = Date.iso8601DateFormatter.date(from: remote.createdAt)
+                localShare.expiresAt = Date.iso8601DateFormatter.date(from: remote.expiresAt)
+            } else {
+                // Insert new ShareEntity
+                _ = ShareCoreDataService.shared.saveShare(
+                    serverId: remote.id,
+                    scope: remote.scope,
+                    activeNow: remote.activeNow,
+                    revoked: remote.revoked,
+                    createdAt: Date.iso8601DateFormatter.date(from: remote.createdAt),
+                    expiresAt: Date.iso8601DateFormatter.date(from: remote.expiresAt),
+                    task: task
+                )
+            }
+        }
+        do {
+            try context.save()
+        } catch {
+            shareSyncLogger.error("Failed to save shares context after sync: \(error.localizedDescription)")
+        }
+    }
+    
     /// Creates a share link on the server for a given task
     internal func createShare(for task: TaskEntity, expiresAt: String, completion: ((Result<String, Error>) -> Void)? = nil) {
         guard let listServerId = task.serverId, !listServerId.isEmpty else {
@@ -90,7 +95,7 @@ extension ShareNetworkService {
             }
         }
     }
-
+    
     /// Deletes a share link from the server and local storage
     internal func deleteShare(_ share: ShareEntity, completion: ((Result<Void, Error>) -> Void)? = nil) {
         guard let task = share.task, let listServerId = task.serverId, let shareServerId = share.serverId else {
@@ -109,7 +114,7 @@ extension ShareNetworkService {
             }
         }
     }
-
+    
     /// Creates a share link on the server and presents a share sheet with the generated URL.
     internal func createShareAndPresentSheet(for task: TaskEntity, expiresAt: String, completion: ((Result<String, Error>) -> Void)? = nil) {
         self.createShare(for: task, expiresAt: expiresAt) { result in

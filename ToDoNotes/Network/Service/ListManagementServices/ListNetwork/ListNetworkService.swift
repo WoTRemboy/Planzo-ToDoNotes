@@ -10,6 +10,32 @@ import CoreData
 
 private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListNetworkService")
 
+struct CreateListRequest: Codable {
+    let name: String?
+    let details: String?
+    let folder: String?
+    let done: Bool
+    let isTask: Bool
+    let important: Bool
+    let pinned: Bool
+    let dueAt: String?
+    let hasDueTime: Bool
+}
+
+struct UpdateListRequest: Codable {
+    let id: String
+    let name: String?
+    let details: String?
+    let folder: String?
+    let done: Bool
+    let isTask: Bool
+    let important: Bool
+    let pinned: Bool
+    let dueAt: String?
+    let hasDueTime: Bool
+    let archived: Bool
+}
+
 final class ListNetworkService {
     static let shared = ListNetworkService()
     private let tokenStorage = TokenStorageService()
@@ -66,32 +92,6 @@ final class ListNetworkService {
             }
         }
     }
-}
-
-struct CreateListRequest: Codable {
-    let name: String?
-    let details: String?
-    let folder: String?
-    let done: Bool
-    let isTask: Bool
-    let important: Bool
-    let pinned: Bool
-    let dueAt: String?
-    let hasDueTime: Bool
-}
-
-struct UpdateListRequest: Codable {
-    let id: String
-    let name: String?
-    let details: String?
-    let folder: String?
-    let done: Bool
-    let isTask: Bool
-    let important: Bool
-    let pinned: Bool
-    let dueAt: String?
-    let hasDueTime: Bool
-    let archived: Bool
 }
 
 extension ListNetworkService {

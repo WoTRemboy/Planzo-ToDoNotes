@@ -60,8 +60,14 @@ final class AuthNetworkService: ObservableObject {
                 self.saveAuthResponse(authResponse, idToken: idToken)
                 logger.info("Google authorization succeeded, access token received.")
                 DispatchQueue.main.async {
-                    ListNetworkService.shared.syncAllBackTasks(since: nil)
-                    completion(.success(authResponse))
+                    FullSyncNetworkService.shared.syncAllData { result in
+                        switch result {
+                        case .success(_):
+                            completion(.success(authResponse))
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    }
                 }
                 LoadingOverlay.shared.hide()
             } catch {
@@ -115,8 +121,14 @@ final class AuthNetworkService: ObservableObject {
                 self.saveAuthResponse(authResponse, idToken: idToken)
                 logger.info("Apple authorization succeeded, access token received.")
                 DispatchQueue.main.async {
-                    ListNetworkService.shared.syncAllBackTasks(since: nil)
-                    completion(.success(authResponse))
+                    FullSyncNetworkService.shared.syncAllData { result in
+                        switch result {
+                        case .success(_):
+                            completion(.success(authResponse))
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    }
                 }
             } catch {
                 logger.error("Failed to decode Apple authorization response: \(error.localizedDescription)")

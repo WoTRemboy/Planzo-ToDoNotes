@@ -13,3 +13,18 @@ struct ShareLink: Codable, Identifiable {
     let scope: String
     let activeNow: Bool
 }
+
+
+struct ShareLinkRequest: Codable, Identifiable {
+    let id: String
+    let listId: String
+    let createdAt: String
+    let expiresAt: String
+    let revoked: Bool
+    let scope: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "shareId"
+        case listId, createdAt, expiresAt, revoked, scope
+    }
+}
