@@ -135,7 +135,7 @@ struct MainView: View {
         }
         .refreshable {
             let lastSyncAt = authService.currentUser?.lastSyncAt
-            await viewModel.refreshTasks(since: lastSyncAt)
+            await FullSyncNetworkService.shared.refreshTasks(since: lastSyncAt)
         }
     }
     

@@ -324,19 +324,4 @@ final class MainViewModel: ObservableObject {
             return false
         }
     }
-    
-    @MainActor
-    internal func refreshTasks(since: String?) async {
-        await withCheckedContinuation { continuation in
-            FullSyncNetworkService.shared.syncDeltaData(since: since) { result in
-                switch result {
-                case .success(_):
-                    logger.info("Delta data sync successful since: \(since ?? "nil")")
-                case .failure(let error):
-                    logger.error("Delta data sync failed with error: \(error)")
-                }
-                continuation.resume()
-            }
-        }
-    }
 }

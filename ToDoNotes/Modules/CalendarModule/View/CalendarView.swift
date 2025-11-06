@@ -129,6 +129,10 @@ struct CalendarView: View {
                     .padding(.top, 1)
             }
         }
+        .refreshable {
+            let lastSyncAt = authService.currentUser?.lastSyncAt
+            await FullSyncNetworkService.shared.refreshTasks(since: lastSyncAt)
+        }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .animation(.easeInOut(duration: 0.15),
                    value: viewModel.selectedDate)

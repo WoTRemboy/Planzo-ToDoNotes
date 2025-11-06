@@ -198,4 +198,19 @@ final class FullSyncNetworkService {
     private func syncLists(_ upserts: [ListItem], deletes: [ListDelete] = [], since: String? = nil) {
         ListNetworkService.shared.syncLists(upserts, deletedTasks: deletes, since: since)
     }
+    
+    @MainActor
+    internal func refreshTasks(since: String?) async {
+        await withCheckedContinuation { continuation in
+            self.syncDeltaData(since: since) { result in
+                switch result {
+                case .success(_):
+                    logger.info("Delta data sync successful since: \(since ?? "nil")")
+                case .failure(let error):
+                    logger.error("Delta data sync failed with error: \(error)")
+                }
+                continuation.resume()
+            }
+        }
+    }
 }
