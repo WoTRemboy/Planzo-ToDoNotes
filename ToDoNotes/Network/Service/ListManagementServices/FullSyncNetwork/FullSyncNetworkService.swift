@@ -26,6 +26,11 @@ struct ItemsDelta: Codable {
     let deletes: [ItemDelete]
 }
 
+struct NotificationsDelta: Codable {
+    let upserts: [NotificationUpsert]
+    let deletes: [NotificationDelete]
+}
+
 struct SharesDelta: Codable {
     let upserts: [ShareLinkRequest]
     let deletes: [ShareDelete]
@@ -38,6 +43,7 @@ struct FullSyncDeltaResponse: Codable {
     let folders: FoldersDelta
     let lists: ListsDelta
     let items: ItemsDelta
+    let notifications: NotificationsDelta
     let shares: SharesDelta
 }
 
@@ -47,6 +53,7 @@ struct FullSyncSnapshotResponse: Codable {
     let folders: [FolderUpsert]
     let lists: [ListItem]
     let items: [ListTaskItem]
+    let notifications: [NotificationUpsert]
     let shares: [ShareLinkRequest]
 }
 
@@ -79,10 +86,11 @@ final class FullSyncNetworkService {
                     }
                     do {
                         let decoded = try JSONDecoder().decode(FullSyncSnapshotResponse.self, from: data)
-                        logger.info("Full sync succeeded. Folders: \(decoded.folders.count), Lists: \(decoded.lists.count), Items: \(decoded.items.count), Shares: \(decoded.shares.count)")
+                        logger.info("Full sync succeeded. Folders: \(decoded.folders.count), Lists: \(decoded.lists.count), Items: \(decoded.items.count), Notifications: \(decoded.notifications.count), Shares: \(decoded.shares.count)")
                         self.syncLists(decoded.lists)
                         self.syncItems(decoded.items)
                         self.syncShares(decoded.shares)
+                        self.syncNotifications(decoded.notifications)
                         DispatchQueue.main.async {
                             UserCoreDataService.shared.updateLastSyncAt()
                             completion(.success(()))
@@ -127,10 +135,11 @@ final class FullSyncNetworkService {
                     }
                     do {
                         let decoded = try JSONDecoder().decode(FullSyncDeltaResponse.self, from: data)
-                        logger.info("Delta sync succeeded. Folders: \(decoded.folders.upserts.count)/\(decoded.folders.deletes.count), Lists: \(decoded.lists.upserts.count)/\(decoded.lists.deletes.count), Items: \(decoded.items.upserts.count)/\(decoded.items.deletes.count), Shares: \(decoded.shares.upserts.count)/\(decoded.shares.deletes.count)")
+                        logger.info("Delta sync succeeded. Folders: \(decoded.folders.upserts.count)/\(decoded.folders.deletes.count), Lists: \(decoded.lists.upserts.count)/\(decoded.lists.deletes.count), Items: \(decoded.items.upserts.count)/\(decoded.items.deletes.count), Notifications: \(decoded.notifications.upserts.count)/\(decoded.notifications.deletes.count), Shares: \(decoded.shares.upserts.count)/\(decoded.shares.deletes.count)")
                         self.syncLists(decoded.lists.upserts, deletes: decoded.lists.deletes, since: since)
                         self.syncItems(decoded.items.upserts, deletedItems: decoded.items.deletes, since: since)
                         self.syncShares(decoded.shares.upserts)
+                        self.syncNotifications(decoded.notifications.upserts, deletes: decoded.notifications.deletes, since: since)
                         DispatchQueue.main.async {
                             UserCoreDataService.shared.updateLastSyncAt()
                             completion(.success(()))
@@ -197,6 +206,25 @@ final class FullSyncNetworkService {
 
     private func syncLists(_ upserts: [ListItem], deletes: [ListDelete] = [], since: String? = nil) {
         ListNetworkService.shared.syncLists(upserts, deletedTasks: deletes, since: since)
+    }
+    
+    private func syncNotifications(_ upserts: [NotificationUpsert], deletes: [NotificationDelete] = [], since: String? = nil) {
+        guard !upserts.isEmpty || !deletes.isEmpty else { return }
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        // Group notifications by listId
+        let grouped = Dictionary(grouping: upserts, by: { $0.listId })
+        context.performAndWait {
+            for (listId, notificationsGroup) in grouped {
+                let fetch: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+                fetch.predicate = NSPredicate(format: "serverId == %@", listId)
+                fetch.fetchLimit = 1
+                if let task = try? context.fetch(fetch).first {
+                    NotificationNetworkService.shared.syncNotifications(for: task, remoteItems: notificationsGroup, deletedItems: deletes, since: since)
+                } else {
+                    logger.error("No TaskEntity found for listId: \(listId)")
+                }
+            }
+        }
     }
     
     @MainActor
