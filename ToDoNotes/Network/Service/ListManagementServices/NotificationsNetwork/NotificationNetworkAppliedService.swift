@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 import OSLog
+import UserNotifications
 
 private let logger = Logger(subsystem: "com.todonotes.notifications", category: "NotificationNetworkAppliedService")
 
@@ -42,6 +43,7 @@ extension NotificationNetworkService {
             for entity in toRemove {
                 context.delete(entity)
             }
+            UNUserNotificationCenter.current().removeNotifications(for: NSSet(array: toRemove))
         }
         // Map notifications by serverId for quick lookup
         var localByServerId: [String: NotificationEntity] = [:]
@@ -60,6 +62,9 @@ extension NotificationNetworkService {
                     localNotif.type = remote.type
                     localNotif.target = Date.iso8601SecondsDateFormatter.date(from: remote.target)
                     localNotif.updatedAt = Date.iso8601DateFormatter.date(from: remote.updatedAt)
+                    
+                    UNUserNotificationCenter.current().removeNotifications(for: NSSet(set: [localNotif]))
+                    UNUserNotificationCenter.current().setupNotification(for: localNotif, with: task.name)
                 } else {
                     self.updateNotification(localNotif)
                 }
@@ -72,6 +77,7 @@ extension NotificationNetworkService {
                 newNotif.target = Date.iso8601SecondsDateFormatter.date(from: remote.target)
                 newNotif.updatedAt = Date.iso8601DateFormatter.date(from: remote.updatedAt)
                 newNotif.task = task
+                UNUserNotificationCenter.current().setupNotification(for: newNotif, with: task.name)
             }
         }
         // Save context if there were changes

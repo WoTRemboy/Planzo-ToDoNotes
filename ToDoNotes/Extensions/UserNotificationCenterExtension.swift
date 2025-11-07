@@ -26,6 +26,11 @@ extension UNUserNotificationCenter {
         // First removes any existing notifications
         removeNotifications(for: entityNotifications)
         
+        let defaults = UserDefaults.standard
+        let rawValue = defaults.string(forKey: Texts.UserDefaults.notifications) ?? String()
+        let notificationsStatus = NotificationStatus(rawValue: rawValue) ?? .prohibited
+        guard notificationsStatus == .allowed else { return }
+        
         // Gets current pending notifications to check for duplicates
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.getPendingNotificationRequests { pendingRequests in
@@ -45,7 +50,7 @@ extension UNUserNotificationCenter {
                 
                 let content = UNMutableNotificationContent()
                 content.title = notification.type.notificationName
-                content.body = name ?? String()
+                content.body = name ?? Texts.TaskManagement.TaskRow.placeholder
                 content.sound = .default
                 
                 let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: targetDate)
@@ -60,6 +65,39 @@ extension UNUserNotificationCenter {
                         logger.debug("Notification successfully setup for \(String(describing: name)) at \(targetDate) with type \(notification.type.selectorName)")
                     }
                 }
+            }
+        }
+    }
+    
+    /// Schedules a single notification for the given NotificationItem.
+    /// - Parameters:
+    ///   - notification: The NotificationItem to schedule.
+    ///   - name: The name (body) to display in the notification.
+    internal func setupNotification(for notification: NotificationEntity, with name: String?) {
+        
+        let defaults = UserDefaults.standard
+        let rawValue = defaults.string(forKey: Texts.UserDefaults.notifications) ?? String()
+        let notificationsStatus = NotificationStatus(rawValue: rawValue) ?? .prohibited
+        guard notificationsStatus == .allowed else { return }
+        
+        guard let targetDate = notification.target,
+              targetDate > Date(),
+              let identifier = notification.id?.uuidString,
+              let type = notification.type
+        else { return }
+        
+        let content = UNMutableNotificationContent()
+        content.title = TaskNotification(rawValue: type)?.notificationName ?? type
+        content.body = name ?? Texts.TaskManagement.TaskRow.placeholder
+        content.sound = .default
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: targetDate)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        self.add(request) { error in
+            if let error = error {
+                logger.error("Notification setup error for \(identifier): \(error.localizedDescription)")
+            } else {
+                logger.debug("Notification successfully setup for \(String(describing: name)) at \(targetDate) with type \(notification.type ?? "nil")")
             }
         }
     }
@@ -118,3 +156,4 @@ extension UNUserNotificationCenter {
         }
     }
 }
+
