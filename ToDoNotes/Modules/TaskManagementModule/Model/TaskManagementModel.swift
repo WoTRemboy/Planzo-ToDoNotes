@@ -38,6 +38,7 @@ struct NotificationItem: Identifiable, Equatable, Hashable {
     var id = UUID()
     var type: TaskNotification
     var target: Date?
+    var serverId: String?
 }
 
 // MARK: - Management View State

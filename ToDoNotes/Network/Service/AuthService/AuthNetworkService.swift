@@ -18,6 +18,17 @@ final class AuthNetworkService: ObservableObject {
     private let logoutDelay: TimeInterval = 1.5
     private let tokenStorage = TokenStorageService()
     
+    init() {
+        NotificationCenter.default.addObserver(forName: .userDidUpdateLastSyncAt, object: nil, queue: .main) { [weak self] _ in
+            guard let self = self else { return }
+            self.currentUser = UserCoreDataService.shared.loadUser()
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .userDidUpdateLastSyncAt, object: nil)
+    }
+    
     internal func googleAuthorize(idToken: String, completion: @escaping (Result<AuthResponse, Error>) -> Void) {
         guard let url = URL(string: "https://banana.avoqode.com/api/v1/auth/google") else {
             logger.error("Invalid Google authorization URL.")
@@ -60,8 +71,14 @@ final class AuthNetworkService: ObservableObject {
                 self.saveAuthResponse(authResponse, idToken: idToken)
                 logger.info("Google authorization succeeded, access token received.")
                 DispatchQueue.main.async {
-                    ListNetworkService.shared.syncAllBackTasks(since: nil)
-                    completion(.success(authResponse))
+                    FullSyncNetworkService.shared.syncAllData { result in
+                        switch result {
+                        case .success(_):
+                            completion(.success(authResponse))
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    }
                 }
                 LoadingOverlay.shared.hide()
             } catch {
@@ -115,8 +132,14 @@ final class AuthNetworkService: ObservableObject {
                 self.saveAuthResponse(authResponse, idToken: idToken)
                 logger.info("Apple authorization succeeded, access token received.")
                 DispatchQueue.main.async {
-                    ListNetworkService.shared.syncAllBackTasks(since: nil)
-                    completion(.success(authResponse))
+                    FullSyncNetworkService.shared.syncAllData { result in
+                        switch result {
+                        case .success(_):
+                            completion(.success(authResponse))
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    }
                 }
             } catch {
                 logger.error("Failed to decode Apple authorization response: \(error.localizedDescription)")
@@ -227,6 +250,20 @@ final class AuthNetworkService: ObservableObject {
         let user = UserCoreDataService.shared.loadUser()
         self.currentUser = user
         logger.debug("Current user loaded from Core Data.")
+    }
+    
+    internal func updateLastSyncAt(date: Date = Date()) {
+        let formatter = ISO8601DateFormatter()
+        let lastSyncString = formatter.string(from: date)
+        // Update the persisted user
+        UserCoreDataService.shared.updateLastSyncAt(date: date)
+        // Update the in-memory currentUser
+        if var user = self.currentUser {
+            user.lastSyncAt = lastSyncString
+            DispatchQueue.main.async {
+                self.currentUser = user
+            }
+        }
     }
     
     var isAuthorized: Bool {

@@ -86,8 +86,10 @@ struct MainView: View {
                 .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
                 .presentationDragIndicator(.visible)
         }
-        .sheet(isPresented: $viewModel.showingShareSheet) {
-            TaskManagementShareView()
+        .sheet(item: $viewModel.sharingTask) { task in
+            TaskManagementShareView(viewModel: TaskManagementViewModel(entity: task), onComplete: {
+                viewModel.setSharingTask(to: nil)
+            })
                 .presentationDetents([.height(300)])
                 .presentationDragIndicator(.visible)
         }
@@ -120,13 +122,6 @@ struct MainView: View {
         .popView(isPresented: $viewModel.showingTaskEditRemovedAlert, onTap: {}, onDismiss: {}) {
             editAlert
         }
-        .refreshable {
-            guard let lastSyncAt = authService.currentUser?.lastSyncAt else {
-                await refreshAllTasks()
-                return
-            }
-            await refreshTasks(since: lastSyncAt)
-        }
     }
     
     // MARK: - Main Content Layout
@@ -137,6 +132,10 @@ struct MainView: View {
             MainCustomNavBar(title: Texts.MainPage.title, namespace: animation)
                 .zIndex(1)
             taskForm
+        }
+        .refreshable {
+            let lastSyncAt = authService.currentUser?.lastSyncAt
+            await FullSyncNetworkService.shared.refreshTasks(since: lastSyncAt)
         }
     }
     
@@ -319,19 +318,6 @@ extension MainView {
     /// Access filtered segmented tasks from the view model.
     private var filteredSegmentedTasks: [(Date?, [TaskEntity])] {
         viewModel.filteredSegmentedTasks
-    }
-    
-    @MainActor
-    private func refreshAllTasks() async {
-        await refreshTasks(since: nil)
-    }
-    
-    @MainActor
-    private func refreshTasks(since: String?) async {
-        await withCheckedContinuation { continuation in
-            ListNetworkService.shared.syncAllBackTasks(since: since)
-            continuation.resume()
-        }
     }
 }
 

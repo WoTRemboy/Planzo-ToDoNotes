@@ -15,82 +15,89 @@ extension ListItemNetworkService {
     /// Syncs the checklist items for a backend task with the server.
     internal func syncChecklistIfNeeded(for task: TaskEntity, since: String?, completion: (() -> Void)? = nil) {
         guard let serverId = task.serverId, !serverId.isEmpty else { return }
-        let context = CoreDataProvider.shared.persistentContainer.viewContext
 
         // Fetch items (checklist) from server
         self.fetchItems(listId: serverId, since: since) { result in
             switch result {
             case .success(let syncResult):
-                let localChecklist = ((task.checklist as? Set<ChecklistEntity>) ?? []).sorted { $0.order < $1.order }
-                // Handle deletes (remote deletions)
-                let deletedIds = Set(syncResult.deletes.map { $0.id })
-                if !deletedIds.isEmpty {
-                    let toRemove = localChecklist.filter { item in
-                        if let sid = item.serverId { return deletedIds.contains(sid) } else { return false }
-                    }
-                    for item in toRemove {
-                        context.delete(item)
-                    }
-                }
-                
-                let remoteItems = syncResult.upserts
-
-                // Map checklist by serverId for quick lookup
-                var localByServerId: [String: ChecklistEntity] = [:]
-                for item in localChecklist {
-                    if let serverId = item.serverId {
-                        localByServerId[serverId] = item
-                    }
-                }
-
-                // Upsert remote checklist items
-                var checklistToAdd = [ChecklistEntity]()
-                for remote in remoteItems {
-                    if let localItem = localByServerId[remote.id] {
-                        let updatedRemoteDate = Date.iso8601DateFormatter.date(from: remote.updatedAt) ?? .distantPast
-                        let updatedLocalDate = (task.updatedAt ?? .distantPast).addingTimeInterval(1)
-                        if updatedRemoteDate > updatedLocalDate {
-                            // Update fields
-                            localItem.serverId = remote.id
-                            localItem.name = remote.title
-                            localItem.completed = remote.done
-                            localItem.order = Int32(remote.order)
-                        } else {
-                            self.updateChecklistItem(localItem, for: task)
-                        }
-                    } else {
-                        // Insert new ChecklistEntity if does not exist
-                        let newItem = ChecklistEntity(context: context)
-                        newItem.id = UUID()
-                        newItem.serverId = remote.id
-                        newItem.name = remote.title
-                        newItem.completed = remote.done
-                        newItem.task = task
-                        newItem.order = Int32(remote.order)
-                        checklistToAdd.append(newItem)
-                    }
-                }
-                var checklist = ((task.checklist as? Set<ChecklistEntity>) ?? []).sorted { $0.order < $1.order }
-                for newItem in checklistToAdd {
-                    let insertIndex = checklist.firstIndex(where: { newItem.order < $0.order }) ?? checklist.count
-                    checklist.insert(newItem, at: insertIndex)
-                }
-                for (index, item) in checklist.enumerated() {
-                    item.order = Int32(index)
-                }
-                task.checklist = NSSet(array: checklist)
-
-                // Save context if there were changes
-                do {
-                    try context.save()
-                } catch {
-                    logger.error("Failed to save checklist context after sync: \(error.localizedDescription)")
-                }
+                self.syncItems(for: task, remoteItems: syncResult.upserts, deletedItems: syncResult.deletes, since: since)
                 logger.info("Checklist sync finished for task: \(serverId)")
                 completion?()
             case .failure(let error):
                 logger.error("Failed to sync checklist from server: \(error.localizedDescription)")
                 completion?()
+            }
+        }
+    }
+    
+    internal func syncItems(for task: TaskEntity, remoteItems: [ListTaskItem], deletedItems: [ItemDelete] = [], since: String?) {
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        
+        let localChecklist = ((task.checklist as? Set<ChecklistEntity>) ?? []).sorted { $0.order < $1.order }
+        // Handle deletes (remote deletions)
+        let deletedIds = Set(deletedItems.map { $0.id })
+        if !deletedIds.isEmpty {
+            let toRemove = localChecklist.filter { item in
+                if let sid = item.serverId { return deletedIds.contains(sid) } else { return false }
+            }
+            for item in toRemove {
+                context.delete(item)
+            }
+        }
+        
+        context.performAndWait {
+            let localChecklist = ((task.checklist as? Set<ChecklistEntity>) ?? []).sorted { $0.order < $1.order }
+
+            // Map checklist by serverId for quick lookup
+            var localByServerId: [String: ChecklistEntity] = [:]
+            for item in localChecklist {
+                if let serverId = item.serverId {
+                    localByServerId[serverId] = item
+                }
+            }
+
+            // Upsert remote checklist items
+            var checklistToAdd = [ChecklistEntity]()
+            for remote in remoteItems {
+                if let localItem = localByServerId[remote.id] {
+                    let updatedRemoteDate = Date.iso8601DateFormatter.date(from: remote.updatedAt) ?? .distantPast
+                    let updatedLocalDate = (task.updatedAt ?? .distantPast).addingTimeInterval(1)
+                    if updatedRemoteDate > updatedLocalDate {
+                        // Update fields
+                        localItem.serverId = remote.id
+                        localItem.name = remote.title
+                        localItem.completed = remote.done
+                        localItem.order = Int32(remote.order)
+                    } else {
+                        self.updateChecklistItem(localItem, for: task)
+                    }
+                } else {
+                    // Insert new ChecklistEntity if does not exist
+                    let newItem = ChecklistEntity(context: context)
+                    newItem.id = UUID()
+                    newItem.serverId = remote.id
+                    newItem.name = remote.title
+                    newItem.completed = remote.done
+                    newItem.task = task
+                    newItem.order = Int32(remote.order)
+                    checklistToAdd.append(newItem)
+                }
+            }
+            var checklist = ((task.checklist as? Set<ChecklistEntity>) ?? []).sorted { $0.order < $1.order }
+            for newItem in checklistToAdd {
+                let insertIndex = checklist.firstIndex(where: { newItem.order < $0.order }) ?? checklist.count
+                checklist.insert(newItem, at: insertIndex)
+            }
+            for (index, item) in checklist.enumerated() {
+                item.order = Int32(index)
+            }
+            task.checklist = NSSet(array: checklist)
+
+            // Save context if there were changes
+            do {
+                try context.save()
+            } catch {
+                logger.error("Failed to save checklist context after sync: \(error.localizedDescription)")
             }
         }
     }

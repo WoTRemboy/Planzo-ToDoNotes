@@ -131,7 +131,7 @@ struct TodayTaskRowWithSwipeActions: View {
     
     private var shareButton: some View {
         Button {
-            viewModel.toggleShowShareSheet()
+            viewModel.setSharingTask(to: entity)
         } label: {
             Image.TaskManagement.TaskRow.SwipeAction.share
         }

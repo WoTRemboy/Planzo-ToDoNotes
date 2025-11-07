@@ -63,7 +63,7 @@ struct Folder: Identifiable, Equatable, Hashable {
     }
 }
 
-struct FolderColor: Hashable {
+struct FolderColor: Hashable, Codable {
     var red: Double
     var green: Double
     var blue: Double

@@ -48,7 +48,7 @@ struct TaskCalendarSelectorView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             
-            removeButton
+            doneButton
                 .zIndex(1)
         }
         .presentationDragIndicator(.visible)
@@ -70,13 +70,13 @@ struct TaskCalendarSelectorView: View {
     /// The header containing Cancel, Title, and Done buttons.
     private var header: some View {
         HStack {
-            toolBarButtonCancel
-            Spacer()
+//            toolBarButtonCancel
+//            Spacer()
             Text(Texts.TaskManagement.DatePicker.title)
                 .font(.system(size: 20, weight: .medium))
             
-            Spacer()
-            toolBarButtonDone
+//            Spacer()
+//            toolBarButtonDone
         }
         .padding([.horizontal, .top], 24)
     }
@@ -147,6 +147,27 @@ struct TaskCalendarSelectorView: View {
         }
         .clipShape(.rect(cornerRadius: 10))
         .padding()
+    }
+    
+    private var doneButton: some View {
+        Button {
+            viewModel.saveTaskDateParams()
+            viewModel.toggleDatePicker()
+        } label: {
+            Text(Texts.TaskManagement.DatePicker.done)
+                .font(.system(size: 17, weight: .medium))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            
+                .foregroundColor(Color.LabelColors.labelReversed)
+                .background(Color.LabelColors.labelPrimary)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .frame(height: 50)
+        .frame(maxWidth: .infinity)
+        .minimumScaleFactor(0.4)
+        
+        .padding(.horizontal)
+        .padding(.bottom)
     }
     
     /// Button to clear all selected parameters (date, time, notifications).
