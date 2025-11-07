@@ -107,14 +107,21 @@ struct TaskManagementView: View {
         }
         .task {
             if let entity = entity {
-                ListItemNetworkService.shared.syncChecklistForTaskEntity(entity, since: authService.currentUser?.lastSyncAt) {
+                let since = authService.currentUser?.lastSyncAt
+                ListItemNetworkService.shared.syncChecklistForTaskEntity(entity, since: since) {
                     viewModel.reloadChecklist(from: entity.checklist)
+                }
+                NotificationNetworkService.shared.syncNotificationsIfNeeded(for: entity, since: since) {
+                    viewModel.reloadNotifications(from: entity.notifications)
+                    UNUserNotificationCenter.current().logNotifications(for: entity.notifications)
                 }
             }
         }
         // Share Sheet Presentation
-        .sheet(isPresented: $viewModel.showingShareSheet) {
-            TaskManagementShareView()
+        .sheet(item: $viewModel.sharingTask) { item in
+            TaskManagementShareView(viewModel: viewModel) {
+                viewModel.setSharingTask(to: nil)
+            }
                 .presentationDetents([.height(285)])
                 .presentationDragIndicator(.visible)
         }

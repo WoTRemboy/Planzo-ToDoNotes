@@ -31,6 +31,9 @@ struct ToDoNotesApp: App {
     @StateObject private var tokenService = TokenStorageService()
     @StateObject private var subscriptionService = SubscriptionViewModel()
     
+    /// Background sync task for periodic server sync
+    @State private var backgroundSyncTask: Task<Void, Never>?
+    
     /// The app's main scene, launching with the splash screen and setting up appearance and context.
     internal var body: some Scene {
         WindowGroup {
@@ -51,12 +54,29 @@ struct ToDoNotesApp: App {
                 .environmentObject(subscriptionService)
                 .task {
                     authService.loadPersistedProfile()
-                    if authService.isAuthorized {
-                        ListNetworkService.shared.syncAllBackTasks(since: authService.currentUser?.lastSyncAt)
-                        logger.info("SyncAllBackTasks started for syncing all tasks.")
-                    } else {
-                        logger.info("User is not authorized, skipping server sync.")
+                    
+                    backgroundSyncTask = Task {
+                        while !Task.isCancelled {
+                            if authService.isAuthorized, let user = authService.currentUser {
+                                FullSyncNetworkService.shared.syncDeltaData(since: user.lastSyncAt) { result in
+                                    switch result {
+                                    case .success(_):
+                                        logger.info("Delta data sync successful since: \(user.lastSyncAt ?? "nil")")
+                                    case .failure(let error):
+                                        logger.error("Delta data sync failed with error: \(error)")
+                                    }
+                                }
+                                logger.info("SyncAllBackTasks started for syncing all tasks.")
+                            } else {
+                                backgroundSyncTask?.cancel()
+                                logger.info("User is not authorized, skipping server sync.")
+                            }
+                            try? await Task.sleep(nanoseconds: 15 * 1_000_000_000)
+                        }
                     }
+                }
+                .onDisappear {
+                    backgroundSyncTask?.cancel()
                 }
         }
     }

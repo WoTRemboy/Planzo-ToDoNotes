@@ -103,34 +103,45 @@ extension ListNetworkService {
     
     private func backendSyncAllTasks(since: String?, context: NSManagedObjectContext, localTasks: [TaskEntity]) {
         self.fetchLists(since: since) { result in
-            var localTasks = localTasks
-            
             switch result {
             case .success(let syncResult):
-                
                 let deletedTasks = syncResult.deletes
-                for deleted in deletedTasks {
-                    if let taskToDelete = localTasks.first(where: { $0.serverId == deleted.id }) {
-                        context.delete(taskToDelete)
-                        if let index = localTasks.firstIndex(where: { $0 === taskToDelete }) {
-                            localTasks.remove(at: index)
-                        }
-                        logger.info("Deleted local task because it was deleted on server: \(deleted.id)")
-                    }
+                self.syncLists(syncResult.upserts, deletedTasks: deletedTasks, localTasks: localTasks, since: since)
+            case .failure(let error):
+                logger.error("Failed to fetch lists from server for import: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    internal func syncLists(_ upsertTasks: [ListItem], deletedTasks: [ListDelete] = [], localTasks: [TaskEntity] = [], since: String? = nil) {
+        var localTasks = localTasks
+        
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        for deleted in deletedTasks {
+            if let taskToDelete = localTasks.first(where: { $0.serverId == deleted.id }) {
+                context.delete(taskToDelete)
+                if let index = localTasks.firstIndex(where: { $0 === taskToDelete }) {
+                    localTasks.remove(at: index)
                 }
-                
-                let remoteTasks = syncResult.upserts
+                logger.info("Deleted local task because it was deleted on server: \(deleted.id)")
+            }
+        }
+        
+        context.performAndWait {
+            do {
+                let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+                let localTasks = try context.fetch(fetchRequest)
                 
                 let localTasksToUpload = localTasks.filter { local in
                     guard let serverId = local.serverId, !serverId.isEmpty else { return true }
-                    return !remoteTasks.contains(where: { $0.id == serverId })
+                    return !upsertTasks.contains(where: { $0.id == serverId })
                 }
-
+                
                 for local in localTasksToUpload {
                     let sinceDate = Date.iso8601SecondsDateFormatter.date(from: since ?? "") ?? .distantPast
                     let updatedDate = local.updatedAt ?? .distantPast
                     guard updatedDate > sinceDate else { continue }
-                    self.createList(for: local) { createResult in
+                    ListNetworkService.shared.createList(for: local) { createResult in
                         switch createResult {
                         case .success(let listItem):
                             logger.info("Local task uploaded to backend: \(listItem.id)")
@@ -143,7 +154,7 @@ extension ListNetworkService {
                         }
                     }
                 }
-                for remote in remoteTasks {
+                for remote in upsertTasks {
                     if let task = localTasks.first(where: { $0.serverId == remote.id }),
                        let _ = task.serverId {
                         
@@ -173,7 +184,7 @@ extension ListNetworkService {
                             }
                             logger.info("Local task updated from server: \(remote.id) \(remote.name)")
                         } else if let parsedDate, localDate > parsedDate {
-                            self.updateList(to: task) { updateResult in
+                            ListNetworkService.shared.updateList(to: task) { updateResult in
                                 switch updateResult {
                                 case .success(let listItem):
                                     logger.info("Task updated on backend from local changes: \(listItem.id)")
@@ -220,8 +231,8 @@ extension ListNetworkService {
                 } catch {
                     logger.error("Failed to save imported tasks: \(error.localizedDescription)")
                 }
-            case .failure(let error):
-                logger.error("Failed to fetch lists from server for import: \(error.localizedDescription)")
+            } catch {
+                logger.error("Failed to save imported tasks: \(error.localizedDescription)")
             }
         }
     }

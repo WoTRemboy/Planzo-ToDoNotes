@@ -15,6 +15,15 @@ struct TaskManagementShareView: View {
     
     /// Indicates whether the task should be viewable via the shared link.
     @State private var shareType: ShareAccess = .viewOnly
+
+    @ObservedObject private var viewModel: TaskManagementViewModel
+    
+    private let onComplete: (() -> Void)?
+    
+    init(viewModel: TaskManagementViewModel, onComplete: (() -> Void)? = nil) {
+        self.viewModel = viewModel
+        self.onComplete = onComplete
+    }
     
     // MARK: - Body
     
@@ -61,14 +70,14 @@ struct TaskManagementShareView: View {
     /// A reusable row for view sharing option.
     private var viewButton: some View {
         paramButton(type: .viewOnly) {
-            // View Button Action
+            shareType = .viewOnly
         }
     }
     
     /// A reusable row for edit sharing option.
     private var editButton: some View {
         paramButton(type: .edit) {
-            // Edit Button Action
+            shareType = .edit
         }
     }
     
@@ -99,7 +108,12 @@ struct TaskManagementShareView: View {
     /// Button to trigger the generation of a shareable link.
     private var generateLinkButton: some View {
         Button {
-            // Action for generate link button
+            let expirationDate = Date().addingTimeInterval(7 * 24 * 3600)
+            let isoFormatter = ISO8601DateFormatter()
+            let expiresAtString = isoFormatter.string(from: expirationDate)
+            viewModel.handleShareLink(expiresAt: expiresAtString) {
+                onComplete?()
+            }
         } label: {
             HStack {
                 Image.TaskManagement.EditTask.link
@@ -124,6 +138,5 @@ struct TaskManagementShareView: View {
 // MARK: - Preview
 
 #Preview {
-    TaskManagementShareView()
-        .environmentObject(TaskManagementViewModel())
+    TaskManagementShareView(viewModel: TaskManagementViewModel())
 }

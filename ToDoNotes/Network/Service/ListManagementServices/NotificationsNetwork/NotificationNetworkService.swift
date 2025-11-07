@@ -1,28 +1,30 @@
 //
-//  ListItemNetworkService.swift
+//  NotificationNetworkService.swift
 //  ToDoNotes
 //
-//  Created by Roman Tverdokhleb on 23/09/2025.
+//  Created by Roman Tverdokhleb on 31/10/2025.
 //
 
 import Foundation
 import OSLog
 
-private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListItemNetworkService")
+private let logger = Logger(subsystem: "com.todonotes.notifications", category: "NotificationNetworkService")
 
-final class ListItemNetworkService {
-    static let shared = ListItemNetworkService()
+// MARK: - Network Service
 
-    /// Fetches items for a given list from the server, optionally since a specific date.
+final class NotificationNetworkService {
+    static let shared = NotificationNetworkService()
+
+    /// Fetches notifications for a given list from the server, optionally since a specific date.
     /// - Parameters:
-    ///   - listId: The ID of the list to fetch items for.
+    ///   - listId: The ID of the list to fetch notifications for.
     ///   - since: String for incremental sync.
-    ///   - completion: Completion handler with result containing ItemSyncResponse or error.
-    func fetchItems(listId: String, since: String? = nil, completion: @escaping (Result<ItemSyncResponse, Error>) -> Void) {
+    ///   - completion: Completion handler with result containing NotificationSyncResponse or error.
+    func fetchNotifications(listId: String, since: String? = nil, completion: @escaping (Result<NotificationSyncResponse, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                var components = URLComponents(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/items")!
+                var components = URLComponents(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/notifications")!
                 if let since = since {
                     components.queryItems = [URLQueryItem(name: "since", value: since)]
                 }
@@ -33,27 +35,27 @@ final class ListItemNetworkService {
 
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
-                        logger.error("Items fetch request failed: \(error.localizedDescription)")
+                        logger.error("Notifications fetch request failed: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
                         return
                     }
                     guard let data = data else {
-                        logger.error("Items fetch response data is nil.")
+                        logger.error("Notifications fetch response data is nil.")
                         DispatchQueue.main.async {
                             completion(.failure(URLError(.badServerResponse)))
                         }
                         return
                     }
                     do {
-                        let decoded = try JSONDecoder().decode(ItemSyncResponse.self, from: data)
-                        logger.info("Items fetch succeeded. Upserts: \(decoded.upserts.count), Deletes: \(decoded.deletes.count)")
+                        let decoded = try JSONDecoder().decode(NotificationSyncResponse.self, from: data)
+                        logger.info("Notifications fetch succeeded. Upserts: \(decoded.upserts.count), Deletes: \(decoded.deletes.count)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
                         }
                     } catch {
-                        logger.error("Failed to decode items fetch response: \(error.localizedDescription)")
+                        logger.error("Failed to decode notifications fetch response: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
@@ -68,19 +70,18 @@ final class ListItemNetworkService {
         }
     }
 
-    /// Creates a new item in the specified list.
+    /// Creates a new notification in the specified list.
     /// - Parameters:
-    ///   - listId: List id where to create the item
-    ///   - title: Title of the item
-    ///   - notes: Notes for the item
-    ///   - dueAt: Due date
-    ///   - completion: Completion handler with created ListTaskItem or error
-    func createItem(for item: ChecklistEntity, listId: String, completion: @escaping (Result<ListTaskItem, Error>) -> Void) {
+    ///   - listId: List id where to create the notification
+    ///   - target: Notification trigger date/time (ISO8601 string)
+    ///   - type: Notification type string
+    ///   - completion: Completion handler with created NotificationUpsert or error
+    func createNotification(listId: String, target: String, type: String, completion: @escaping (Result<NotificationUpsert, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/items") else {
-                    logger.error("Invalid URL for item creation.")
+                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/notifications") else {
+                    logger.error("Invalid URL for notification creation.")
                     DispatchQueue.main.async {
                         completion(.failure(URLError(.badURL)))
                     }
@@ -90,11 +91,11 @@ final class ListItemNetworkService {
                 request.httpMethod = "POST"
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                let body = CreateItemRequest(title: item.name, notes: "", dueAt: nil, order: Int(item.order), done: item.completed)
+                let body = CreateNotificationRequest(target: target, type: type)
                 do {
                     request.httpBody = try JSONEncoder().encode(body)
                 } catch {
-                    logger.error("Failed to encode create item request: \(error.localizedDescription)")
+                    logger.error("Failed to encode create notification request: \(error.localizedDescription)")
                     DispatchQueue.main.async {
                         completion(.failure(error))
                     }
@@ -102,27 +103,27 @@ final class ListItemNetworkService {
                 }
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
-                        logger.error("Item create request failed: \(error.localizedDescription)")
+                        logger.error("Notification create request failed: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
                         return
                     }
                     guard let data = data else {
-                        logger.error("Item create response data is nil.")
+                        logger.error("Notification create response data is nil.")
                         DispatchQueue.main.async {
                             completion(.failure(URLError(.badServerResponse)))
                         }
                         return
                     }
                     do {
-                        let decoded = try JSONDecoder().decode(ListTaskItem.self, from: data)
-                        logger.info("Item create succeeded. ID: \(decoded.id)")
+                        let decoded = try JSONDecoder().decode(NotificationUpsert.self, from: data)
+                        logger.info("Notification create succeeded. ID: \(decoded.id)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
                         }
                     } catch {
-                        logger.error("Failed to decode item create response: \(error.localizedDescription)")
+                        logger.error("Failed to decode notification create response: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
@@ -136,18 +137,18 @@ final class ListItemNetworkService {
             }
         }
     }
-
-    /// Deletes an item from the specified list.
+    
+    /// Deletes a notification from the specified list.
     /// - Parameters:
     ///   - listId: List id
-    ///   - id: Item id
+    ///   - id: Notification id
     ///   - completion: Completion handler with success or error
-    static func deleteItem(listId: String, id: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func deleteNotification(listId: String, id: String, completion: @escaping (Result<Void, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/items/\(id)") else {
-                    logger.error("Invalid URL for item deletion.")
+                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/notifications/\(id)") else {
+                    logger.error("Invalid URL for notification deletion.")
                     DispatchQueue.main.async {
                         completion(.failure(URLError(.badURL)))
                     }
@@ -158,13 +159,13 @@ final class ListItemNetworkService {
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
-                        logger.error("Item delete request failed: \(error.localizedDescription)")
+                        logger.error("Notification delete request failed: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
                         return
                     }
-                    logger.info("Item delete succeeded. ID: \(id) in list \(listId)")
+                    logger.info("Notification delete succeeded. ID: \(id) in list \(listId)")
                     DispatchQueue.main.async {
                         completion(.success(()))
                     }
@@ -178,28 +179,20 @@ final class ListItemNetworkService {
         }
     }
 
-    /// Updates an item in the specified list.
+    /// Updates a notification in the specified list.
     /// - Parameters:
     ///   - listId: List id
-    ///   - id: Item id
-    ///   - title: New title
-    ///   - done: New done status
-    ///   - notes: New notes
-    ///   - dueAt: New due date
-    ///   - completion: Completion handler with updated ListTaskItem or error
-    func updateItem(listId: String, item: ChecklistEntity, completion: @escaping (Result<ListTaskItem, Error>) -> Void) {
+    ///   - id: Notification id
+    ///   - target: Notification trigger date/time (ISO8601 string)
+    ///   - type: Notification type string
+    ///   - deleted: Deleted flag (optional)
+    ///   - completion: Completion handler with updated NotificationUpsert or error
+    func updateNotification(listId: String, id: String, target: String, type: String, deleted: Bool? = nil, completion: @escaping (Result<NotificationUpsert, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let id = item.serverId else {
-                    logger.error("Invalid server id for checklist item update.")
-                    DispatchQueue.main.async {
-                        completion(.failure(URLError(.badURL)))
-                    }
-                    return
-                }
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/items/\(id)") else {
-                    logger.error("Invalid URL for item update.")
+                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/notifications/\(id)") else {
+                    logger.error("Invalid URL for notification update.")
                     DispatchQueue.main.async {
                         completion(.failure(URLError(.badURL)))
                     }
@@ -209,11 +202,11 @@ final class ListItemNetworkService {
                 request.httpMethod = "PATCH"
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                let body = UpdateItemRequest(title: item.name, done: item.completed, notes: "", dueAt: "", order: Int(item.order))
+                let body = UpdateNotificationRequest(target: target, type: type, deleted: deleted)
                 do {
                     request.httpBody = try JSONEncoder().encode(body)
                 } catch {
-                    logger.error("Failed to encode update item request: \(error.localizedDescription)")
+                    logger.error("Failed to encode update notification request: \(error.localizedDescription)")
                     DispatchQueue.main.async {
                         completion(.failure(error))
                     }
@@ -221,27 +214,27 @@ final class ListItemNetworkService {
                 }
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
-                        logger.error("Item update request failed: \(error.localizedDescription)")
+                        logger.error("Notification update request failed: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }
                         return
                     }
                     guard let data = data else {
-                        logger.error("Item update response data is nil.")
+                        logger.error("Notification update response data is nil.")
                         DispatchQueue.main.async {
                             completion(.failure(URLError(.badServerResponse)))
                         }
                         return
                     }
                     do {
-                        let decoded = try JSONDecoder().decode(ListTaskItem.self, from: data)
-                        logger.info("Item update succeeded. ID: \(decoded.id)")
+                        let decoded = try JSONDecoder().decode(NotificationUpsert.self, from: data)
+                        logger.info("Notification update succeeded. ID: \(decoded.id)")
                         DispatchQueue.main.async {
                             completion(.success(decoded))
                         }
                     } catch {
-                        logger.error("Failed to decode item update response: \(error.localizedDescription)")
+                        logger.error("Failed to decode notification update response: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             completion(.failure(error))
                         }

@@ -80,8 +80,10 @@ struct CalendarView: View {
                 .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
                 .presentationDragIndicator(.visible)
         }
-        .sheet(isPresented: $viewModel.showingShareSheet) {
-            TaskManagementShareView()
+        .sheet(item: $viewModel.sharingTask) { task in
+            TaskManagementShareView(viewModel: TaskManagementViewModel(entity: task)) {
+                viewModel.setSharingTask(to: nil)
+            }
                 .presentationDetents([.height(300)])
                 .presentationDragIndicator(.visible)
         }
@@ -126,6 +128,10 @@ struct CalendarView: View {
                 taskForm
                     .padding(.top, 1)
             }
+        }
+        .refreshable {
+            let lastSyncAt = authService.currentUser?.lastSyncAt
+            await FullSyncNetworkService.shared.refreshTasks(since: lastSyncAt)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .animation(.easeInOut(duration: 0.15),

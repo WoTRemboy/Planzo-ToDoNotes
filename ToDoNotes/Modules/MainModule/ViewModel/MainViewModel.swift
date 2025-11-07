@@ -7,6 +7,9 @@
 
 import SwiftUI
 import CoreData
+import OSLog
+
+private let logger = Logger(subsystem: "com.todonotes.main", category: "MainViewModel")
 
 /// ViewModel responsible for managing the main screen's filters, folders, search, and task creation behavior.
 final class MainViewModel: ObservableObject {
@@ -46,6 +49,7 @@ final class MainViewModel: ObservableObject {
     
     /// The selected task for editing or viewing.
     @Published internal var selectedTask: TaskEntity? = nil
+    @Published internal var sharingTask: TaskEntity? = nil
     @Published internal var selectedTaskFolder: Folder = .mock()
     
     /// The task selected for restoring from deleted.
@@ -238,6 +242,10 @@ final class MainViewModel: ObservableObject {
         }
     }
     
+    internal func setSharingTask(to task: TaskEntity?) {
+        sharingTask = task
+    }
+    
     /// Compares a given folder to the currently selected one.
     /// - Returns: `true` if it matches, otherwise `false`.
     internal func compareFolders(with folder: Folder) -> Bool {
@@ -281,7 +289,10 @@ final class MainViewModel: ObservableObject {
 //            }
             
             if let count = task.notifications?.count, count > 0,
-               let target = task.target, target < .now { return false }
+               let target = task.target,
+               let oneDay = Calendar.current.date(byAdding: .day, value: -1, to: .now),
+               target < oneDay
+            { return false }
             
             return true
             
@@ -306,7 +317,10 @@ final class MainViewModel: ObservableObject {
 //            }
             
             if let count = task.notifications?.count, count > 0,
-               let target = task.target, target < .now { return true }
+               let target = task.target,
+               let oneDay = Calendar.current.date(byAdding: .day, value: -1, to: .now),
+               target < oneDay
+            { return true }
             
             return false
             
