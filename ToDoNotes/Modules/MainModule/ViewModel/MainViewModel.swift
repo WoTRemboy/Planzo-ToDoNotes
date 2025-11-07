@@ -289,7 +289,10 @@ final class MainViewModel: ObservableObject {
 //            }
             
             if let count = task.notifications?.count, count > 0,
-               let target = task.target, target < .now { return false }
+               let target = task.target,
+               let oneDay = Calendar.current.date(byAdding: .day, value: -1, to: .now),
+               target < oneDay
+            { return false }
             
             return true
             
@@ -314,7 +317,10 @@ final class MainViewModel: ObservableObject {
 //            }
             
             if let count = task.notifications?.count, count > 0,
-               let target = task.target, target < .now { return true }
+               let target = task.target,
+               let oneDay = Calendar.current.date(byAdding: .day, value: -1, to: .now),
+               target < oneDay
+            { return true }
             
             return false
             

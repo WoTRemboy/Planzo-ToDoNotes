@@ -328,6 +328,12 @@ final class TaskManagementViewModel: ObservableObject {
     /// Saves the combined date/time as the task's target date.
     internal func saveTaskDateParams() {
         targetDate = combinedDateTime
+        // Recalculate notification targets for updated date
+        notificationsLocal = Set(notificationsLocal.map { item in
+            var updatedItem = item
+            updatedItem.target = notificationTargetCalculation(for: item.type)
+            return updatedItem
+        })
     }
     
     /// Schedules user notifications for the selected notification items.
