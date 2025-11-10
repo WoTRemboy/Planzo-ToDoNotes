@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 import OSLog
+import SwiftUI
 
 private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListNetworkService")
 
@@ -275,7 +276,7 @@ extension ListNetworkService {
     
     /// Applies a received ListItem (task) to the local Core Data database.
     /// - Parameter item: The ListItem to apply.
-    internal func applyListItem(_ item: ListItem) {
+    internal func applyListItem(_ item: ListItem, completion: ((Result<TaskEntity, Error>) -> Void)) {
         let context = CoreDataProvider.shared.persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "serverId == %@", item.id)
@@ -316,8 +317,47 @@ extension ListNetworkService {
         }
         do {
             try context.save()
+            completion(.success(task))
         } catch {
+            completion(.failure(error))
             logger.error("Failed to save task from ListItem: \(error.localizedDescription)")
         }
     }
+    
+    /// Loads a task by listID from backend, applies it locally, shows LoadingOverlay, and presents TaskManagementView for the result.
+    internal func openTaskFromDeepLink(listID: String) {
+        LoadingOverlay.shared.show()
+        ListNetworkService.shared.fetchList(withId: listID) { result in
+            switch result {
+            case .success(let listItem):
+                ListNetworkService.shared.applyListItem(listItem) { result in
+                    switch result {
+                    case .success(let entity):
+                        LoadingOverlay.shared.hide()
+                        DispatchQueue.main.async {
+                            if let rootVC = RootViewControllerMethods.getRootViewController() {
+                                let hosting = UIHostingController(
+                                    rootView: TaskManagementPreview(entity: entity, shared: true) {
+                                        rootVC.dismiss(animated: true)
+                                    })
+                                if let sheet = hosting.sheetPresentationController {
+                                    sheet.detents = [.medium(), .large()]
+                                    sheet.prefersGrabberVisible = true
+                                }
+                                rootVC.present(hosting, animated: true)
+                            }
+                        }
+                    case .failure(let failure):
+                        LoadingOverlay.shared.hide()
+                        logger.error("Error applying list item: \(failure)")
+                    }
+                }
+                
+            case .failure(let error):
+                LoadingOverlay.shared.hide()
+                logger.error("Failed to fetch list with ID: \(listID) - \(error)")
+            }
+        }
+    }
 }
+

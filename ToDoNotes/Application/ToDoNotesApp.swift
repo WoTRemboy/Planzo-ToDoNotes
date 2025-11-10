@@ -16,6 +16,8 @@ private let logger = Logger(subsystem: "com.todonotes.application", category: "T
 @main
 struct ToDoNotesApp: App {
     
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     // MARK: - Properties
         
     /// Stores the current status of user notifications in UserDefaults.
