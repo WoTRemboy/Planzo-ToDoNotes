@@ -68,6 +68,8 @@
 		635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */; };
 		636154512E89CAB30063C880 /* ListItemAppliedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636154502E89CAB30063C880 /* ListItemAppliedService.swift */; };
 		63645A5E2D383897000095D3 /* TextFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63645A5D2D383890000095D3 /* TextFieldDelegate.swift */; };
+		636754C92EC26703004702F4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636754C82EC26703004702F4 /* SceneDelegate.swift */; };
+		636754CB2EC2697B004702F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636754CA2EC26978004702F4 /* AppDelegate.swift */; };
 		63753A7B2E78447E00D75DAF /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63753A7A2E78447E00D75DAF /* LoadingOverlay.swift */; };
 		63753A832E7867C800D75DAF /* ci_pre_xcodebuild.sh in Resources */ = {isa = PBXBuildFile; fileRef = 63753A822E7867C800D75DAF /* ci_pre_xcodebuild.sh */; };
 		63753A852E78690000D75DAF /* Secrets.json in Resources */ = {isa = PBXBuildFile; fileRef = 63753A842E7868F900D75DAF /* Secrets.json */; };
@@ -151,6 +153,9 @@
 		63E870E72D54F44D00699091 /* ViewGlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E870E62D54F44500699091 /* ViewGlow.swift */; };
 		63E870E92D55313000699091 /* ResetMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E870E82D55312200699091 /* ResetMessageModel.swift */; };
 		63E890CA2D347655003D7370 /* TaskListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E890C92D347655003D7370 /* TaskListRow.swift */; };
+		63ECEDD42EC377D0008A1F42 /* SettingSyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ECEDD32EC377D0008A1F42 /* SettingSyncView.swift */; };
+		63ECEDD72EC38E0F008A1F42 /* SettingSyncFAQView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ECEDD62EC38E0F008A1F42 /* SettingSyncFAQView.swift */; };
+		63ECEDD92EC39072008A1F42 /* FAQBulletModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ECEDD82EC3906C008A1F42 /* FAQBulletModel.swift */; };
 		63F39F812E7A07600089E1AE /* SubscriptionNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F39F802E7A07600089E1AE /* SubscriptionNetworkService.swift */; };
 		63F6C6F72D29B41E00716AB0 /* FolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C6F62D29B41E00716AB0 /* FolderCell.swift */; };
 		63F6C6F92D29B78400716AB0 /* FoldersScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F6C6F82D29B78400716AB0 /* FoldersScrollView.swift */; };
@@ -261,6 +266,8 @@
 		635FEF872D24C366007FFBBA /* OnboardingScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenViewModel.swift; sourceTree = "<group>"; };
 		636154502E89CAB30063C880 /* ListItemAppliedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemAppliedService.swift; sourceTree = "<group>"; };
 		63645A5D2D383890000095D3 /* TextFieldDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldDelegate.swift; sourceTree = "<group>"; };
+		636754C82EC26703004702F4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		636754CA2EC26978004702F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		63753A7A2E78447E00D75DAF /* LoadingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
 		63753A822E7867C800D75DAF /* ci_pre_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_pre_xcodebuild.sh; sourceTree = "<group>"; };
 		63753A842E7868F900D75DAF /* Secrets.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Secrets.json; sourceTree = "<group>"; };
@@ -342,6 +349,9 @@
 		63E870E62D54F44500699091 /* ViewGlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewGlow.swift; sourceTree = "<group>"; };
 		63E870E82D55312200699091 /* ResetMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetMessageModel.swift; sourceTree = "<group>"; };
 		63E890C92D347655003D7370 /* TaskListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListRow.swift; sourceTree = "<group>"; };
+		63ECEDD32EC377D0008A1F42 /* SettingSyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingSyncView.swift; sourceTree = "<group>"; };
+		63ECEDD62EC38E0F008A1F42 /* SettingSyncFAQView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingSyncFAQView.swift; sourceTree = "<group>"; };
+		63ECEDD82EC3906C008A1F42 /* FAQBulletModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQBulletModel.swift; sourceTree = "<group>"; };
 		63F39F802E7A07600089E1AE /* SubscriptionNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionNetworkService.swift; sourceTree = "<group>"; };
 		63F6C6F62D29B41E00716AB0 /* FolderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderCell.swift; sourceTree = "<group>"; };
 		63F6C6F82D29B78400716AB0 /* FoldersScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoldersScrollView.swift; sourceTree = "<group>"; };
@@ -612,6 +622,7 @@
 				63AE657C2D71F9E6009A3541 /* SettingTaskCreateView.swift */,
 				63AE65822D721AED009A3541 /* SettingAboutPageView.swift */,
 				630F54812E6F7BAC00DF57E6 /* SettingAccountView.swift */,
+				63ECEDD32EC377D0008A1F42 /* SettingSyncView.swift */,
 			);
 			path = NavigationViews;
 			sourceTree = "<group>";
@@ -685,6 +696,8 @@
 		635FEF712D24B72E007FFBBA /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				636754CA2EC26978004702F4 /* AppDelegate.swift */,
+				636754C82EC26703004702F4 /* SceneDelegate.swift */,
 				635FEF6A2D24B71C007FFBBA /* ToDoNotesApp.swift */,
 				6380EB2C2D8843BA002CB75E /* Localizable.xcstrings */,
 			);
@@ -1164,6 +1177,14 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		63ECEDD52EC38DF8008A1F42 /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				63ECEDD62EC38E0F008A1F42 /* SettingSyncFAQView.swift */,
+			);
+			path = Sync;
+			sourceTree = "<group>";
+		};
 		63F6C6F52D29B40600716AB0 /* Folders */ = {
 			isa = PBXGroup;
 			children = (
@@ -1207,6 +1228,7 @@
 				6302B3552E5C5C7A002E65C1 /* TimeFormatModel.swift */,
 				6302B3572E5C6A64002E65C1 /* WeekFirstDayModel.swift */,
 				63F6C7042D2AA94B00716AB0 /* ThemeModel.swift */,
+				63ECEDD82EC3906C008A1F42 /* FAQBulletModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1232,6 +1254,7 @@
 		63F6C70A2D2AAA8500716AB0 /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
+				63ECEDD52EC38DF8008A1F42 /* Sync */,
 				630F54802E6F736C00DF57E6 /* Profile */,
 				63F6C70D2D2AAD0100716AB0 /* SettingsNavBar.swift */,
 				634877AB2D369B21009110B0 /* SettingFormRow.swift */,
@@ -1457,6 +1480,7 @@
 				635792102EAE36FD00C179BA /* ConfigureFoldersViewModel.swift in Sources */,
 				637B9F612D296FA90010F13B /* ContentView.swift in Sources */,
 				63C2DC792D8C4ABD00E6E0A0 /* ContextMenuHelper.swift in Sources */,
+				636754CB2EC2697B004702F4 /* AppDelegate.swift in Sources */,
 				63837AD02EB4F2A80061EB49 /* NotificationNetworkService.swift in Sources */,
 				637B9F5A2D2969AC0010F13B /* CalendarView.swift in Sources */,
 				63AE65882D73181A009A3541 /* CustomNavLink.swift in Sources */,
@@ -1540,6 +1564,7 @@
 				63F6C7172D2ABE6700716AB0 /* CustomCalendarView.swift in Sources */,
 				63E890CA2D347655003D7370 /* TaskListRow.swift in Sources */,
 				63645A5E2D383897000095D3 /* TextFieldDelegate.swift in Sources */,
+				63ECEDD42EC377D0008A1F42 /* SettingSyncView.swift in Sources */,
 				63C2DC772D8C47BA00E6E0A0 /* CustomContextMenu.swift in Sources */,
 				637B9F692D29754F0010F13B /* FilterCell.swift in Sources */,
 				63753A7B2E78447E00D75DAF /* LoadingOverlay.swift in Sources */,
@@ -1560,11 +1585,14 @@
 				6302B3582E5C6A6E002E65C1 /* WeekFirstDayModel.swift in Sources */,
 				6328D5BC2E881299000574AE /* ListItemModel.swift in Sources */,
 				637B9F512D295B7F0010F13B /* MainNavigationBar.swift in Sources */,
+				636754C92EC26703004702F4 /* SceneDelegate.swift in Sources */,
+				63ECEDD72EC38E0F008A1F42 /* SettingSyncFAQView.swift in Sources */,
 				6396C8102D7DC8B70046DB14 /* TodayTaskRowWithActions.swift in Sources */,
 				635FEF822D24BEA6007FFBBA /* ImageExtension.swift in Sources */,
 				638E21962D2C209200FB1464 /* TaskManagementView.swift in Sources */,
 				631FBB942DB0127E00BEABD0 /* CalendarPageOverviewTip.swift in Sources */,
 				63286AF32E7B3A1500483810 /* SubscriptionCarouselModel.swift in Sources */,
+				63ECEDD92EC39072008A1F42 /* FAQBulletModel.swift in Sources */,
 				630F547D2E6F5F1F00DF57E6 /* SettingProfileRow.swift in Sources */,
 				637B9F582D2969940010F13B /* TodayView.swift in Sources */,
 				631FBB922DB0114D00BEABD0 /* TodayPageOverviewTip.swift in Sources */,

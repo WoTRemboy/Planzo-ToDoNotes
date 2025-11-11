@@ -270,4 +270,56 @@ extension ListNetworkService {
             }
         }
     }
+    
+    /// Fetches a single list by its identifier.
+    /// - Parameters:
+    ///   - id: The id of the list to fetch.
+    ///   - completion: Completion handler with result containing ListItem or error.
+    func fetchList(withId id: String, completion: @escaping (Result<ListItem, Error>) -> Void) {
+        AccessTokenManager.shared.getValidAccessToken { result in
+            switch result {
+            case .success(let accessToken):
+                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(id)") else {
+                    logger.error("Invalid URL for list fetch by id.")
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "GET"
+                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+                request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        logger.error("List fetch by id request failed: \(error.localizedDescription)")
+                        DispatchQueue.main.async {
+                            completion(.failure(error))
+                        }
+                        return
+                    }
+                    guard let data = data else {
+                        logger.error("List fetch by id response data is nil.")
+                        DispatchQueue.main.async {
+                            completion(.failure(URLError(.badServerResponse)))
+                        }
+                        return
+                    }
+                    do {
+                        let decoded = try JSONDecoder().decode(ListItem.self, from: data)
+                        DispatchQueue.main.async {
+                            completion(.success(decoded))
+                        }
+                    } catch {
+                        logger.error("Failed to decode list fetch by id response: \(error.localizedDescription)")
+                        DispatchQueue.main.async {
+                            completion(.failure(error))
+                        }
+                    }
+                }
+                task.resume()
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 }
