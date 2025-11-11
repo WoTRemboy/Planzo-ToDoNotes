@@ -161,7 +161,6 @@ struct SettingsView: View {
             if let user = authService.currentUser {
                 CustomNavLink(
                     destination: SettingAccountView(namespace: namespace)
-//                        .environmentObject(authService)
                         .environmentObject(viewModel),
                     label: {
                         SettingsProfileRow(
@@ -242,17 +241,17 @@ struct SettingsView: View {
     }
     
     private var syncButton: some View {
-        Button {
-            // Sync Button Action
-        } label: {
-            SettingFormRow(
-                title: Texts.Settings.Sync.title,
-                image: Image.Settings.sync,
-                details: viewModel.lastSyncString(dateString: authService.currentUser?.lastSyncAt),
-                chevron: true,
-                last: true)
-            .animation(.easeInOut(duration: 0.2), value: viewModel.userTheme)
-        }
+        CustomNavLink(
+            destination: SettingSyncView(appleAuthService: appleAuthService, googleAuthService: googleAuthService)
+                .environmentObject(viewModel),
+            label: {
+                SettingFormRow(
+                    title: Texts.Settings.Sync.title,
+                    image: Image.Settings.sync,
+                    details: viewModel.lastSyncString(dateString: authService.currentUser?.lastSyncAt),
+                    chevron: true,
+                    last: true)
+            })
         .clipShape(.rect(cornerRadius: 10))
         .padding(.horizontal)
     }

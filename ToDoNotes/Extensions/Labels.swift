@@ -93,6 +93,25 @@ final class Texts {
             static let title = NSLocalizedString("SettingsPageSyncTitle", comment: "Sync")
             static let off = NSLocalizedString("SettingsPageSyncOff", comment: "Off")
             static let now = NSLocalizedString("SettingsPageSyncNow", comment: "Now")
+            static let update = NSLocalizedString("SettingsPageSyncUpdate", comment: "Update")
+            static let updating = NSLocalizedString("SettingsPageSyncUpdating", comment: "Updating")
+            static let lastSync = NSLocalizedString("SettingsPageSyncLastSync", comment: "Last sync")
+            static let disabled = NSLocalizedString("SettingsPageSyncDisabled", comment: "Sync disabled")
+            
+            static let support = NSLocalizedString("SettingsPageSyncSupport", comment: "If you have any other questions or suggestions, you can [contact us](https://avoqode.com/#contacts).")
+            static let supportError = NSLocalizedString("SettingsPageSyncSupportError", comment: "Please, visit our avoqode.com to contact us.")
+            
+            static let login = NSLocalizedString("SettingsPageSyncLogin", comment: "Sign in to your Planzo account so your tasks sync across all devices and stay protected from loss.")
+            static let questions = NSLocalizedString("SettingsPageSyncQuestions", comment: "FAQ")
+            
+            enum FAQ {
+                static let title = NSLocalizedString("SettingsPageSyncFAQTitle", comment: "Unable to sync tasks successfully")
+                static let first = NSLocalizedString("SettingsPageSyncFAQFirst", comment: "Our app supports data synchronization across different iOS devices.")
+                static let second = NSLocalizedString("SettingsPageSyncFAQSecond", comment: "Update all your devices to the latest version.")
+                static let third = NSLocalizedString("SettingsPageSyncFAQThird", comment: "Make sure both devices have a stable Internet connection.")
+                static let fourth = NSLocalizedString("SettingsPageSyncFAQFourth", comment: "Make sure both devices are signed in with the same account.")
+                static let fifth = NSLocalizedString("SettingsPageSyncFAQFifth", comment: "Make sure you have enough iCloud storage space.")
+            }
         }
         
         enum About {

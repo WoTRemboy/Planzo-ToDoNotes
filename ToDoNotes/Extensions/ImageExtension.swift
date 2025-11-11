@@ -115,6 +115,7 @@ extension Image {
     enum Selector {
         static let selected = Image("SelectorSelected")
         static let unselected = Image("SelectorUnselected")
+        static let bullet = Image("SelectorBullet")
     }
     
     // MARK: - Task Management Images
