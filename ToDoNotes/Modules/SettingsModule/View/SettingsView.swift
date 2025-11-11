@@ -124,6 +124,7 @@ struct SettingsView: View {
             VStack(spacing: 16) {
                 profileButton
                 subscriptionPromoteRow
+                syncButton
                 
                 VStack(spacing: 0) {
                     appearanceButton
@@ -235,6 +236,22 @@ struct SettingsView: View {
             viewModel.toggleShowingSubscriptionPage()
         } label: {
             SubscriptionPromoteRow()
+        }
+        .clipShape(.rect(cornerRadius: 10))
+        .padding(.horizontal)
+    }
+    
+    private var syncButton: some View {
+        Button {
+            // Sync Button Action
+        } label: {
+            SettingFormRow(
+                title: Texts.Settings.Sync.title,
+                image: Image.Settings.sync,
+                details: viewModel.lastSyncString(dateString: authService.currentUser?.lastSyncAt),
+                chevron: true,
+                last: true)
+            .animation(.easeInOut(duration: 0.2), value: viewModel.userTheme)
         }
         .clipShape(.rect(cornerRadius: 10))
         .padding(.horizontal)

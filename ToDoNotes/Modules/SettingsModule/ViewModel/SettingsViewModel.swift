@@ -297,5 +297,22 @@ final class SettingsViewModel: ObservableObject {
         TimeFormatSelector.current = format
         logger.debug("User changed time format to: \(format.rawValue)")
     }
+    
+    internal func lastSyncString(dateString: String?) -> String {
+        let formatter = Date.iso8601SecondsDateFormatter
+        guard let dateString, !dateString.isEmpty,
+              let date = formatter.date(from: dateString) else {
+            return Texts.Settings.Sync.off
+        }
+        
+        let now = Date()
+        if abs(date.timeIntervalSince(now)) < 1.0 {
+            return Texts.Settings.Sync.now
+        }
+        let relativeFormatter = RelativeDateTimeFormatter()
+        relativeFormatter.unitsStyle = .short
+        let relativeString = relativeFormatter.localizedString(for: date, relativeTo: now)
+        return relativeString
+    }
 }
 

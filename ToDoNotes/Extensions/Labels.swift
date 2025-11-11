@@ -89,6 +89,12 @@ final class Texts {
         static let ok = NSLocalizedString("SettingsPageOk", comment: "OK")
         static let hide = NSLocalizedString("SettingsPageHide", comment: "Hide")
         
+        enum Sync {
+            static let title = NSLocalizedString("SettingsPageSyncTitle", comment: "Sync")
+            static let off = NSLocalizedString("SettingsPageSyncOff", comment: "Off")
+            static let now = NSLocalizedString("SettingsPageSyncNow", comment: "Now")
+        }
+        
         enum About {
             static let title = NSLocalizedString("SettingsPageAboutTitle", comment: "About")
             static let release = "release"
