@@ -104,6 +104,9 @@ extension Image {
         static let chevron = Image("SettingsChevron")
         static let check = Image(systemName: "checkmark")
         
+        static let syncError = Image("SyncError")
+        static let syncUpdating = Image("SyncUpdating")
+        
         enum TaskCreate {
             static let popup = Image("TaskCreationPopup")
             static let fullScreen = Image("TaskCreationFullScreen")

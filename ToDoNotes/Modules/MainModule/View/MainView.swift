@@ -122,6 +122,9 @@ struct MainView: View {
         .popView(isPresented: $viewModel.showingTaskEditRemovedAlert, onTap: {}, onDismiss: {}) {
             editAlert
         }
+        .popView(isPresented: $viewModel.showingSyncErrorAlert, onTap: {}, onDismiss: {}) {
+            syncErrorAlert
+        }
     }
     
     // MARK: - Main Content Layout
@@ -133,10 +136,7 @@ struct MainView: View {
                 .zIndex(1)
             taskForm
         }
-        .refreshable {
-            let lastSyncAt = authService.currentUser?.lastSyncAt
-            await FullSyncNetworkService.shared.refreshTasks(since: lastSyncAt)
-        }
+        .modifier(RefreshModifier(authService: authService))
     }
     
     /// Placeholder text shown when no tasks are available under current filters.
@@ -304,6 +304,19 @@ extension MainView {
             secondaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertCancel,
             secondaryAction: viewModel.toggleShowingEditRemovedAlert)
     }
+    
+    private var syncErrorAlert: some View {
+        CustomAlertView(
+            title: Texts.Settings.Sync.Retry.title,
+            message: Texts.Settings.Sync.Retry.content,
+            primaryButtonTitle: Texts.Settings.Sync.Retry.tryAgain,
+            primaryAction: {
+                viewModel.handleSync(authService: authService)
+                viewModel.toggleShowingSyncErrorAlert()
+            },
+            secondaryButtonTitle: Texts.Settings.Sync.Retry.cancel,
+            secondaryAction: viewModel.toggleShowingSyncErrorAlert)
+    }
 }
 
 // MARK: - Filtering and Sorting Tasks
@@ -333,4 +346,3 @@ extension MainView {
                 .datastoreLocation(.applicationDefault)])
         }
 }
-

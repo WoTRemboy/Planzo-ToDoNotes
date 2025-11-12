@@ -112,6 +112,14 @@ final class Texts {
                 static let fourth = NSLocalizedString("SettingsPageSyncFAQFourth", comment: "Make sure both devices are signed in with the same account.")
                 static let fifth = NSLocalizedString("SettingsPageSyncFAQFifth", comment: "Make sure you have enough iCloud storage space.")
             }
+            
+            enum Retry {
+                static let details = NSLocalizedString("SettingsPageSyncRetry", comment: "Sync error. Tap to try again.")
+                static let title = NSLocalizedString("SettingsPageSyncRetryTitle", comment: "Sync error")
+                static let content = NSLocalizedString("SettingsPageSyncRetryContent", comment: "Unable to connect to the server. Check your Internet connection.")
+                static let tryAgain = NSLocalizedString("SettingsPageSyncRetryTryAgain", comment: "Retry sync")
+                static let cancel = NSLocalizedString("SettingsPageSyncRetryCancel", comment: "Cancel")
+            }
         }
         
         enum About {

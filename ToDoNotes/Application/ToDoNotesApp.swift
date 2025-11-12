@@ -70,7 +70,7 @@ struct ToDoNotesApp: App {
                                 }
                                 logger.info("SyncAllBackTasks started for syncing all tasks.")
                             } else {
-                                backgroundSyncTask?.cancel()
+//                                backgroundSyncTask?.cancel()
                                 logger.info("User is not authorized, skipping server sync.")
                             }
                             try? await Task.sleep(nanoseconds: 15 * 1_000_000_000)

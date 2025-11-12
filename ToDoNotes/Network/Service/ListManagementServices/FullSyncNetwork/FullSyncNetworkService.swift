@@ -11,31 +11,6 @@ import CoreData
 
 private let logger = Logger(subsystem: "com.todonotes.sync", category: "FullSyncNetworkService")
 
-struct FoldersDelta: Codable {
-    let upserts: [FolderUpsert]
-    let deletes: [FolderDelete]
-}
-
-struct ListsDelta: Codable {
-    let upserts: [ListItem]
-    let deletes: [ListDelete]
-}
-
-struct ItemsDelta: Codable {
-    let upserts: [ListTaskItem]
-    let deletes: [ItemDelete]
-}
-
-struct NotificationsDelta: Codable {
-    let upserts: [NotificationUpsert]
-    let deletes: [NotificationDelete]
-}
-
-struct SharesDelta: Codable {
-    let upserts: [ShareLinkRequest]
-    let deletes: [ShareDelete]
-}
-
 struct FullSyncDeltaResponse: Codable {
     let since: String
     let now: String
@@ -57,15 +32,42 @@ struct FullSyncSnapshotResponse: Codable {
     let shares: [ShareLinkRequest]
 }
 
-final class FullSyncNetworkService {
+final class FullSyncNetworkService: ObservableObject {
+    // Track last sync status
+    @Published private(set) var lastSyncStatus: SyncStatus = .updated
+    
     static let shared = FullSyncNetworkService()
     
+    // Update sync status
+    private func setSyncStatus(to value: SyncStatus) {
+        if Thread.isMainThread {
+            self.lastSyncStatus = value
+        } else {
+            DispatchQueue.main.async {
+                self.lastSyncStatus = value
+            }
+        }
+    }
+    
     func syncAllData(completion: @escaping (Result<Void, Error>) -> Void) {
+        // Prevent concurrent sync requests
+        guard lastSyncStatus != .updating else {
+            logger.warning("Sync already in progress. Skipping new request.")
+            DispatchQueue.main.async {
+                completion(.failure(NSError(domain: "FullSyncNetworkService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Sync already in progress"])))
+            }
+            return
+        }
+        
+        // Track last sync status
+        self.setSyncStatus(to: .updating)
+        
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
                 guard let url = URL(string: "https://banana.avoqode.com/api/v1/sync/snapshot") else {
                     logger.error("Invalid URL for full sync.")
+                    self.setSyncStatus(to: .failed)
                     completion(.failure(URLError(.badURL)))
                     return
                 }
@@ -76,11 +78,13 @@ final class FullSyncNetworkService {
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
                         logger.error("Full sync request failed: \(error.localizedDescription)")
+                        self.setSyncStatus(to: .failed)
                         DispatchQueue.main.async { completion(.failure(error)) }
                         return
                     }
                     guard let data = data else {
                         logger.error("Full sync response data is nil.")
+                        self.setSyncStatus(to: .failed)
                         DispatchQueue.main.async { completion(.failure(URLError(.badServerResponse))) }
                         return
                     }
@@ -93,21 +97,38 @@ final class FullSyncNetworkService {
                         self.syncNotifications(decoded.notifications)
                         DispatchQueue.main.async {
                             UserCoreDataService.shared.updateLastSyncAt()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                self.setSyncStatus(to: .updated)
+                            }
                             completion(.success(()))
                         }
                     } catch {
                         logger.error("Failed to decode full sync response: \(error.localizedDescription)")
+                        self.setSyncStatus(to: .failed)
                         DispatchQueue.main.async { completion(.failure(error)) }
                     }
                 }
                 task.resume()
             case .failure(let error):
+                self.setSyncStatus(to: .failed)
                 completion(.failure(error))
             }
         }
     }
     
     func syncDeltaData(since: String?, completion: @escaping (Result<Void, Error>) -> Void) {
+        // Prevent concurrent sync requests
+        guard lastSyncStatus != .updating else {
+            logger.warning("Sync already in progress. Skipping new request.")
+            DispatchQueue.main.async {
+                completion(.failure(NSError(domain: "FullSyncNetworkService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Sync already in progress"])))
+            }
+            return
+        }
+        
+        // Track last sync status
+        self.setSyncStatus(to: .updating)
+        
         let formatter = ISO8601DateFormatter()
         let since: String = since ?? formatter.string(from: .distantPast)
         AccessTokenManager.shared.getValidAccessToken { result in
@@ -115,6 +136,7 @@ final class FullSyncNetworkService {
             case .success(let accessToken):
                 guard let url = URL(string: "https://banana.avoqode.com/api/v1/sync/delta?since=\(since)") else {
                     logger.error("Invalid URL for delta sync.")
+                    self.setSyncStatus(to: .failed)
                     completion(.failure(URLError(.badURL)))
                     return
                 }
@@ -125,11 +147,13 @@ final class FullSyncNetworkService {
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
                         logger.error("Delta sync request failed: \(error.localizedDescription)")
+                        self.setSyncStatus(to: .failed)
                         DispatchQueue.main.async { completion(.failure(error)) }
                         return
                     }
                     guard let data = data else {
                         logger.error("Delta sync response data is nil.")
+                        self.setSyncStatus(to: .failed)
                         DispatchQueue.main.async { completion(.failure(URLError(.badServerResponse))) }
                         return
                     }
@@ -142,15 +166,20 @@ final class FullSyncNetworkService {
                         self.syncNotifications(decoded.notifications.upserts, deletes: decoded.notifications.deletes, since: since)
                         DispatchQueue.main.async {
                             UserCoreDataService.shared.updateLastSyncAt()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                self.setSyncStatus(to: .updated)
+                            }
                             completion(.success(()))
                         }
                     } catch {
                         logger.error("Failed to decode delta sync response: \(error.localizedDescription)")
+                        self.setSyncStatus(to: .failed)
                         DispatchQueue.main.async { completion(.failure(error)) }
                     }
                 }
                 task.resume()
             case .failure(let error):
+                self.setSyncStatus(to: .failed)
                 completion(.failure(error))
             }
         }
@@ -242,3 +271,4 @@ final class FullSyncNetworkService {
         }
     }
 }
+

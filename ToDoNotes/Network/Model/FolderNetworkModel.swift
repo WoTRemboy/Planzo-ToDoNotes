@@ -30,6 +30,11 @@ struct FolderSyncResponse: Codable {
     let deletes: [FolderDelete]
 }
 
+struct FoldersDelta: Codable {
+    let upserts: [FolderUpsert]
+    let deletes: [FolderDelete]
+}
+
 struct CreateFolderRequest: Codable {
     let name: String
     let order: Int

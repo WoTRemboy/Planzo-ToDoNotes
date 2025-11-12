@@ -28,6 +28,11 @@ struct NotificationSyncResponse: Codable {
     let deletes: [NotificationDelete]
 }
 
+struct NotificationsDelta: Codable {
+    let upserts: [NotificationUpsert]
+    let deletes: [NotificationDelete]
+}
+
 struct CreateNotificationRequest: Codable {
     let target: String
     let type: String

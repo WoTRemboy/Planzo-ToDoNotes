@@ -42,6 +42,7 @@ final class SettingsViewModel: ObservableObject {
     /// Flag to show language alert popup.
     @Published internal var showingLanguageAlert: Bool = false
     @Published internal var showingErrorAlert: Bool = false
+    @Published internal var showingSyncErrorAlert: Bool = false
     /// Flag to show appearance selector popup.
     @Published internal var showingAppearance: Bool = false
     @Published internal var showingTimeFormat: Bool = false
@@ -114,6 +115,10 @@ final class SettingsViewModel: ObservableObject {
         showingErrorAlert.toggle()
     }
     
+    internal func toggleShowingSyncErrorAlert() {
+        showingSyncErrorAlert.toggle()
+    }
+    
     /// Toggles the display of the language alert.
     internal func toggleShowingLanguageAlert() {
         showingLanguageAlert.toggle()
@@ -152,6 +157,22 @@ final class SettingsViewModel: ObservableObject {
     }
     
     // MARK: - Functional Actions
+    
+    internal func handleSync(authService: AuthNetworkService) {
+        if authService.isAuthorized, let user = authService.currentUser {
+            FullSyncNetworkService.shared.syncDeltaData(since: user.lastSyncAt) { result in
+                switch result {
+                case .success(_):
+                    logger.info("Delta data sync successful since: \(user.lastSyncAt ?? "nil")")
+                case .failure(let error):
+                    logger.error("Delta data sync failed with error: \(error)")
+                }
+            }
+            logger.info("SyncAllBackTasks started for syncing all tasks.")
+        } else {
+            logger.error("SyncAllBackTasks not starting as user not authorized or syncStatus is not .updated")
+        }
+    }
     
     internal func handleGoogleSignIn(googleAuthService: GoogleAuthService) {
         guard let topVC = UIApplication.shared.connectedScenes
