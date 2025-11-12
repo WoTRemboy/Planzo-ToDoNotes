@@ -105,6 +105,7 @@ extension Image {
         static let check = Image(systemName: "checkmark")
         
         static let syncError = Image("SyncError")
+        static let syncUpdating = Image("SyncUpdating")
         
         enum TaskCreate {
             static let popup = Image("TaskCreationPopup")

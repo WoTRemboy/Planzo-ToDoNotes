@@ -41,6 +41,7 @@ final class MainViewModel: ObservableObject {
     @Published internal var showingTaskCreateView: Bool = false
     @Published internal var showingTaskCreateViewFullscreen: Bool = false
     @Published internal var showingTaskRemoveAlert: Bool = false
+    @Published internal var showingSyncErrorAlert: Bool = false
     @Published internal var showingTaskEditRemovedAlert: Bool = false
     @Published internal var showingFolderSetupView: Bool = false
     @Published internal var showingSearchBar: Bool = false
@@ -196,6 +197,10 @@ final class MainViewModel: ObservableObject {
         showingTaskRemoveAlert.toggle()
     }
     
+    internal func toggleShowingSyncErrorAlert() {
+        showingSyncErrorAlert.toggle()
+    }
+    
     /// Toggles the edit alert for restoring deleted tasks.
     internal func toggleShowingEditRemovedAlert() {
         showingTaskEditRemovedAlert.toggle()
@@ -328,6 +333,22 @@ final class MainViewModel: ObservableObject {
             return true
         case .deleted:
             return false
+        }
+    }
+    
+    internal func handleSync(authService: AuthNetworkService) {
+        if authService.isAuthorized, let user = authService.currentUser {
+            FullSyncNetworkService.shared.syncDeltaData(since: user.lastSyncAt) { result in
+                switch result {
+                case .success(_):
+                    logger.info("Delta data sync successful since: \(user.lastSyncAt ?? "nil")")
+                case .failure(let error):
+                    logger.error("Delta data sync failed with error: \(error)")
+                }
+            }
+            logger.info("SyncAllBackTasks started for syncing all tasks.")
+        } else {
+            logger.error("SyncAllBackTasks not starting as user not authorized or syncStatus is not .updated")
         }
     }
 }

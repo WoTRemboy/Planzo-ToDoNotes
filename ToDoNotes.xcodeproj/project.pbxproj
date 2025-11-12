@@ -121,6 +121,7 @@
 		63AE65882D73181A009A3541 /* CustomNavLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AE65872D73181A009A3541 /* CustomNavLink.swift */; };
 		63AE658A2D731A15009A3541 /* CustomNavBarContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AE65892D731A15009A3541 /* CustomNavBarContainerView.swift */; };
 		63AE658C2D731EDF009A3541 /* CustomNavBarPreferenceKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AE658B2D731ED6009A3541 /* CustomNavBarPreferenceKeys.swift */; };
+		63B35EF52EC4F061003E3D89 /* RefreshModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B35EF42EC4F05C003E3D89 /* RefreshModifier.swift */; };
 		63B88F562DBE533700C9EA8A /* MainViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B88F552DBE533200C9EA8A /* MainViewModelTests.swift */; };
 		63B88F592DBE555A00C9EA8A /* OnboardingViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B88F582DBE555900C9EA8A /* OnboardingViewModelTests.swift */; };
 		63B88F5E2DBE941C00C9EA8A /* TodayViewDayTasksTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B88F5D2DBE941400C9EA8A /* TodayViewDayTasksTest.swift */; };
@@ -318,6 +319,7 @@
 		63AE65872D73181A009A3541 /* CustomNavLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavLink.swift; sourceTree = "<group>"; };
 		63AE65892D731A15009A3541 /* CustomNavBarContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavBarContainerView.swift; sourceTree = "<group>"; };
 		63AE658B2D731ED6009A3541 /* CustomNavBarPreferenceKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavBarPreferenceKeys.swift; sourceTree = "<group>"; };
+		63B35EF42EC4F05C003E3D89 /* RefreshModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshModifier.swift; sourceTree = "<group>"; };
 		63B88F492DBE532300C9EA8A /* ToDoNotesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDoNotesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B88F552DBE533200C9EA8A /* MainViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModelTests.swift; sourceTree = "<group>"; };
 		63B88F582DBE555900C9EA8A /* OnboardingViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModelTests.swift; sourceTree = "<group>"; };
@@ -607,6 +609,7 @@
 		632D0DD82D37E0990071684D /* Modifiers */ = {
 			isa = PBXGroup;
 			children = (
+				63B35EF42EC4F05C003E3D89 /* RefreshModifier.swift */,
 				635DBBB42D6A1E2C0050476C /* NavigationTransitionModifier.swift */,
 				6378A7522D3EB6A200C1B858 /* ImmediateKeyboardModifier.swift */,
 				63E870E62D54F44500699091 /* ViewGlow.swift */,
@@ -1592,6 +1595,7 @@
 				638E21962D2C209200FB1464 /* TaskManagementView.swift in Sources */,
 				631FBB942DB0127E00BEABD0 /* CalendarPageOverviewTip.swift in Sources */,
 				63286AF32E7B3A1500483810 /* SubscriptionCarouselModel.swift in Sources */,
+				63B35EF52EC4F061003E3D89 /* RefreshModifier.swift in Sources */,
 				63ECEDD92EC39072008A1F42 /* FAQBulletModel.swift in Sources */,
 				630F547D2E6F5F1F00DF57E6 /* SettingProfileRow.swift in Sources */,
 				637B9F582D2969940010F13B /* TodayView.swift in Sources */,

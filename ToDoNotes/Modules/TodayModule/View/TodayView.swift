@@ -113,10 +113,7 @@ struct TodayView: View {
             
             taskForm
         }
-        .refreshable {
-            let lastSyncAt = authService.currentUser?.lastSyncAt
-            await FullSyncNetworkService.shared.refreshTasks(since: lastSyncAt)
-        }
+        .modifier(RefreshModifier(authService: authService))
         .animation(.easeInOut(duration: 0.2),
                    value: tasksResults.isEmpty)
     }
