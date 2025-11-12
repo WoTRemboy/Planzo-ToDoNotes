@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 import OSLog
+import SwiftUI
 
 private let logger = Logger(subsystem: "com.todonotes.listing", category: "ListNetworkService")
 
@@ -269,6 +270,92 @@ extension ListNetworkService {
             case .failure(let error):
                 logger.error("Failed to archive task on backend: \(error.localizedDescription)")
                 completion?(.failure(error))
+            }
+        }
+    }
+    
+    /// Applies a received ListItem (task) to the local Core Data database.
+    /// - Parameter item: The ListItem to apply.
+    internal func applyListItem(_ item: ListItem, completion: ((Result<TaskEntity, Error>) -> Void)) {
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "serverId == %@", item.id)
+        fetchRequest.fetchLimit = 1
+        let task: TaskEntity
+        if let entity = try? context.fetch(fetchRequest).first {
+            task = entity
+        } else {
+            task = TaskEntity(context: context)
+            task.id = UUID()
+            if let createdDate = Date.iso8601DateFormatter.date(from: item.createdAt) {
+                task.created = createdDate
+            }
+        }
+        task.serverId = item.id
+        task.name = item.name
+        task.details = item.details
+        task.completed = item.isTask ? (item.done ? 2 : 1) : 0
+        if let dueDate = item.dueAt, let parsedDate = Date.iso8601SecondsDateFormatter.date(from: dueDate) {
+            task.target = parsedDate
+        } else {
+            task.target = nil
+        }
+        task.hasTargetTime = item.hasDueTime
+        task.important = item.important
+        task.pinned = item.pinned
+        task.removed = item.archived
+        if let updatedDate = Date.iso8601DateFormatter.date(from: item.updatedAt) {
+            task.updatedAt = updatedDate
+        }
+        if let folderId = item.folder {
+            let folderFetch: NSFetchRequest<FolderEntity> = FolderEntity.fetchRequest()
+            folderFetch.predicate = NSPredicate(format: "serverId == %@", folderId)
+            folderFetch.fetchLimit = 1
+            if let foundFolder = try? context.fetch(folderFetch).first {
+                task.folder = foundFolder
+            }
+        }
+        do {
+            try context.save()
+            completion(.success(task))
+        } catch {
+            completion(.failure(error))
+            logger.error("Failed to save task from ListItem: \(error.localizedDescription)")
+        }
+    }
+    
+    /// Loads a task by listID from backend, applies it locally, shows LoadingOverlay, and presents TaskManagementView for the result.
+    internal func openTaskFromDeepLink(listID: String) {
+        LoadingOverlay.shared.show()
+        ListNetworkService.shared.fetchList(withId: listID) { result in
+            switch result {
+            case .success(let listItem):
+                ListNetworkService.shared.applyListItem(listItem) { result in
+                    switch result {
+                    case .success(let entity):
+                        LoadingOverlay.shared.hide()
+                        DispatchQueue.main.async {
+                            if let rootVC = RootViewControllerMethods.getRootViewController() {
+                                let hosting = UIHostingController(
+                                    rootView: TaskManagementPreview(entity: entity, shared: true) {
+                                        rootVC.dismiss(animated: true)
+                                    })
+                                if let sheet = hosting.sheetPresentationController {
+                                    sheet.detents = [.medium(), .large()]
+                                    sheet.prefersGrabberVisible = true
+                                }
+                                rootVC.present(hosting, animated: true)
+                            }
+                        }
+                    case .failure(let failure):
+                        LoadingOverlay.shared.hide()
+                        logger.error("Error applying list item: \(failure)")
+                    }
+                }
+                
+            case .failure(let error):
+                LoadingOverlay.shared.hide()
+                logger.error("Failed to fetch list with ID: \(listID) - \(error)")
             }
         }
     }

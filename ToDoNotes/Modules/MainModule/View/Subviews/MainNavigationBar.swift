@@ -13,6 +13,9 @@ struct MainCustomNavBar: View {
     
     @EnvironmentObject private var authService: AuthNetworkService
     @EnvironmentObject private var viewModel: MainViewModel
+    @ObservedObject private var syncService = FullSyncNetworkService.shared
+    
+    @State private var isRotating = false
     
     /// The title displayed in the navigation bar.
     private let title: String
@@ -78,8 +81,36 @@ struct MainCustomNavBar: View {
                     .font(.system(size: 25, weight: .bold))
                     .foregroundStyle(Color.LabelColors.labelSubscription)
             }
+            
+            if syncService.lastSyncStatus == .failed {
+                Image.Settings.syncError
+                    .resizable()
+                    .frame(width: 22, height: 22)
+                    .onTapGesture {
+                        viewModel.toggleShowingSyncErrorAlert()
+                    }
+            } else if syncService.lastSyncStatus == .updating {
+                updatingIcon
+            }
         }
+        .transition(.blurReplace)
+        .animation(.easeInOut(duration: 0.2), value: syncService.lastSyncStatus)
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private var updatingIcon: some View {
+        Image.Settings.syncUpdating
+            .resizable()
+            .frame(width: 22, height: 22)
+            .rotationEffect(Angle.degrees(isRotating ? 360 : 0))
+            .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false), value: isRotating)
+            .onAppear {
+                isRotating = true
+            }
+            .onDisappear {
+                isRotating = false
+            }
+            .transition(.scale)
     }
     
     // MARK: - Action Buttons

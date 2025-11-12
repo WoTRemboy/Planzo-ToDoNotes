@@ -14,6 +14,10 @@ struct ShareLink: Codable, Identifiable {
     let activeNow: Bool
 }
 
+struct SharesDelta: Codable {
+    let upserts: [ShareLinkRequest]
+    let deletes: [ShareDelete]
+}
 
 struct ShareLinkRequest: Codable, Identifiable {
     let id: String

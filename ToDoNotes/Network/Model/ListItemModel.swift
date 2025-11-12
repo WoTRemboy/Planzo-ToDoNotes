@@ -31,6 +31,11 @@ struct ItemSyncResponse: Codable {
     let deletes: [ItemDelete]
 }
 
+struct ItemsDelta: Codable {
+    let upserts: [ListTaskItem]
+    let deletes: [ItemDelete]
+}
+
 struct CreateItemRequest: Codable {
     let title: String?
     let notes: String?

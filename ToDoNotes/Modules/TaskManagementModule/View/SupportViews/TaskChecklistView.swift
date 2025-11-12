@@ -101,6 +101,7 @@ struct TaskChecklistView: View {
                 .frame(width: 18, height: 18)
                 .animation(.easeInOut(duration: 0.2), value: item.wrappedValue.name)
         }
+        .disabled(preview)
         .onAppear {
             if !item.wrappedValue.name.isEmpty, viewModel.check == .checked {
                 item.wrappedValue.completed = true
@@ -117,6 +118,7 @@ struct TaskChecklistView: View {
         .foregroundStyle(
             item.wrappedValue.completed ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
         
+        .disabled(preview)
         .submitLabel(.next)
         .focused($focusedItemID, equals: item.id)
         .introspect(.textField, on: .iOS(.v16, .v17, .v18, .v26)) { textField in

@@ -2011,25 +2011,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "By clicking Start, you agree to our [Terms of Service](https://avoqode.com/terms-of-service) and [Privacy Policy](https://avoqode.com/privacy-policy)."
+            "value" : "By continuing, you agree to the [Terms of Service](https://avoqode.com/terms-of-service) and [Privacy Policy](https://avoqode.com/privacy-policy)."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Al hacer clic en Comenzar, aceptas nuestros [Terms of Service](https://avoqode.com/terms-of-service) y nuestra [Privacy Policy](https://avoqode.com/privacy-policy)."
+            "value" : "Al continuar, usted acepta los [Términos de servicio](https://avoqode.com/terms-of-service)￼ y la [Política de privacidad](https://avoqode.com/privacy-policy)."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "En cliquant sur Commencer, vous acceptez nos [Terms of Service](https://avoqode.com/terms-of-service) et notre [Privacy Policy](https://avoqode.com/privacy-policy)."
+            "value" : "En continuant, vous acceptez les [Conditions d’utilisation]￼(https://avoqode.com/terms-of-service) et la [Politique de confidentialité￼](https://avoqode.com/privacy-policy)."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Нажимая на Начать, Вы соглашаетесь с нашими [Terms of Service](https://avoqode.com/terms-of-service) и [Privacy Policy](https://avoqode.com/privacy-policy)."
+            "value" : "Продолжая, Вы соглашаетесь с [Условиями использования](https://avoqode.com/terms-of-service) и [Политикой конфиденциальности](https://avoqode.com/privacy-policy)."
           }
         }
       }
@@ -3161,6 +3161,644 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Вы действительно хотите удалить все существующие задачи? Восстановить их будет невозможно."
+          }
+        }
+      }
+    },
+    "SettingsPageSyncDisabled" : {
+      "comment" : "Sync disabled",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync disabled"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sincronización desactivada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisation désactivée"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Синхронизация отключена"
+          }
+        }
+      }
+    },
+    "SettingsPageSyncFAQFifth" : {
+      "comment" : "Make sure you have enough iCloud storage space.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make sure you have enough iCloud storage space."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asegúrese de tener suficiente espacio de almacenamiento en su iCloud."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assurez-vous que votre iCloud dispose de suffisamment d’espace de stockage."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Убедитесь, что на вашем iCloud достаточно места для хранения."
+          }
+        }
+      }
+    },
+    "SettingsPageSyncFAQFirst" : {
+      "comment" : "Our app supports data synchronization across different iOS devices.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Our app supports data synchronization across different iOS devices."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuestra aplicación admite la sincronización de datos entre diferentes dispositivos iOS."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notre application prend en charge la synchronisation des données entre différents appareils iOS."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Наше приложение поддерживает синхронизацию данных между разными устройствами iOS."
+          }
+        }
+      }
+    },
+    "SettingsPageSyncFAQFourth" : {
+      "comment" : "Make sure both devices are signed in with the same account.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make sure both devices are signed in with the same account."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asegúrese de que ambos dispositivos hayan iniciado sesión con la misma cuenta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assurez-vous que les deux appareils sont connectés avec le même compte."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Убедитесь, что оба устройства вошли в систему с одного и того же аккаунта."
+          }
+        }
+      }
+    },
+    "SettingsPageSyncFAQSecond" : {
+      "comment" : "Update all your devices to the latest version.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update all your devices to the latest version."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualice todos sus dispositivos a la última versión."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettez à jour tous vos appareils vers la dernière version."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обновите все свои устройства до последней версии."
+          }
+        }
+      }
+    },
+    "SettingsPageSyncFAQThird" : {
+      "comment" : "Make sure both devices have a stable Internet connection.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make sure both devices have a stable Internet connection."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asegúrese de que ambos dispositivos tengan una conexión a Internet estable."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assurez-vous que les deux appareils disposent d’une connexion Internet stable."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Убедитесь, что оба устройства имеют стабильное интернет-соединение."
+          }
+        }
+      }
+    },
+    "SettingsPageSyncFAQTitle" : {
+      "comment" : "Unable to sync tasks successfully",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to sync tasks successfully"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pueden sincronizar las tareas correctamente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de synchroniser les tâches avec succès"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удается успешно синхронизировать задачи"
+          }
+        }
+      }
+    },
+    "SettingsPageSyncLastSync" : {
+      "comment" : "Last sync",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last sync"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última sincronización"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernière synchronisation"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Последняя синхронизация"
+          }
+        }
+      }
+    },
+    "SettingsPageSyncLogin" : {
+      "comment" : "Sign in to your Planzo account so your tasks sync across all devices and stay protected from loss.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to your Planzo account so your tasks sync across all devices and stay protected from loss."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicie sesión en su cuenta de Planzo para que sus tareas se sincronicen en todos sus dispositivos y estén protegidas contra pérdidas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connectez-vous à votre compte Planzo pour que vos tâches soient synchronisées sur tous vos appareils et protégées contre la perte."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войдите в аккаунт Planzo, чтобы ваши задачи синхронизировались на всех устройствах и были защищены от потери."
+          }
+        }
+      }
+    },
+    "SettingsPageSyncNow" : {
+      "comment" : "Now",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahora"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maintenant"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сейчас"
+          }
+        }
+      }
+    },
+    "SettingsPageSyncOff" : {
+      "comment" : "Off",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivé"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выключено"
+          }
+        }
+      }
+    },
+    "SettingsPageSyncQuestions" : {
+      "comment" : "FAQ",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FAQ"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preguntas frecuentes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questions fréquentes"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Частые вопросы"
+          }
+        }
+      }
+    },
+    "SettingsPageSyncRetry" : {
+      "comment" : "Sync error. Tap to try again.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync error. Tap to try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error de sincronización. Toque para intentarlo de nuevo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur de synchronisation. Appuyez pour réessayer."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ошибка синхронизации. Нажмите, чтобы повторить попытку."
+          }
+        }
+      }
+    },
+    "SettingsPageSyncRetryCancel" : {
+      "comment" : "Cancel",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отмена"
+          }
+        }
+      }
+    },
+    "SettingsPageSyncRetryContent" : {
+      "comment" : "Unable to connect to the server. Check your Internet connection.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to connect to the server. Check your Internet connection."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede conectar con el servidor. Verifique su conexión a Internet."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de se connecter au serveur. Vérifiez votre connexion Internet."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удается соединиться с сервером. Проверьте подключение к интернету."
+          }
+        }
+      }
+    },
+    "SettingsPageSyncRetryTitle" : {
+      "comment" : "Sync error",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync error"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error de sincronización"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur de synchronisation"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ошибка синхронизации"
+          }
+        }
+      }
+    },
+    "SettingsPageSyncRetryTryAgain" : {
+      "comment" : "Retry sync",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry sync"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reintentar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réessayer"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторить"
+          }
+        }
+      }
+    },
+    "SettingsPageSyncSupport" : {
+      "comment" : "If you have any other questions or suggestions, you can [contact us](https://avoqode.com/#contacts).",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you have any other questions or suggestions, you can [contact us](https://avoqode.com/#contacts)."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si tiene otras preguntas o sugerencias, puede [ponerse en contacto con nosotros](https://avoqode.com/#contacts)."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si vous avez d’autres questions ou suggestions, vous pouvez [nous contacter](https://avoqode.com/#contacts)."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Если у вас есть другие вопросы или предложения, вы можете [связаться с нами](https://avoqode.com/#contacts)."
+          }
+        }
+      }
+    },
+    "SettingsPageSyncSupportError" : {
+      "comment" : "Please, visit our avoqode.com to contact us.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please, visit our avoqode.com to contact us."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visite nuestro sitio web avoqode.com para ponerse en contacto con nosotros."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veuillez visiter notre site avoqode.com pour nous contacter."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пожалуйста, посетите наш сайт avoqode.com, чтобы связаться с нами."
+          }
+        }
+      }
+    },
+    "SettingsPageSyncTitle" : {
+      "comment" : "Sync",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sincronización"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisation"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Синхронизация"
+          }
+        }
+      }
+    },
+    "SettingsPageSyncUpdate" : {
+      "comment" : "Update",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre à jour"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обновить"
+          }
+        }
+      }
+    },
+    "SettingsPageSyncUpdating" : {
+      "comment" : "Updating",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updating"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizando"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mise à jour"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обновление"
           }
         }
       }

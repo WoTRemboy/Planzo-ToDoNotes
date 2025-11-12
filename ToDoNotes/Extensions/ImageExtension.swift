@@ -90,6 +90,7 @@ extension Image {
         
         static let about = Image("SettingsAboutApp")
         static let aboutLogo = Image("SettingsAboutAppLogo")
+        static let sync = Image("SettingsSync")
         static let appearance = Image("SettingsAppearance")
         static let language = Image("SettingsLanguage")
         static let notifications = Image("SettingsNotification")
@@ -103,6 +104,9 @@ extension Image {
         static let chevron = Image("SettingsChevron")
         static let check = Image(systemName: "checkmark")
         
+        static let syncError = Image("SyncError")
+        static let syncUpdating = Image("SyncUpdating")
+        
         enum TaskCreate {
             static let popup = Image("TaskCreationPopup")
             static let fullScreen = Image("TaskCreationFullScreen")
@@ -114,6 +118,7 @@ extension Image {
     enum Selector {
         static let selected = Image("SelectorSelected")
         static let unselected = Image("SelectorUnselected")
+        static let bullet = Image("SelectorBullet")
     }
     
     // MARK: - Task Management Images

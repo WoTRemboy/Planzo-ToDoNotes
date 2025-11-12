@@ -368,12 +368,14 @@ struct TaskManagementView_Previews: PreviewProvider {
     
     struct PreviewWrapper: View {
         @State private var taskManagementHeight: CGFloat = 130
+        @Namespace private var namespace
         
         var body: some View {
             TaskManagementView(
                 taskManagementHeight: $taskManagementHeight,
-                namespace: Namespace().wrappedValue)
-            { }
+                namespace: namespace,
+                onDismiss: { }
+            )
         }
     }
 }
@@ -475,4 +477,3 @@ extension TaskManagementView {
         }
     }
 }
-

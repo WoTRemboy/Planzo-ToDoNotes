@@ -12,6 +12,16 @@
 				<string>$(GOOGLE_URL_SCHEME)</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.avoqode.ToDoNotes</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>planzo</string>
+			</array>
+		</dict>
 	</array>
 	<key>UIDesignRequiresCompatibility</key>
 	<true/>

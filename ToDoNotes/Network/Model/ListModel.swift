@@ -34,3 +34,14 @@ struct ListSyncResponse: Codable {
     let upserts: [ListItem]
     let deletes: [ListDelete]
 }
+
+struct ListsDelta: Codable {
+    let upserts: [ListItem]
+    let deletes: [ListDelete]
+}
+
+enum SyncStatus {
+    case updating
+    case updated
+    case failed
+}

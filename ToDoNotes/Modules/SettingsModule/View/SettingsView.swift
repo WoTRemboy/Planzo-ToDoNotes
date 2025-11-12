@@ -124,6 +124,7 @@ struct SettingsView: View {
             VStack(spacing: 16) {
                 profileButton
                 subscriptionPromoteRow
+                syncButton
                 
                 VStack(spacing: 0) {
                     appearanceButton
@@ -160,7 +161,6 @@ struct SettingsView: View {
             if let user = authService.currentUser {
                 CustomNavLink(
                     destination: SettingAccountView(namespace: namespace)
-//                        .environmentObject(authService)
                         .environmentObject(viewModel),
                     label: {
                         SettingsProfileRow(
@@ -236,6 +236,22 @@ struct SettingsView: View {
         } label: {
             SubscriptionPromoteRow()
         }
+        .clipShape(.rect(cornerRadius: 10))
+        .padding(.horizontal)
+    }
+    
+    private var syncButton: some View {
+        CustomNavLink(
+            destination: SettingSyncView(appleAuthService: appleAuthService, googleAuthService: googleAuthService)
+                .environmentObject(viewModel),
+            label: {
+                SettingFormRow(
+                    title: Texts.Settings.Sync.title,
+                    image: Image.Settings.sync,
+                    details: viewModel.lastSyncString(dateString: authService.currentUser?.lastSyncAt),
+                    chevron: true,
+                    last: true)
+            })
         .clipShape(.rect(cornerRadius: 10))
         .padding(.horizontal)
     }

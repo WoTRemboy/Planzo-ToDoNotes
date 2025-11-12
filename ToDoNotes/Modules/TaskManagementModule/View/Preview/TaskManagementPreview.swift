@@ -17,13 +17,17 @@ struct TaskManagementPreview: View {
     
     /// The task entity being previewed.
     private let entity: TaskEntity?
+    private let shared: Bool
+    private let onDismiss: () -> Void
         
     // MARK: - Initialization
     
     /// Initializes the preview with a given task entity.
     /// - Parameter entity: The task to display. If provided, initializes the ViewModel with the entity.
-    init(entity: TaskEntity?) {
+    init(entity: TaskEntity?, shared: Bool = false, onDismiss: @escaping () -> Void = {}) {
         self.entity = entity
+        self.shared = shared
+        self.onDismiss = onDismiss
         
         if let entity {
             self._viewModel = StateObject(wrappedValue: TaskManagementViewModel(entity: entity))
@@ -58,6 +62,9 @@ struct TaskManagementPreview: View {
                 TaskChecklistView(viewModel: viewModel, preview: true)
                     .padding(.horizontal, -8)
             }
+            if shared {
+                closeButton
+            }
         }
         .padding(.horizontal, 16)
     }
@@ -75,6 +82,7 @@ struct TaskManagementPreview: View {
                       text: $viewModel.nameText)
             .font(.system(size: 20, weight: .medium))
             .lineLimit(1)
+            .disabled(true)
             
             .foregroundStyle(
                 viewModel.check == .checked
@@ -100,6 +108,7 @@ struct TaskManagementPreview: View {
                   text: $viewModel.descriptionText,
                   axis: .vertical)
         
+        .disabled(true)
         .fixedSize(horizontal: false, vertical: true)
         .font(.system(size: 17, weight: .regular))
         .foregroundStyle(
@@ -107,10 +116,29 @@ struct TaskManagementPreview: View {
             ? Color.LabelColors.labelDetails
             : Color.LabelColors.labelPrimary)
     }
+    
+    private var closeButton: some View {
+        Button {
+            onDismiss()
+        } label: {
+            Text(Texts.CalendarPage.close)
+                .font(.system(size: 17, weight: .medium))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            
+                .foregroundColor(Color.LabelColors.labelReversed)
+                .background(Color.LabelColors.labelPrimary)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .frame(height: 50)
+        .frame(maxWidth: .infinity)
+        .minimumScaleFactor(0.4)
+        
+        .padding(.bottom)
+    }
 }
 
 // MARK: - Preview
 
 #Preview {
-    TaskManagementPreview(entity: PreviewData.taskItem)
+    TaskManagementPreview(entity: PreviewData.taskItem, shared: true) {}
 }
