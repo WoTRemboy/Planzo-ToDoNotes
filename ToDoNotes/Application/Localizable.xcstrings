@@ -2011,25 +2011,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "By continuing, you agree to the [Terms of Service](https://avoqode.com/terms-of-service) and [Privacy Policy](https://avoqode.com/privacy-policy)."
+            "value" : "By continuing, you agree to the [Terms of Service](https://avoqode.com/terms-of-service) and [Privacy Policy](https://avoqode.com/privacy-policy)"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Al continuar, usted acepta los [Términos de servicio](https://avoqode.com/terms-of-service)￼ y la [Política de privacidad](https://avoqode.com/privacy-policy)."
+            "value" : "Al continuar, usted acepta los [Términos de servicio](https://avoqode.com/terms-of-service)￼ y la [Política de privacidad](https://avoqode.com/privacy-policy)"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "En continuant, vous acceptez les [Conditions d’utilisation]￼(https://avoqode.com/terms-of-service) et la [Politique de confidentialité￼](https://avoqode.com/privacy-policy)."
+            "value" : "En continuant, vous acceptez les [Conditions d’utilisation]￼(https://avoqode.com/terms-of-service) et la [Politique de confidentialité￼](https://avoqode.com/privacy-policy)"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Продолжая, Вы соглашаетесь с [Условиями использования](https://avoqode.com/terms-of-service) и [Политикой конфиденциальности](https://avoqode.com/privacy-policy)."
+            "value" : "Продолжая, Вы соглашаетесь с [Условиями использования](https://avoqode.com/terms-of-service) и [Политикой конфиденциальности](https://avoqode.com/privacy-policy)"
           }
         }
       }

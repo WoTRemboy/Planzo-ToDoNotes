@@ -6,6 +6,10 @@
 //
 
 import SwiftUI
+import OSLog
+
+/// A logger instance for debug and error messages.
+private let logger = Logger(subsystem: "com.todonotes.subscription", category: "SubscriptionView")
 
 struct SubscriptionView: View {
     
@@ -68,12 +72,12 @@ struct SubscriptionView: View {
             if authService.isAuthorized {
                 continueButton
             }
-            HStack(spacing: 16) {
-                termsPolicyButton(type: .termsOfService)
-                termsPolicyButton(type: .privacyPolicy)
-            }
-            .padding([.horizontal, .top])
-            .padding(.bottom, hasNotch() ? 0 : 16)
+            termsPolicyLabel
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(Color.LabelColors.labelDetails)
+                .multilineTextAlignment(.center)
+                .padding([.horizontal, .top])
+                .padding(.bottom, hasNotch() ? 0 : 16)
         }
         .frame(maxWidth: .infinity)
         .background {
@@ -144,15 +148,13 @@ struct SubscriptionView: View {
         .padding([.horizontal, .top], 16)
     }
         
-    private func termsPolicyButton(type: SupportLink) -> some View {
-        Button {
-            viewModel.openSupportLink(url: type.url)
-        } label: {
-            Text(type.title)
-                .font(.system(size: 14, weight: .medium))
-                .foregroundStyle(Color.LabelColors.labelDetails)
+    private var termsPolicyLabel: some View {
+        if let attributedText = try? AttributedString(markdown: Texts.OnboardingPage.markdownTerms) {
+            return Text(attributedText)
+        } else {
+            logger.error("Attributed terms string creation failed from markdown.")
+            return Text(Texts.OnboardingPage.markdownTermsError)
         }
-        .frame(maxWidth: .infinity, alignment: .center)
     }
     
     private var errorAlert: some View {

@@ -136,7 +136,6 @@ struct MainView: View {
                 .zIndex(1)
             taskForm
         }
-        .modifier(RefreshModifier(authService: authService))
     }
     
     /// Placeholder text shown when no tasks are available under current filters.
@@ -174,6 +173,8 @@ struct MainView: View {
         
         .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
         .animation(.easeInOut(duration: 0.1), value: viewModel.allTasks.map { $0.folder })
+        
+        .modifier(RefreshModifier(authService: authService))
     }
 }
 
