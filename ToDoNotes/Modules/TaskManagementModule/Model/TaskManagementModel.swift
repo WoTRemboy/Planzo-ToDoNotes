@@ -261,9 +261,9 @@ enum TaskCheck: Int16 {
     case checked = 2
 }
 
-enum ShareAccess {
-    case viewOnly
-    case edit
+enum ShareAccess: String {
+    case viewOnly = "VIEWER"
+    case edit = "EDITOR"
     
     internal var name: String {
         switch self {

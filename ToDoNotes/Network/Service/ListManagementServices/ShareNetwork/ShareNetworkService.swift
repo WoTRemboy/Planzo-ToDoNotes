@@ -65,8 +65,20 @@ final class ShareNetworkService: ObservableObject {
     }
     
     /// Creates share info for a list by id
-    func createShare(for listId: String, expiresAt: String, completion: @escaping (Result<ShareLink, Error>) -> Void) {
-        struct Body: Codable { let expiresAt: String }
+    func createShare(for listId: String, expiresAt: String, grantRole: String, completion: @escaping (Result<ShareLink, Error>) -> Void) {
+        struct Body: Codable {
+            let expiresAt: String
+            let grantRole: String?
+            let oneTime: Bool?
+            let maxUses: Int?
+
+            enum CodingKeys: String, CodingKey {
+                case expiresAt
+                case grantRole
+                case oneTime
+                case maxUses
+            }
+        }
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
@@ -81,7 +93,7 @@ final class ShareNetworkService: ObservableObject {
                 request.setValue("application/json", forHTTPHeaderField: "Accept")
                 request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 
-                let body = Body(expiresAt: expiresAt)
+                let body = Body(expiresAt: expiresAt, grantRole: grantRole, oneTime: true, maxUses: 1)
                 do {
                     request.httpBody = try JSONEncoder().encode(body)
                 } catch {
@@ -164,6 +176,66 @@ final class ShareNetworkService: ObservableObject {
                         DispatchQueue.main.async {
                             completion(.failure(URLError(.cannotRemoveFile)))
                         }
+                    }
+                }
+                task.resume()
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    /// Accepts a share invite by code
+    /// - Parameters:
+    ///   - code: Share code received from the inviter
+    ///   - completion: Result with Void on success, or Error
+    func acceptShare(code: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        struct Body: Codable { let code: String }
+        AccessTokenManager.shared.getValidAccessToken { result in
+            switch result {
+            case .success(let accessToken):
+                guard let url = URL(string: "https://banana.avoqode.com/api/v1/share/accept") else {
+                    logger.error("Invalid accept share URL")
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "POST"
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue("application/json", forHTTPHeaderField: "Accept")
+                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+
+                let body = Body(code: code)
+                do {
+                    request.httpBody = try JSONEncoder().encode(body)
+                } catch {
+                    logger.error("Failed to encode accept share body: \(error.localizedDescription)")
+                    completion(.failure(error))
+                    return
+                }
+
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        logger.error("Accept share request failed: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(error)) }
+                        return
+                    }
+                    guard let httpResponse = response as? HTTPURLResponse else {
+                        logger.error("Accept share response is not HTTPURLResponse.")
+                        DispatchQueue.main.async { completion(.failure(URLError(.badServerResponse))) }
+                        return
+                    }
+
+                    if (200...299).contains(httpResponse.statusCode) {
+                        logger.info("Share accepted successfully")
+                        DispatchQueue.main.async { completion(.success(())) }
+                    } else {
+                        if let data = data, let message = String(data: data, encoding: .utf8) {
+                            logger.error("Accept share failed (status: \(httpResponse.statusCode)) body: \(message)")
+                        } else {
+                            logger.error("Accept share failed with status: \(httpResponse.statusCode)")
+                        }
+                        DispatchQueue.main.async { completion(.failure(URLError(.cannotParseResponse))) }
                     }
                 }
                 task.resume()

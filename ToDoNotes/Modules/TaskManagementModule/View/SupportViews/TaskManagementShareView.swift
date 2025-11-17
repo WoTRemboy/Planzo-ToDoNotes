@@ -111,7 +111,7 @@ struct TaskManagementShareView: View {
             let expirationDate = Date().addingTimeInterval(7 * 24 * 3600)
             let isoFormatter = ISO8601DateFormatter()
             let expiresAtString = isoFormatter.string(from: expirationDate)
-            viewModel.handleShareLink(expiresAt: expiresAtString) {
+            viewModel.handleShareLink(expiresAt: expiresAtString, grantRole: shareType.rawValue) {
                 onComplete?()
             }
         } label: {

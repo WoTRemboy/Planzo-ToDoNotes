@@ -11,6 +11,11 @@ struct ShareLink: Codable, Identifiable {
     let expiresAt: String
     let revoked: Bool
     let scope: String
+    let grantRole: String
+    let oneTime: Bool
+    let maxUses: Int
+    let useCount: Int
+    let usedAt: String?
     let activeNow: Bool
 }
 
@@ -26,10 +31,15 @@ struct ShareLinkRequest: Codable, Identifiable {
     let expiresAt: String
     let revoked: Bool
     let scope: String
+    let grantRole: String
+    let oneTime: Bool
+    let maxUses: Int
+    let useCount: Int
     
     enum CodingKeys: String, CodingKey {
         case id = "shareId"
         case listId, createdAt, expiresAt, revoked, scope
+        case grantRole, oneTime, maxUses, useCount
     }
 }
 
