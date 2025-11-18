@@ -15,6 +15,7 @@ private let logger = Logger(subsystem: "com.todonotes.main", category: "MainTask
 struct MainTaskRowWithActions: View {
         
     @EnvironmentObject private var viewModel: MainViewModel
+    @EnvironmentObject private var authService: AuthNetworkService
     
     /// The task entity displayed in the row.
     @ObservedObject private var entity: TaskEntity
@@ -76,7 +77,9 @@ struct MainTaskRowWithActions: View {
         removeButton
         if viewModel.selectedFilter != .deleted {
             folderButton
-            shareButton
+            if authService.isAuthorized {
+                shareButton
+            }
         }
     }
     
@@ -193,5 +196,6 @@ struct MainTaskRowWithActions: View {
 #Preview {
     MainTaskRowWithActions(entity: TaskEntity(), isLast: false)
         .environmentObject(MainViewModel())
+        .environmentObject(AuthNetworkService())
 }
 

@@ -24,6 +24,10 @@ final class ShareCoreDataService {
         scope: String?,
         activeNow: Bool,
         revoked: Bool,
+        grantRole: String?,
+        oneTime: Bool,
+        maxUses: Int32,
+        useCount: Int32,
         createdAt: Date?,
         expiresAt: Date?,
         task: TaskEntity?
@@ -40,6 +44,10 @@ final class ShareCoreDataService {
         entity.scope = scope
         entity.activeNow = activeNow
         entity.revoked = revoked
+        entity.grantRole = grantRole
+        entity.oneTime = oneTime
+        entity.maxUses = maxUses
+        entity.useCount = useCount
         entity.createdAt = createdAt
         entity.expiresAt = expiresAt
         entity.task = task

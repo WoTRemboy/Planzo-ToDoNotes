@@ -82,6 +82,7 @@ final class TaskManagementViewModel: ObservableObject {
     
     /// The selected share access type for the task.
     @Published internal var shareAccess: ShareAccess = .viewOnly
+    @Published internal var shareMembers: [SharingMember] = []
     @Published internal var sharingTask: TaskEntity? = nil
     
     /// Reference to the TaskEntity being edited (if any).
@@ -625,7 +626,7 @@ final class TaskManagementViewModel: ObservableObject {
     
     /// Handles creation and sharing of a share link for the current task.
     @MainActor
-    func handleShareLink(expiresAt: String? = nil, completion: @escaping (() -> Void)) {
+    func handleShareLink(expiresAt: String? = nil, grantRole: String, completion: @escaping (() -> Void)) {
         guard let entity = self.entity else { return }
         let expiration: String
         if let expiresAt = expiresAt {
@@ -635,7 +636,7 @@ final class TaskManagementViewModel: ObservableObject {
             let date = Date().addingTimeInterval(7*24*3600)
             expiration = Date.iso8601DateFormatter.string(from: date)
         }
-        ShareNetworkService.shared.createShareAndPresentSheet(for: entity, expiresAt: expiration) { result in
+        ShareNetworkService.shared.createShareAndPresentSheet(for: entity, expiresAt: expiration, grantRole: grantRole) { result in
             switch result {
             case .success(_):
                 completion()
@@ -647,6 +648,29 @@ final class TaskManagementViewModel: ObservableObject {
     
     internal func setSharingTask(to task: TaskEntity?) {
         sharingTask = task
+    }
+    
+    @MainActor
+    internal func loadMembersForSharingTask(completion: (() -> Void)? = nil) {
+        guard let task = entity, let serverId = task.serverId, !serverId.isEmpty else {
+            self.shareMembers = []
+            completion?()
+            return
+        }
+        ShareAccessService.shared.getMembers(for: serverId) { [weak self] result in
+            switch result {
+            case .success(let members):
+                self?.shareMembers = members
+            case .failure(let error):
+                logger.error("Error fetching share members: \(error.localizedDescription)")
+                self?.shareMembers = []
+            }
+            completion?()
+        }
+    }
+    
+    internal func isOwner(for member: SharingMember) -> Bool {
+        member.role == ShareAccess.owner.rawValue
     }
 }
 

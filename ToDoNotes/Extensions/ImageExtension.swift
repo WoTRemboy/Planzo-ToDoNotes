@@ -157,6 +157,9 @@ extension Image {
                 static let pinnedSelect = Image("EditTaskPinnedOffIcon")
                 static let pinnedDeselect = Image("EditTaskPinnedOnIcon")
                 
+                static let shareSettings = Image("EditTaskShareSettingIcon")
+                static let closeSharing = Image("EditTaskCloseShareIcon")
+                
                 static let copy = Image("EditTaskCopyIcon")
                 static let trash = Image("EditTaskTrashIcon")
             }
