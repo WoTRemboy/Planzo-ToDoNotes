@@ -123,8 +123,14 @@ struct TaskManagementNavBar: View {
             }
             .controlGroupStyle(.compactMenu)
             
+            if !viewModel.shareMembers.isEmpty {
+                shareSettingsButton
+            }
             if entity != nil {
                 duplicateButton
+            }
+            if !viewModel.shareMembers.isEmpty {
+                closeSharingButton
             }
         } label: {
             Image.NavigationBar.more
@@ -208,6 +214,31 @@ struct TaskManagementNavBar: View {
                 Text(Texts.TaskManagement.ContextMenu.dublicate)
             } icon: {
                 Image.TaskManagement.EditTask.Menu.copy
+                    .renderingMode(.template)
+            }
+        }
+    }
+    
+    private var shareSettingsButton: some View {
+        CustomNavLink(
+            destination: SharingAccessView(viewModel: viewModel)) {
+                    Label {
+                        Text(Texts.TaskManagement.SharingAccess.shareSetting)
+                    } icon: {
+                        Image.TaskManagement.EditTask.Menu.shareSettings
+                            .renderingMode(.template)
+                    }
+                }
+    }
+    
+    private var closeSharingButton: some View {
+        Button {
+            
+        } label: {
+            Label {
+                Text(Texts.TaskManagement.SharingAccess.endSharing)
+            } icon: {
+                Image.TaskManagement.EditTask.Menu.closeSharing
                     .renderingMode(.template)
             }
         }

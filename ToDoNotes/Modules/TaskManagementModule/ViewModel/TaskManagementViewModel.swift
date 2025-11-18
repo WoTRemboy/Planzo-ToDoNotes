@@ -82,6 +82,7 @@ final class TaskManagementViewModel: ObservableObject {
     
     /// The selected share access type for the task.
     @Published internal var shareAccess: ShareAccess = .viewOnly
+    @Published internal var shareMembers: [SharingMember] = []
     @Published internal var sharingTask: TaskEntity? = nil
     
     /// Reference to the TaskEntity being edited (if any).
@@ -647,6 +648,29 @@ final class TaskManagementViewModel: ObservableObject {
     
     internal func setSharingTask(to task: TaskEntity?) {
         sharingTask = task
+    }
+    
+    @MainActor
+    internal func loadMembersForSharingTask(completion: (() -> Void)? = nil) {
+        guard let task = entity, let serverId = task.serverId, !serverId.isEmpty else {
+            self.shareMembers = []
+            completion?()
+            return
+        }
+        ShareAccessService.shared.getMembers(for: serverId) { [weak self] result in
+            switch result {
+            case .success(let members):
+                self?.shareMembers = members
+            case .failure(let error):
+                logger.error("Error fetching share members: \(error.localizedDescription)")
+                self?.shareMembers = []
+            }
+            completion?()
+        }
+    }
+    
+    internal func isOwner(for member: SharingMember) -> Bool {
+        member.role == ShareAccess.owner.rawValue
     }
 }
 

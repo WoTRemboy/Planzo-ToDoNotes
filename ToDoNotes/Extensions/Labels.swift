@@ -267,11 +267,32 @@ final class Texts {
             }
         }
         
+        enum SharingAccess {
+            static let title = NSLocalizedString("TaskManagementSharingAccessTitle", comment: "Sharing Access Settings")
+            static let user = NSLocalizedString("TaskManagementSharingAccessUser", comment: "User")
+            static let allowedUsers = NSLocalizedString("TaskManagementSharingAccessAllowedUsers", comment: "Users who have access")
+            static let deniedUsers = NSLocalizedString("TaskManagementSharingAccessDeniedUsers", comment: "Access Denied")
+            
+            static let endSharing = NSLocalizedString("TaskManagementSharingAccessEndSharing", comment: "End Sharing")
+            static let shareSetting = NSLocalizedString("TaskManagementSharingAccessShareSetting", comment: "Sharing Settings")
+            static let closeAccess = NSLocalizedString("TaskManagementSharingAccessCloseAccess", comment: "Close any access for all")
+        }
+        
         enum ShareView {
-            static let title = "Совместный доступ"
-            static let view = "Просмотр"
-            static let edit = "Редактирование"
-            static let link = "Получение ссылки..."
+            static let title = NSLocalizedString("TaskManagementShareViewTitle", comment: "Collaboration")
+            
+            static let accessFor = NSLocalizedString("TaskManagementShareViewAccessFor", comment: "Access for")
+            
+            static let link = NSLocalizedString("TaskManagementShareViewLink", comment: "Share Link")
+            static let generating = NSLocalizedString("TaskManagementShareViewGenerating", comment: "Generating Link...")
+            
+            static let owner = NSLocalizedString("TaskManagementShareViewOwner", comment: "Owner")
+            static let view = NSLocalizedString("TaskManagementShareViewView", comment: "Can view")
+            static let edit = NSLocalizedString("TaskManagementShareViewEdit", comment: "Can edit")
+            
+            static let closeAccess = NSLocalizedString("TaskManagementShareViewCloseAccess", comment: "Close any access")
+            static let save = NSLocalizedString("TaskManagementShareViewSave", comment: "Save")
+            static let cancel = NSLocalizedString("TaskManagementShareViewCancel", comment: "Cancel")
         }
     }
     
