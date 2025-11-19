@@ -176,6 +176,7 @@ extension Image {
             static let contentOff = Image("TaskRowContentOff")
             static let important = Image("TaskRowImportant")
             static let expired = Image("TaskRowExpired")
+            static let shared = Image("TaskRowShared")
             
             enum SwipeAction {
                 static let important = Image("TaskRowSwipeImportantOff")

@@ -96,6 +96,19 @@ extension ShareNetworkService {
         self.createShare(for: listServerId, expiresAt: expiresAt, grantRole: grantRole) { result in
             switch result {
             case .success(let shareLink):
+                _ = ShareCoreDataService.shared.saveShare(
+                    serverId: shareLink.id,
+                    scope: shareLink.scope,
+                    activeNow: shareLink.activeNow,
+                    revoked: shareLink.revoked,
+                    grantRole: shareLink.grantRole,
+                    oneTime: shareLink.oneTime,
+                    maxUses: Int32(shareLink.maxUses),
+                    useCount: Int32(shareLink.useCount),
+                    createdAt: Date.iso8601DateFormatter.date(from: shareLink.createdAt),
+                    expiresAt: Date.iso8601DateFormatter.date(from: shareLink.expiresAt),
+                    task: task
+                )
                 completion?(.success(shareLink.id))
             case .failure(let error):
                 logger.error("Failed to create share on server: \(error.localizedDescription)")
@@ -130,7 +143,6 @@ extension ShareNetworkService {
             case .success(let serverID):
                 let urlString = "https://banana.avoqode.com/l/\(serverID)"
                 guard let url = URL(string: urlString) else { return }
-                print(url)
                 DispatchQueue.main.async {
                     guard let rootVC = RootViewControllerMethods.getRootViewController() else { return }
                     let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
@@ -144,3 +156,4 @@ extension ShareNetworkService {
         }
     }
 }
+
