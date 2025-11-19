@@ -79,6 +79,7 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var showingDatePicker: Bool = false
     /// Whether the notification alert is showing.
     @Published internal var showingNotificationAlert: Bool = false
+    @Published internal var showingNetworkErrorAlert: Bool = false
     
     /// The selected share access type for the task.
     @Published internal var shareAccess: ShareAccess = .viewOnly
@@ -626,7 +627,7 @@ final class TaskManagementViewModel: ObservableObject {
     
     /// Handles creation and sharing of a share link for the current task.
     @MainActor
-    func handleShareLink(expiresAt: String? = nil, grantRole: String, completion: @escaping (() -> Void)) {
+    internal func handleShareLink(expiresAt: String? = nil, grantRole: String, completion: @escaping ((Result<Void, Error>) -> Void)) {
         guard let entity = self.entity else { return }
         let expiration: String
         if let expiresAt = expiresAt {
@@ -639,9 +640,10 @@ final class TaskManagementViewModel: ObservableObject {
         ShareNetworkService.shared.createShareAndPresentSheet(for: entity, expiresAt: expiration, grantRole: grantRole) { result in
             switch result {
             case .success(_):
-                completion()
+                completion(.success(()))
             case .failure(let error):
                 logger.error("\(error.localizedDescription)")
+                completion(.failure(error))
             }
         }
     }
