@@ -143,7 +143,7 @@ extension ShareNetworkService {
             case .success(let serverID):
                 let urlString = "https://banana.avoqode.com/l/\(serverID)"
                 guard let url = URL(string: urlString) else { return }
-                DispatchQueue.main.async {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     guard let rootVC = RootViewControllerMethods.getRootViewController() else { return }
                     let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
                     activityVC.popoverPresentationController?.sourceView = rootVC.view

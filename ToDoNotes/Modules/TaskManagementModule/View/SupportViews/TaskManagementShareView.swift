@@ -135,6 +135,7 @@ struct TaskManagementShareView: View {
                     .foregroundStyle(Color.LabelColors.labelPrimary)
             }
         }
+        .disabled(isLoading)
         .padding(.horizontal)
         .padding(.top, 32)
     }

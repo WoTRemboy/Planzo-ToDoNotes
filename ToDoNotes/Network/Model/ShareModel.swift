@@ -68,6 +68,7 @@ enum ShareAccess: String {
     case owner = "OWNER"
     case viewOnly = "VIEWER"
     case edit = "EDITOR"
+    case closed = "CLOSED"
     
     internal var name: String {
         switch self {
@@ -77,6 +78,12 @@ enum ShareAccess: String {
             return Texts.TaskManagement.ShareView.view
         case .edit:
             return Texts.TaskManagement.ShareView.edit
+        case .closed:
+            return Texts.TaskManagement.ShareView.closeAccess
         }
     }
+}
+
+struct MyRoleResponse: Codable {
+    let role: String
 }

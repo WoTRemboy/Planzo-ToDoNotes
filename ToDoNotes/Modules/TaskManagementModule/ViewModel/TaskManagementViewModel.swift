@@ -80,11 +80,17 @@ final class TaskManagementViewModel: ObservableObject {
     /// Whether the notification alert is showing.
     @Published internal var showingNotificationAlert: Bool = false
     @Published internal var showingNetworkErrorAlert: Bool = false
+    @Published internal var showingRemoveMemberAlert: Bool = false
     
     /// The selected share access type for the task.
     @Published internal var shareAccess: ShareAccess = .viewOnly
     @Published internal var shareMembers: [SharingMember] = []
+    @Published internal var selectedMember: SharingMember? = nil
+    @Published internal var currentRole: ShareAccess = .viewOnly
     @Published internal var sharingTask: TaskEntity? = nil
+    
+    @Published var isUpdatingMemberRole: Bool = false
+    @Published var selectedShareType: ShareAccess = .viewOnly
     
     /// Reference to the TaskEntity being edited (if any).
     private var entity: TaskEntity? = nil
@@ -196,6 +202,12 @@ final class TaskManagementViewModel: ObservableObject {
             separateTargetDateToTimeAndDay(targetDate: targetDate)
         }
         updateDays()
+        
+        if let roleRaw = selectedMember?.role {
+            self.selectedShareType = ShareAccess(rawValue: roleRaw) ?? .viewOnly
+        } else {
+            self.selectedShareType = .viewOnly
+        }
     }
     
     /// Convenience initializer for editing an existing TaskEntity.
@@ -308,6 +320,10 @@ final class TaskManagementViewModel: ObservableObject {
     /// Shows or hides the notification alert.
     internal func toggleShowingNotificationAlert() {
         showingNotificationAlert.toggle()
+    }
+    
+    internal func toggleShowingRemoveMemberAlert() {
+        showingRemoveMemberAlert.toggle()
     }
     
     /// Sets whether a date is shown for the task.
@@ -648,6 +664,10 @@ final class TaskManagementViewModel: ObservableObject {
         }
     }
     
+    internal func setSelectedMember(to member: SharingMember?) {
+        selectedMember = member
+    }
+    
     internal func setSharingTask(to task: TaskEntity?) {
         sharingTask = task
     }
@@ -655,10 +675,23 @@ final class TaskManagementViewModel: ObservableObject {
     @MainActor
     internal func loadMembersForSharingTask(completion: (() -> Void)? = nil) {
         guard let task = entity, let serverId = task.serverId, !serverId.isEmpty else {
-            self.shareMembers = []
+            self.currentRole = .viewOnly
             completion?()
             return
         }
+        ShareAccessService.shared.getMyRole(for: serverId) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let role):
+                self.currentRole = ShareAccess(rawValue: role) ?? .viewOnly
+                logger.info("Current user's share access role: \(role)")
+            case .failure(let error):
+                self.currentRole = .viewOnly
+                logger.error("Error fetching share members: \(error.localizedDescription)")
+            }
+            completion?()
+        }
+        
         ShareAccessService.shared.getMembers(for: serverId) { [weak self] result in
             switch result {
             case .success(let members):
@@ -673,6 +706,48 @@ final class TaskManagementViewModel: ObservableObject {
     
     internal func isOwner(for member: SharingMember) -> Bool {
         member.role == ShareAccess.owner.rawValue
+    }
+
+    @MainActor
+    func updateMemberRole(newRole: ShareAccess, onComplete: (() -> Void)? = nil) {
+        guard let member = selectedMember else { return }
+        guard selectedShareType.rawValue != selectedMember?.role else { onComplete?(); return }
+        
+        self.selectedShareType = newRole
+        isUpdatingMemberRole = true
+        ShareAccessService.shared.updateMemberRole(listId: member.listId, memberId: member.id, newRole: newRole.rawValue) { [weak self] result in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self?.isUpdatingMemberRole = false
+                switch result {
+                case .success(let updatedMember):
+                    if let index = self?.shareMembers.firstIndex(where: { $0.id == updatedMember.id }) {
+                        self?.shareMembers[index] = updatedMember
+                    }
+                    onComplete?()
+                case .failure(_):
+                    self?.showingNetworkErrorAlert = true
+                }
+            }
+        }
+    }
+    
+    /// Deletes a sharing member from the list.
+    @MainActor
+    func deleteMember(_ member: SharingMember, onComplete: (() -> Void)? = nil) {
+        guard let listId = entity?.serverId else { return }
+        isUpdatingMemberRole = true
+        ShareAccessService.shared.deleteMember(listId: listId, memberId: member.id) { [weak self] result in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self?.isUpdatingMemberRole = false
+                switch result {
+                case .success:
+                    self?.shareMembers.removeAll { $0.id == member.id }
+                    onComplete?()
+                case .failure(_):
+                    self?.showingNetworkErrorAlert = true
+                }
+            }
+        }
     }
 }
 

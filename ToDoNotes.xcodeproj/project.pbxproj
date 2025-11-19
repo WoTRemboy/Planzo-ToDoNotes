@@ -70,6 +70,7 @@
 		63645A5E2D383897000095D3 /* TextFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63645A5D2D383890000095D3 /* TextFieldDelegate.swift */; };
 		636754C92EC26703004702F4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636754C82EC26703004702F4 /* SceneDelegate.swift */; };
 		636754CB2EC2697B004702F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636754CA2EC26978004702F4 /* AppDelegate.swift */; };
+		636F342A2ECE149800D6C77E /* SharingAccessManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636F34292ECE149800D6C77E /* SharingAccessManageView.swift */; };
 		63753A7B2E78447E00D75DAF /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63753A7A2E78447E00D75DAF /* LoadingOverlay.swift */; };
 		63753A832E7867C800D75DAF /* ci_pre_xcodebuild.sh in Resources */ = {isa = PBXBuildFile; fileRef = 63753A822E7867C800D75DAF /* ci_pre_xcodebuild.sh */; };
 		63753A852E78690000D75DAF /* Secrets.json in Resources */ = {isa = PBXBuildFile; fileRef = 63753A842E7868F900D75DAF /* Secrets.json */; };
@@ -272,6 +273,7 @@
 		63645A5D2D383890000095D3 /* TextFieldDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldDelegate.swift; sourceTree = "<group>"; };
 		636754C82EC26703004702F4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		636754CA2EC26978004702F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		636F34292ECE149800D6C77E /* SharingAccessManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingAccessManageView.swift; sourceTree = "<group>"; };
 		63753A7A2E78447E00D75DAF /* LoadingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
 		63753A822E7867C800D75DAF /* ci_pre_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_pre_xcodebuild.sh; sourceTree = "<group>"; };
 		63753A842E7868F900D75DAF /* Secrets.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Secrets.json; sourceTree = "<group>"; };
@@ -928,6 +930,7 @@
 			children = (
 				637C27B92ECCA03A00B7BBC7 /* SharingAccessView.swift */,
 				637C27BB2ECCA16100B7BBC7 /* SharingAccessProfileRow.swift */,
+				636F34292ECE149800D6C77E /* SharingAccessManageView.swift */,
 			);
 			path = SharingAccessViews;
 			sourceTree = "<group>";
@@ -1616,6 +1619,7 @@
 				631FBB942DB0127E00BEABD0 /* CalendarPageOverviewTip.swift in Sources */,
 				63286AF32E7B3A1500483810 /* SubscriptionCarouselModel.swift in Sources */,
 				63B35EF52EC4F061003E3D89 /* RefreshModifier.swift in Sources */,
+				636F342A2ECE149800D6C77E /* SharingAccessManageView.swift in Sources */,
 				63ECEDD92EC39072008A1F42 /* FAQBulletModel.swift in Sources */,
 				630F547D2E6F5F1F00DF57E6 /* SettingProfileRow.swift in Sources */,
 				637B9F582D2969940010F13B /* TodayView.swift in Sources */,
