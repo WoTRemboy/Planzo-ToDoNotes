@@ -27,17 +27,12 @@ struct TaskManagementPreviewNavBar: View {
     
     /// The main view body displaying the navigation bar.
     internal var body: some View {
-        GeometryReader { proxy in
-            let topInset = proxy.safeAreaInsets.top
-            
-            ZStack(alignment: .top) {
-                backgroundColor
-                titleSection
-                    .padding(.top, topInset + 9.5)
-            }
-            .ignoresSafeArea(edges: .top)
+        ZStack(alignment: .center) {
+            backgroundColor
+            titleSection
         }
-        .frame(height: 48)
+        .ignoresSafeArea(edges: .top)
+        .frame(height: 60)
     }
     
     // MARK: - Subviews

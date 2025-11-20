@@ -183,6 +183,21 @@ extension ListNetworkService {
                                     task.folder = foundFolder
                                 }
                             }
+                            for share in remote.shareLinks {
+                                _ = ShareCoreDataService.shared.saveShare(
+                                    serverId: share.id,
+                                    scope: share.scope,
+                                    activeNow: share.activeNow,
+                                    revoked: share.revoked,
+                                    grantRole: share.grantRole,
+                                    oneTime: share.oneTime,
+                                    maxUses: Int32(share.maxUses),
+                                    useCount: Int32(share.useCount),
+                                    createdAt: Date.iso8601DateFormatter.date(from: share.createdAt),
+                                    expiresAt: Date.iso8601DateFormatter.date(from: share.expiresAt),
+                                    task: task
+                                )
+                            }
                             logger.info("Local task updated from server: \(remote.id) \(remote.name)")
                         } else if let parsedDate, localDate > parsedDate {
                             ListNetworkService.shared.updateList(to: task) { updateResult in
@@ -223,6 +238,21 @@ extension ListNetworkService {
                             if let foundFolder = try? context.fetch(folderFetch).first {
                                 newTask.folder = foundFolder
                             }
+                        }
+                        for share in remote.shareLinks {
+                            _ = ShareCoreDataService.shared.saveShare(
+                                serverId: share.id,
+                                scope: share.scope,
+                                activeNow: share.activeNow,
+                                revoked: share.revoked,
+                                grantRole: share.grantRole,
+                                oneTime: share.oneTime,
+                                maxUses: Int32(share.maxUses),
+                                useCount: Int32(share.useCount),
+                                createdAt: Date.iso8601DateFormatter.date(from: share.createdAt),
+                                expiresAt: Date.iso8601DateFormatter.date(from: share.expiresAt),
+                                task: newTask
+                            )
                         }
                     }
                 }
@@ -315,6 +345,21 @@ extension ListNetworkService {
                 task.folder = foundFolder
             }
         }
+        for share in item.shareLinks {
+            _ = ShareCoreDataService.shared.saveShare(
+                serverId: share.id,
+                scope: share.scope,
+                activeNow: share.activeNow,
+                revoked: share.revoked,
+                grantRole: share.grantRole,
+                oneTime: share.oneTime,
+                maxUses: Int32(share.maxUses),
+                useCount: Int32(share.useCount),
+                createdAt: Date.iso8601DateFormatter.date(from: share.createdAt),
+                expiresAt: Date.iso8601DateFormatter.date(from: share.expiresAt),
+                task: task
+            )
+        }
         do {
             try context.save()
             completion(.success(task))
@@ -396,3 +441,4 @@ extension ListNetworkService {
         rootVC.present(hosting, animated: true)
     }
 }
+
