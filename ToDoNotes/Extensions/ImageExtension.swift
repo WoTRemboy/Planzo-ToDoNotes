@@ -139,6 +139,7 @@ extension Image {
             static let accept = Image("EditTaskAccept")
             static let ready = Image("EditTaskReady")
             static let link = Image("EditTaskLink")
+            static let generate = Image("EditTaskGenerate")
             
             enum Checklist {
                 static let check = Image("ChecklistItemChecked")
@@ -176,6 +177,7 @@ extension Image {
             static let contentOff = Image("TaskRowContentOff")
             static let important = Image("TaskRowImportant")
             static let expired = Image("TaskRowExpired")
+            static let shared = Image("TaskRowShared")
             
             enum SwipeAction {
                 static let important = Image("TaskRowSwipeImportantOff")

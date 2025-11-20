@@ -220,10 +220,12 @@ extension MainView {
         VStack(alignment: .trailing, spacing: 16) {
             Spacer()
             // scrollToTopButton (Placeholder for future scroll-to-top button)
-            if viewModel.selectedFilter != .deleted {
-                plusButton
-            } else if !filteredSegmentedTasks.isEmpty {
-                removeAllTasksButton
+            if let folder = viewModel.selectedFolder, !folder.shared {
+                if viewModel.selectedFilter != .deleted {
+                    plusButton
+                } else if !filteredSegmentedTasks.isEmpty {
+                    removeAllTasksButton
+                }
             }
         }
         .padding(.horizontal)

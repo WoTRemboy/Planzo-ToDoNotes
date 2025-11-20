@@ -84,6 +84,8 @@ struct SharingAccessProfileRow: View {
                                   weight: .regular))
                     .foregroundStyle(Color.LabelColors.labelSecondary)
                     .lineLimit(1)
+                    .contentTransition(.numericText())
+                    .animation(.easeInOut, value: member.role)
             }
         }
     }

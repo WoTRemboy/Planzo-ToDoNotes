@@ -152,6 +152,12 @@ final class MainViewModel: ObservableObject {
     /// Reload folders from Core Data.
     internal func reloadFolders() {
         self.folders = FolderCoreDataService.shared.loadFolders()
+        
+        if let selected = selectedFolder, !folders.contains(where: { $0 == selected }) {
+            selectedFolder = folders.first
+        } else if selectedFolder == nil {
+            selectedFolder = folders.first
+        }
     }
     
     /// Fetch tasks from Core Data and assign to allTasks.
@@ -160,9 +166,12 @@ final class MainViewModel: ObservableObject {
         let request: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \TaskEntity.target, ascending: true)]
         
-        if let folder = selectedFolder, folder.system, !folder.shared {
+        guard let folder = selectedFolder else { return }
+        if folder.system, !folder.shared {
             request.predicate = nil
-        } else if let folder = selectedFolder {
+        } else if folder.system, folder.shared {
+            request.predicate = NSPredicate(format: "share.@count > 0")
+        } else {
             request.predicate = NSPredicate(format: "folder.id == %@", folder.id as CVarArg)
         }
         
@@ -352,3 +361,4 @@ final class MainViewModel: ObservableObject {
         }
     }
 }
+

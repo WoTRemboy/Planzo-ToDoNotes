@@ -62,7 +62,7 @@ struct TaskListRow: View {
             if entity.completed != 0 {
                 checkBoxButton
             }
-            nameLabel
+            nameSharedView
             
             Spacer()
             detailsBox
@@ -151,6 +151,15 @@ struct TaskListRow: View {
     
     // MARK: - Task Name
     
+    private var nameSharedView: some View {
+        HStack(spacing: 8) {
+            nameLabel
+            if let sharing = entity.share, sharing.count > 0 {
+                sharingIcon
+            }
+        }
+    }
+    
     /// Displays the task name with optional strikethrough and faded colors depending on the task state.
     private var nameLabel: some View {
         let name = entity.name ?? String()
@@ -164,6 +173,12 @@ struct TaskListRow: View {
                     Color.LabelColors.labelPrimary)
             .strikethrough(TaskService.taskCheckStatus(for: entity),
                            color: Color.LabelColors.labelDetails)
+    }
+    
+    private var sharingIcon: some View {
+        Image.TaskManagement.TaskRow.shared
+            .resizable()
+            .frame(width: 18, height: 18)
     }
     
     // MARK: - Details Section

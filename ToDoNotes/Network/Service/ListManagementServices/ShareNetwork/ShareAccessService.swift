@@ -40,7 +40,6 @@ final class ShareAccessService: ObservableObject {
                         DispatchQueue.main.async { completion(.failure(URLError(.badServerResponse))) }
                         return
                     }
-                    print(String(data: data, encoding: .utf8)!)
                     do {
                         let decoded = try JSONDecoder().decode([SharingMember].self, from: data)
                         DispatchQueue.main.async { completion(.success(decoded)) }
@@ -81,11 +80,102 @@ final class ShareAccessService: ObservableObject {
                         DispatchQueue.main.async { completion(.failure(URLError(.badServerResponse))) }
                         return
                     }
-                    if httpResponse.statusCode == 200 {
+                    if (200...299).contains(httpResponse.statusCode) {
                         DispatchQueue.main.async { completion(.success(())) }
                     } else {
                         logger.error("Member DELETE failed with status: \(httpResponse.statusCode)")
                         DispatchQueue.main.async { completion(.failure(URLError(.cannotRemoveFile))) }
+                    }
+                }
+                task.resume()
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    /// Loads the current user's sharing role for a list by id.
+    func getMyRole(for listId: String, completion: @escaping (Result<String, Error>) -> Void) {
+        AccessTokenManager.shared.getValidAccessToken { result in
+            switch result {
+            case .success(let accessToken):
+                guard let url = URL(string: self.baseURL + "\(listId)/my-role") else {
+                    logger.error("Invalid my-role URL for listId: \(listId)")
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "GET"
+                request.setValue("application/json", forHTTPHeaderField: "Accept")
+                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        logger.error("MyRole fetch failed: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(error)) }
+                        return
+                    }
+                    guard let data = data else {
+                        logger.error("MyRole fetch response data is nil.")
+                        DispatchQueue.main.async { completion(.failure(URLError(.badServerResponse))) }
+                        return
+                    }
+                    do {
+                        let decoded = try JSONDecoder().decode(MyRoleResponse.self, from: data)
+                        DispatchQueue.main.async { completion(.success(decoded.role)) }
+                    } catch {
+                        logger.error("Failed to decode my-role: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(error)) }
+                    }
+                }
+                task.resume()
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    /// Updates the role of a member in a list.
+    func updateMemberRole(listId: String, memberId: String, newRole: String, completion: @escaping (Result<SharingMember, Error>) -> Void) {
+        AccessTokenManager.shared.getValidAccessToken { result in
+            switch result {
+            case .success(let accessToken):
+                guard let url = URL(string: self.baseURL + "\(listId)/members/\(memberId)/role") else {
+                    logger.error("Invalid PATCH member role URL: listId=\(listId), memberId=\(memberId)")
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "PATCH"
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue("application/json", forHTTPHeaderField: "Accept")
+                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+
+                let body = MyRoleResponse(role: newRole)
+                do {
+                    request.httpBody = try JSONEncoder().encode(body)
+                } catch {
+                    logger.error("Failed to encode PATCH role body: \(error.localizedDescription)")
+                    completion(.failure(error))
+                    return
+                }
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        logger.error("PATCH member role failed: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(error)) }
+                        return
+                    }
+                    guard let data = data else {
+                        logger.error("PATCH member role response data is nil.")
+                        DispatchQueue.main.async { completion(.failure(URLError(.badServerResponse))) }
+                        return
+                    }
+                    do {
+                        let decoded = try JSONDecoder().decode(SharingMember.self, from: data)
+                        DispatchQueue.main.async { completion(.success(decoded)) }
+                    } catch {
+                        logger.error("Failed to decode PATCH member role response: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(error)) }
                     }
                 }
                 task.resume()

@@ -15,6 +15,9 @@ struct TaskManagementShareView: View {
     
     /// Indicates whether the task should be viewable via the shared link.
     @State private var shareType: ShareAccess = .viewOnly
+    
+    @State private var isLoading: Bool = false
+    @State private var isRotating: Bool = false
 
     @ObservedObject private var viewModel: TaskManagementViewModel
     
@@ -42,6 +45,9 @@ struct TaskManagementShareView: View {
             }
             .zIndex(1)
         }
+        .popView(isPresented: $viewModel.showingNetworkErrorAlert, onTap: {}, onDismiss: {}) {
+            syncErrorAlert
+        }
     }
     
     // MARK: - Navigation Bar
@@ -65,6 +71,7 @@ struct TaskManagementShareView: View {
             editButton
         }
         .padding([.top, .horizontal])
+        .sensoryFeedback(.selection, trigger: shareType)
     }
     
     /// A reusable row for view sharing option.
@@ -101,6 +108,7 @@ struct TaskManagementShareView: View {
                     .foregroundStyle(Color.SupportColors.supportButton)
             }
         }
+        .disabled(isLoading)
     }
     
     // MARK: - Generate Link Button
@@ -108,21 +116,18 @@ struct TaskManagementShareView: View {
     /// Button to trigger the generation of a shareable link.
     private var generateLinkButton: some View {
         Button {
-            let expirationDate = Date().addingTimeInterval(7 * 24 * 3600)
-            let isoFormatter = ISO8601DateFormatter()
-            let expiresAtString = isoFormatter.string(from: expirationDate)
-            viewModel.handleShareLink(expiresAt: expiresAtString, grantRole: shareType.rawValue) {
-                onComplete?()
-            }
+            generateButtonFunc()
         } label: {
             HStack {
-                Image.TaskManagement.EditTask.link
-                    .resizable()
-                    .frame(width: 22, height: 22)
-                
-                Text(Texts.TaskManagement.ShareView.link)
+                if isLoading {
+                    updatingIcon
+                } else {
+                    shareIcon
+                }
+                shareLabel
                     .font(.system(size: 17, weight: .medium))
                     .foregroundStyle(Color.LabelColors.labelReversed)
+                    .contentTransition(.numericText())
             }
             .frame(maxWidth: .infinity, minHeight: 50)
             .background {
@@ -130,8 +135,69 @@ struct TaskManagementShareView: View {
                     .foregroundStyle(Color.LabelColors.labelPrimary)
             }
         }
+        .disabled(isLoading)
         .padding(.horizontal)
         .padding(.top, 32)
+    }
+    
+    private var shareIcon: some View {
+        Image.TaskManagement.EditTask.link
+            .resizable()
+            .frame(width: 22, height: 22)
+            .transition(.blurReplace)
+    }
+    
+    private var updatingIcon: some View {
+        Image.TaskManagement.EditTask.generate
+            .resizable()
+            .frame(width: 22, height: 22)
+            .rotationEffect(Angle.degrees(isRotating ? 360 : 0))
+            .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false), value: isRotating)
+            .onAppear {
+                isRotating = true
+            }
+            .onDisappear {
+                isRotating = false
+            }
+            .transition(.scale)
+    }
+    
+    private var shareLabel: Text {
+        if isLoading {
+            Text(Texts.TaskManagement.ShareView.generating)
+        } else {
+            Text(Texts.TaskManagement.ShareView.link)
+        }
+    }
+    
+    private func generateButtonFunc() {
+        let expirationDate = Date().addingTimeInterval(7 * 24 * 3600)
+        let isoFormatter = ISO8601DateFormatter()
+        let expiresAtString = isoFormatter.string(from: expirationDate)
+        withAnimation {
+            isLoading = true
+        }
+        viewModel.handleShareLink(expiresAt: expiresAtString, grantRole: shareType.rawValue) { result in
+            switch result {
+            case .success():
+                onComplete?()
+            case .failure(_):
+                viewModel.showingNetworkErrorAlert = true
+            }
+            withAnimation {
+                isLoading = false
+            }
+        }
+    }
+    
+    private var syncErrorAlert: some View {
+        CustomAlertView(
+            title: Texts.Settings.Sync.Retry.title,
+            message: Texts.Settings.Sync.Retry.content,
+            primaryButtonTitle: Texts.Settings.Sync.Retry.cancel,
+            primaryAction: {
+                viewModel.showingNetworkErrorAlert.toggle()
+            })
     }
 }
 
