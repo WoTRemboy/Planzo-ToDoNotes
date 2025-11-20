@@ -222,6 +222,11 @@ final class FullSyncNetworkService: ObservableObject {
                             expiresAt: request.expiresAt,
                             revoked: request.revoked,
                             scope: request.scope,
+                            grantRole: request.grantRole,
+                            oneTime: request.oneTime,
+                            maxUses: request.maxUses,
+                            useCount: request.useCount,
+                            usedAt: String(),
                             activeNow: true
                         )
                     }

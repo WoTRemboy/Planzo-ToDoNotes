@@ -77,25 +77,27 @@ struct TaskManagementView: View {
     // MARK: - View Body
     
     internal var body: some View {
-        ZStack {
-            // Background color for popup mode if no entity is being edited
-            backgroundLayer
-            
-            VStack(spacing: 0) {
-                // Navigation bar for full-screen or edit modes
-                if shouldShowFullScreenContent {
-                    TaskManagementNavBar(
-                        viewModel: viewModel, entity: entity) {
-                            duplicateTask()
-                        } onDismiss: {
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                entity != nil ? updateTask() : nil
-                                onDismiss()
+        FullSwipeNavigationStack {
+            ZStack {
+                // Background color for popup mode if no entity is being edited
+                backgroundLayer
+                
+                VStack(spacing: 0) {
+                    // Navigation bar for full-screen or edit modes
+                    if shouldShowFullScreenContent {
+                        TaskManagementNavBar(
+                            viewModel: viewModel, entity: entity) {
+                                duplicateTask()
+                            } onDismiss: {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    entity != nil ? updateTask() : nil
+                                    onDismiss()
+                                }
                             }
-                        }
-                        .zIndex(1)  // Ensures the navbar stays above the content
+                            .zIndex(1)  // Ensures the navbar stays above the content
+                    }
+                    content
                 }
-                content
             }
         }
         // Setup on appear (keyboard events, default check status)
@@ -115,6 +117,7 @@ struct TaskManagementView: View {
                     viewModel.reloadNotifications(from: entity.notifications)
                     UNUserNotificationCenter.current().logNotifications(for: entity.notifications)
                 }
+                viewModel.loadMembersForSharingTask()
             }
         }
         // Share Sheet Presentation

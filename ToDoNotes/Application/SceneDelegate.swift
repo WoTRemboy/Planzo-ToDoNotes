@@ -19,8 +19,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard url.scheme == "planzo", url.host == "open-list" else { return }
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         let listId = components?.queryItems?.first(where: { $0.name == "listId" })?.value
-        if let listId = listId {
-            ListNetworkService.shared.openTaskFromDeepLink(listID: listId)
+        let code = components?.queryItems?.first(where: { $0.name == "code" })?.value
+        if let listId = listId, let code = code {
+            ListNetworkService.shared.openTaskFromDeepLink(listID: listId, code: code)
         }
     }
 }

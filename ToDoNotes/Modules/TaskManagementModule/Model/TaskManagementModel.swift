@@ -260,17 +260,3 @@ enum TaskCheck: Int16 {
     case unchecked = 1
     case checked = 2
 }
-
-enum ShareAccess {
-    case viewOnly
-    case edit
-    
-    internal var name: String {
-        switch self {
-        case .viewOnly:
-            return Texts.TaskManagement.ShareView.view
-        case .edit:
-            return Texts.TaskManagement.ShareView.edit
-        }
-    }
-}

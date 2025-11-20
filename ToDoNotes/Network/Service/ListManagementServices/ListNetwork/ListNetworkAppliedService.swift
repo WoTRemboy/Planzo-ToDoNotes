@@ -183,6 +183,21 @@ extension ListNetworkService {
                                     task.folder = foundFolder
                                 }
                             }
+                            for share in remote.shareLinks {
+                                _ = ShareCoreDataService.shared.saveShare(
+                                    serverId: share.id,
+                                    scope: share.scope,
+                                    activeNow: share.activeNow,
+                                    revoked: share.revoked,
+                                    grantRole: share.grantRole,
+                                    oneTime: share.oneTime,
+                                    maxUses: Int32(share.maxUses),
+                                    useCount: Int32(share.useCount),
+                                    createdAt: Date.iso8601DateFormatter.date(from: share.createdAt),
+                                    expiresAt: Date.iso8601DateFormatter.date(from: share.expiresAt),
+                                    task: task
+                                )
+                            }
                             logger.info("Local task updated from server: \(remote.id) \(remote.name)")
                         } else if let parsedDate, localDate > parsedDate {
                             ListNetworkService.shared.updateList(to: task) { updateResult in
@@ -223,6 +238,21 @@ extension ListNetworkService {
                             if let foundFolder = try? context.fetch(folderFetch).first {
                                 newTask.folder = foundFolder
                             }
+                        }
+                        for share in remote.shareLinks {
+                            _ = ShareCoreDataService.shared.saveShare(
+                                serverId: share.id,
+                                scope: share.scope,
+                                activeNow: share.activeNow,
+                                revoked: share.revoked,
+                                grantRole: share.grantRole,
+                                oneTime: share.oneTime,
+                                maxUses: Int32(share.maxUses),
+                                useCount: Int32(share.useCount),
+                                createdAt: Date.iso8601DateFormatter.date(from: share.createdAt),
+                                expiresAt: Date.iso8601DateFormatter.date(from: share.expiresAt),
+                                task: newTask
+                            )
                         }
                     }
                 }
@@ -315,6 +345,21 @@ extension ListNetworkService {
                 task.folder = foundFolder
             }
         }
+        for share in item.shareLinks {
+            _ = ShareCoreDataService.shared.saveShare(
+                serverId: share.id,
+                scope: share.scope,
+                activeNow: share.activeNow,
+                revoked: share.revoked,
+                grantRole: share.grantRole,
+                oneTime: share.oneTime,
+                maxUses: Int32(share.maxUses),
+                useCount: Int32(share.useCount),
+                createdAt: Date.iso8601DateFormatter.date(from: share.createdAt),
+                expiresAt: Date.iso8601DateFormatter.date(from: share.expiresAt),
+                task: task
+            )
+        }
         do {
             try context.save()
             completion(.success(task))
@@ -324,40 +369,76 @@ extension ListNetworkService {
         }
     }
     
-    /// Loads a task by listID from backend, applies it locally, shows LoadingOverlay, and presents TaskManagementView for the result.
-    internal func openTaskFromDeepLink(listID: String) {
+    internal func openTaskFromDeepLink(listID: String, code: String) {
         LoadingOverlay.shared.show()
+        acceptShare(code: code) { [weak self] acceptResult in
+            guard let self = self else { return }
+            switch acceptResult {
+            case .success:
+                self.fetchAndApplyList(listID: listID) { fetchApplyResult in
+                    switch fetchApplyResult {
+                    case .success(let entity):
+                        self.syncChecklistAndPresent(for: entity)
+                    case .failure(let error):
+                        LoadingOverlay.shared.hide()
+                        logger.error("Failed to fetch/apply list for deep link: \(error.localizedDescription)")
+                    }
+                }
+            case .failure(let error):
+                LoadingOverlay.shared.hide()
+                logger.error("Failed to accept share for list ID: \(listID) - \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    private func acceptShare(code: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        ShareNetworkService.shared.acceptShare(code: code) { result in
+            completion(result)
+        }
+    }
+    
+    private func fetchAndApplyList(listID: String, completion: @escaping (Result<TaskEntity, Error>) -> Void) {
         ListNetworkService.shared.fetchList(withId: listID) { result in
             switch result {
             case .success(let listItem):
-                ListNetworkService.shared.applyListItem(listItem) { result in
-                    switch result {
-                    case .success(let entity):
-                        LoadingOverlay.shared.hide()
-                        DispatchQueue.main.async {
-                            if let rootVC = RootViewControllerMethods.getRootViewController() {
-                                let hosting = UIHostingController(
-                                    rootView: TaskManagementPreview(entity: entity, shared: true) {
-                                        rootVC.dismiss(animated: true)
-                                    })
-                                if let sheet = hosting.sheetPresentationController {
-                                    sheet.detents = [.medium(), .large()]
-                                    sheet.prefersGrabberVisible = true
-                                }
-                                rootVC.present(hosting, animated: true)
-                            }
-                        }
-                    case .failure(let failure):
-                        LoadingOverlay.shared.hide()
-                        logger.error("Error applying list item: \(failure)")
-                    }
+                ListNetworkService.shared.applyListItem(listItem) { applyResult in
+                    completion(applyResult)
                 }
-                
             case .failure(let error):
-                LoadingOverlay.shared.hide()
-                logger.error("Failed to fetch list with ID: \(listID) - \(error)")
+                completion(.failure(error))
+                logger.error("Failed to fetch list with ID: \(listID) - \(error.localizedDescription)")
             }
         }
+    }
+    
+    private func syncChecklistAndPresent(for entity: TaskEntity) {
+        guard let serverId = entity.serverId, !serverId.isEmpty else {
+            LoadingOverlay.shared.hide()
+            logger.error("Entity has no serverId after applying list item")
+            return
+        }
+        ListItemNetworkService.shared.syncChecklistForTaskEntity(entity, since: nil) { [weak self] in
+            guard self != nil else { return }
+            LoadingOverlay.shared.hide()
+            DispatchQueue.main.async {
+                self?.presentTaskManagement(for: entity)
+            }
+            logger.info("Checklist items synced after list fetch for listId: \(serverId)")
+        }
+    }
+    
+    private func presentTaskManagement(for entity: TaskEntity) {
+        guard let rootVC = RootViewControllerMethods.getRootViewController() else { return }
+        let hosting = UIHostingController(
+            rootView: TaskManagementPreview(entity: entity, shared: true) {
+                rootVC.dismiss(animated: true)
+            }
+        )
+        if let sheet = hosting.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersGrabberVisible = true
+        }
+        rootVC.present(hosting, animated: true)
     }
 }
 

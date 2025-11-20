@@ -56,6 +56,10 @@ extension ShareNetworkService {
                 localShare.scope = remote.scope
                 localShare.activeNow = remote.activeNow
                 localShare.revoked = remote.revoked
+                localShare.grantRole = remote.grantRole
+                localShare.oneTime = remote.oneTime
+                localShare.maxUses = Int32(remote.maxUses)
+                localShare.useCount = Int32(remote.useCount)
                 localShare.createdAt = Date.iso8601DateFormatter.date(from: remote.createdAt)
                 localShare.expiresAt = Date.iso8601DateFormatter.date(from: remote.expiresAt)
             } else {
@@ -65,6 +69,10 @@ extension ShareNetworkService {
                     scope: remote.scope,
                     activeNow: remote.activeNow,
                     revoked: remote.revoked,
+                    grantRole: remote.grantRole,
+                    oneTime: remote.oneTime,
+                    maxUses: Int32(remote.maxUses),
+                    useCount: Int32(remote.useCount),
                     createdAt: Date.iso8601DateFormatter.date(from: remote.createdAt),
                     expiresAt: Date.iso8601DateFormatter.date(from: remote.expiresAt),
                     task: task
@@ -79,15 +87,28 @@ extension ShareNetworkService {
     }
     
     /// Creates a share link on the server for a given task
-    internal func createShare(for task: TaskEntity, expiresAt: String, completion: ((Result<String, Error>) -> Void)? = nil) {
+    internal func createShare(for task: TaskEntity, expiresAt: String, grantRole: String, completion: ((Result<String, Error>) -> Void)? = nil) {
         guard let listServerId = task.serverId, !listServerId.isEmpty else {
             logger.error("Can't create share: task has no serverId")
             completion?(.failure(NSError(domain: "Share", code: -1, userInfo: [NSLocalizedDescriptionKey: "No serverId for parent task."])));
             return
         }
-        self.createShare(for: listServerId, expiresAt: expiresAt) { result in
+        self.createShare(for: listServerId, expiresAt: expiresAt, grantRole: grantRole) { result in
             switch result {
             case .success(let shareLink):
+                _ = ShareCoreDataService.shared.saveShare(
+                    serverId: shareLink.id,
+                    scope: shareLink.scope,
+                    activeNow: shareLink.activeNow,
+                    revoked: shareLink.revoked,
+                    grantRole: shareLink.grantRole,
+                    oneTime: shareLink.oneTime,
+                    maxUses: Int32(shareLink.maxUses),
+                    useCount: Int32(shareLink.useCount),
+                    createdAt: Date.iso8601DateFormatter.date(from: shareLink.createdAt),
+                    expiresAt: Date.iso8601DateFormatter.date(from: shareLink.expiresAt),
+                    task: task
+                )
                 completion?(.success(shareLink.id))
             case .failure(let error):
                 logger.error("Failed to create share on server: \(error.localizedDescription)")
@@ -116,13 +137,13 @@ extension ShareNetworkService {
     }
     
     /// Creates a share link on the server and presents a share sheet with the generated URL.
-    internal func createShareAndPresentSheet(for task: TaskEntity, expiresAt: String, completion: ((Result<String, Error>) -> Void)? = nil) {
-        self.createShare(for: task, expiresAt: expiresAt) { result in
+    internal func createShareAndPresentSheet(for task: TaskEntity, expiresAt: String, grantRole: String, completion: ((Result<String, Error>) -> Void)? = nil) {
+        self.createShare(for: task, expiresAt: expiresAt, grantRole: grantRole) { result in
             switch result {
             case .success(let serverID):
                 let urlString = "https://banana.avoqode.com/l/\(serverID)"
                 guard let url = URL(string: urlString) else { return }
-                DispatchQueue.main.async {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     guard let rootVC = RootViewControllerMethods.getRootViewController() else { return }
                     let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
                     activityVC.popoverPresentationController?.sourceView = rootVC.view
@@ -135,3 +156,4 @@ extension ShareNetworkService {
         }
     }
 }
+

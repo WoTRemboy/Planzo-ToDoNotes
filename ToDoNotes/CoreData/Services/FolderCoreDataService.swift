@@ -110,10 +110,27 @@ final class FolderCoreDataService {
             fetchRequest.predicate = NSPredicate(format: "system == %@", NSNumber(value: onlySystem))
         }
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "order", ascending: true)]
-        if let entities = try? viewContext.fetch(fetchRequest) {
-            return entities.map { Folder(from: $0) }
+        guard let entities = try? viewContext.fetch(fetchRequest) else {
+            return []
         }
-        return []
+        
+        let folders = entities.map { Folder(from: $0) }
+        let filteredFolders = folders.filter { folder in
+            if !folder.system || !folder.shared {
+                return true
+            } else {
+                let taskFetch: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+                taskFetch.predicate = NSPredicate(format: "share.@count > 0")
+                taskFetch.fetchLimit = 1
+                if let count = try? viewContext.count(for: taskFetch), count > 0 {
+                    return true
+                } else {
+                    return false
+                }
+            }
+        }
+        
+        return filteredFolders
     }
     
     internal func loadFolder(by id: UUID) -> Folder? {
@@ -192,3 +209,4 @@ extension FolderColor {
         self.alpha = entity.alpha
     }
 }
+

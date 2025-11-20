@@ -136,7 +136,6 @@ struct MainView: View {
                 .zIndex(1)
             taskForm
         }
-        .modifier(RefreshModifier(authService: authService))
     }
     
     /// Placeholder text shown when no tasks are available under current filters.
@@ -174,6 +173,8 @@ struct MainView: View {
         
         .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
         .animation(.easeInOut(duration: 0.1), value: viewModel.allTasks.map { $0.folder })
+        
+        .modifier(RefreshModifier(authService: authService))
     }
 }
 
@@ -219,10 +220,12 @@ extension MainView {
         VStack(alignment: .trailing, spacing: 16) {
             Spacer()
             // scrollToTopButton (Placeholder for future scroll-to-top button)
-            if viewModel.selectedFilter != .deleted {
-                plusButton
-            } else if !filteredSegmentedTasks.isEmpty {
-                removeAllTasksButton
+            if let folder = viewModel.selectedFolder, !folder.shared {
+                if viewModel.selectedFilter != .deleted {
+                    plusButton
+                } else if !filteredSegmentedTasks.isEmpty {
+                    removeAllTasksButton
+                }
             }
         }
         .padding(.horizontal)
