@@ -68,18 +68,31 @@ enum ShareAccess: String {
     case owner = "OWNER"
     case viewOnly = "VIEWER"
     case edit = "EDITOR"
-    case closed = "CLOSED"
+    case closed = "NO_ACCESS"
     
     internal var name: String {
         switch self {
         case .owner:
-            return Texts.TaskManagement.ShareView.owner
+            return Texts.TaskManagement.ShareView.Access.owner
         case .viewOnly:
-            return Texts.TaskManagement.ShareView.view
+            return Texts.TaskManagement.ShareView.Access.view
         case .edit:
-            return Texts.TaskManagement.ShareView.edit
+            return Texts.TaskManagement.ShareView.Access.edit
         case .closed:
-            return Texts.TaskManagement.ShareView.closeAccess
+            return Texts.TaskManagement.ShareView.Access.closeAccess
+        }
+    }
+    
+    internal var description: String {
+        switch self {
+        case .owner:
+            return Texts.TaskManagement.ShareView.Access.ownerDisctiption
+        case .viewOnly:
+            return Texts.TaskManagement.ShareView.Access.viewDisctiption
+        case .edit:
+            return Texts.TaskManagement.ShareView.Access.editDescription
+        case .closed:
+            return Texts.TaskManagement.ShareView.Access.closeDescription
         }
     }
 }

@@ -109,6 +109,7 @@ extension ShareNetworkService {
                     expiresAt: Date.iso8601DateFormatter.date(from: shareLink.expiresAt),
                     task: task
                 )
+                task.role = ShareAccess.owner.rawValue
                 completion?(.success(shareLink.id))
             case .failure(let error):
                 logger.error("Failed to create share on server: \(error.localizedDescription)")

@@ -18,6 +18,7 @@ struct CalendarTaskRowWithActions: View {
     
     /// Access to the CalendarViewModel to update task-related states.
     @EnvironmentObject private var viewModel: CalendarViewModel
+    @EnvironmentObject private var authService: AuthNetworkService
     
     /// The task entity displayed in the row.
     @ObservedObject private var entity: TaskEntity
@@ -51,7 +52,9 @@ struct CalendarTaskRowWithActions: View {
             TaskListRow(entity: entity, isLast: isLast)
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
-            leadingSwipeActions
+            if entity.role != ShareAccess.viewOnly.rawValue {
+                leadingSwipeActions
+            }
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             trailingSwipeAction
@@ -121,8 +124,15 @@ struct CalendarTaskRowWithActions: View {
     @ViewBuilder
     private var trailingSwipeAction: some View {
         removeButton
-        folderButton
-        shareButton
+        if entity.role != ShareAccess.viewOnly.rawValue {
+            if entity.role == nil || entity.role == ShareAccess.owner.rawValue {
+                folderButton
+            }
+            
+            if authService.isAuthorized {
+                shareButton
+            }
+        }
     }
     
     private var shareButton: some View {
@@ -166,4 +176,5 @@ struct CalendarTaskRowWithActions: View {
 
 #Preview {
     CalendarTaskRowWithActions(entity: PreviewData.taskItem, isLast: false, onShowFolderSetup: nil)
+        .environmentObject(AuthNetworkService())
 }

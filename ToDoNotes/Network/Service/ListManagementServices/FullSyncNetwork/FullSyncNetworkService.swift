@@ -95,6 +95,7 @@ final class FullSyncNetworkService: ObservableObject {
                         self.syncItems(decoded.items)
                         self.syncShares(decoded.shares)
                         self.syncNotifications(decoded.notifications)
+                        self.refreshSharingInfoForAllSharedTasks()
                         DispatchQueue.main.async {
                             UserCoreDataService.shared.updateLastSyncAt()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -164,6 +165,7 @@ final class FullSyncNetworkService: ObservableObject {
                         self.syncItems(decoded.items.upserts, deletedItems: decoded.items.deletes, since: since)
                         self.syncShares(decoded.shares.upserts)
                         self.syncNotifications(decoded.notifications.upserts, deletes: decoded.notifications.deletes, since: since)
+                        self.refreshSharingInfoForAllSharedTasks()
                         DispatchQueue.main.async {
                             UserCoreDataService.shared.updateLastSyncAt()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -205,9 +207,10 @@ final class FullSyncNetworkService: ObservableObject {
         }
     }
     private func syncShares(_ shares: [ShareLinkRequest]) {
-        guard !shares.isEmpty else { return }
         let context = CoreDataProvider.shared.persistentContainer.viewContext
         let grouped = Dictionary(grouping: shares, by: { $0.listId })
+        var roleFetchTargets: [(listId: String, objectID: NSManagedObjectID)] = []
+        var membersFetchTargets: [(listId: String, objectID: NSManagedObjectID)] = []
         context.performAndWait {
             for (listId, group) in grouped {
                 let fetch: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
@@ -231,15 +234,44 @@ final class FullSyncNetworkService: ObservableObject {
                         )
                     }
                     ShareNetworkService.shared.syncShares(for: task, serverShares: shareLinks)
+                    if !shareLinks.isEmpty {
+                        roleFetchTargets.append((listId: listId, objectID: task.objectID))
+                        membersFetchTargets.append((listId: listId, objectID: task.objectID))
+                    }
                 } else {
                     logger.error("No TaskEntity found for listId: \(listId)")
+                }
+            }
+        }
+        for target in roleFetchTargets {
+            ShareAccessService.shared.getMyRole(for: target.listId) { result in
+                switch result {
+                case .success(let role):
+                    let context = CoreDataProvider.shared.persistentContainer.viewContext
+                    context.perform {
+                        do {
+                            if let task = try? context.existingObject(with: target.objectID) as? TaskEntity {
+                                task.role = role
+                                do { try context.save() } catch {
+                                    logger.error("Failed to save role to TaskEntity after role fetch: \(error.localizedDescription)")
+                                }
+                                logger.info("Updated TaskEntity role after role fetch for listId \(target.listId): \(role)")
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    logger.error("Failed to fetch role for listId \(target.listId): \(error.localizedDescription)")
                 }
             }
         }
     }
 
     private func syncLists(_ upserts: [ListItem], deletes: [ListDelete] = [], since: String? = nil) {
-        ListNetworkService.shared.syncLists(upserts, deletedTasks: deletes, since: since)
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        let localTasks: [TaskEntity] = (try? context.fetch(fetchRequest)) ?? []
+        
+        ListNetworkService.shared.syncLists(upserts, deletedTasks: deletes, localTasks: localTasks, since: since)
     }
     
     private func syncNotifications(_ upserts: [NotificationUpsert], deletes: [NotificationDelete] = [], since: String? = nil) {
@@ -256,6 +288,58 @@ final class FullSyncNetworkService: ObservableObject {
                     NotificationNetworkService.shared.syncNotifications(for: task, remoteItems: notificationsGroup, deletedItems: deletes, since: since)
                 } else {
                     logger.error("No TaskEntity found for listId: \(listId)")
+                }
+            }
+        }
+    }
+    
+    private func refreshSharingInfoForAllSharedTasks() {
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "serverId != nil AND serverId != '' AND share.@count > 0")
+        var targets: [(listId: String, objectID: NSManagedObjectID)] = []
+        context.performAndWait {
+            let tasks: [TaskEntity] = (try? context.fetch(fetchRequest)) ?? []
+            for task in tasks {
+                if let listId = task.serverId, !listId.isEmpty {
+                    targets.append((listId: listId, objectID: task.objectID))
+                }
+            }
+        }
+        guard !targets.isEmpty else { return }
+        for target in targets {
+            // Refresh members count
+            ShareAccessService.shared.getMembers(for: target.listId) { result in
+                switch result {
+                case .success(let members):
+                    let context = CoreDataProvider.shared.persistentContainer.viewContext
+                    context.perform {
+                        if let task = try? context.existingObject(with: target.objectID) as? TaskEntity {
+                            task.members = Int16(members.count)
+                            do { try context.save() } catch {
+                                logger.error("Failed to save refreshed members count for listId \(target.listId): \(error.localizedDescription)")
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    logger.error("Failed to refresh members for listId \(target.listId): \(error.localizedDescription)")
+                }
+            }
+            // Refresh my role
+            ShareAccessService.shared.getMyRole(for: target.listId) { result in
+                switch result {
+                case .success(let role):
+                    let context = CoreDataProvider.shared.persistentContainer.viewContext
+                    context.perform {
+                        if let task = try? context.existingObject(with: target.objectID) as? TaskEntity {
+                            task.role = role
+                            do { try context.save() } catch {
+                                logger.error("Failed to save refreshed role for listId \(target.listId): \(error.localizedDescription)")
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    logger.error("Failed to refresh role for listId \(target.listId): \(error.localizedDescription)")
                 }
             }
         }
