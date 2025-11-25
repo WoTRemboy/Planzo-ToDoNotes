@@ -6310,6 +6310,93 @@
         }
       }
     },
+    "TaskManagementShareViewDeniedMemberMessage" : {
+      "comment" : "The user has been removed from this note’s access list.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The user has been removed from this note’s access list."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El usuario ha sido eliminado de la lista de acceso a esta nota."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’utilisateur a été retiré de la liste d’accès à cette note."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пользователь удалён из списка доступа к этой заметке."
+          }
+        }
+      }
+    },
+    "TaskManagementShareViewDeniedMemberOk" : {
+      "comment" : "OK",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Хорошо"
+          }
+        }
+      }
+    },
+    "TaskManagementShareViewDeniedMemberTitle" : {
+      "comment" : "Access Revoked",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access Revoked"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acceso revocado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accès révoqué"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Доступ отозван"
+          }
+        }
+      }
+    },
     "TaskManagementShareViewEdit" : {
       "comment" : "Can edit",
       "localizations" : {
@@ -6596,6 +6683,122 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Сохранить"
+          }
+        }
+      }
+    },
+    "TaskManagementShareViewStopSharingMessage" : {
+      "comment" : "All people will lose access to this note and won't be able to view or edit it.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All people will lose access to this note and won't be able to view or edit it."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas las personas perderán el acceso a esta nota y ya no podrán verla ni editarla."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toutes les personnes perdront l’accès à cette note et ne pourront plus la consulter ni la modifier."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Все пользователи потеряют доступ к этой заметке и не смогут её просматривать или редактировать."
+          }
+        }
+      }
+    },
+    "TaskManagementShareViewStopSharingStop" : {
+      "comment" : "Stop",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detener"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrêter"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Остановить"
+          }
+        }
+      }
+    },
+    "TaskManagementShareViewStopSharingTitle" : {
+      "comment" : "Stop Sharing?",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop Sharing?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Detener el uso compartido?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrêter le partage ?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Прекратить доступ?"
+          }
+        }
+      }
+    },
+    "TaskManagementShareViewStopSharingToastTitle" : {
+      "comment" : "Sharing ended, returned to folder",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sharing ended, note returned to folder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uso compartido finalizado, la nota volvió a su carpeta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partage terminé, la note a été replacée dans le dossier"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Доступ закрыт, заметка возвращена в папку"
           }
         }
       }

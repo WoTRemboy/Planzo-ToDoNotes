@@ -125,7 +125,9 @@ struct CalendarTaskRowWithActions: View {
     private var trailingSwipeAction: some View {
         removeButton
         if entity.role != ShareAccess.viewOnly.rawValue {
-            folderButton
+            if entity.role == nil || entity.role == ShareAccess.owner.rawValue {
+                folderButton
+            }
             
             if authService.isAuthorized {
                 shareButton

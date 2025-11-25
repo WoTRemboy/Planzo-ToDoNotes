@@ -325,6 +325,7 @@ extension ListNetworkService {
         task.serverId = item.id
         task.name = item.name
         task.details = item.details
+        task.members = 1
         task.completed = item.isTask ? (item.done ? 2 : 1) : 0
         if let dueDate = item.dueAt, let parsedDate = Date.iso8601SecondsDateFormatter.date(from: dueDate) {
             task.target = parsedDate

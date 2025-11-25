@@ -241,7 +241,7 @@ struct TaskManagementNavBar: View {
     
     private var closeSharingButton: some View {
         Button {
-            
+            viewModel.toggleShowingStopSharingAlert()
         } label: {
             Label {
                 Text(Texts.TaskManagement.SharingAccess.endSharing)

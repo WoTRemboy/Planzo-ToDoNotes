@@ -154,7 +154,7 @@ struct TaskListRow: View {
     private var nameSharedView: some View {
         HStack(spacing: 8) {
             nameLabel
-            if let sharing = entity.share, sharing.count > 0 {
+            if entity.members > 0 {
                 sharingIcon
             }
         }

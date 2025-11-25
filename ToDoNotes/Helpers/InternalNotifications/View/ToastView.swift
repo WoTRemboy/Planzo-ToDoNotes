@@ -82,7 +82,6 @@ private struct ToastView: View {
             Text(item.title)
                 .font(.system(size: 14, weight: .medium))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
-                .lineLimit(1)
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 14)
@@ -144,5 +143,6 @@ private struct ToastView: View {
     RootView {
         ContentView()
             .environmentObject(TabRouter())
+            .environmentObject(AuthNetworkService())
     }
 }

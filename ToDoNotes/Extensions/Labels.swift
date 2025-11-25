@@ -301,6 +301,20 @@ final class Texts {
                 static let closeDescription = NSLocalizedString("TaskManagementShareViewCloseDescription", comment: "Access Revoked")
             }
             
+            enum StopSharingAlert {
+                static let title = NSLocalizedString("TaskManagementShareViewStopSharingTitle", comment: "Stop Sharing?")
+                static let message = NSLocalizedString("TaskManagementShareViewStopSharingMessage", comment: "All people will lose access to this note and won't be able to view or edit it.")
+                static let stop = NSLocalizedString("TaskManagementShareViewStopSharingStop", comment: "Stop")
+                
+                static let toastTitle = NSLocalizedString("TaskManagementShareViewStopSharingToastTitle", comment: "Sharing ended, returned to folder")
+            }
+            
+            enum DeniedMemberAlert {
+                static let title = NSLocalizedString("TaskManagementShareViewDeniedMemberTitle", comment: "Access Revoked")
+                static let message = NSLocalizedString("TaskManagementShareViewDeniedMemberMessage", comment: "The user has been removed from this note’s access list.")
+                static let ok = NSLocalizedString("TaskManagementShareViewDeniedMemberOk", comment: "OK")
+            }
+            
             enum RemoveMemberAlert {
                 static let title = NSLocalizedString("TaskManagementShareViewRemoveMemberTitle", comment: "Remove Access for")
                 static let message = NSLocalizedString("TaskManagementShareViewRemoveMemberMessage", comment: "The user will no longer be able to view or edit this note. To grant access again, you’ll need to share the note once more.")

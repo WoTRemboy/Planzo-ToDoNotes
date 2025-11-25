@@ -21,7 +21,9 @@ struct SharingAccessView: View {
             accessStack
         }
         .safeAreaInset(edge: .bottom) {
-            safeAreaContent
+            if viewModel.shareMembers.count > 0 {
+                safeAreaContent
+            }
         }
         .customNavBarItems(
             title: Texts.TaskManagement.SharingAccess.title,
@@ -35,6 +37,9 @@ struct SharingAccessView: View {
             }
                 .presentationDetents([.height(350)])
                 .presentationDragIndicator(.visible)
+        }
+        .popView(isPresented: $viewModel.showingDeniedAlert, onTap: {}, onDismiss: {}) {
+            deniedAlert
         }
     }
     
@@ -50,10 +55,13 @@ struct SharingAccessView: View {
             ownerRow
             allowedUsersStack
             
-            deniedUsersLabel
-            deniedUsersStack
+            if !viewModel.deniedMembers.isEmpty {
+                deniedUsersLabel
+                deniedUsersStack
+            }
         }
         .animation(.spring(duration: 0.2), value: viewModel.shareMembers)
+        .animation(.spring(duration: 0.2), value: viewModel.deniedMembers)
         .padding([.horizontal, .top])
     }
     
@@ -84,9 +92,9 @@ struct SharingAccessView: View {
         LazyVStack {
             ForEach(viewModel.deniedMembers, id: \.userSub) { member in
                 Button {
-                    viewModel.setSelectedMember(to: member)
+                    viewModel.toggleShowingDeniedAlert()
                 } label: {
-                    SharingAccessProfileRow(member: member, viewModel: viewModel)
+                    SharingAccessProfileRow(member: member, denied: true, viewModel: viewModel)
                 }
             }
         }
@@ -104,10 +112,11 @@ struct SharingAccessView: View {
     
     private var removeAccessButton: some View {
         Button {
-            
+            viewModel.toggleShowingStopSharingAlert()
         } label: {
             removeAccessView
         }
+        .disabled(viewModel.isUpdatingMemberRole)
         .padding(.bottom, hasNotch() ? 0 : 16)
     }
     
@@ -124,6 +133,16 @@ struct SharingAccessView: View {
             .frame(height: 50)
             .minimumScaleFactor(0.4)
             .padding([.horizontal, .top], 16)
+    }
+    
+    private var deniedAlert: some View {
+        CustomAlertView(
+            title: Texts.TaskManagement.ShareView.DeniedMemberAlert.title,
+            message: Texts.TaskManagement.ShareView.DeniedMemberAlert.message,
+            primaryButtonTitle: Texts.TaskManagement.ShareView.DeniedMemberAlert.ok,
+            primaryAction:
+                viewModel.toggleShowingDeniedAlert
+        )
     }
 }
 

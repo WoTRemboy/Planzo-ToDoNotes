@@ -136,6 +136,12 @@ struct TaskManagementView: View {
             .presentationDetents([.height(670)])
             .interactiveDismissDisabled()
         }
+        .popView(isPresented: $viewModel.showingNetworkErrorAlert, onTap: {}, onDismiss: {}) {
+            syncErrorAlert
+        }
+        .popView(isPresented: $viewModel.showingStopSharingAlert, onTap: {}, onDismiss: {}) {
+            stopSharingAlert
+        }
         // Matched Geometry Effect for Navigation
         .navigationTransition(
             id: transitionID,
@@ -366,6 +372,30 @@ struct TaskManagementView: View {
             .resizable()
             .frame(width: 30, height: 30)
         }
+    }
+    
+    private var syncErrorAlert: some View {
+        CustomAlertView(
+            title: Texts.Settings.Sync.Retry.title,
+            message: Texts.Settings.Sync.Retry.content,
+            primaryButtonTitle: Texts.Settings.Sync.Retry.cancel,
+            primaryAction:
+                viewModel.toggleShowingNetworkErrorAlert
+            )
+    }
+    
+    private var stopSharingAlert: some View {
+        CustomAlertView(
+            title: Texts.TaskManagement.ShareView.StopSharingAlert.title,
+            message: Texts.TaskManagement.ShareView.StopSharingAlert.message,
+            primaryButtonTitle: Texts.TaskManagement.ShareView.StopSharingAlert.stop,
+            primaryAction:
+                {
+                    viewModel.removeAllMembersAndLinks { _ in }
+                },
+            secondaryButtonTitle: Texts.Settings.Sync.Retry.cancel,
+            secondaryAction: viewModel.toggleShowingStopSharingAlert
+            )
     }
 }
 

@@ -170,7 +170,7 @@ final class MainViewModel: ObservableObject {
         if folder.system, !folder.shared {
             request.predicate = nil
         } else if folder.system, folder.shared {
-            request.predicate = NSPredicate(format: "share.@count > 0")
+            request.predicate = NSPredicate(format: "members > 0")
         } else {
             request.predicate = NSPredicate(format: "folder.id == %@", folder.id as CVarArg)
         }
