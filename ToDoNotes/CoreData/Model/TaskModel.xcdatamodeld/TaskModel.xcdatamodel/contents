@@ -60,6 +60,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="pinned" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="removed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="role" optional="YES" attributeType="String"/>
         <attribute name="serverId" optional="YES" attributeType="String"/>
         <attribute name="target" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="updatedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>

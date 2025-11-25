@@ -6281,6 +6281,35 @@
         }
       }
     },
+    "TaskManagementShareViewCloseDescription" : {
+      "comment" : "Access Revoked",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access Revoked"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acceso revocado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accès révoqué"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Доступ отозван"
+          }
+        }
+      }
+    },
     "TaskManagementShareViewEdit" : {
       "comment" : "Can edit",
       "localizations" : {
@@ -6306,6 +6335,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Может редактировать"
+          }
+        }
+      }
+    },
+    "TaskManagementShareViewEditDescription" : {
+      "comment" : "You can edit this note",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can edit this note"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puede editar la nota"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous pouvez modifier la note"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вы можете редактировать заметку"
           }
         }
       }
@@ -6393,6 +6451,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Владелец"
+          }
+        }
+      }
+    },
+    "TaskManagementShareViewOwnerDisctiption" : {
+      "comment" : "Full access to this note",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full access to this note"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acceso completo a la nota"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accès complet à la note"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Полный доступ к заметке"
           }
         }
       }
@@ -6567,6 +6654,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Может просматривать"
+          }
+        }
+      }
+    },
+    "TaskManagementShareViewViewDisctiption" : {
+      "comment" : "You can view this note",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can view this note"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puede ver la nota"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous pouvez afficher la note"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вы можете просматривать заметку"
           }
         }
       }

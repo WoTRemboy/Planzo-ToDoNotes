@@ -117,7 +117,7 @@ struct TaskManagementView: View {
                     viewModel.reloadNotifications(from: entity.notifications)
                     UNUserNotificationCenter.current().logNotifications(for: entity.notifications)
                 }
-                viewModel.loadMembersForSharingTask()
+                viewModel.loadMembersForSharingTaskWithToasts()
             }
         }
         // Share Sheet Presentation
@@ -169,7 +169,9 @@ struct TaskManagementView: View {
                     TaskChecklistView(viewModel: viewModel) // Checklist (points) editor
                         .padding(.horizontal, -8)
                     
-                    addPointButton  // "Add point" button
+                    if viewModel.accessToEdit {
+                        addPointButton  // "Add point" button
+                    }
                 } else {
                     // Simplified description field for sheet mode
                     descriptionSheetInput
@@ -207,6 +209,7 @@ struct TaskManagementView: View {
                         .resizable()
                         .frame(width: 20, height: 20)
                 }
+                .disabled(!viewModel.accessToEdit)
             }
             
             // TextField for task title
@@ -222,10 +225,11 @@ struct TaskManagementView: View {
             .strikethrough(viewModel.check == .checked)
             
             .focused($titleFocused)
-            .immediateKeyboard(delay: shouldShowFullScreenContent ? 0.4 : 0)
+            .immediateKeyboardIf(entity == nil, delay: shouldShowFullScreenContent ? 0.4 : 0)
             .onAppear {
                 titleFocused = true
             }
+            .disabled(!viewModel.accessToEdit)
         }
         .padding(.top, 16)
     }
@@ -265,6 +269,7 @@ struct TaskManagementView: View {
             viewModel.check == .checked
             ? Color.LabelColors.labelDetails
             : Color.LabelColors.labelPrimary)
+        .disabled(!viewModel.accessToEdit)
     }
     
     /// Button to add a new checklist point.
@@ -289,8 +294,10 @@ struct TaskManagementView: View {
             checkButton     // Button to toggle task check status
             
             Spacer()
-            acceptButton    // Save (accept or update) button
-                .transition(.scale)
+            if viewModel.accessToEdit {
+                acceptButton    // Save (accept or update) button
+                    .transition(.scale)
+            }
         }
         .animation(.easeInOut(duration: 0.2), value: isKeyboardActive)
     }
@@ -312,6 +319,7 @@ struct TaskManagementView: View {
                 .foregroundStyle(Color.LabelColors.labelPrimary)
             }
         }
+        .disabled(!viewModel.accessToEdit)
     }
     
     /// Returns the appropriate calendar icon depending on whether a date is set.
@@ -336,6 +344,7 @@ struct TaskManagementView: View {
             .resizable()
             .frame(width: 24, height: 24)
         }
+        .disabled(!viewModel.accessToEdit)
     }
     
     /// Button to save the new or updated task.
@@ -416,7 +425,7 @@ extension TaskManagementView {
     
     /// Updates the existing task entity with the latest input values.
     private func updateTask() {
-        if let entity {
+        if let entity, viewModel.accessToEdit {
             viewModel.setupUserNotifications(remove: entity.notifications)
             viewModel.disableButtonGlow()
             
@@ -435,7 +444,7 @@ extension TaskManagementView {
                     checklist: viewModel.checklistLocal)
                 logger.debug("Task updated successfully: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown").")
             } catch {
-                logger.error("Task update failed: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown"). Error: \(error.localizedDescription)")
+                logger.error("Task update failed: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown") Error: \(error.localizedDescription)")
             }
         }
     }
@@ -477,6 +486,17 @@ extension TaskManagementView {
             Toast.shared.present(
                 title: Texts.Toasts.duplicatedError)
             logger.error("Task \(entity?.name ?? "unnamed") \(entity?.id?.uuidString ?? "unknown") duplicate Error: \(error.localizedDescription)")
+        }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func immediateKeyboardIf(_ condition: Bool, delay: Double) -> some View {
+        if condition {
+            self.immediateKeyboard(delay: delay)
+        } else {
+            self
         }
     }
 }

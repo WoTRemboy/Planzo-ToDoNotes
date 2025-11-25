@@ -85,6 +85,7 @@ final class TaskManagementViewModel: ObservableObject {
     /// The selected share access type for the task.
     @Published internal var shareAccess: ShareAccess = .viewOnly
     @Published internal var shareMembers: [SharingMember] = []
+    @Published internal var deniedMembers: [SharingMember] = []
     @Published internal var selectedMember: SharingMember? = nil
     @Published internal var currentRole: ShareAccess = .viewOnly
     @Published internal var sharingTask: TaskEntity? = nil
@@ -181,6 +182,10 @@ final class TaskManagementViewModel: ObservableObject {
             minute: timeComponents.minute,
             second: timeComponents.second
         )) ?? selectedDay
+    }
+    
+    internal var accessToEdit: Bool {
+        entity == nil || currentRole == .owner || currentRole == .edit
     }
     
     // MARK: - Initialization
@@ -673,34 +678,102 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     @MainActor
-    internal func loadMembersForSharingTask(completion: (() -> Void)? = nil) {
-        guard let task = entity, let serverId = task.serverId, !serverId.isEmpty else {
-            self.currentRole = .viewOnly
-            completion?()
+    internal func loadMembersForSharingTask(completion: @escaping ((Result<Void, Error>) -> Void)) {
+        guard let task = entity,
+              let serverId = task.serverId, !serverId.isEmpty
+        else {
+            completion(.success(()))
             return
         }
-        ShareAccessService.shared.getMyRole(for: serverId) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let role):
-                self.currentRole = ShareAccess(rawValue: role) ?? .viewOnly
-                logger.info("Current user's share access role: \(role)")
-            case .failure(let error):
-                self.currentRole = .viewOnly
-                logger.error("Error fetching share members: \(error.localizedDescription)")
-            }
-            completion?()
-        }
         
+        let group = DispatchGroup()
+        var capturedError: Error? = nil
+
+        if task.role != ShareAccess.owner.rawValue {
+            group.enter()
+            ShareAccessService.shared.getMyRole(for: serverId) { [weak self] result in
+                guard let self = self else { group.leave(); return }
+                switch result {
+                case .success(let role):
+                    self.currentRole = ShareAccess(rawValue: role) ?? .viewOnly
+                    task.role = role
+                    if let context = task.managedObjectContext {
+                        do {
+                            try context.save()
+                        } catch {
+                            logger.error("Failed to save role to TaskEntity: \(error.localizedDescription)")
+                        }
+                    }
+                    logger.info("Current user's share access role: \(role)")
+                case .failure(let error):
+                    self.currentRole = .viewOnly
+                    logger.error("Error fetching my role: \(error.localizedDescription)")
+                    if capturedError == nil { capturedError = error }
+                }
+                group.leave()
+            }
+        } else {
+            self.currentRole = .owner
+        }
+
+        group.enter()
         ShareAccessService.shared.getMembers(for: serverId) { [weak self] result in
             switch result {
             case .success(let members):
                 self?.shareMembers = members
+                self?.syncDeniedMembers()
             case .failure(let error):
                 logger.error("Error fetching share members: \(error.localizedDescription)")
                 self?.shareMembers = []
+                self?.deniedMembers = []
+                if capturedError == nil { capturedError = error }
             }
-            completion?()
+            group.leave()
+        }
+
+        group.notify(queue: .main) {
+            if let error = capturedError {
+                self.showingNetworkErrorAlert = true
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }
+    }
+    
+    /// Loads members for the current sharing task and presents appropriate toasts based on the result.
+    /// - Note: Wraps `loadMembersForSharingTask(completion:)` to provide user feedback.
+    @MainActor
+    internal func loadMembersForSharingTaskWithToasts() {
+        guard let task = entity,
+              let serverId = task.serverId, !serverId.isEmpty,
+              let share = task.share, share.count > 0
+        else {
+            if entity?.role == nil || entity?.role == ShareAccess.owner.rawValue {
+                self.currentRole = .owner
+            } else {
+                self.currentRole = .viewOnly
+            }
+            return
+        }
+        
+        loadMembersForSharingTask { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success:
+                switch self.currentRole {
+                case .viewOnly:
+                    Toast.shared.present(title: self.currentRole.description)
+                case .edit:
+                    Toast.shared.present(title: self.currentRole.description)
+                default:
+                    break
+                }
+                
+            case .failure(_):
+                break
+            }
         }
     }
     
@@ -723,6 +796,7 @@ final class TaskManagementViewModel: ObservableObject {
                     if let index = self?.shareMembers.firstIndex(where: { $0.id == updatedMember.id }) {
                         self?.shareMembers[index] = updatedMember
                     }
+                    self?.syncDeniedMembers()
                     onComplete?()
                 case .failure(_):
                     self?.showingNetworkErrorAlert = true
@@ -741,13 +815,28 @@ final class TaskManagementViewModel: ObservableObject {
                 self?.isUpdatingMemberRole = false
                 switch result {
                 case .success:
-                    self?.shareMembers.removeAll { $0.id == member.id }
+                    guard let self = self else { return }
+                    self.shareMembers.removeAll { $0.id == member.id }
+                    if !self.deniedMembers.contains(where: { $0.id == member.id }) {
+                        self.deniedMembers.append(member)
+                    }
                     onComplete?()
                 case .failure(_):
                     self?.showingNetworkErrorAlert = true
                 }
             }
         }
+    }
+    
+    /// Moves any shareMembers with role == .closed to deniedMembers without duplication.
+    internal func syncDeniedMembers() {
+        let closedRoleRaw = ShareAccess.closed.rawValue
+        let closedMembers = shareMembers.filter { $0.role == closedRoleRaw }
+        let closedIds = Set(closedMembers.map { $0.id })
+        let deniedIds = Set(deniedMembers.map { $0.id })
+        let newDenied = closedMembers.filter { !deniedIds.contains($0.id) }
+        deniedMembers.append(contentsOf: newDenied)
+        shareMembers.removeAll { closedIds.contains($0.id) }
     }
 }
 

@@ -38,7 +38,9 @@ struct MainTaskRowWithActions: View {
             TaskListRow(entity: entity, isLast: isLast)
         }
         .swipeActions(edge: .leading, allowsFullSwipe: viewModel.selectedFilter == .deleted) {
-            leadingSwipeActions
+            if entity.role != ShareAccess.viewOnly.rawValue {
+                leadingSwipeActions
+            }
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             trailingSwipeAction
@@ -76,9 +78,12 @@ struct MainTaskRowWithActions: View {
     private var trailingSwipeAction: some View {
         removeButton
         if viewModel.selectedFilter != .deleted {
-            folderButton
-            if authService.isAuthorized {
-                shareButton
+            if entity.role != ShareAccess.viewOnly.rawValue {
+                folderButton
+                
+                if authService.isAuthorized {
+                    shareButton
+                }
             }
         }
     }

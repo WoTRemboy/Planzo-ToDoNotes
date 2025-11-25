@@ -114,13 +114,14 @@ extension ListNetworkService {
         }
     }
     
-    internal func syncLists(_ upsertTasks: [ListItem], deletedTasks: [ListDelete] = [], localTasks: [TaskEntity] = [], since: String? = nil) {
+    internal func syncLists(_ upsertTasks: [ListItem], deletedTasks: [ListDelete] = [], localTasks: [TaskEntity], since: String? = nil) {
         var localTasks = localTasks
         
         let context = CoreDataProvider.shared.persistentContainer.viewContext
         for deleted in deletedTasks {
             if let taskToDelete = localTasks.first(where: { $0.serverId == deleted.id }) {
                 context.delete(taskToDelete)
+                UNUserNotificationCenter.current().removeNotifications(for: taskToDelete.notifications)
                 if let index = localTasks.firstIndex(where: { $0 === taskToDelete }) {
                     localTasks.remove(at: index)
                 }

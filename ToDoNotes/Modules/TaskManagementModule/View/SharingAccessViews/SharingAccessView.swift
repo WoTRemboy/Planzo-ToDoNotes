@@ -27,7 +27,7 @@ struct SharingAccessView: View {
             title: Texts.TaskManagement.SharingAccess.title,
             showBackButton: true)
         .task {
-            viewModel.loadMembersForSharingTask()
+            viewModel.loadMembersForSharingTask { _ in }
         }
         .sheet(item: $viewModel.selectedMember) { item in
             SharingAccessManageView(viewModel: viewModel) {
@@ -48,13 +48,10 @@ struct SharingAccessView: View {
         VStack(alignment: .leading, spacing: 12) {
             accessUsersLabel
             ownerRow
-            ForEach(viewModel.shareMembers, id: \.userSub) { member in
-                Button {
-                    viewModel.setSelectedMember(to: member)
-                } label: {
-                    SharingAccessProfileRow(member: member, viewModel: viewModel)
-                }
-            }
+            allowedUsersStack
+            
+            deniedUsersLabel
+            deniedUsersStack
         }
         .animation(.spring(duration: 0.2), value: viewModel.shareMembers)
         .padding([.horizontal, .top])
@@ -63,6 +60,36 @@ struct SharingAccessView: View {
     private var ownerRow: some View {
         let member = SharingMember(id: authService.currentUser?.email ?? "", listId: "", userSub: "", role: ShareAccess.owner.rawValue, revoked: false, addedAt: "", addedBy: "", updatedAt: "")
         return SharingAccessProfileRow(member: member, imageURL: authService.currentUser?.avatarUrl, viewModel: viewModel)
+    }
+    
+    private var allowedUsersStack: some View {
+        LazyVStack {
+            ForEach(viewModel.shareMembers, id: \.userSub) { member in
+                Button {
+                    viewModel.setSelectedMember(to: member)
+                } label: {
+                    SharingAccessProfileRow(member: member, viewModel: viewModel)
+                }
+            }
+        }
+    }
+    
+    private var deniedUsersLabel: some View {
+        Text(Texts.TaskManagement.SharingAccess.deniedUsers)
+            .font(.system(size: 14, weight: .regular))
+            .foregroundStyle(Color.LabelColors.labelSecondary)
+    }
+    
+    private var deniedUsersStack: some View {
+        LazyVStack {
+            ForEach(viewModel.deniedMembers, id: \.userSub) { member in
+                Button {
+                    viewModel.setSelectedMember(to: member)
+                } label: {
+                    SharingAccessProfileRow(member: member, viewModel: viewModel)
+                }
+            }
+        }
     }
     
     private var safeAreaContent: some View {
