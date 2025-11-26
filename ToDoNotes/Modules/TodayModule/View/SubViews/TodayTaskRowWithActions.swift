@@ -19,6 +19,7 @@ struct TodayTaskRowWithSwipeActions: View {
     
     /// View model managing Today page state.
     @EnvironmentObject private var viewModel: TodayViewModel
+    @EnvironmentObject private var authService: AuthNetworkService
     
     /// The task entity being displayed.
     @ObservedObject private var entity: TaskEntity
@@ -51,7 +52,11 @@ struct TodayTaskRowWithSwipeActions: View {
         } label: {
             TaskListRow(entity: entity, isLast: isLast)            
         }
-        .swipeActions(edge: .leading, allowsFullSwipe: false) { leadingSwipeActions }
+        .swipeActions(edge: .leading, allowsFullSwipe: false) {
+            if entity.role != ShareAccess.viewOnly.rawValue {
+                leadingSwipeActions
+            }
+        }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) { trailingSwipeActions }
     }
     
@@ -75,8 +80,15 @@ struct TodayTaskRowWithSwipeActions: View {
     @ViewBuilder
     private var trailingSwipeActions: some View {
         removeButton
-        folderButton
-        shareButton
+        if entity.role != ShareAccess.viewOnly.rawValue {
+            if entity.role == nil || entity.role == ShareAccess.owner.rawValue {
+                folderButton
+            }
+            
+            if authService.isAuthorized {
+                shareButton
+            }
+        }
     }
     
     // MARK: - Individual Swipe Buttons
@@ -173,4 +185,5 @@ struct TodayTaskRowWithSwipeActions: View {
                                  namespace: Namespace().wrappedValue,
                                  onShowFolderSetup: nil)
     .environmentObject(TodayViewModel())
+    .environmentObject(AuthNetworkService())
 }

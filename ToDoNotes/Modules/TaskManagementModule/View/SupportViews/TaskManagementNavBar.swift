@@ -55,7 +55,7 @@ struct TaskManagementNavBar: View {
                     HStack(spacing: 0) {
                         backButton  // Back button to dismiss the view
                         titleLabel  // Title showing today's date
-                        if entity != nil {
+                        if entity != nil, viewModel.currentRole != .viewOnly {
                             shareButton
                         }
                         moreButton  // More options button (menu with actions)
@@ -109,27 +109,35 @@ struct TaskManagementNavBar: View {
                 .frame(width: 24, height: 24)
         }
         .padding(.trailing)
+        .disabled(!viewModel.accessToEdit)
     }
     
     /// The menu button for additional task actions (important, pinned, delete, duplicate).
     private var moreButton: some View {
         Menu {
-            ControlGroup {
-                importanceButton
-                pinnedButton
+            if entity?.role != ShareAccess.viewOnly.rawValue {
+                ControlGroup {
+                    importanceButton
+                    pinnedButton
+                    if entity != nil {
+                        deleteButton
+                    }
+                }
+                .controlGroupStyle(.compactMenu)
+            } else {
                 if entity != nil {
                     deleteButton
                 }
             }
-            .controlGroupStyle(.compactMenu)
             
-            if !viewModel.shareMembers.isEmpty {
+            if !viewModel.shareMembers.isEmpty, viewModel.currentRole == .owner {
                 shareSettingsButton
             }
             if entity != nil {
                 duplicateButton
             }
-            if !viewModel.shareMembers.isEmpty {
+            if !viewModel.shareMembers.isEmpty,
+                viewModel.currentRole == .owner {
                 closeSharingButton
             }
         } label: {
@@ -233,7 +241,7 @@ struct TaskManagementNavBar: View {
     
     private var closeSharingButton: some View {
         Button {
-            
+            viewModel.toggleShowingStopSharingAlert()
         } label: {
             Label {
                 Text(Texts.TaskManagement.SharingAccess.endSharing)

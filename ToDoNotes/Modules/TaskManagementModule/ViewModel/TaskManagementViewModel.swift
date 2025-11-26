@@ -80,11 +80,14 @@ final class TaskManagementViewModel: ObservableObject {
     /// Whether the notification alert is showing.
     @Published internal var showingNotificationAlert: Bool = false
     @Published internal var showingNetworkErrorAlert: Bool = false
+    @Published internal var showingDeniedAlert: Bool = false
+    @Published internal var showingStopSharingAlert: Bool = false
     @Published internal var showingRemoveMemberAlert: Bool = false
     
     /// The selected share access type for the task.
     @Published internal var shareAccess: ShareAccess = .viewOnly
     @Published internal var shareMembers: [SharingMember] = []
+    @Published internal var deniedMembers: [SharingMember] = []
     @Published internal var selectedMember: SharingMember? = nil
     @Published internal var currentRole: ShareAccess = .viewOnly
     @Published internal var sharingTask: TaskEntity? = nil
@@ -183,6 +186,10 @@ final class TaskManagementViewModel: ObservableObject {
         )) ?? selectedDay
     }
     
+    internal var accessToEdit: Bool {
+        entity == nil || currentRole == .owner || currentRole == .edit
+    }
+    
     // MARK: - Initialization
     
     /// Initializes a new TaskManagementViewModel for a new or existing task.
@@ -275,6 +282,18 @@ final class TaskManagementViewModel: ObservableObject {
             self.check = .checked
             setChecklistCompletion(to: true)
         }
+    }
+    
+    internal func toggleShowingNetworkErrorAlert() {
+        showingNetworkErrorAlert.toggle()
+    }
+    
+    internal func toggleShowingDeniedAlert() {
+        showingDeniedAlert.toggle()
+    }
+    
+    internal func toggleShowingStopSharingAlert() {
+        showingStopSharingAlert.toggle()
     }
     
     /// Toggles the importance flag for the task.
@@ -569,6 +588,18 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     // MARK: - Private Methods
+
+    /// Persists the current shareMembers count to the TaskEntity.members and saves the context.
+    private func persistMembersCount() {
+        guard let task = self.entity, let context = task.managedObjectContext else { return }
+        task.members = Int16(self.shareMembers.count)
+        do {
+            try context.save()
+            logger.info("Persisted members count to TaskEntity: \(self.shareMembers.count)")
+        } catch {
+            logger.error("Failed to persist members count: \(error.localizedDescription)")
+        }
+    }
     
     /// Updates the days array for the current calendarDate.
     private func updateDays() {
@@ -673,34 +704,101 @@ final class TaskManagementViewModel: ObservableObject {
     }
     
     @MainActor
-    internal func loadMembersForSharingTask(completion: (() -> Void)? = nil) {
-        guard let task = entity, let serverId = task.serverId, !serverId.isEmpty else {
-            self.currentRole = .viewOnly
-            completion?()
+    internal func loadMembersForSharingTask(completion: @escaping ((Result<Void, Error>) -> Void)) {
+        guard let task = entity,
+              let serverId = task.serverId, !serverId.isEmpty
+        else {
+            completion(.success(()))
             return
         }
-        ShareAccessService.shared.getMyRole(for: serverId) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let role):
-                self.currentRole = ShareAccess(rawValue: role) ?? .viewOnly
-                logger.info("Current user's share access role: \(role)")
-            case .failure(let error):
-                self.currentRole = .viewOnly
-                logger.error("Error fetching share members: \(error.localizedDescription)")
-            }
-            completion?()
-        }
         
+        let group = DispatchGroup()
+        var capturedError: Error? = nil
+
+        if task.role != ShareAccess.owner.rawValue {
+            group.enter()
+            ShareAccessService.shared.getMyRole(for: serverId) { [weak self] result in
+                guard let self = self else { group.leave(); return }
+                switch result {
+                case .success(let role):
+                    self.currentRole = ShareAccess(rawValue: role) ?? .viewOnly
+                    task.role = role
+                    if let context = task.managedObjectContext {
+                        do {
+                            try context.save()
+                        } catch {
+                            logger.error("Failed to save role to TaskEntity: \(error.localizedDescription)")
+                        }
+                    }
+                    logger.info("Current user's share access role: \(role)")
+                case .failure(let error):
+                    self.currentRole = .viewOnly
+                    logger.error("Error fetching my role: \(error.localizedDescription)")
+                    if capturedError == nil { capturedError = error }
+                }
+                group.leave()
+            }
+        } else {
+            self.currentRole = .owner
+        }
+
+        group.enter()
         ShareAccessService.shared.getMembers(for: serverId) { [weak self] result in
             switch result {
             case .success(let members):
                 self?.shareMembers = members
+                self?.persistMembersCount()
+                self?.syncDeniedMembers()
             case .failure(let error):
                 logger.error("Error fetching share members: \(error.localizedDescription)")
                 self?.shareMembers = []
+                self?.deniedMembers = []
+                if capturedError == nil { capturedError = error }
             }
-            completion?()
+            group.leave()
+        }
+
+        group.notify(queue: .main) {
+            if let error = capturedError {
+                self.showingNetworkErrorAlert = true
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }
+    }
+    
+    /// Loads members for the current sharing task and presents appropriate toasts based on the result.
+    /// - Note: Wraps `loadMembersForSharingTask(completion:)` to provide user feedback.
+    @MainActor
+    internal func loadMembersForSharingTaskWithToasts() {
+        guard let task = entity,
+              let serverId = task.serverId, !serverId.isEmpty,
+              let share = task.share, share.count > 0
+        else {
+            if entity?.role == nil || entity?.role == ShareAccess.owner.rawValue {
+                self.currentRole = .owner
+            } else {
+                self.currentRole = .viewOnly
+            }
+            return
+        }
+        
+        loadMembersForSharingTask { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success:
+                switch self.currentRole {
+                case .viewOnly, .edit:
+                    Toast.shared.present(title: self.currentRole.description)
+                default:
+                    break
+                }
+                
+            case .failure(_):
+                break
+            }
         }
     }
     
@@ -723,6 +821,8 @@ final class TaskManagementViewModel: ObservableObject {
                     if let index = self?.shareMembers.firstIndex(where: { $0.id == updatedMember.id }) {
                         self?.shareMembers[index] = updatedMember
                     }
+                    self?.syncDeniedMembers()
+                    self?.persistMembersCount()
                     onComplete?()
                 case .failure(_):
                     self?.showingNetworkErrorAlert = true
@@ -741,11 +841,122 @@ final class TaskManagementViewModel: ObservableObject {
                 self?.isUpdatingMemberRole = false
                 switch result {
                 case .success:
-                    self?.shareMembers.removeAll { $0.id == member.id }
+                    guard let self = self else { return }
+                    self.shareMembers.removeAll { $0.id == member.id }
+                    if !self.deniedMembers.contains(where: { $0.id == member.id }) {
+                        self.deniedMembers.append(member)
+                    }
+                    self.persistMembersCount()
                     onComplete?()
                 case .failure(_):
                     self?.showingNetworkErrorAlert = true
                 }
+            }
+        }
+    }
+    
+    /// Moves any shareMembers with role == .closed to deniedMembers without duplication.
+    internal func syncDeniedMembers() {
+        let closedRoleRaw = ShareAccess.closed.rawValue
+        let closedMembers = shareMembers.filter { $0.role == closedRoleRaw }
+        let closedIds = Set(closedMembers.map { $0.id })
+        let deniedIds = Set(deniedMembers.map { $0.id })
+        let newDenied = closedMembers.filter { !deniedIds.contains($0.id) }
+        deniedMembers.append(contentsOf: newDenied)
+        shareMembers.removeAll { closedIds.contains($0.id) }
+    }
+
+    /// Adds all current shareMembers to deniedMembers without duplication.
+    internal func addAllShareMembersToDenied() {
+        let deniedIds = Set(deniedMembers.map { $0.id })
+        let toAppend = shareMembers.filter { !deniedIds.contains($0.id) }
+        if !toAppend.isEmpty {
+            deniedMembers.append(contentsOf: toAppend)
+            logger.info("Moved \(toAppend.count) members from shareMembers to deniedMembers")
+        }
+    }
+
+    @MainActor
+    func removeAllMembersAndLinks(onComplete: ((Result<Void, Error>) -> Void)? = nil) {
+        guard let listId = entity?.serverId, !listId.isEmpty else {
+            onComplete?(.success(()))
+            return
+        }
+        isUpdatingMemberRole = true
+        let group = DispatchGroup()
+        var capturedError: Error? = nil
+
+        // 1) Remove all current members
+        group.enter()
+        ShareAccessService.shared.getMembers(for: listId) { result in
+            switch result {
+            case .success(let members):
+                for member in members {
+                    group.enter()
+                    ShareAccessService.shared.deleteMember(listId: listId, memberId: member.id) { deleteResult in
+                        if case .failure(let error) = deleteResult {
+                            if capturedError == nil { capturedError = error }
+                            logger.error("Failed to delete member: \(member.id), error: \(error.localizedDescription)")
+                        } else {
+                            logger.info("Deleted member: \(member.id)")
+                        }
+                        group.leave()
+                    }
+                }
+                group.leave()
+            case .failure(let error):
+                if capturedError == nil { capturedError = error }
+                logger.error("Failed to load members for deletion: \(error.localizedDescription)")
+                group.leave()
+            }
+        }
+
+        // 2) Remove all share links
+        group.enter()
+        ShareNetworkService.shared.getShareInfo(for: listId) { result in
+            switch result {
+            case .success(let links):
+                for link in links {
+                    group.enter()
+                    ShareNetworkService.shared.deleteShare(listId: listId, shareId: link.id) { deleteResult in
+                        if case .failure(let error) = deleteResult {
+                            if capturedError == nil { capturedError = error }
+                            logger.error("Failed to delete share link: \(link.id), error: \(error.localizedDescription)")
+                        } else {
+                            logger.info("Deleted share link: \(link.id)")
+                        }
+                        group.leave()
+                    }
+                }
+                group.leave()
+            case .failure(let error):
+                if capturedError == nil { capturedError = error }
+                logger.error("Failed to load share links for deletion: \(error.localizedDescription)")
+                group.leave()
+            }
+        }
+
+        group.notify(queue: .main) {
+            self.showingStopSharingAlert = false
+            self.isUpdatingMemberRole = false
+            if let error = capturedError {
+                self.showingNetworkErrorAlert = true
+                onComplete?(.failure(error))
+            } else {
+                self.addAllShareMembersToDenied()
+                self.shareMembers.removeAll()
+                self.persistMembersCount()
+                if let task = self.entity, let context = task.managedObjectContext {
+                    task.share = nil
+                    do {
+                        try context.save()
+                        logger.info("Cleared local share links for task and saved context")
+                    } catch {
+                        logger.error("Failed to save context after clearing local share links: \(error.localizedDescription)")
+                    }
+                }
+                Toast.shared.present(title: "\(Texts.TaskManagement.ShareView.StopSharingAlert.toastTitle) \(self.entity?.folder?.name ?? Texts.Folders.all)")
+                onComplete?(.success(()))
             }
         }
     }
@@ -771,4 +982,5 @@ extension TaskManagementViewModel {
         }
     }
 }
+
 

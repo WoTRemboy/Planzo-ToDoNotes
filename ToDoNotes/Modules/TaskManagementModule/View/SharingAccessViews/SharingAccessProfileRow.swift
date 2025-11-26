@@ -13,10 +13,12 @@ struct SharingAccessProfileRow: View {
     @ObservedObject private var viewModel: TaskManagementViewModel
     
     private let member: SharingMember
+    private let denied: Bool
     private let imageURL: String?
     
-    init(member: SharingMember, imageURL: String? = nil, viewModel: TaskManagementViewModel) {
+    init(member: SharingMember, denied: Bool = false, imageURL: String? = nil, viewModel: TaskManagementViewModel) {
         self.member = member
+        self.denied = denied
         self.imageURL = imageURL
         self.viewModel = viewModel
     }
@@ -77,22 +79,26 @@ struct SharingAccessProfileRow: View {
                 .foregroundStyle(Color.LabelColors.labelPrimary)
                 .lineLimit(1)
             
-            // Optional details text
-            if let role = ShareAccess(rawValue: member.role)?.name {
-                Text(role)
-                    .font(.system(size: 13,
-                                  weight: .regular))
-                    .foregroundStyle(Color.LabelColors.labelSecondary)
-                    .lineLimit(1)
-                    .contentTransition(.numericText())
-                    .animation(.easeInOut, value: member.role)
-            }
+            Text(detailsSubtitle)
+                .font(.system(size: 13, weight: .regular))
+                .foregroundStyle(Color.LabelColors.labelSecondary)
+                .lineLimit(1)
+                .contentTransition(.numericText())
+                .animation(.easeInOut, value: member.role)
+        }
+    }
+    
+    private var detailsSubtitle: String {
+        if let role = ShareAccess(rawValue: member.role)?.name, !denied {
+            return role
+        } else {
+            return "\(Texts.TaskManagement.ShareView.Access.closeAccess)"
         }
     }
 }
 
 #Preview {
     let mock = SharingMember.mock
-    SharingAccessProfileRow(member: mock, viewModel: TaskManagementViewModel())
+    SharingAccessProfileRow(member: mock, denied: false, viewModel: TaskManagementViewModel())
         .environmentObject(AuthNetworkService())
 }

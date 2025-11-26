@@ -183,13 +183,13 @@ final class TaskService {
         
         let newTask = TaskEntity(context: viewContext)
         newTask.id = UUID()
-        newTask.created = task.created
+        newTask.created = task.created?.addingTimeInterval(1)
         newTask.updatedAt = .now
         
         newTask.name = task.name
         newTask.details = task.details
         newTask.completed = task.completed
-        newTask.target = task.target
+        newTask.target = task.target?.addingTimeInterval(1)
         newTask.hasTargetTime = task.hasTargetTime
         newTask.important = task.important
         newTask.pinned = task.pinned
@@ -231,9 +231,9 @@ final class TaskService {
         ListNetworkService.shared.updateTaskOnServer(for: newTask) { result in
             switch result {
             case .success(_):
-                if let checklistEntities = (task.checklist as? Set<ChecklistEntity>)?.sorted(by: { $0.order < $1.order }) {
+                if let checklistEntities = (newTask.checklist as? Set<ChecklistEntity>)?.sorted(by: { $0.order < $1.order }) {
                     for checklistEntity in checklistEntities {
-                        ListItemNetworkService.shared.createChecklistItem(for: task, item: checklistEntity) { result in
+                        ListItemNetworkService.shared.createChecklistItem(for: newTask, item: checklistEntity) { result in
                             switch result {
                             case .success(let serverId):
                                 updateChecklistEntityServerIdAndSave(checklistEntity, serverId: serverId)
@@ -244,11 +244,9 @@ final class TaskService {
                     }
                 }
                 
-                for notificationEntity in notificationEntities {
-                    if let serverId = notificationEntity.serverId, !serverId.isEmpty {
-                        NotificationNetworkService.shared.updateNotification(notificationEntity)
-                    } else {
-                        NotificationNetworkService.shared.createNotification(for: task, type: notificationEntity.type ?? "", target: notificationEntity.target ?? Date()) { result in
+                if let notificationsSet = newTask.notifications as? Set<NotificationEntity> {
+                    for notificationEntity in notificationsSet {
+                        NotificationNetworkService.shared.createNotification(for: newTask, type: notificationEntity.type ?? "", target: notificationEntity.target ?? Date()) { result in
                             switch result {
                             case .success(let serverId):
                                 updateNotificationEntityServerIdAndSave(notificationEntity, serverId: serverId)

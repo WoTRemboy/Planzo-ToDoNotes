@@ -286,13 +286,34 @@ final class Texts {
             static let link = NSLocalizedString("TaskManagementShareViewLink", comment: "Share Link")
             static let generating = NSLocalizedString("TaskManagementShareViewGenerating", comment: "Generating Link...")
             
-            static let owner = NSLocalizedString("TaskManagementShareViewOwner", comment: "Owner")
-            static let view = NSLocalizedString("TaskManagementShareViewView", comment: "Can view")
-            static let edit = NSLocalizedString("TaskManagementShareViewEdit", comment: "Can edit")
-            
-            static let closeAccess = NSLocalizedString("TaskManagementShareViewCloseAccess", comment: "Close any access")
             static let save = NSLocalizedString("TaskManagementShareViewSave", comment: "Save")
             static let cancel = NSLocalizedString("TaskManagementShareViewCancel", comment: "Cancel")
+            
+            enum Access {
+                static let owner = NSLocalizedString("TaskManagementShareViewOwner", comment: "Owner")
+                static let view = NSLocalizedString("TaskManagementShareViewView", comment: "Can view")
+                static let edit = NSLocalizedString("TaskManagementShareViewEdit", comment: "Can edit")
+                static let closeAccess = NSLocalizedString("TaskManagementShareViewCloseAccess", comment: "Close any access")
+                
+                static let ownerDisctiption = NSLocalizedString("TaskManagementShareViewOwnerDisctiption", comment: "Full access to this note")
+                static let viewDisctiption = NSLocalizedString("TaskManagementShareViewViewDisctiption", comment: "You can view this note")
+                static let editDescription = NSLocalizedString("TaskManagementShareViewEditDescription", comment: "You can edit this note")
+                static let closeDescription = NSLocalizedString("TaskManagementShareViewCloseDescription", comment: "Access Revoked")
+            }
+            
+            enum StopSharingAlert {
+                static let title = NSLocalizedString("TaskManagementShareViewStopSharingTitle", comment: "Stop Sharing?")
+                static let message = NSLocalizedString("TaskManagementShareViewStopSharingMessage", comment: "All people will lose access to this note and won't be able to view or edit it.")
+                static let stop = NSLocalizedString("TaskManagementShareViewStopSharingStop", comment: "Stop")
+                
+                static let toastTitle = NSLocalizedString("TaskManagementShareViewStopSharingToastTitle", comment: "Sharing ended, returned to folder")
+            }
+            
+            enum DeniedMemberAlert {
+                static let title = NSLocalizedString("TaskManagementShareViewDeniedMemberTitle", comment: "Access Revoked")
+                static let message = NSLocalizedString("TaskManagementShareViewDeniedMemberMessage", comment: "The user has been removed from this note’s access list.")
+                static let ok = NSLocalizedString("TaskManagementShareViewDeniedMemberOk", comment: "OK")
+            }
             
             enum RemoveMemberAlert {
                 static let title = NSLocalizedString("TaskManagementShareViewRemoveMemberTitle", comment: "Remove Access for")

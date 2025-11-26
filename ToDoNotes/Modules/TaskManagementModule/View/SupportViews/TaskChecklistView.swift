@@ -52,7 +52,7 @@ struct TaskChecklistView: View {
                     checkbox(item: $item)
                     textField(item: $item)
                     
-                    if !preview {
+                    if !preview, viewModel.accessToEdit {
                         removeButton(item: $item)
                         dragHandle(for: $item)
                     }
@@ -101,7 +101,7 @@ struct TaskChecklistView: View {
                 .frame(width: 18, height: 18)
                 .animation(.easeInOut(duration: 0.2), value: item.wrappedValue.name)
         }
-        .disabled(preview)
+        .disabled(preview || !viewModel.accessToEdit)
         .onAppear {
             if !item.wrappedValue.name.isEmpty, viewModel.check == .checked {
                 item.wrappedValue.completed = true
@@ -118,7 +118,7 @@ struct TaskChecklistView: View {
         .foregroundStyle(
             item.wrappedValue.completed ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
         
-        .disabled(preview)
+        .disabled(preview || !viewModel.accessToEdit)
         .submitLabel(.next)
         .focused($focusedItemID, equals: item.id)
         .introspect(.textField, on: .iOS(.v16, .v17, .v18, .v26)) { textField in

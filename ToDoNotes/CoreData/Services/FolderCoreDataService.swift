@@ -120,7 +120,7 @@ final class FolderCoreDataService {
                 return true
             } else {
                 let taskFetch: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
-                taskFetch.predicate = NSPredicate(format: "share.@count > 0")
+                taskFetch.predicate = NSPredicate(format: "members > 0")
                 taskFetch.fetchLimit = 1
                 if let count = try? viewContext.count(for: taskFetch), count > 0 {
                     return true
