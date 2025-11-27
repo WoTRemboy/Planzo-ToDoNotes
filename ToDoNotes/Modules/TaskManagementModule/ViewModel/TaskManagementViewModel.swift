@@ -190,6 +190,10 @@ final class TaskManagementViewModel: ObservableObject {
         entity == nil || currentRole == .owner || currentRole == .edit
     }
     
+    internal var isTaskOwner: Bool {
+        currentRole == .owner
+    }
+    
     // MARK: - Initialization
     
     /// Initializes a new TaskManagementViewModel for a new or existing task.
@@ -760,7 +764,8 @@ final class TaskManagementViewModel: ObservableObject {
 
         group.notify(queue: .main) {
             if let error = capturedError {
-                self.showingNetworkErrorAlert = true
+                Toast.shared.present(title: Texts.Settings.Sync.Retry.title,
+                                     symbol: Image.Settings.syncError)
                 completion(.failure(error))
             } else {
                 completion(.success(()))

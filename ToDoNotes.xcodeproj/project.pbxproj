@@ -408,14 +408,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6303E2C82D3469DC0096DB64 /* CoreData */ = {
+		6303E2C82D3469DC0096DB64 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
 				635DBBB02D64E8660050476C /* Model */,
 				635DBBB12D64E8710050476C /* Services */,
 				636C53E12D7E79370096F436 /* PreviewData */,
 			);
-			path = CoreData;
+			path = Persistence;
 			sourceTree = "<group>";
 		};
 		630F54802E6F736C00DF57E6 /* Profile */ = {
@@ -690,7 +690,7 @@
 			children = (
 				63753A812E78678800D75DAF /* ci_scripts */,
 				635FEF712D24B72E007FFBBA /* Application */,
-				6303E2C82D3469DC0096DB64 /* CoreData */,
+				6303E2C82D3469DC0096DB64 /* Persistence */,
 				63FD574B2E68B76F00B7B062 /* Network */,
 				637B9F5D2D296F290010F13B /* Router */,
 				63C2DC742D8C474000E6E0A0 /* Modules */,

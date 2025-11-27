@@ -652,5 +652,5 @@ extension TaskService {
 
 enum TaskServiceError: Error {
     case folderIsTheSame
+    case insufficientPermissions
 }
-
