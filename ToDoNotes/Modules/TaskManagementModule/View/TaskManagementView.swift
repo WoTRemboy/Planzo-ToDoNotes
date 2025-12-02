@@ -142,6 +142,9 @@ struct TaskManagementView: View {
         .popView(isPresented: $viewModel.showingStopSharingAlert, onTap: {}, onDismiss: {}) {
             stopSharingAlert
         }
+        .popView(isPresented: $viewModel.showingConfirmSharedDelete, onTap: {}, onDismiss: {}) {
+            confirmSharedDeleteAlert
+        }
         // Matched Geometry Effect for Navigation
         .navigationTransition(
             id: transitionID,
@@ -390,6 +393,21 @@ struct TaskManagementView: View {
             secondaryButtonTitle: Texts.Settings.Sync.Retry.cancel,
             secondaryAction: viewModel.toggleShowingStopSharingAlert
             )
+    }
+    
+    private var confirmSharedDeleteAlert: some View {
+        CustomAlertView(
+            title: Texts.TaskManagement.SharingAccess.RemoveMeAlert.title,
+            message: Texts.TaskManagement.SharingAccess.RemoveMeAlert.message,
+            primaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertYes,
+            primaryAction: {
+                viewModel.performConfirmSharedDelete()
+                onDismiss()
+            },
+            secondaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertCancel,
+            secondaryAction: {
+                viewModel.cancelConfirmSharedDelete()
+            })
     }
 }
 

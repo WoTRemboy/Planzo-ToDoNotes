@@ -35,7 +35,13 @@ struct MainTaskRowWithActions: View {
         Button {
             handleRowTap()
         } label: {
-            TaskListRow(entity: entity, isLast: isLast)
+            TaskListRow(
+                entity: entity,
+                isLast: isLast,
+                onRequestConfirmSharedDelete: { task in
+                    viewModel.requestConfirmSharedDelete(for: task)
+                }
+            )
         }
         .swipeActions(edge: .leading, allowsFullSwipe: viewModel.selectedFilter == .deleted) {
             if entity.role != ShareAccess.viewOnly.rawValue {
@@ -170,29 +176,13 @@ struct MainTaskRowWithActions: View {
     }
     
     private var removeButton: some View {
-        Button(role: .destructive) {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                if viewModel.selectedFilter != .deleted {
-                    do {
-                        try TaskService.toggleRemoved(for: entity)
-                        Toast.shared.present(title: Texts.Toasts.removed)
-                        logger.debug("Task moved to deleted: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
-                    } catch {
-                        logger.error("Task could not be moved to deleted: \(error.localizedDescription)")
-                    }
-                } else {
-                    do {
-                        try TaskService.deleteRemovedTask(for: entity)
-                        logger.debug("Task permanently deleted.")
-                    } catch {
-                        logger.error("Task could not be permanently deleted: \(error.localizedDescription)")
-                    }
-                }
+        TaskRemoveButton(
+            entity: entity,
+            isInDeletedContext: { viewModel.selectedFilter == .deleted },
+            requestConfirmSharedDelete: { task in
+                viewModel.requestConfirmSharedDelete(for: task)
             }
-        } label: {
-            Image.TaskManagement.TaskRow.SwipeAction.remove
-        }
-        .tint(Color.SwipeColors.remove)
+        )
     }
 }
 

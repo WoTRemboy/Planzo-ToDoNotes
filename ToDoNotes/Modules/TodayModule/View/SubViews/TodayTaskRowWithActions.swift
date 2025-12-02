@@ -50,7 +50,13 @@ struct TodayTaskRowWithSwipeActions: View {
         Button {
             handleTaskSelection()
         } label: {
-            TaskListRow(entity: entity, isLast: isLast)            
+            TaskListRow(
+                entity: entity,
+                isLast: isLast,
+                onRequestConfirmSharedDelete: { task in
+                    viewModel.requestConfirmSharedDelete(for: task)
+                }
+            )
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             if entity.role != ShareAccess.viewOnly.rawValue {
@@ -158,21 +164,13 @@ struct TodayTaskRowWithSwipeActions: View {
     }
     
     private var removeButton: some View {
-        Button(role: .destructive) {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                do {
-                    try TaskService.toggleRemoved(for: entity)
-                    logger.debug("Task removed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
-                } catch {
-                    logger.error("Task removal failed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
-                }
+        TaskRemoveButton(
+            entity: entity,
+            isInDeletedContext: { false },
+            requestConfirmSharedDelete: { task in
+                viewModel.requestConfirmSharedDelete(for: task)
             }
-            Toast.shared.present(
-                title: Texts.Toasts.removed)
-        } label: {
-            Image.TaskManagement.TaskRow.SwipeAction.remove
-        }
-        .tint(Color.SwipeColors.remove)
+        )
     }
 }
 

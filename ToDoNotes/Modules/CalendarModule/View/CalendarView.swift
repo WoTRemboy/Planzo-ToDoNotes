@@ -69,6 +69,9 @@ struct CalendarView: View {
                 acceptTitle: Texts.Settings.accept
             )
         }
+        .popView(isPresented: $viewModel.showingConfirmSharedDelete, onTap: {}, onDismiss: {}) {
+            confirmSharedDeleteAlert
+        }
         // Task creation popup sheet
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
             TaskManagementView(
@@ -282,6 +285,25 @@ extension CalendarView {
             groupedDates[day, default: 0] += 1
         }
         return groupedDates
+    }
+}
+
+// MARK: - Alerts
+
+extension CalendarView {
+    /// Alert to confirm deletion of a shared task when user is not the owner (same as in Main/Today).
+    private var confirmSharedDeleteAlert: some View {
+        CustomAlertView(
+            title: Texts.TaskManagement.SharingAccess.RemoveMeAlert.title,
+            message: Texts.TaskManagement.SharingAccess.RemoveMeAlert.message,
+            primaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertYes,
+            primaryAction: {
+                viewModel.performConfirmSharedDelete()
+            },
+            secondaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertCancel,
+            secondaryAction: {
+                viewModel.cancelConfirmSharedDelete()
+            })
     }
 }
 

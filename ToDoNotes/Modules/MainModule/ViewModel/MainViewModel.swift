@@ -48,6 +48,13 @@ final class MainViewModel: ObservableObject {
     @Published internal var showingShareSheet: Bool = false
     @Published internal var showingSubscriptionPage: Bool = false
     
+    /// Confirm alert for deleting shared (non-owner) task
+    @Published internal var showingConfirmSharedDelete: Bool = false
+    /// Target task for shared delete confirmation
+    @Published internal var sharedDeleteTargetTask: TaskEntity? = nil
+    /// Processing flag to prevent re-entrancy while delete flow is in progress
+    @Published internal var isProcessingSharedDelete: Bool = false
+    
     /// The selected task for editing or viewing.
     @Published internal var selectedTask: TaskEntity? = nil
     @Published internal var sharingTask: TaskEntity? = nil
@@ -298,9 +305,6 @@ final class MainViewModel: ObservableObject {
                target < oneDay {
                 return false
             }
-//            if let target = task.target, !task.hasTargetTime, target < Calendar.current.startOfDay(for: .now) {
-//                return false
-//            }
             
             if let count = task.notifications?.count, count > 0,
                let target = task.target,
@@ -326,9 +330,6 @@ final class MainViewModel: ObservableObject {
                target < oneDay {
                 return task.completed == 0
             }
-//            if let target = task.target, !task.hasTargetTime, target < Calendar.current.startOfDay(for: .now) {
-//                return true
-//            }
             
             if let count = task.notifications?.count, count > 0,
                let target = task.target,
@@ -358,6 +359,58 @@ final class MainViewModel: ObservableObject {
             logger.info("SyncAllBackTasks started for syncing all tasks.")
         } else {
             logger.error("SyncAllBackTasks not starting as user not authorized or syncStatus is not .updated")
+        }
+    }
+    
+    // MARK: - Shared delete confirmation (non-owner)
+
+    internal func requestConfirmSharedDelete(for task: TaskEntity) {
+        guard !self.showingConfirmSharedDelete, !self.isProcessingSharedDelete else { return }
+        self.sharedDeleteTargetTask = task
+        self.showingConfirmSharedDelete = true
+    }
+    
+    internal func cancelConfirmSharedDelete() {
+        self.showingConfirmSharedDelete = false
+        self.sharedDeleteTargetTask = nil
+    }
+    
+    internal func performConfirmSharedDelete() {
+        guard !self.isProcessingSharedDelete else { return }
+        self.isProcessingSharedDelete = true
+        
+        guard let task = self.sharedDeleteTargetTask else {
+            self.isProcessingSharedDelete = false
+            cancelConfirmSharedDelete()
+            return
+        }
+        guard let listId = task.serverId, !listId.isEmpty else {
+            Toast.shared.present(title: Texts.Settings.Sync.Retry.title)
+            logger.error("No serverId when trying to remove my membership from shared list task.")
+            self.isProcessingSharedDelete = false
+            cancelConfirmSharedDelete()
+            return
+        }
+        ShareAccessService.shared.deleteMyMembership(listId: listId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        do {
+                            UNUserNotificationCenter.current().removeNotifications(for: task.notifications)
+                            try TaskService.deleteRemovedTask(for: task)
+                            logger.debug("Successfully removed membership and deleted local task: \(task.name ?? "unknown") \(task.id?.uuidString ?? "unknown")")
+                        } catch {
+                            logger.error("Failed to delete local task after membership removal: \(error.localizedDescription)")
+                        }
+                    }
+                case .failure(let error):
+                    Toast.shared.present(title: Texts.Settings.Sync.Retry.title)
+                    logger.error("Failed to remove membership from list before local delete: \(error.localizedDescription)")
+                }
+                self.isProcessingSharedDelete = false
+                self.cancelConfirmSharedDelete()
+            }
         }
     }
 }

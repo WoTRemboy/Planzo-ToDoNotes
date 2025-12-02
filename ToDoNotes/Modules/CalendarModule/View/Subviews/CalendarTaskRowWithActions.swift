@@ -49,7 +49,13 @@ struct CalendarTaskRowWithActions: View {
             viewModel.selectedTask = entity
             logger.debug("Tapped on a task to edit: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
         } label: {
-            TaskListRow(entity: entity, isLast: isLast)
+            TaskListRow(
+                entity: entity,
+                isLast: isLast,
+                onRequestConfirmSharedDelete: { task in
+                    viewModel.requestConfirmSharedDelete(for: task)
+                }
+            )
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             if entity.role != ShareAccess.viewOnly.rawValue {
@@ -152,21 +158,13 @@ struct CalendarTaskRowWithActions: View {
     }
     
     private var removeButton: some View {
-        Button(role: .destructive) {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                do {
-                    try TaskService.toggleRemoved(for: entity)
-                    Toast.shared.present(title: Texts.Toasts.removed)
-                    logger.debug("Task removed: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown")")
-                } catch {
-                    logger.error("Failed to remove task: \(entity.name ?? "unnamed") \(error.localizedDescription)")
-                }
+        TaskRemoveButton(
+            entity: entity,
+            isInDeletedContext: { false },
+            requestConfirmSharedDelete: { task in
+                viewModel.requestConfirmSharedDelete(for: task)
             }
-            
-        } label: {
-            Image.TaskManagement.TaskRow.SwipeAction.remove
-        }
-        .tint(Color.SwipeColors.remove)
+        )
     }
 }
 

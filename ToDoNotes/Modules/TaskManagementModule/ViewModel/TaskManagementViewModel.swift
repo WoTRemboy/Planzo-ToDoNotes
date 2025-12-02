@@ -9,6 +9,7 @@ import SwiftUI
 import CoreData
 import Foundation
 import OSLog
+import UserNotifications
 
 private let logger = Logger(subsystem: "com.todonotes.task_management", category: "TaskManagementViewModel")
 
@@ -116,6 +117,15 @@ final class TaskManagementViewModel: ObservableObject {
     
     /// The system notification center.
     private let notificationCenter = UNUserNotificationCenter.current()
+    
+    // MARK: - Shared delete confirmation
+    
+    /// Confirm alert for deleting shared (non-owner) task
+    @Published internal var showingConfirmSharedDelete: Bool = false
+    /// Target task for shared delete confirmation
+    @Published internal var sharedDeleteTargetTask: TaskEntity? = nil
+    /// Processing flag to prevent re-entrancy while delete flow is in progress
+    @Published internal var isProcessingSharedDelete: Bool = false
     
     // MARK: - Computed Properties
     
@@ -359,7 +369,7 @@ final class TaskManagementViewModel: ObservableObject {
         showingDatePicker = false
     }
     
-    /// Cancels any changes to the task date/time and restores from entity.
+    /// Cancels the date picker.
     internal func cancelTaskDateParams() {
         targetDate = entity?.target ?? .now.startOfDay
         hasDate = entity?.target != nil
@@ -712,6 +722,11 @@ final class TaskManagementViewModel: ObservableObject {
         guard let task = entity,
               let serverId = task.serverId, !serverId.isEmpty
         else {
+            if entity?.role == nil || entity?.role == ShareAccess.owner.rawValue {
+                self.currentRole = .owner
+            } else {
+                self.currentRole = .viewOnly
+            }
             completion(.success(()))
             return
         }
@@ -965,6 +980,58 @@ final class TaskManagementViewModel: ObservableObject {
             }
         }
     }
+    
+    // MARK: - Shared delete confirmation
+    
+    internal func requestConfirmSharedDelete(for task: TaskEntity) {
+        guard !self.showingConfirmSharedDelete, !self.isProcessingSharedDelete else { return }
+        self.sharedDeleteTargetTask = task
+        self.showingConfirmSharedDelete = true
+    }
+    
+    internal func cancelConfirmSharedDelete() {
+        self.showingConfirmSharedDelete = false
+        self.sharedDeleteTargetTask = nil
+    }
+    
+    internal func performConfirmSharedDelete() {
+        guard !self.isProcessingSharedDelete else { return }
+        self.isProcessingSharedDelete = true
+        
+        guard let task = self.sharedDeleteTargetTask else {
+            self.isProcessingSharedDelete = false
+            cancelConfirmSharedDelete()
+            return
+        }
+        guard let listId = task.serverId, !listId.isEmpty else {
+            Toast.shared.present(title: Texts.Settings.Sync.Retry.title)
+            logger.error("No serverId when trying to remove my membership from shared list task.")
+            self.isProcessingSharedDelete = false
+            cancelConfirmSharedDelete()
+            return
+        }
+        ShareAccessService.shared.deleteMyMembership(listId: listId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        do {
+                            UNUserNotificationCenter.current().removeNotifications(for: task.notifications)
+                            try TaskService.deleteRemovedTask(for: task)
+                            logger.debug("Successfully removed membership and deleted local task.")
+                        } catch {
+                            logger.error("Failed to delete local task after membership removal: \(error.localizedDescription)")
+                        }
+                    }
+                case .failure(let error):
+                    Toast.shared.present(title: Texts.Settings.Sync.Retry.title)
+                    logger.error("Failed to remove membership from list before local delete: \(error.localizedDescription)")
+                }
+                self.isProcessingSharedDelete = false
+                self.cancelConfirmSharedDelete()
+            }
+        }
+    }
 }
 
 // MARK: - Notifications Management
@@ -987,5 +1054,3 @@ extension TaskManagementViewModel {
         }
     }
 }
-
-
