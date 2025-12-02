@@ -276,6 +276,11 @@ final class Texts {
             static let endSharing = NSLocalizedString("TaskManagementSharingAccessEndSharing", comment: "End Sharing")
             static let shareSetting = NSLocalizedString("TaskManagementSharingAccessShareSetting", comment: "Sharing Settings")
             static let closeAccess = NSLocalizedString("TaskManagementSharingAccessCloseAccess", comment: "Close any access for all")
+            
+            enum RemoveMeAlert {
+                static let title = NSLocalizedString("TaskManagementShareViewRemoveMeTitle", comment: "Remove Access")
+                static let message = NSLocalizedString("TaskManagementShareViewRemoveMeMessage", comment: "You will no longer be able to view or edit this note. It will be removed.")
+            }
         }
         
         enum ShareView {

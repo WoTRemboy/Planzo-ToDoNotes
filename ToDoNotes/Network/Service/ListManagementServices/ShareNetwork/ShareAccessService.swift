@@ -94,6 +94,45 @@ final class ShareAccessService: ObservableObject {
         }
     }
     
+    /// Deletes the current user's membership for a list by id.
+    func deleteMyMembership(listId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        AccessTokenManager.shared.getValidAccessToken { result in
+            switch result {
+            case .success(let accessToken):
+                guard let url = URL(string: self.baseURL + "\(listId)/my-membership") else {
+                    logger.error("Invalid my-membership DELETE URL for listId: \(listId)")
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "DELETE"
+                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        logger.error("MyMembership DELETE request failed: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(error)) }
+                        return
+                    }
+                    guard let httpResponse = response as? HTTPURLResponse else {
+                        logger.error("MyMembership DELETE response is not HTTPURLResponse.")
+                        DispatchQueue.main.async { completion(.failure(URLError(.badServerResponse))) }
+                        return
+                    }
+                    if (200...299).contains(httpResponse.statusCode) {
+                        DispatchQueue.main.async { completion(.success(())) }
+                    } else {
+                        logger.error("MyMembership DELETE failed with status: \(httpResponse.statusCode)")
+                        DispatchQueue.main.async { completion(.failure(URLError(.cannotRemoveFile))) }
+                    }
+                }
+                task.resume()
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
     /// Loads the current user's sharing role for a list by id.
     func getMyRole(for listId: String, completion: @escaping (Result<String, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in

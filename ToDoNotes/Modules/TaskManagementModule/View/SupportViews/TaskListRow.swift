@@ -23,6 +23,8 @@ struct TaskListRow: View {
     private let status: TaskStatus
     /// Indicating whether this is the last item in the section.
     private let isLast: Bool
+    /// Optional callback to request confirmation for deleting a shared task (non-owner).
+    private let onRequestConfirmSharedDelete: ((TaskEntity) -> Void)?
     
     // MARK: - Initialization
     
@@ -30,10 +32,12 @@ struct TaskListRow: View {
     /// - Parameters:
     ///   - entity: The `TaskEntity` object representing the task.
     ///   - isLast: A Boolean indicating whether this is the last item in the section.
-    init(entity: TaskEntity, isLast: Bool) {
+    ///   - onRequestConfirmSharedDelete: Optional closure to trigger shared-delete confirmation.
+    init(entity: TaskEntity, isLast: Bool, onRequestConfirmSharedDelete: ((TaskEntity) -> Void)? = nil) {
         self._entity = ObservedObject(wrappedValue: entity)
         self.status = .setupStatus(for: entity)
         self.isLast = isLast
+        self.onRequestConfirmSharedDelete = onRequestConfirmSharedDelete
     }
     
     // MARK: - Body
@@ -154,12 +158,20 @@ struct TaskListRow: View {
     private var nameSharedView: some View {
         HStack(spacing: 8) {
             nameLabel
-            if entity.members > 0 {
+            if isSharedTask {
                 sharingIcon
             }
         }
     }
     
+    private var isSharedTask: Bool {
+        if entity.members > 0 { return true }
+        if let role = entity.role {
+            return role == ShareAccess.viewOnly.rawValue || role == ShareAccess.edit.rawValue
+        }
+        return false
+    }
+        
     /// Displays the task name with optional strikethrough and faded colors depending on the task state.
     private var nameLabel: some View {
         let name = entity.name ?? String()
@@ -294,6 +306,10 @@ struct TaskListRow: View {
             image: UIImage.TaskManagement.trash,
             attributes: .destructive
         ) { _ in
+            if let role = entity.role, role != ShareAccess.owner.rawValue {
+                onRequestConfirmSharedDelete?(entity)
+                return
+            }
             withAnimation(.easeInOut(duration: 0.2)) {
                 do {
                     try TaskService.toggleRemoved(for: entity)
