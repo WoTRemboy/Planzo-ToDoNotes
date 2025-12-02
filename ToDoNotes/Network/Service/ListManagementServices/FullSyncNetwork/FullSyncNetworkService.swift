@@ -94,7 +94,7 @@ final class FullSyncNetworkService: ObservableObject {
                         self.syncLists(decoded.lists)
                         self.syncItems(decoded.items)
                         self.syncShares(decoded.shares)
-                        self.syncNotifications(decoded.notifications)
+//                        self.syncNotifications(decoded.notifications)
                         self.refreshSharingInfoForAllSharedTasks()
                         DispatchQueue.main.async {
                             UserCoreDataService.shared.updateLastSyncAt()
@@ -164,7 +164,7 @@ final class FullSyncNetworkService: ObservableObject {
                         self.syncLists(decoded.lists.upserts, deletes: decoded.lists.deletes, since: since)
                         self.syncItems(decoded.items.upserts, deletedItems: decoded.items.deletes, since: since)
                         self.syncShares(decoded.shares.upserts)
-                        self.syncNotifications(decoded.notifications.upserts, deletes: decoded.notifications.deletes, since: since)
+//                        self.syncNotifications(decoded.notifications.upserts, deletes: decoded.notifications.deletes, since: since)
                         self.refreshSharingInfoForAllSharedTasks()
                         DispatchQueue.main.async {
                             UserCoreDataService.shared.updateLastSyncAt()

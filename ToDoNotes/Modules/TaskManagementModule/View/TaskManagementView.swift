@@ -116,10 +116,10 @@ struct TaskManagementView: View {
                 ListItemNetworkService.shared.syncChecklistForTaskEntity(entity, since: since) {
                     viewModel.reloadChecklist(from: entity.checklist)
                 }
-                NotificationNetworkService.shared.syncNotificationsIfNeeded(for: entity, since: since) {
-                    viewModel.reloadNotifications(from: entity.notifications)
-                    UNUserNotificationCenter.current().logNotifications(for: entity.notifications)
-                }
+//                NotificationNetworkService.shared.syncNotificationsIfNeeded(for: entity, since: since) {
+//                    viewModel.reloadNotifications(from: entity.notifications)
+//                    UNUserNotificationCenter.current().logNotifications(for: entity.notifications)
+//                }
                 viewModel.loadMembersForSharingTaskWithToasts()
             }
         }

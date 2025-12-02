@@ -124,6 +124,7 @@ final class TaskService {
                     }
                 }
                 
+                /*
                 for notificationEntity in notificationEntities {
                     if let serverId = notificationEntity.serverId, !serverId.isEmpty {
                         NotificationNetworkService.shared.updateNotification(notificationEntity)
@@ -168,6 +169,7 @@ final class TaskService {
                         logger.error("Failed to fetch server notifications for cleanup: \(error.localizedDescription)")
                     }
                 }
+                 */
                 
             case .failure(let error):
                 logger.error("Save task sync error: \(error.localizedDescription)")
@@ -244,6 +246,7 @@ final class TaskService {
                     }
                 }
                 
+                /*
                 if let notificationsSet = newTask.notifications as? Set<NotificationEntity> {
                     for notificationEntity in notificationsSet {
                         NotificationNetworkService.shared.createNotification(for: newTask, type: notificationEntity.type ?? "", target: notificationEntity.target ?? Date()) { result in
@@ -256,6 +259,7 @@ final class TaskService {
                         }
                     }
                 }
+                 */
             case .failure(let error):
                 logger.error("Save task sync error: \(error.localizedDescription)")
             }
