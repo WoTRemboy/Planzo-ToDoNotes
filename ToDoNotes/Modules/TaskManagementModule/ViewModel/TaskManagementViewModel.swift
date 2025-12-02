@@ -734,44 +734,48 @@ final class TaskManagementViewModel: ObservableObject {
         let group = DispatchGroup()
         var capturedError: Error? = nil
 
-        if task.role != ShareAccess.owner.rawValue {
-            group.enter()
-            ShareAccessService.shared.getMyRole(for: serverId) { [weak self] result in
-                guard let self = self else { group.leave(); return }
-                switch result {
-                case .success(let role):
-                    self.currentRole = ShareAccess(rawValue: role) ?? .viewOnly
-                    task.role = role
-                    if let context = task.managedObjectContext {
-                        do {
-                            try context.save()
-                        } catch {
-                            logger.error("Failed to save role to TaskEntity: \(error.localizedDescription)")
-                        }
-                    }
-                    logger.info("Current user's share access role: \(role)")
-                case .failure(let error):
-                    self.currentRole = .viewOnly
-                    logger.error("Error fetching my role: \(error.localizedDescription)")
-                    if capturedError == nil { capturedError = error }
-                }
-                group.leave()
-            }
-        } else {
-            self.currentRole = .owner
-        }
-
         group.enter()
-        ShareAccessService.shared.getMembers(for: serverId) { [weak self] result in
+        ShareAccessService.shared.getMyRole(for: serverId) { [weak self] result in
+            guard let self = self else { group.leave(); return }
             switch result {
-            case .success(let members):
-                self?.shareMembers = members
-                self?.persistMembersCount()
-                self?.syncDeniedMembers()
+            case .success(let role):
+                self.currentRole = ShareAccess(rawValue: role) ?? .viewOnly
+                task.role = role
+                if let context = task.managedObjectContext {
+                    do {
+                        try context.save()
+                    } catch {
+                        logger.error("Failed to save role to TaskEntity: \(error.localizedDescription)")
+                    }
+                }
+                switch self.currentRole {
+                case .viewOnly, .edit:
+                    Toast.shared.present(title: self.currentRole.description)
+                default:
+                    break
+                }
+                logger.info("Current user's share access role: \(role)")
+                
+                if self.currentRole == .owner {
+                    group.enter()
+                    ShareAccessService.shared.getMembers(for: serverId) { [weak self] membersResult in
+                        switch membersResult {
+                        case .success(let members):
+                            self?.shareMembers = members
+                            self?.persistMembersCount()
+                            self?.syncDeniedMembers()
+                        case .failure(let error):
+                            logger.error("Error fetching share members: \(error.localizedDescription)")
+                            self?.shareMembers = []
+                            self?.deniedMembers = []
+                            if capturedError == nil { capturedError = error }
+                        }
+                        group.leave()
+                    }
+                }
             case .failure(let error):
-                logger.error("Error fetching share members: \(error.localizedDescription)")
-                self?.shareMembers = []
-                self?.deniedMembers = []
+                self.currentRole = .viewOnly
+                logger.error("Error fetching my role: \(error.localizedDescription)")
                 if capturedError == nil { capturedError = error }
             }
             group.leave()
@@ -804,22 +808,7 @@ final class TaskManagementViewModel: ObservableObject {
             return
         }
         
-        loadMembersForSharingTask { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .success:
-                switch self.currentRole {
-                case .viewOnly, .edit:
-                    Toast.shared.present(title: self.currentRole.description)
-                default:
-                    break
-                }
-                
-            case .failure(_):
-                break
-            }
-        }
+        loadMembersForSharingTask { _ in }
     }
     
     internal func isOwner(for member: SharingMember) -> Bool {

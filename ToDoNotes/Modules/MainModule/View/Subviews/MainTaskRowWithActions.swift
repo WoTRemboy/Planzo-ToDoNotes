@@ -57,8 +57,8 @@ struct MainTaskRowWithActions: View {
     
     /// Handles tapping the task row depending on the selected filter.
     private func handleRowTap() {
-        guard isOwner else { return }
         if viewModel.selectedFilter == .deleted {
+            guard isOwner else { return }
             viewModel.removedTask = entity
             viewModel.toggleShowingEditRemovedAlert()
             logger.debug("Tapped on a deleted task to recover: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
