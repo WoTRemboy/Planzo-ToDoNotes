@@ -403,8 +403,41 @@ extension ListNetworkService {
         ListNetworkService.shared.fetchList(withId: listID) { result in
             switch result {
             case .success(let listItem):
-                ListNetworkService.shared.applyListItem(listItem) { applyResult in
-                    completion(applyResult)
+                ShareAccessService.shared.getMyRole(for: listID) { roleResult in
+                    let capturedRole: String? = {
+                        if case .success(let role) = roleResult { return role }
+                        return nil
+                    }()
+                    if case .failure(let error) = roleResult {
+                        logger.error("Failed to fetch myRole for listId \(listID): \(error.localizedDescription)")
+                    }
+                    ListNetworkService.shared.applyListItem(listItem) { applyResult in
+                        switch applyResult {
+                        case .success(let entity):
+                            if let role = capturedRole {
+                                if let context = entity.managedObjectContext {
+                                    context.perform {
+                                        entity.role = role
+                                        do {
+                                            try context.save()
+                                            logger.info("Saved myRole '\(role)' to TaskEntity for listId: \(listID)")
+                                        } catch {
+                                            logger.error("Failed to save myRole to Core Data: \(error.localizedDescription)")
+                                        }
+                                        completion(.success(entity))
+                                    }
+                                } else {
+                                    entity.role = role
+                                    logger.info("Set myRole '\(role)' on TaskEntity without context for listId: \(listID)")
+                                    completion(.success(entity))
+                                }
+                            } else {
+                                completion(.success(entity))
+                            }
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    }
                 }
             case .failure(let error):
                 completion(.failure(error))

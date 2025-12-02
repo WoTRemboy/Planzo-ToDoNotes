@@ -101,6 +101,7 @@
 		638B1B632EBA3CA500EE9DBA /* ShareCoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638B1B622EBA3CA500EE9DBA /* ShareCoreDataService.swift */; };
 		638B1B692EBA3F1F00EE9DBA /* ShareNetworkAppliedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638B1B682EBA3F1F00EE9DBA /* ShareNetworkAppliedService.swift */; };
 		638E21962D2C209200FB1464 /* TaskManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638E21952D2C209200FB1464 /* TaskManagementView.swift */; };
+		6390EFA12EDF33E10016D0F6 /* TaskRemoveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6390EFA02EDF33E10016D0F6 /* TaskRemoveButton.swift */; };
 		6393E2332DC015CF00025838 /* AppleIDAuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393E2322DC015C300025838 /* AppleIDAuthorizationTests.swift */; };
 		6393E2352DC015DF00025838 /* GoogleAuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393E2342DC015D800025838 /* GoogleAuthorizationTests.swift */; };
 		6393E2372DC0163900025838 /* TaskManagementViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6393E2362DC0162E00025838 /* TaskManagementViewModelTests.swift */; };
@@ -304,6 +305,7 @@
 		638B1B622EBA3CA500EE9DBA /* ShareCoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCoreDataService.swift; sourceTree = "<group>"; };
 		638B1B682EBA3F1F00EE9DBA /* ShareNetworkAppliedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNetworkAppliedService.swift; sourceTree = "<group>"; };
 		638E21952D2C209200FB1464 /* TaskManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementView.swift; sourceTree = "<group>"; };
+		6390EFA02EDF33E10016D0F6 /* TaskRemoveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRemoveButton.swift; sourceTree = "<group>"; };
 		6393E2322DC015C300025838 /* AppleIDAuthorizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleIDAuthorizationTests.swift; sourceTree = "<group>"; };
 		6393E2342DC015D800025838 /* GoogleAuthorizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAuthorizationTests.swift; sourceTree = "<group>"; };
 		6393E2362DC0162E00025838 /* TaskManagementViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementViewModelTests.swift; sourceTree = "<group>"; };
@@ -408,14 +410,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6303E2C82D3469DC0096DB64 /* CoreData */ = {
+		6303E2C82D3469DC0096DB64 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
 				635DBBB02D64E8660050476C /* Model */,
 				635DBBB12D64E8710050476C /* Services */,
 				636C53E12D7E79370096F436 /* PreviewData */,
 			);
-			path = CoreData;
+			path = Persistence;
 			sourceTree = "<group>";
 		};
 		630F54802E6F736C00DF57E6 /* Profile */ = {
@@ -607,6 +609,7 @@
 			isa = PBXGroup;
 			children = (
 				63E890C92D347655003D7370 /* TaskListRow.swift */,
+				6390EFA02EDF33E10016D0F6 /* TaskRemoveButton.swift */,
 				632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */,
 				632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */,
 				63F849452D38145E00E9D5CE /* TaskChecklistView.swift */,
@@ -690,7 +693,7 @@
 			children = (
 				63753A812E78678800D75DAF /* ci_scripts */,
 				635FEF712D24B72E007FFBBA /* Application */,
-				6303E2C82D3469DC0096DB64 /* CoreData */,
+				6303E2C82D3469DC0096DB64 /* Persistence */,
 				63FD574B2E68B76F00B7B062 /* Network */,
 				637B9F5D2D296F290010F13B /* Router */,
 				63C2DC742D8C474000E6E0A0 /* Modules */,
@@ -1545,6 +1548,7 @@
 				63CF11B32EABA9360068C1F9 /* ConfigureSelectedFolderView.swift in Sources */,
 				63DA81022D24C822005CEECB /* OnboardingScreenView.swift in Sources */,
 				63BCD8B02D77298D0016950F /* PopView.swift in Sources */,
+				6390EFA12EDF33E10016D0F6 /* TaskRemoveButton.swift in Sources */,
 				63837AD42EB4F6870061EB49 /* NotificationNetworkAppliedService.swift in Sources */,
 				637B9F4E2D295B490010F13B /* MainViewModel.swift in Sources */,
 				63BCD8B52D7B666B0016950F /* SearchBar.swift in Sources */,

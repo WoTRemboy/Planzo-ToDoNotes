@@ -90,8 +90,11 @@ struct TaskManagementView: View {
                                 duplicateTask()
                             } onDismiss: {
                                 withAnimation(.easeInOut(duration: 0.2)) {
-                                    entity != nil ? updateTask() : nil
-                                    onDismiss()
+                                    if entity != nil {
+                                        attemptPerformSave(thenDismiss: true)
+                                    } else {
+                                        onDismiss()
+                                    }
                                 }
                             }
                             .zIndex(1)  // Ensures the navbar stays above the content
@@ -113,10 +116,10 @@ struct TaskManagementView: View {
                 ListItemNetworkService.shared.syncChecklistForTaskEntity(entity, since: since) {
                     viewModel.reloadChecklist(from: entity.checklist)
                 }
-                NotificationNetworkService.shared.syncNotificationsIfNeeded(for: entity, since: since) {
-                    viewModel.reloadNotifications(from: entity.notifications)
-                    UNUserNotificationCenter.current().logNotifications(for: entity.notifications)
-                }
+//                NotificationNetworkService.shared.syncNotificationsIfNeeded(for: entity, since: since) {
+//                    viewModel.reloadNotifications(from: entity.notifications)
+//                    UNUserNotificationCenter.current().logNotifications(for: entity.notifications)
+//                }
                 viewModel.loadMembersForSharingTaskWithToasts()
             }
         }
@@ -136,11 +139,11 @@ struct TaskManagementView: View {
             .presentationDetents([.height(670)])
             .interactiveDismissDisabled()
         }
-        .popView(isPresented: $viewModel.showingNetworkErrorAlert, onTap: {}, onDismiss: {}) {
-            syncErrorAlert
-        }
         .popView(isPresented: $viewModel.showingStopSharingAlert, onTap: {}, onDismiss: {}) {
             stopSharingAlert
+        }
+        .popView(isPresented: $viewModel.showingConfirmSharedDelete, onTap: {}, onDismiss: {}) {
+            confirmSharedDeleteAlert
         }
         // Matched Geometry Effect for Navigation
         .navigationTransition(
@@ -231,7 +234,7 @@ struct TaskManagementView: View {
             .strikethrough(viewModel.check == .checked)
             
             .focused($titleFocused)
-            .immediateKeyboardIf(entity == nil, delay: shouldShowFullScreenContent ? 0.4 : 0)
+            .immediateKeyboardIf(entity == nil || viewModel.currentRole == .owner, delay: shouldShowFullScreenContent ? 0.4 : 0)
             .onAppear {
                 titleFocused = true
             }
@@ -357,13 +360,7 @@ struct TaskManagementView: View {
     private var acceptButton: some View {
         Button {
             withAnimation {
-                if entity != nil {
-                    updateTask()
-                    onDismiss()
-                } else {
-                    addTask()
-                    onDismiss()
-                }
+                attemptPerformSave(thenDismiss: true)
             }
         } label: {
             (entity != nil
@@ -396,6 +393,21 @@ struct TaskManagementView: View {
             secondaryButtonTitle: Texts.Settings.Sync.Retry.cancel,
             secondaryAction: viewModel.toggleShowingStopSharingAlert
             )
+    }
+    
+    private var confirmSharedDeleteAlert: some View {
+        CustomAlertView(
+            title: Texts.TaskManagement.SharingAccess.RemoveMeAlert.title,
+            message: Texts.TaskManagement.SharingAccess.RemoveMeAlert.message,
+            primaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertYes,
+            primaryAction: {
+                viewModel.performConfirmSharedDelete()
+                onDismiss()
+            },
+            secondaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertCancel,
+            secondaryAction: {
+                viewModel.cancelConfirmSharedDelete()
+            })
     }
 }
 
@@ -517,6 +529,53 @@ extension TaskManagementView {
                 title: Texts.Toasts.duplicatedError)
             logger.error("Task \(entity?.name ?? "unnamed") \(entity?.id?.uuidString ?? "unknown") duplicate Error: \(error.localizedDescription)")
         }
+    }
+    
+    /// Attempts to perform save (update or add) with role verification if needed.
+    private func attemptPerformSave(thenDismiss: Bool) {
+        // If editing an existing shared task and local role is .edit or .viewOnly, verify server role first
+        if let entity = self.entity {
+            if viewModel.currentRole == .edit || viewModel.currentRole == .viewOnly {
+                guard let listId = entity.serverId, !listId.isEmpty else {
+                    // No server id, allow local save
+                    proceedWithSave(for: entity, thenDismiss: thenDismiss)
+                    return
+                }
+                ShareAccessService.shared.getMyRole(for: listId) { result in
+                    switch result {
+                    case .success(let roleRaw):
+                        let role = ShareAccess(rawValue: roleRaw) ?? .viewOnly
+                        if role == .edit || role == .owner {
+                            proceedWithSave(for: entity, thenDismiss: thenDismiss)
+                        } else {
+                            if thenDismiss { onDismiss() }
+                        }
+                    case .failure(_):
+                        Toast.shared.present(title: Texts.Settings.Sync.Retry.title)
+                        if thenDismiss { onDismiss() }
+                    }
+                }
+                return
+            }
+            // Owner or no restriction -> proceed
+            proceedWithSave(for: entity, thenDismiss: thenDismiss)
+            return
+        }
+        // Adding a new task: if role is restricted, block (no server id to verify)
+        if viewModel.currentRole == .edit {
+            Toast.shared.present(title: Texts.Settings.Sync.Retry.title)
+            if thenDismiss { onDismiss() }
+            return
+        }
+        // Proceed with creation
+        addTask()
+        if thenDismiss { onDismiss() }
+    }
+
+    /// Proceeds with saving for an existing entity or adding a new one (already verified).
+    private func proceedWithSave(for entity: TaskEntity, thenDismiss: Bool) {
+        updateTask()
+        if thenDismiss { onDismiss() }
     }
 }
 

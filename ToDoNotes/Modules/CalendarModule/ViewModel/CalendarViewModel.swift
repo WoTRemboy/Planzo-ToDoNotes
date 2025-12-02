@@ -6,6 +6,10 @@
 //
 
 import SwiftUI
+import UserNotifications
+import OSLog
+
+private let logger = Logger(subsystem: "com.todonotes.calendar", category: "CalendarViewModel")
 
 /// ViewModel managing the state and user interactions for the Calendar screen.
 final class CalendarViewModel: ObservableObject {
@@ -56,6 +60,15 @@ final class CalendarViewModel: ObservableObject {
     
     @Published internal var folders: [Folder] = []
     private var coreDataObserver: NSObjectProtocol? = nil
+    
+    // MARK: - Shared delete confirmation
+    
+    /// Confirm alert for deleting shared (non-owner) task
+    @Published internal var showingConfirmSharedDelete: Bool = false
+    /// Target task for shared delete confirmation
+    @Published internal var sharedDeleteTargetTask: TaskEntity? = nil
+    /// Processing flag to prevent re-entrancy while delete flow is in progress
+    @Published internal var isProcessingSharedDelete: Bool = false
     
     // MARK: - Initialization
     
@@ -137,5 +150,57 @@ final class CalendarViewModel: ObservableObject {
     
     internal func reloadFolders() {
         self.folders = FolderCoreDataService.shared.loadFolders().sorted { $0.order < $1.order }
+    }
+    
+    // MARK: - Shared delete confirmation
+    
+    internal func requestConfirmSharedDelete(for task: TaskEntity) {
+        guard !self.showingConfirmSharedDelete, !self.isProcessingSharedDelete else { return }
+        self.sharedDeleteTargetTask = task
+        self.showingConfirmSharedDelete = true
+    }
+    
+    internal func cancelConfirmSharedDelete() {
+        self.showingConfirmSharedDelete = false
+        self.sharedDeleteTargetTask = nil
+    }
+    
+    internal func performConfirmSharedDelete() {
+        guard !self.isProcessingSharedDelete else { return }
+        self.isProcessingSharedDelete = true
+        
+        guard let task = self.sharedDeleteTargetTask else {
+            self.isProcessingSharedDelete = false
+            cancelConfirmSharedDelete()
+            return
+        }
+        guard let listId = task.serverId, !listId.isEmpty else {
+            Toast.shared.present(title: Texts.Settings.Sync.Retry.title)
+            logger.error("No serverId when trying to remove my membership from shared list task.")
+            self.isProcessingSharedDelete = false
+            cancelConfirmSharedDelete()
+            return
+        }
+        ShareAccessService.shared.deleteMyMembership(listId: listId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        do {
+                            UNUserNotificationCenter.current().removeNotifications(for: task.notifications)
+                            try TaskService.deleteRemovedTask(for: task)
+                            logger.debug("Successfully removed membership and deleted local task.")
+                        } catch {
+                            logger.error("Failed to delete local task after membership removal: \(error.localizedDescription)")
+                        }
+                    }
+                case .failure(let error):
+                    Toast.shared.present(title: Texts.Settings.Sync.Retry.title)
+                    logger.error("Failed to remove membership from list before local delete: \(error.localizedDescription)")
+                }
+                self.isProcessingSharedDelete = false
+                self.cancelConfirmSharedDelete()
+            }
+        }
     }
 }

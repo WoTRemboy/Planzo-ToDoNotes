@@ -133,7 +133,7 @@ struct SettingsView: View {
                             viewModel.readNotificationStatus()
                         }
                     languageButton
-                    resetTasksButton
+//                    resetTasksButton
                     taskCreationSettingsButton
                 }
                 .clipShape(.rect(cornerRadius: 10))

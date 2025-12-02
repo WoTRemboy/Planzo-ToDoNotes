@@ -94,7 +94,7 @@ final class FullSyncNetworkService: ObservableObject {
                         self.syncLists(decoded.lists)
                         self.syncItems(decoded.items)
                         self.syncShares(decoded.shares)
-                        self.syncNotifications(decoded.notifications)
+//                        self.syncNotifications(decoded.notifications)
                         self.refreshSharingInfoForAllSharedTasks()
                         DispatchQueue.main.async {
                             UserCoreDataService.shared.updateLastSyncAt()
@@ -164,7 +164,7 @@ final class FullSyncNetworkService: ObservableObject {
                         self.syncLists(decoded.lists.upserts, deletes: decoded.lists.deletes, since: since)
                         self.syncItems(decoded.items.upserts, deletedItems: decoded.items.deletes, since: since)
                         self.syncShares(decoded.shares.upserts)
-                        self.syncNotifications(decoded.notifications.upserts, deletes: decoded.notifications.deletes, since: since)
+//                        self.syncNotifications(decoded.notifications.upserts, deletes: decoded.notifications.deletes, since: since)
                         self.refreshSharingInfoForAllSharedTasks()
                         DispatchQueue.main.async {
                             UserCoreDataService.shared.updateLastSyncAt()
@@ -297,32 +297,35 @@ final class FullSyncNetworkService: ObservableObject {
         let context = CoreDataProvider.shared.persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "serverId != nil AND serverId != '' AND share.@count > 0")
-        var targets: [(listId: String, objectID: NSManagedObjectID)] = []
+        var targets: [(listId: String, objectID: NSManagedObjectID, isOwner: Bool)] = []
         context.performAndWait {
             let tasks: [TaskEntity] = (try? context.fetch(fetchRequest)) ?? []
             for task in tasks {
                 if let listId = task.serverId, !listId.isEmpty {
-                    targets.append((listId: listId, objectID: task.objectID))
+                    let isOwner = (task.role == ShareAccess.owner.rawValue)
+                    targets.append((listId: listId, objectID: task.objectID, isOwner: isOwner))
                 }
             }
         }
         guard !targets.isEmpty else { return }
         for target in targets {
-            // Refresh members count
-            ShareAccessService.shared.getMembers(for: target.listId) { result in
-                switch result {
-                case .success(let members):
-                    let context = CoreDataProvider.shared.persistentContainer.viewContext
-                    context.perform {
-                        if let task = try? context.existingObject(with: target.objectID) as? TaskEntity {
-                            task.members = Int16(members.count)
-                            do { try context.save() } catch {
-                                logger.error("Failed to save refreshed members count for listId \(target.listId): \(error.localizedDescription)")
+            // Refresh members count only for owners
+            if target.isOwner {
+                ShareAccessService.shared.getMembers(for: target.listId) { result in
+                    switch result {
+                    case .success(let members):
+                        let context = CoreDataProvider.shared.persistentContainer.viewContext
+                        context.perform {
+                            if let task = try? context.existingObject(with: target.objectID) as? TaskEntity {
+                                task.members = Int16(members.count)
+                                do { try context.save() } catch {
+                                    logger.error("Failed to save refreshed members count for listId \(target.listId): \(error.localizedDescription)")
+                                }
                             }
                         }
+                    case .failure(let error):
+                        logger.error("Failed to refresh members for listId \(target.listId): \(error.localizedDescription)")
                     }
-                case .failure(let error):
-                    logger.error("Failed to refresh members for listId \(target.listId): \(error.localizedDescription)")
                 }
             }
             // Refresh my role

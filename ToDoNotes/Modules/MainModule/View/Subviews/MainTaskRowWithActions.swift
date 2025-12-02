@@ -35,7 +35,13 @@ struct MainTaskRowWithActions: View {
         Button {
             handleRowTap()
         } label: {
-            TaskListRow(entity: entity, isLast: isLast)
+            TaskListRow(
+                entity: entity,
+                isLast: isLast,
+                onRequestConfirmSharedDelete: { task in
+                    viewModel.requestConfirmSharedDelete(for: task)
+                }
+            )
         }
         .swipeActions(edge: .leading, allowsFullSwipe: viewModel.selectedFilter == .deleted) {
             if entity.role != ShareAccess.viewOnly.rawValue {
@@ -52,6 +58,7 @@ struct MainTaskRowWithActions: View {
     /// Handles tapping the task row depending on the selected filter.
     private func handleRowTap() {
         if viewModel.selectedFilter == .deleted {
+            guard isOwner else { return }
             viewModel.removedTask = entity
             viewModel.toggleShowingEditRemovedAlert()
             logger.debug("Tapped on a deleted task to recover: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
@@ -69,8 +76,14 @@ struct MainTaskRowWithActions: View {
             importantButton
             pinnedButton
         } else {
-            restoreButton
+            if isOwner {
+                restoreButton
+            }
         }
+    }
+    
+    private var isOwner: Bool {
+        entity.role == nil || entity.role == ShareAccess.owner.rawValue
     }
     
     /// Defines trailing swipe action for sharing, moving and deleting the task.
@@ -78,17 +91,22 @@ struct MainTaskRowWithActions: View {
     private var trailingSwipeAction: some View {
         removeButton
         if viewModel.selectedFilter != .deleted {
-            if entity.role != ShareAccess.viewOnly.rawValue {
-                
-                if entity.role == nil || entity.role == ShareAccess.owner.rawValue {
-                    folderButton
-                }
-                
-                if authService.isAuthorized {
-                    shareButton
-                }
+            if !isSharedTask {
+                folderButton
+            }
+            
+            if authService.isAuthorized, (entity.role == ShareAccess.owner.rawValue || entity.role == nil) {
+                shareButton
             }
         }
+    }
+    
+    private var isSharedTask: Bool {
+        if entity.members > 0 { return true }
+        if let role = entity.role {
+            return role == ShareAccess.viewOnly.rawValue || role == ShareAccess.edit.rawValue
+        }
+        return false
     }
     
     // MARK: - Swipe Action Buttons
@@ -173,29 +191,13 @@ struct MainTaskRowWithActions: View {
     }
     
     private var removeButton: some View {
-        Button(role: .destructive) {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                if viewModel.selectedFilter != .deleted {
-                    do {
-                        try TaskService.toggleRemoved(for: entity)
-                        Toast.shared.present(title: Texts.Toasts.removed)
-                        logger.debug("Task moved to deleted: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
-                    } catch {
-                        logger.error("Task could not be moved to deleted: \(error.localizedDescription)")
-                    }
-                } else {
-                    do {
-                        try TaskService.deleteRemovedTask(for: entity)
-                        logger.debug("Task permanently deleted.")
-                    } catch {
-                        logger.error("Task could not be permanently deleted: \(error.localizedDescription)")
-                    }
-                }
+        TaskRemoveButton(
+            entity: entity,
+            isInDeletedContext: { viewModel.selectedFilter == .deleted },
+            requestConfirmSharedDelete: { task in
+                viewModel.requestConfirmSharedDelete(for: task)
             }
-        } label: {
-            Image.TaskManagement.TaskRow.SwipeAction.remove
-        }
-        .tint(Color.SwipeColors.remove)
+        )
     }
 }
 

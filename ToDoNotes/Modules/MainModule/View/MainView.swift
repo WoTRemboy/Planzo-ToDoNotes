@@ -28,10 +28,6 @@ struct MainView: View {
     private let overviewTip = MainPageOverview()
     @State private var folderSetupTask: TaskEntity?
     
-    // Note: This view expects `viewModel` to provide task data such as `allTasks`,
-    // along with segmented and filtered task arrays.
-    // Please ensure the MainViewModel publishes these properties accordingly.
-    
     // MARK: - Body
     
     internal var body: some View {
@@ -124,6 +120,9 @@ struct MainView: View {
         }
         .popView(isPresented: $viewModel.showingSyncErrorAlert, onTap: {}, onDismiss: {}) {
             syncErrorAlert
+        }
+        .popView(isPresented: $viewModel.showingConfirmSharedDelete, onTap: {}, onDismiss: {}) {
+            confirmSharedDeleteAlert
         }
     }
     
@@ -319,6 +318,21 @@ extension MainView {
             },
             secondaryButtonTitle: Texts.Settings.Sync.Retry.cancel,
             secondaryAction: viewModel.toggleShowingSyncErrorAlert)
+    }
+    
+    /// Alert to confirm deletion of a shared task when user is not the owner.
+    private var confirmSharedDeleteAlert: some View {
+        CustomAlertView(
+            title: Texts.TaskManagement.SharingAccess.RemoveMeAlert.title,
+            message: Texts.TaskManagement.SharingAccess.RemoveMeAlert.message,
+            primaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertYes,
+            primaryAction: {
+                viewModel.performConfirmSharedDelete()
+            },
+            secondaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertCancel,
+            secondaryAction: {
+                viewModel.cancelConfirmSharedDelete()
+            })
     }
 }
 

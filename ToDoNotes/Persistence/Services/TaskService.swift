@@ -124,6 +124,7 @@ final class TaskService {
                     }
                 }
                 
+                /*
                 for notificationEntity in notificationEntities {
                     if let serverId = notificationEntity.serverId, !serverId.isEmpty {
                         NotificationNetworkService.shared.updateNotification(notificationEntity)
@@ -168,6 +169,7 @@ final class TaskService {
                         logger.error("Failed to fetch server notifications for cleanup: \(error.localizedDescription)")
                     }
                 }
+                 */
                 
             case .failure(let error):
                 logger.error("Save task sync error: \(error.localizedDescription)")
@@ -244,6 +246,7 @@ final class TaskService {
                     }
                 }
                 
+                /*
                 if let notificationsSet = newTask.notifications as? Set<NotificationEntity> {
                     for notificationEntity in notificationsSet {
                         NotificationNetworkService.shared.createNotification(for: newTask, type: notificationEntity.type ?? "", target: notificationEntity.target ?? Date()) { result in
@@ -256,6 +259,7 @@ final class TaskService {
                         }
                     }
                 }
+                 */
             case .failure(let error):
                 logger.error("Save task sync error: \(error.localizedDescription)")
             }
@@ -283,11 +287,13 @@ final class TaskService {
     
     /// Deletes all tasks marked as removed using a batch delete.
     static func deleteRemovedTasks() {
+        let ownerRaw = ShareAccess.owner.rawValue
+        
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Texts.CoreData.entity)
-        fetchRequest.predicate = NSPredicate(format: "removed == %@", NSNumber(value: true))
+        fetchRequest.predicate = NSPredicate(format: "removed == YES AND (role == nil OR role == %@)", ownerRaw)
         
         let syncFetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
-        syncFetchRequest.predicate = NSPredicate(format: "removed == YES && serverId != nil")
+        syncFetchRequest.predicate = NSPredicate(format: "removed == YES AND serverId != nil AND (role == nil OR role == %@)", ownerRaw)
         if let tasksToDelete = try? viewContext.fetch(syncFetchRequest) {
             for task in tasksToDelete {
                 if let serverId = task.serverId {
@@ -652,5 +658,5 @@ extension TaskService {
 
 enum TaskServiceError: Error {
     case folderIsTheSame
+    case insufficientPermissions
 }
-

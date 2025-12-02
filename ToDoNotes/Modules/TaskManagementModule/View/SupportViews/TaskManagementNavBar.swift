@@ -15,6 +15,8 @@ struct TaskManagementNavBar: View {
     /// View model controlling the current task state.
     @ObservedObject private var viewModel: TaskManagementViewModel
     
+    @EnvironmentObject private var authService: AuthNetworkService
+    
     /// The task entity being edited/created.
     private let entity: TaskEntity?
     /// Closure triggered when duplicating a task.
@@ -55,7 +57,7 @@ struct TaskManagementNavBar: View {
                     HStack(spacing: 0) {
                         backButton  // Back button to dismiss the view
                         titleLabel  // Title showing today's date
-                        if entity != nil, viewModel.currentRole != .viewOnly {
+                        if entity != nil, authService.isAuthorized, viewModel.isTaskOwner {
                             shareButton
                         }
                         moreButton  // More options button (menu with actions)
@@ -199,9 +201,13 @@ struct TaskManagementNavBar: View {
     /// Deletes the current task.
     private var deleteButton: some View {
         Button(role: .destructive) {
-            viewModel.toggleRemoved()
-            onDismiss()
-            Toast.shared.present(title: Texts.Toasts.removed)
+            if let task = entity, let role = task.role, role != ShareAccess.owner.rawValue {
+                viewModel.requestConfirmSharedDelete(for: task)
+            } else {
+                viewModel.toggleRemoved()
+                onDismiss()
+                Toast.shared.present(title: Texts.Toasts.removed)
+            }
         } label: {
             Label {
                 Text(Texts.TaskManagement.ContextMenu.delete)
@@ -261,4 +267,5 @@ struct TaskManagementNavBar: View {
         entity: PreviewData.taskItem,
         onDuplicate: {},
         onDismiss: {})
+    .environmentObject(AuthNetworkService())
 }

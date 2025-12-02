@@ -65,6 +65,9 @@ struct TodayView: View {
                 acceptTitle: Texts.Settings.accept
             )
         }
+        .popView(isPresented: $viewModel.showingConfirmSharedDelete, onTap: {}, onDismiss: {}) {
+            confirmSharedDeleteAlert
+        }
         
         // Sheet for task creation
         .sheet(isPresented: $viewModel.showingTaskCreateView) {
@@ -250,6 +253,25 @@ extension TodayView {
         if !completed.isEmpty { result[.completed] = completed }
         
         return result
+    }
+}
+
+// MARK: - Alerts
+
+extension TodayView {
+    /// Alert to confirm deletion of a shared task when user is not the owner (same as in Main).
+    private var confirmSharedDeleteAlert: some View {
+        CustomAlertView(
+            title: Texts.TaskManagement.SharingAccess.RemoveMeAlert.title,
+            message: Texts.TaskManagement.SharingAccess.RemoveMeAlert.message,
+            primaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertYes,
+            primaryAction: {
+                viewModel.performConfirmSharedDelete()
+            },
+            secondaryButtonTitle: Texts.MainPage.Filter.RemoveFilter.alertCancel,
+            secondaryAction: {
+                viewModel.cancelConfirmSharedDelete()
+            })
     }
 }
 
