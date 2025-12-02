@@ -139,9 +139,6 @@ struct TaskManagementView: View {
             .presentationDetents([.height(670)])
             .interactiveDismissDisabled()
         }
-//        .popView(isPresented: $viewModel.showingNetworkErrorAlert, onTap: {}, onDismiss: {}) {
-//            syncErrorAlert
-//        }
         .popView(isPresented: $viewModel.showingStopSharingAlert, onTap: {}, onDismiss: {}) {
             stopSharingAlert
         }
@@ -547,7 +544,7 @@ extension TaskManagementView {
             return
         }
         // Adding a new task: if role is restricted, block (no server id to verify)
-        if viewModel.currentRole == .edit || viewModel.currentRole == .viewOnly {
+        if viewModel.currentRole == .edit {
             Toast.shared.present(title: Texts.Settings.Sync.Retry.title)
             if thenDismiss { onDismiss() }
             return
