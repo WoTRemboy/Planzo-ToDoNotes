@@ -1792,25 +1792,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The data will be deleted permanently."
+            "value" : "Your tasks will be permanently deleted. Tasks you can view or edit will remain."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los datos se eliminarán de forma permanente."
+            "value" : "Sus tareas se eliminarán de forma permanente. Las tareas a las que tiene acceso como lector o editor permanecerán."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les données seront supprimées définitivement."
+            "value" : "Vos tâches seront supprimées définitivement. Les tâches auxquelles vous avez accès en lecture ou en modification resteront."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Данные будут удалены навсегда"
+            "value" : "Ваши задачи будут удалены навсегда. Задачи, к которым вы имеете доступ в роли просмотра или редактора, останутся."
           }
         }
       }

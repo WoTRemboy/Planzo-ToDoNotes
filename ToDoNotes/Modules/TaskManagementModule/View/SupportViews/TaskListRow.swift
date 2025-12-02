@@ -158,12 +158,20 @@ struct TaskListRow: View {
     private var nameSharedView: some View {
         HStack(spacing: 8) {
             nameLabel
-            if entity.members > 0 {
+            if isSharedTask {
                 sharingIcon
             }
         }
     }
     
+    private var isSharedTask: Bool {
+        if entity.members > 0 { return true }
+        if let role = entity.role {
+            return role == ShareAccess.viewOnly.rawValue || role == ShareAccess.edit.rawValue
+        }
+        return false
+    }
+        
     /// Displays the task name with optional strikethrough and faded colors depending on the task state.
     private var nameLabel: some View {
         let name = entity.name ?? String()

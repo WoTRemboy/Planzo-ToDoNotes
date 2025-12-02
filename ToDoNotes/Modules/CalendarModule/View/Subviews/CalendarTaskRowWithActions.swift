@@ -130,13 +130,21 @@ struct CalendarTaskRowWithActions: View {
     @ViewBuilder
     private var trailingSwipeAction: some View {
         removeButton
-        if entity.members == 0 {
+        if !isSharedTask {
             folderButton
         }
         
         if authService.isAuthorized, (entity.role == ShareAccess.owner.rawValue || entity.role == nil) {
             shareButton
         }
+    }
+    
+    private var isSharedTask: Bool {
+        if entity.members > 0 { return true }
+        if let role = entity.role {
+            return role == ShareAccess.viewOnly.rawValue || role == ShareAccess.edit.rawValue
+        }
+        return false
     }
     
     private var shareButton: some View {

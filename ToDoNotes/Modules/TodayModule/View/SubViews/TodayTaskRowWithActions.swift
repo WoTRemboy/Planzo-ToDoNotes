@@ -86,13 +86,21 @@ struct TodayTaskRowWithSwipeActions: View {
     @ViewBuilder
     private var trailingSwipeActions: some View {
         removeButton
-        if entity.members == 0 {
+        if !isSharedTask {
             folderButton
         }
         
         if authService.isAuthorized, (entity.role == ShareAccess.owner.rawValue || entity.role == nil) {
             shareButton
         }
+    }
+    
+    private var isSharedTask: Bool {
+        if entity.members > 0 { return true }
+        if let role = entity.role {
+            return role == ShareAccess.viewOnly.rawValue || role == ShareAccess.edit.rawValue
+        }
+        return false
     }
     
     // MARK: - Individual Swipe Buttons

@@ -283,11 +283,13 @@ final class TaskService {
     
     /// Deletes all tasks marked as removed using a batch delete.
     static func deleteRemovedTasks() {
+        let ownerRaw = ShareAccess.owner.rawValue
+        
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Texts.CoreData.entity)
-        fetchRequest.predicate = NSPredicate(format: "removed == %@", NSNumber(value: true))
+        fetchRequest.predicate = NSPredicate(format: "removed == YES AND (role == nil OR role == %@)", ownerRaw)
         
         let syncFetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
-        syncFetchRequest.predicate = NSPredicate(format: "removed == YES && serverId != nil")
+        syncFetchRequest.predicate = NSPredicate(format: "removed == YES AND serverId != nil AND (role == nil OR role == %@)", ownerRaw)
         if let tasksToDelete = try? viewContext.fetch(syncFetchRequest) {
             for task in tasksToDelete {
                 if let serverId = task.serverId {

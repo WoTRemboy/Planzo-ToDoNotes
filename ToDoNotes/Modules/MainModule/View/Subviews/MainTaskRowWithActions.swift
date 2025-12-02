@@ -57,6 +57,7 @@ struct MainTaskRowWithActions: View {
     
     /// Handles tapping the task row depending on the selected filter.
     private func handleRowTap() {
+        guard isOwner else { return }
         if viewModel.selectedFilter == .deleted {
             viewModel.removedTask = entity
             viewModel.toggleShowingEditRemovedAlert()
@@ -75,8 +76,14 @@ struct MainTaskRowWithActions: View {
             importantButton
             pinnedButton
         } else {
-            restoreButton
+            if isOwner {
+                restoreButton
+            }
         }
+    }
+    
+    private var isOwner: Bool {
+        entity.role == nil || entity.role == ShareAccess.owner.rawValue
     }
     
     /// Defines trailing swipe action for sharing, moving and deleting the task.
@@ -84,7 +91,7 @@ struct MainTaskRowWithActions: View {
     private var trailingSwipeAction: some View {
         removeButton
         if viewModel.selectedFilter != .deleted {
-            if entity.members == 0 {
+            if !isSharedTask {
                 folderButton
             }
             
@@ -92,6 +99,14 @@ struct MainTaskRowWithActions: View {
                 shareButton
             }
         }
+    }
+    
+    private var isSharedTask: Bool {
+        if entity.members > 0 { return true }
+        if let role = entity.role {
+            return role == ShareAccess.viewOnly.rawValue || role == ShareAccess.edit.rawValue
+        }
+        return false
     }
     
     // MARK: - Swipe Action Buttons
