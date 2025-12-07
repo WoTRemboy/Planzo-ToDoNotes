@@ -18,7 +18,7 @@ struct SubscriptionTrialToggle: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.trailing, 60)
             
-            Toggle(isOn: $viewModel.selectedFreePlan) {}
+            Toggle(isOn: $viewModel.selectedFreePlan.animation()) {}
                 .fixedSize()
                 .background(Color.SupportColors.supportButton)
                 .tint(Color.ToggleColors.main)
@@ -28,6 +28,9 @@ struct SubscriptionTrialToggle: View {
         .background {
             RoundedRectangle(cornerRadius: 20)
                 .foregroundStyle(Color.SupportColors.supportButton)
+        }
+        .onDisappear {
+            viewModel.selectedFreePlan = false
         }
     }
 }
