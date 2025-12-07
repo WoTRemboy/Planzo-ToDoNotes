@@ -30,10 +30,6 @@ struct FolderFormView: View {
             
             Spacer()
             
-            if folder.system {
-                Image.Subscription.premium
-            }
-            
             if !folder.visible {
                 Image.Folder.hidden
                     .renderingMode(.template)
@@ -41,8 +37,8 @@ struct FolderFormView: View {
                     .frame(width: 20, height: 20)
             }
             
-            if folder.locked {
-                Image.Folder.unlocked
+            if folder.system {
+                Image.Folder.locked
                     .renderingMode(.template)
                     .foregroundStyle(Color.LabelColors.labelSecondary)
                     .frame(width: 20, height: 20)

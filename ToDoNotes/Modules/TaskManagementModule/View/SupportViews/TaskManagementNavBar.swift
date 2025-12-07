@@ -104,9 +104,9 @@ struct TaskManagementNavBar: View {
     
     private var shareButton: some View {
         Button {
-            viewModel.setSharingTask(to: entity)
+            isPremium ? viewModel.setSharingTask(to: entity) : viewModel.toggleShowingSubscriptionPage()
         } label: {
-            Image.NavigationBar.share
+            (isPremium ? Image.NavigationBar.share : Image.NavigationBar.premiumShare)
                 .resizable()
                 .frame(width: 24, height: 24)
         }
@@ -233,16 +233,31 @@ struct TaskManagementNavBar: View {
         }
     }
     
+    @ViewBuilder
     private var shareSettingsButton: some View {
-        CustomNavLink(
-            destination: SharingAccessView(viewModel: viewModel)) {
-                    Label {
-                        Text(Texts.TaskManagement.SharingAccess.shareSetting)
-                    } icon: {
-                        Image.TaskManagement.EditTask.Menu.shareSettings
-                            .renderingMode(.template)
+        if isPremium {
+            CustomNavLink(
+                destination: SharingAccessView(viewModel: viewModel)) {
+                        Label {
+                            Text(Texts.TaskManagement.SharingAccess.shareSetting)
+                        } icon: {
+                            Image.TaskManagement.EditTask.Menu.shareSettings
+                                .renderingMode(.template)
+                        }
                     }
+        } else {
+            Button {
+                viewModel.toggleShowingSubscriptionPage()
+            } label: {
+                Label {
+                    Text(Texts.TaskManagement.SharingAccess.shareSetting)
+                } icon: {
+                    Image.TaskManagement.EditTask.Menu.shareSettings
+                        .renderingMode(.template)
                 }
+            }
+        }
+        
     }
     
     private var closeSharingButton: some View {
@@ -256,6 +271,10 @@ struct TaskManagementNavBar: View {
                     .renderingMode(.template)
             }
         }
+    }
+    
+    private var isPremium: Bool {
+        authService.currentUser?.isPremium ?? false
     }
 }
 

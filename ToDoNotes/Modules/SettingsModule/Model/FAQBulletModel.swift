@@ -24,3 +24,23 @@ enum FAQBullet: CaseIterable {
         }
     }
 }
+
+enum FAQBulletSub: CaseIterable {
+    case auth
+    case restore
+    case status
+    case payment
+    
+    internal var title: String {
+        switch self {
+        case .auth:
+            return Texts.Settings.Sync.SubFAQ.second
+        case .restore:
+            return Texts.Settings.Sync.SubFAQ.third
+        case .status:
+            return Texts.Settings.Sync.SubFAQ.fourth
+        case .payment:
+            return Texts.Settings.Sync.SubFAQ.fifth
+        }
+    }
+}

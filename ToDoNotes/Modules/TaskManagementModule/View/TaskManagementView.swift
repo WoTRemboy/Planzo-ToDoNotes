@@ -123,6 +123,9 @@ struct TaskManagementView: View {
                 viewModel.loadMembersForSharingTaskWithToasts()
             }
         }
+        .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {
+            SubscriptionView(namespace: animation, networkService: authService)
+        }
         // Share Sheet Presentation
         .sheet(item: $viewModel.sharingTask) { item in
             TaskManagementShareView(viewModel: viewModel) {

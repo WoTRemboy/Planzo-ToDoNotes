@@ -29,8 +29,23 @@ final class UserCoreDataService {
         entity.name = user.name
         entity.email = user.email
         entity.avatarURL = user.avatarUrl
-        entity.subscription = user.subscription.rawValue
         entity.lastSyncAt = user.lastSyncAt
+        
+        // Save Subscription relation
+        if let sub = user.subscription {
+            let subEntity = SubscriptionEntity(context: viewContext)
+            subEntity.type = sub.type
+            subEntity.plan = sub.plan
+            subEntity.status = sub.status
+            subEntity.validFrom = Date.iso8601SecondsDateFormatter.date(from: sub.validFrom ?? "")
+            subEntity.validUntil = Date.iso8601SecondsDateFormatter.date(from: sub.validUntil ?? "")
+            subEntity.trialUsed = sub.trialUsed
+            subEntity.user = entity
+            entity.subscription = subEntity
+        } else {
+            entity.subscription = nil
+        }
+        
         saveContext()
     }
     
@@ -46,8 +61,8 @@ final class UserCoreDataService {
             let name = entity.name
             let email = entity.email
             let avatarURL = entity.avatarURL
-            let subscription = entity.subscription
             let lastSyncAt = entity.lastSyncAt
+            let subscriptionEntity = entity.subscription
             return User(
                 id: id,
                 provider: provider,
@@ -56,7 +71,17 @@ final class UserCoreDataService {
                 name: name,
                 email: email,
                 avatarUrl: avatarURL,
-                subscription: SubscriptionType(rawValue: subscription ?? "free") ?? .free,
+                subscription: {
+                    guard let s = subscriptionEntity else { return nil }
+                    return Subscription(
+                        type: s.type,
+                        plan: s.plan,
+                        status: s.status,
+                        validFrom: s.validFrom?.iso8601String,
+                        validUntil: s.validUntil?.iso8601String,
+                        trialUsed: s.trialUsed
+                    )
+                }(),
                 lastSyncAt: lastSyncAt
             )
         }
@@ -101,3 +126,4 @@ private extension Date {
 extension Notification.Name {
     static let userDidUpdateLastSyncAt = Notification.Name("userDidUpdateLastSyncAt")
 }
+

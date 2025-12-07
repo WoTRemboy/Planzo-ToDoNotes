@@ -17,7 +17,7 @@ final class AuthNetworkService: ObservableObject {
     
     private let logoutDelay: TimeInterval = 1.5
     private let tokenStorage = TokenStorageService()
-    
+        
     init() {
         NotificationCenter.default.addObserver(forName: .userDidUpdateLastSyncAt, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else { return }
@@ -74,7 +74,17 @@ final class AuthNetworkService: ObservableObject {
                     FullSyncNetworkService.shared.syncAllData { result in
                         switch result {
                         case .success(_):
-                            completion(.success(authResponse))
+                            SubscriptionCoordinatorService.shared.checkSubscriptionAndUpdateState { subResult in
+                                switch subResult {
+                                case .success:
+                                    logger.info("Google login: subscription check succeeded")
+                                    self.loadPersistedProfile()
+                                    completion(.success(authResponse))
+                                case .failure(let error):
+                                    logger.error("Google login: subscription check failed: \(error.localizedDescription)")
+                                    completion(.success(authResponse))
+                                }
+                            }
                         case .failure(let error):
                             completion(.failure(error))
                         }
@@ -135,7 +145,17 @@ final class AuthNetworkService: ObservableObject {
                     FullSyncNetworkService.shared.syncAllData { result in
                         switch result {
                         case .success(_):
-                            completion(.success(authResponse))
+                            SubscriptionCoordinatorService.shared.refreshStatusFromBoth { subResult in
+                                switch subResult {
+                                case .success:
+                                    logger.info("Apple login: subscription refresh succeeded")
+                                    self.loadPersistedProfile()
+                                    completion(.success(authResponse))
+                                case .failure(let error):
+                                    logger.error("Apple login: subscription refresh failed: \(error.localizedDescription)")
+                                    completion(.success(authResponse))
+                                }
+                            }
                         case .failure(let error):
                             completion(.failure(error))
                         }
@@ -282,6 +302,7 @@ final class AuthNetworkService: ObservableObject {
                 name: (claims["name"] as? String) ?? (claims["given_name"] as? String),
                 email: claims["email"] as? String,
                 avatarUrl: claims["picture"] as? String,
+                subscription: nil,
                 lastSyncAt: nil
             )
             DispatchQueue.main.async {
