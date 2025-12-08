@@ -100,10 +100,7 @@ struct SubscriptionView: View {
                 showingProductsError = true
             }
         }
-        .onChange(of: viewModel.shouldDismiss) { _, newValue in
-            if newValue {
-                dismiss()
-            }
+        .onChange(of: viewModel.shouldDismiss) { _, _ in dismiss()
         }
         .onChange(of: justPurchased) { _, newValue in
             if newValue {
