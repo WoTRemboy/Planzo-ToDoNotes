@@ -5,6 +5,39 @@
 //  Created by Roman Tverdokhleb on 03/09/2025.
 //
 
+/// Represents a subscription returned by backend and used across the app.
+internal struct Subscription: Codable, Equatable {
+    let type: String?
+    let plan: String?
+    let status: String?
+    let validFrom: String?
+    let validUntil: String?
+    let trialUsed: Bool
+
+    private enum CodingKeys: String, CodingKey {
+        case type, plan, status, validFrom, validUntil, trialUsed
+    }
+
+    internal init(type: String?, plan: String?, status: String?, validFrom: String?, validUntil: String?, trialUsed: Bool) {
+        self.type = type
+        self.plan = plan
+        self.status = status
+        self.validFrom = validFrom
+        self.validUntil = validUntil
+        self.trialUsed = trialUsed
+    }
+}
+
+/// Convenience helpers for date parsing and status checks.
+extension Subscription {
+
+    /// Simple convenience to check if plan is premium-like.
+    internal var isPremiumPlan: Bool {
+        let p = plan ?? ""
+        return p == "PRO"
+    }
+}
+
 /// Represents the user information returned by the authorization response.
 internal struct User: Codable, Equatable {
     let id: String?
@@ -14,14 +47,14 @@ internal struct User: Codable, Equatable {
     let name: String?
     let email: String?
     let avatarUrl: String?
-    let subscription: SubscriptionType
+    let subscription: Subscription?
     var lastSyncAt: String?
     
     private enum CodingKeys: String, CodingKey {
         case id, provider, sub, createdAt, name, email, avatarUrl, subscription
     }
     
-    internal init(id: String?, provider: String?, sub: String?, createdAt: String?, name: String?, email: String?, avatarUrl: String?, subscription: SubscriptionType = .free, lastSyncAt: String?) {
+    internal init(id: String?, provider: String?, sub: String?, createdAt: String?, name: String?, email: String?, avatarUrl: String?, subscription: Subscription?, lastSyncAt: String?) {
         self.id = id
         self.provider = provider
         self.sub = sub
@@ -42,9 +75,17 @@ internal struct User: Codable, Equatable {
         name = try container.decodeIfPresent(String.self, forKey: .name)
         email = try container.decodeIfPresent(String.self, forKey: .email)
         avatarUrl = try container.decodeIfPresent(String.self, forKey: .avatarUrl)
-        subscription = try container.decodeIfPresent(SubscriptionType.self, forKey: .subscription) ?? .free
+        subscription = try container.decodeIfPresent(Subscription.self, forKey: .subscription)
         lastSyncAt = nil
     }
+}
+
+extension User {
+    /// Returns true if user has any subscription object.
+    internal var hasSubscription: Bool { subscription != nil }
+
+    /// Returns whether user has premium capabilities.
+    internal var isPremium: Bool { subscription?.isPremiumPlan == true }
 }
 
 /// Represents the structure of the response returned by the authorization endpoint.

@@ -6,10 +6,40 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct SubscriptionPricesView: View {
     
     @EnvironmentObject private var viewModel: SubscriptionViewModel
+    @ObservedObject private var subscription = SubscriptionCoordinatorService.shared
+    
+    private func currentProductID(for plan: SubscriptionPlan) -> ProSubscriptionID {
+        switch (plan, viewModel.selectedFreePlan) {
+        case (.annual, true): return .annualTrial
+        case (.annual, false): return .annual
+        case (.monthly, true): return .monthlyTrial
+        case (.monthly, false): return .monthly
+        }
+    }
+    
+    private func skProduct(for id: ProSubscriptionID) -> Product? {
+        subscription.products.first { $0.id == id.rawValue }
+    }
+
+    private func currencyString(_ value: Decimal, product: Product) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        // Use the product's currency and locale to match StoreKit display formatting
+        formatter.currencyCode = product.priceFormatStyle.currencyCode
+        formatter.locale = product.priceFormatStyle.locale
+        return formatter.string(from: value as NSDecimalNumber) ?? "--"
+    }
+
+    private func perMonthString(for product: Product, months: Int) -> String {
+        guard months > 0 else { return product.displayPrice }
+        let perMonth = (product.price as NSDecimalNumber).decimalValue / Decimal(months)
+        return currencyString(perMonth, product: product)
+    }
     
     internal var body: some View {
         HStack(alignment: .bottom, spacing: 8) {
@@ -46,20 +76,36 @@ struct SubscriptionPricesView: View {
     }
     
     private func priceTile(type: SubscriptionPlan) -> some View {
-        VStack(spacing: 8) {
+        let selectedProduct: Product? = {
+            let id = currentProductID(for: type)
+            return skProduct(for: id)
+        }()
+        
+        return VStack(spacing: 8) {
             Text(type.title)
                 .font(.system(size: 14, weight: .medium))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
             
-            Text(String(format: "$%.2f", type.price))
+            Text(selectedProduct?.displayPrice ?? "--")
                 .font(.system(size: 25, weight: .bold))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
             
-            Text("($\(String(format: "%.2f", type.month))/\(Texts.Subscription.Page.month))")
+            let monthText: String = {
+                if let p = selectedProduct {
+                    if type == .annual {
+                        return "(\(perMonthString(for: p, months: 12))/\(Texts.Subscription.Page.month))"
+                    } else {
+                        return "(\(p.displayPrice)/\(Texts.Subscription.Page.month))"
+                    }
+                } else {
+                    return "--/\(Texts.Subscription.Page.month))"
+                }
+            }()
+            Text(monthText)
                 .textCase(.lowercase)
                 .font(.system(size: 14, weight: .regular))
                 .foregroundStyle(Color.LabelColors.labelSecondary)
@@ -75,7 +121,6 @@ struct SubscriptionPricesView: View {
             } else {
                 corners = [.allCorners]
             }
-            
             return RoundedCorner(radius: 10, corners: corners)
                 .stroke(viewModel.strokeColor(for: type), lineWidth: 2)
                 .foregroundStyle(Color.clear)
@@ -88,17 +133,30 @@ struct SubscriptionPricesView: View {
     }
     
     private var saveBanner: some View {
-        Text("\(Texts.Subscription.Page.save) $12")
+        let annual = skProduct(for: currentProductID(for: .annual))
+        let monthly = skProduct(for: currentProductID(for: .monthly))
+        let savingsText: String = {
+            if let a = annual, let m = monthly {
+                let aPrice = (a.price as NSDecimalNumber).decimalValue
+                let mPrice = (m.price as NSDecimalNumber).decimalValue
+                let yearlyMonthly = mPrice * 12
+                let diff = max(0, yearlyMonthly - aPrice)
+                if diff > 0 {
+                    return "\(Texts.Subscription.Page.save) \(currencyString(diff, product: a))"
+                }
+            }
+            return "\(Texts.Subscription.Page.save) --" // fallback to previous mock
+        }()
+        
+        return Text(savingsText)
             .textCase(.uppercase)
             .font(.system(size: 11, weight: .medium))
             .foregroundStyle(Color.LabelColors.labelWhite)
             .minimumScaleFactor(0.5)
             .lineLimit(1)
-        
             .frame(maxWidth: .infinity)
             .frame(height: 13)
             .padding(8)
-        
             .background {
                 RoundedCorner(radius: 10, corners: [.topLeft, .topRight])
                     .stroke(Color.SupportColors.supportSubscription, lineWidth: 2)
@@ -131,30 +189,10 @@ enum SubscriptionPlan {
     internal var title: String {
         switch self {
         case .annual:
-            "Annual Plan"
+            Texts.Subscription.annual
         case .monthly:
-            "Monthly Plan"
-        }
-    }
-    
-    internal var price: Float {
-        switch self {
-        case .annual:
-            119.99
-        case .monthly:
-            14.99
-        }
-    }
-    
-    internal var month: Float {
-        switch self {
-        case .annual:
-            9.99
-        case .monthly:
-            14.99
+            Texts.Subscription.monthly
         }
     }
 }
-
-
 

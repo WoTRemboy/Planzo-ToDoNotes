@@ -76,7 +76,7 @@ struct MainCustomNavBar: View {
                 .frame(alignment: .leading)
                 .padding(.leading, 16)
             
-            if authService.currentUser?.isPro == true {
+            if authService.currentUser?.isPremium == true {
                 Text(Texts.Subscription.SubType.pro)
                     .font(.system(size: 25, weight: .bold))
                     .foregroundStyle(Color.LabelColors.labelSubscription)
@@ -118,7 +118,7 @@ struct MainCustomNavBar: View {
     /// Action buttons for search and importance toggle.
     private var buttons: some View {
         HStack(spacing: 20) {
-            if authService.currentUser?.isFree == true || authService.currentUser == nil {
+            if authService.currentUser?.isPremium == false || authService.currentUser == nil {
                 subscriptionButton
             }
             

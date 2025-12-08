@@ -24,7 +24,7 @@
     "_developerTeamID" : "NAJAJ652LV",
     "_disableDialogs" : false,
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 779923005.39019799,
+    "_lastSynchronizedDate" : 785955303.83315301,
     "_locale" : "en_US",
     "_renewalBillingIssuesEnabled" : false,
     "_storefront" : "USA",
@@ -65,9 +65,57 @@
               "locale" : "fr"
             },
             {
+              "description" : "Совместная работа в Planzo Pro",
+              "displayName" : "Доступ Pro (годовой)",
+              "locale" : "ru"
+            },
+            {
               "description" : "Planzo Pro Collaboration",
               "displayName" : "Pro Access (Annual)",
               "locale" : "en_US"
+            }
+          ],
+          "productID" : "iOS_todonotes_proaccess_annual_120",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Annual Plan",
+          "subscriptionGroupID" : "21784050",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "119.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "6755833101",
+          "introductoryOffer" : {
+            "internalID" : "586A6EDD",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
+          "localizations" : [
+            {
+              "description" : "Planzo Pro Collaboration",
+              "displayName" : "Pro Access (Annual)",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "Colaboración de Planzo Pro",
+              "displayName" : "Acceso Pro (anual)",
+              "locale" : "es_ES"
+            },
+            {
+              "description" : "Collaboration Planzo Pro",
+              "displayName" : "Accès Pro (annuel)",
+              "locale" : "fr"
             },
             {
               "description" : "Совместная работа в Planzo Pro",
@@ -75,9 +123,9 @@
               "locale" : "ru"
             }
           ],
-          "productID" : "iOS_todonotes_proaccess_annual_120",
+          "productID" : "iOS_todonotes_proaccess_annual_trial_15",
           "recurringSubscriptionPeriod" : "P1Y",
-          "referenceName" : "Annual Plan",
+          "referenceName" : "Annual Plan Trial",
           "subscriptionGroupID" : "21784050",
           "type" : "RecurringSubscription",
           "winbackOffers" : [
@@ -121,6 +169,54 @@
           "productID" : "iOS_todonotes_proaccess_monthly_15",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Monthly Plan",
+          "subscriptionGroupID" : "21784050",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "14.99",
+          "familyShareable" : false,
+          "groupNumber" : 4,
+          "internalID" : "6755833277",
+          "introductoryOffer" : {
+            "internalID" : "D77B09EC",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
+          "localizations" : [
+            {
+              "description" : "Planzo Pro Collaboration",
+              "displayName" : "Pro Access (Monthly)",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "Совместная работа в Planzo Pro",
+              "displayName" : "Доступ Pro (ежемесячный)",
+              "locale" : "ru"
+            },
+            {
+              "description" : "Colaboración de Planzo Pro",
+              "displayName" : "Acceso Pro (mensual)",
+              "locale" : "es_ES"
+            },
+            {
+              "description" : "Collaboration Planzo Pro",
+              "displayName" : "Accès Pro (mensuel)",
+              "locale" : "fr"
+            }
+          ],
+          "productID" : "iOS_todonotes_proaccess_monthly_trial_15",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly Plan Trial",
           "subscriptionGroupID" : "21784050",
           "type" : "RecurringSubscription",
           "winbackOffers" : [

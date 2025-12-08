@@ -7,6 +7,7 @@
 
 import SwiftUI
 import OSLog
+import StoreKit
 
 /// A logger instance for debug and error messages.
 private let logger = Logger(subsystem: "com.todonotes.subscription", category: "SubscriptionView")
@@ -20,8 +21,17 @@ struct SubscriptionView: View {
     /// Google authentication service.
     @StateObject private var googleAuthService: GoogleAuthService
     
+    @Environment(\.dismiss) private var dismiss
+    
     /// Animation namespace used for matched geometry transitions.
     private let namespace: Namespace.ID
+    
+    @ObservedObject private var subscription = SubscriptionCoordinatorService.shared
+    
+    @State private var showingProductsError: Bool = false
+    
+    @State private var justPurchased: Bool = false
+    
     
     init(namespace: Namespace.ID, networkService: AuthNetworkService) {
         self.namespace = namespace
@@ -29,6 +39,14 @@ struct SubscriptionView: View {
         _appleAuthService = StateObject(wrappedValue: AppleAuthService(networkService: networkService))
         
         _googleAuthService = StateObject(wrappedValue: GoogleAuthService(networkService: networkService))
+    }
+    
+    private func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: Texts.DateParameters.locale)
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter.string(from: date)
     }
     
     internal var body: some View {
@@ -49,9 +67,62 @@ struct SubscriptionView: View {
         .popView(isPresented: $viewModel.showingErrorAlert, onTap: {}, onDismiss: {}) {
             errorAlert
         }
+        .popView(isPresented: $showingProductsError, onTap: {}, onDismiss: {
+            dismiss()
+        }) {
+            CustomAlertView(
+                title: Texts.Settings.Sync.Retry.title,
+                message: Texts.Settings.Sync.Retry.content,
+                primaryButtonTitle: Texts.Settings.ok,
+                primaryAction: { showingProductsError = false; dismiss() }
+            )
+        }
+        .popView(isPresented: $viewModel.showingSuccessAlert, onTap: {}, onDismiss: { dismiss() }) {
+            CustomAlertView(
+                title: Texts.Settings.Reset.success,
+                message: viewModel.successAlertMessage,
+                primaryButtonTitle: Texts.Settings.ok,
+                primaryAction: {
+                    viewModel.showingSuccessAlert = false
+                    dismiss()
+                }
+            )
+        }
         .navigationTransition(
             id: Texts.NamespaceID.subscriptionButton,
             namespace: namespace)
+        .onAppear {
+            subscription.loadProducts()
+            subscription.refreshStatus()
+        }
+        .onChange(of: subscription.status) { _, newStatus in
+            if newStatus != .loading, subscription.products.count == 0 {
+                showingProductsError = true
+            }
+        }
+        .onChange(of: viewModel.shouldDismiss) { _, newValue in
+            if newValue {
+                dismiss()
+            }
+        }
+        .onChange(of: justPurchased) { _, newValue in
+            if newValue {
+                switch subscription.status {
+                case .subscribed(let expiration):
+                    if let exp = expiration {
+                        viewModel.setAlertMessage("\(Texts.Subscription.State.until):  \(formattedDate(exp))")
+                    } else {
+                        viewModel.setAlertMessage(Texts.Subscription.State.untilWithoutDate)
+                    }
+                    viewModel.showingSuccessAlert = true
+                    justPurchased = false
+                case .notSubscribed, .error:
+                    justPurchased = false
+                default:
+                    break
+                }
+            }
+        }
     }
     
     private var subscriptionContent: some View {
@@ -104,7 +175,9 @@ struct SubscriptionView: View {
     private var subscriptionView: some View {
         VStack {
             planTitle
-            trialToggle
+            if shouldShowTrialToggle {
+                trialToggle
+            }
             subscriptionPricesView
         }
         .padding(.top, 30)
@@ -123,6 +196,15 @@ struct SubscriptionView: View {
             .padding(.top, 8)
     }
     
+    private var shouldShowTrialToggle: Bool {
+        let backendAllows = authService.currentUser?.subscription?.trialUsed == false
+        let storeKitAllows = subscription.products.contains { product in
+            product.id == ProSubscriptionID.annualTrial.rawValue ||
+            product.id == ProSubscriptionID.monthlyTrial.rawValue
+        }
+        return backendAllows && storeKitAllows
+    }
+    
     private var subscriptionPricesView: some View {
         SubscriptionPricesView()
             .padding(.top)
@@ -130,17 +212,45 @@ struct SubscriptionView: View {
     
     private var continueButton: some View {
         Button {
-            // Continue Button Action
+            let productId: String = {
+                if viewModel.selectedFreePlan {
+                    return (viewModel.selectedSubscriptionPlan == .annual)
+                    ? ProSubscriptionID.annualTrial.rawValue
+                    : ProSubscriptionID.monthlyTrial.rawValue
+                } else {
+                    return (viewModel.selectedSubscriptionPlan == .annual)
+                    ? ProSubscriptionID.annual.rawValue
+                    : ProSubscriptionID.monthly.rawValue
+                }
+            }()
+            subscription.purchase(productId: productId) { result in
+                switch result {
+                case .success:
+                    DispatchQueue.main.async {
+                        justPurchased = true
+                    }
+                case .failure(_):
+                    DispatchQueue.main.async {
+                        viewModel.toggleShowingErrorAlert()
+                    }
+                }
+            }
         } label: {
-            Text(Texts.Subscription.Page.continueButton)
+            Text(viewModel.selectedFreePlan
+                 ? Texts.Subscription.Page.trialContinue
+                 : Texts.Subscription.Page.continueButton)
                 .font(.system(size: 17, weight: .medium))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .minimumScaleFactor(0.4)
+                .lineLimit(1)
+                .contentTransition(.numericText())
             
                 .foregroundColor(Color.LabelColors.labelReversed)
                 .background(Color.LabelColors.labelPrimary)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .frame(height: 50)
+        .disabled(subscription.purchasingProductId != nil || subscription.restoreInProgress || (subscription.status == .loading))
         .frame(maxWidth: .infinity)
         .minimumScaleFactor(0.4)
         
@@ -159,8 +269,8 @@ struct SubscriptionView: View {
     
     private var errorAlert: some View {
         CustomAlertView(
-            title: Texts.Authorization.Error.authorizationFailed,
-            message: Texts.Authorization.Error.retryLater,
+            title: Texts.Settings.Sync.Retry.title,
+            message: Texts.Settings.Sync.Retry.content,
             primaryButtonTitle: Texts.Settings.ok,
             primaryAction: {
                 viewModel.toggleShowingErrorAlert()
@@ -173,3 +283,4 @@ struct SubscriptionView: View {
         .environmentObject(SubscriptionViewModel())
         .environmentObject(AuthNetworkService())
 }
+

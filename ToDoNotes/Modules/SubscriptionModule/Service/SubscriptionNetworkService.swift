@@ -25,7 +25,7 @@ struct SubscriptionResponse: Codable {
     /// License information for the subscription
     struct License: Codable {
         /// The date and time until which the license is valid
-        let validUntil: String
+        let validUntil: String?
         /// The date and time from which the license is valid
         let validFrom: String
         /// The type of license
@@ -34,6 +34,7 @@ struct SubscriptionResponse: Codable {
         let plan: String
         /// The current status of the license
         let status: String
+        let trialUsed: Bool
     }
     
     /// License data associated with the subscription
@@ -42,81 +43,148 @@ struct SubscriptionResponse: Codable {
     let sub: String
 }
 
-/// Сервис для работы с подписками
 final class SubscriptionNetworkService {
     static let shared = SubscriptionNetworkService()
-    private let tokenStorage = TokenStorageService()
+    
+    // MARK: - Trial
     
     /// Starts a free trial for the user
-    /// - Parameter days: Duration of the trial period in days (default is 14)
-    /// - Returns: An updated `AuthResponse` containing a new access token and user subscription information
-    /// - Throws: `SubscriptionAPIError` if the token is missing, network request fails, response is invalid, or decoding fails
-    func startTrial(days: Int = 14) async throws -> AuthResponse {
-        guard let accessToken = tokenStorage.load(type: .accessToken) else {
-            logger.error("Missing access token when trying to start trial")
-            throw SubscriptionAPIError.missingToken
-        }
-        var components = URLComponents(string: "https://banana.avoqode.com/api/v1/subscription/trial")!
-        components.queryItems = [
-            URLQueryItem(name: "days", value: String(days))
-        ]
-        var request = URLRequest(url: components.url!)
-        request.httpMethod = "POST"
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        
-        do {
-            let (data, response) = try await URLSession.shared.data(for: request)
-            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                logger.error("Invalid response when starting trial: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
-                throw SubscriptionAPIError.invalidResponse
+    /// - Parameters:
+    ///   - days: Duration of the trial period in days (default is 14)
+    ///   - completion: Result with `AuthResponse` or `Error`
+    internal func startTrial(days: Int = 7, completion: @escaping (Result<AuthResponse, Error>) -> Void) {
+        AccessTokenManager.shared.getValidAccessToken { result in
+            switch result {
+            case .success(let accessToken):
+                var components = URLComponents(string: "https://banana.avoqode.com/api/v1/subscription/trial")!
+                components.queryItems = [ URLQueryItem(name: "days", value: String(days)) ]
+                guard let url = components.url else {
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "POST"
+                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+                
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        logger.error("Network error when starting trial: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.network(error))) }
+                        return
+                    }
+                    guard let data = data, let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                        logger.error("Invalid response when starting trial: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.invalidResponse)) }
+                        return
+                    }
+                    do {
+                        let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
+                        logger.info("Successfully started trial for \(days) days")
+                        DispatchQueue.main.async { completion(.success(authResponse)) }
+                    } catch {
+                        logger.error("Decoding error when starting trial: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.decoding(error))) }
+                    }
+                }
+                task.resume()
+            case .failure(let error):
+                completion(.failure(error))
             }
-            do {
-                let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
-                logger.info("Successfully started trial for \(days) days")
-                return authResponse
-            } catch {
-                logger.error("Decoding error when starting trial: \(error.localizedDescription)")
-                throw SubscriptionAPIError.decoding(error)
-            }
-        } catch {
-            logger.error("Network error when starting trial: \(error.localizedDescription)")
-            throw SubscriptionAPIError.network(error)
         }
     }
     
+    // MARK: - Check subscription
+    
     /// Checks the current subscription status of the user.
-    /// - Returns: A `SubscriptionResponse` containing subscription license data and subscription identifier.
-    /// - Throws: `SubscriptionAPIError` if the token is missing, network request fails, response is invalid, or decoding fails.
-    func checkSubscription() async throws -> SubscriptionResponse {
-        guard let accessToken = tokenStorage.load(type: .accessToken) else {
-            logger.error("Missing access token when trying to check subscription status")
-            throw SubscriptionAPIError.missingToken
+    /// - Parameter completion: Result with `SubscriptionResponse` or `Error`.
+    internal func checkSubscription(completion: @escaping (Result<SubscriptionResponse, Error>) -> Void) {
+        AccessTokenManager.shared.getValidAccessToken { result in
+            switch result {
+            case .success(let accessToken):
+                guard let url = URL(string: "https://banana.avoqode.com/api/v1/subscription/me") else {
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "GET"
+                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+                
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        logger.error("Network error when checking subscription: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.network(error))) }
+                        return
+                    }
+                    guard let data = data, let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                        logger.error("Invalid response when checking subscription: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.invalidResponse)) }
+                        return
+                    }
+                    do {
+                        let decoder = JSONDecoder()
+                        let subscriptionStatus = try decoder.decode(SubscriptionResponse.self, from: data)
+                        logger.info("Successfully fetched subscription status")
+                        DispatchQueue.main.async { completion(.success(subscriptionStatus)) }
+                    } catch {
+                        logger.error("Decoding error when checking subscription: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.decoding(error))) }
+                    }
+                }
+                task.resume()
+            case .failure(let error):
+                completion(.failure(error))
+            }
         }
-        
-        let url = URL(string: "https://banana.avoqode.com/api/v1/subscription/me")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        
-        do {
-            let (data, response) = try await URLSession.shared.data(for: request)
-            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                logger.error("Invalid response when checking subscription: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
-                throw SubscriptionAPIError.invalidResponse
+    }
+    
+    // MARK: - Grant PRO
+    
+    /// Grants PRO plan until a specific moment.
+    /// - Parameters:
+    ///   - plan: Plan identifier (e.g., "PRO")
+    ///   - validUntil: ISO8601 date-time string when license expires
+    ///   - completion: Result with `AuthResponse` or `Error`
+    internal func grantPro(plan: String, validUntil: String, completion: @escaping (Result<AuthResponse, Error>) -> Void) {
+        AccessTokenManager.shared.getValidAccessToken { result in
+            switch result {
+            case .success(let accessToken):
+                var components = URLComponents(string: "https://banana.avoqode.com/api/v1/subscription/grant-pro")!
+                components.queryItems = [
+                    URLQueryItem(name: "plan", value: plan),
+                    URLQueryItem(name: "validUntil", value: validUntil)
+                ]
+                guard let url = components.url else {
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "POST"
+                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+                
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        logger.error("Network error when granting PRO: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.network(error))) }
+                        return
+                    }
+                    guard let data = data, let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                        logger.error("Invalid response when granting PRO: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.invalidResponse)) }
+                        return
+                    }
+                    do {
+                        let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
+                        logger.info("Successfully granted PRO plan: \(plan) until \(validUntil)")
+                        DispatchQueue.main.async { completion(.success(authResponse)) }
+                    } catch {
+                        logger.error("Decoding error when granting PRO: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.decoding(error))) }
+                    }
+                }
+                task.resume()
+            case .failure(let error):
+                completion(.failure(error))
             }
-            do {
-                let decoder = JSONDecoder()
-                let subscriptionStatus = try decoder.decode(SubscriptionResponse.self, from: data)
-                logger.info("Successfully fetched subscription status")
-                return subscriptionStatus
-            } catch {
-                logger.error("Decoding error when checking subscription: \(error.localizedDescription)")
-                throw SubscriptionAPIError.decoding(error)
-            }
-        } catch {
-            logger.error("Network error when checking subscription: \(error.localizedDescription)")
-            throw SubscriptionAPIError.network(error)
         }
     }
 }
-

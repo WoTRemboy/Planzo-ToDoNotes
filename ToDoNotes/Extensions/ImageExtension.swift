@@ -50,6 +50,7 @@ extension Image {
         static let hide = Image("NavIconHide")
         static let back = Image("NavIconBack")
         static let share = Image("NavIconShare")
+        static let premiumShare = Image("NavIconPremiumShare")
     }
     
     // MARK: - Tab Bar Images

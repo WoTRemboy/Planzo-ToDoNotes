@@ -113,6 +113,15 @@ final class Texts {
                 static let fifth = NSLocalizedString("SettingsPageSyncFAQFifth", comment: "Make sure you have enough iCloud storage space.")
             }
             
+            enum SubFAQ {
+                static let title = NSLocalizedString("SettingsPageSyncSubFAQTitle", comment: "Subscription Management")
+                static let first = NSLocalizedString("SettingsPageSyncSubFAQFirst", comment: "Our app uses App Store subscriptions. Payment and subscription management are handled through the Apple ID used to purchase it.")
+                static let second = NSLocalizedString("SettingsPageSyncSubFAQSecond", comment: "Make sure you are signed in on this device with the same Apple ID you used when purchasing the subscription.")
+                static let third = NSLocalizedString("SettingsPageSyncSubFAQThird", comment: "In the app settings, tap “Restore Purchases” to retrieve your active subscription from the App Store.")
+                static let fourth = NSLocalizedString("SettingsPageSyncSubFAQFourth", comment: "Check your subscription status in iOS: Settings → your name → Subscriptions. If the subscription was canceled or expired, please renew it.")
+                static let fifth = NSLocalizedString("SettingsPageSyncSubFAQFifth", comment: "Ensure that your Apple ID has a valid payment method attached and that there are no purchase restrictions on the account.")
+            }
+            
             enum Retry {
                 static let details = NSLocalizedString("SettingsPageSyncRetry", comment: "Sync error. Tap to try again.")
                 static let title = NSLocalizedString("SettingsPageSyncRetryTitle", comment: "Sync error")
@@ -191,6 +200,15 @@ final class Texts {
             static let popup = NSLocalizedString("SettingsPageTaskCreatePopup", comment: "Pop-up Window")
             static let fullScreen = NSLocalizedString("SettingsPageTaskCreateFullscreen", comment: "Full Screen")
             static let descriptionContent = NSLocalizedString("SettingsPageTaskCreateDescriptionContent", comment: "Choose between Page and Pop-up styles for taking notes.")
+        }
+        
+        enum Plans {
+            static let title = NSLocalizedString("SettingsPagePlansTitle", comment: "Subscription")
+            static let free = NSLocalizedString("SettingsPagePlansFree", comment: "Free")
+            static let pro = NSLocalizedString("SettingsPagePlansPro", comment: "Pro")
+            static let freePlan = NSLocalizedString("SettingsPagePlansFreePlan", comment: "Free Plan")
+            static let proPlan = NSLocalizedString("SettingsPagePlansProPlan", comment: "Pro Plan")
+            static let error = NSLocalizedString("SettingsPagePlansError", comment: "Unable to retrieve subscription end date")
         }
     }
     
@@ -409,6 +427,8 @@ final class Texts {
     
     enum Subscription {
         static let plan = NSLocalizedString("SubscriptionPlan", comment: "Plan")
+        static let annual = NSLocalizedString("SubscriptionAnnual", comment: "Annual Plan")
+        static let monthly = NSLocalizedString("SubscriptionMonthly", comment: "Monthly Plan")
 
         enum SubType {
             static let free = NSLocalizedString("SubscriptionFree", comment: "Free")
@@ -423,14 +443,19 @@ final class Texts {
             static let firstDescription = NSLocalizedString("SubscriptionBenefitsFirstDescription", comment: "Share tasks with friends and family.")
             static let secondTitle = NSLocalizedString("SubscriptionBenefitsSecondTitle", comment: "Collaborate with Planzo Pro")
             static let secondDescription = NSLocalizedString("SubscriptionBenefitsSecondDescription", comment: "Grant view-only or editing access.")
+            static let thirdTitle = NSLocalizedString("SubscriptionBenefitsThirdTitle", comment: "Manage Members")
+            static let thirdDescription = NSLocalizedString("SubscriptionBenefitsThirdDescription", comment: "Monitor and change member access.")
+            static let fourthTitle = NSLocalizedString("SubscriptionBenefitsFourthTitle", comment: "Special Folder")
+            static let fourthDescription = NSLocalizedString("SubscriptionBenefitsFourthDescription", comment: "Shared tasks are stored in a separate folder.")
         }
         
         enum Page {
             static let choosePlan = NSLocalizedString("SubscriptionPageChoosePlanTitle", comment: "Choose your Plan")
             static let continueButton = NSLocalizedString("SubscriptionPageContinueButton", comment: "Continue")
+            static let trialContinue = NSLocalizedString("SubscriptionPageTrialContinueButton", comment: "Get 7-day trial")
             static let restore = NSLocalizedString("SubscriptionPageRestoreButton", comment: "Restore purchases")
             
-            static let trial = NSLocalizedString("SubscriptionPageTrialTitle", comment: "Get 14 days free with an annual subscription.")
+            static let trial = NSLocalizedString("SubscriptionPageTrialTitle", comment: "Get 7 days free with an annual subscription.")
             static let save = NSLocalizedString("SubscriptionPageSaveButton", comment: "Save")
             static let month = NSLocalizedString("SubscriptionPageMonth", comment: "Month")
         }
@@ -439,6 +464,19 @@ final class Texts {
             static let title = NSLocalizedString("SubscriptionPromoTitle", comment: "Upgrade to Planzo")
             static let pro = NSLocalizedString("SubscriptionPromoPro", comment: "Pro")
             static let description = NSLocalizedString("SubscriptionPromoDescription", comment: "Share tasks, customize your calendar, track progress, and more.")
+        }
+        
+        enum State {
+            static let until = NSLocalizedString("SubscriptionPromoUntil", comment: "Subscription is active until")
+            static let untilWithoutDate = NSLocalizedString("SubscriptionPromoUntilWithoutDate", comment: "Subscription is active")
+            static let restored = NSLocalizedString("SubscriptionPromoRestored", comment: "Purchases restored successfully.")
+        }
+        
+        enum Error {
+            static let purchaceCancelled = NSLocalizedString("SubscriptionErrorPurchaceCancelled", comment: "The purchase was cancelled.")
+            static let invalidOffer = NSLocalizedString("SubscriptionErrorInvalidOffer", comment: "The purchase was invalid.")
+            static let verificationFailed = NSLocalizedString("SubscriptionErrorVerificationFailed", comment: "The purchase could not be verified.")
+            static let unknown = NSLocalizedString("SubscriptionErrorUnknown", comment: "An unknown error occurred.")
         }
     }
     

@@ -90,7 +90,7 @@ struct TodayTaskRowWithSwipeActions: View {
             folderButton
         }
         
-        if authService.isAuthorized, (entity.role == ShareAccess.owner.rawValue || entity.role == nil) {
+        if authService.isAuthorized, (entity.role == ShareAccess.owner.rawValue || entity.role == nil), authService.currentUser?.isPremium == true {
             shareButton
         }
     }

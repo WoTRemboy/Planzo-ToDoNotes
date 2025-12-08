@@ -139,7 +139,6 @@
 		63BDC3402E7C1C2400E92FDC /* SubscriptionLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BDC33F2E7C1C2400E92FDC /* SubscriptionLoginView.swift */; };
 		63BDC3422E7C22F600E92FDC /* SupportLinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BDC3412E7C22F200E92FDC /* SupportLinkModel.swift */; };
 		63BDC3452E7C276100E92FDC /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 63BDC3442E7C276100E92FDC /* SwiftUIIntrospect */; };
-		63BF43942E7994CA008F52D0 /* SubscriptionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BF43932E7994C7008F52D0 /* SubscriptionModel.swift */; };
 		63BFBF672E82FCB00061C3DA /* ListItemNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BFBF662E82FCAF0061C3DA /* ListItemNetworkService.swift */; };
 		63C22F412EBBD2D100C327B1 /* FolderNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C22F402EBBD2D100C327B1 /* FolderNetworkService.swift */; };
 		63C22F432EBBD34F00C327B1 /* FolderNetworkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C22F422EBBD34C00C327B1 /* FolderNetworkModel.swift */; };
@@ -147,6 +146,9 @@
 		63C2DC792D8C4ABD00E6E0A0 /* ContextMenuHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C2DC782D8C4AB600E6E0A0 /* ContextMenuHelper.swift */; };
 		63C5A8CF2D31BECD00154101 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 63C5A8CE2D31BECD00154101 /* GoogleSignIn */; };
 		63C5A8D12D31BECD00154101 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 63C5A8D02D31BECD00154101 /* GoogleSignInSwift */; };
+		63C9898D2EE5FB17007C68A7 /* SettingSubFAQView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C9898C2EE5FB17007C68A7 /* SettingSubFAQView.swift */; };
+		63CD136C2ED886EB00C81BA9 /* StoreKitSubscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD136B2ED886EB00C81BA9 /* StoreKitSubscriptionService.swift */; };
+		63CD136E2ED887BF00C81BA9 /* SubscriptionCoordinatorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD136D2ED887BF00C81BA9 /* SubscriptionCoordinatorService.swift */; };
 		63CD66982D367EC50053C93C /* TaskManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD66972D367EBD0053C93C /* TaskManagementViewModel.swift */; };
 		63CF11B32EABA9360068C1F9 /* ConfigureSelectedFolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CF11B22EABA9360068C1F9 /* ConfigureSelectedFolderView.swift */; };
 		63CF11B52EABAD790068C1F9 /* SelectedFolderSettingFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CF11B42EABAD790068C1F9 /* SelectedFolderSettingFormView.swift */; };
@@ -342,12 +344,14 @@
 		63BCD8B42D7B66680016950F /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		63BDC33F2E7C1C2400E92FDC /* SubscriptionLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionLoginView.swift; sourceTree = "<group>"; };
 		63BDC3412E7C22F200E92FDC /* SupportLinkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportLinkModel.swift; sourceTree = "<group>"; };
-		63BF43932E7994C7008F52D0 /* SubscriptionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionModel.swift; sourceTree = "<group>"; };
 		63BFBF662E82FCAF0061C3DA /* ListItemNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemNetworkService.swift; sourceTree = "<group>"; };
 		63C22F402EBBD2D100C327B1 /* FolderNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderNetworkService.swift; sourceTree = "<group>"; };
 		63C22F422EBBD34C00C327B1 /* FolderNetworkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderNetworkModel.swift; sourceTree = "<group>"; };
 		63C2DC762D8C47BA00E6E0A0 /* CustomContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomContextMenu.swift; sourceTree = "<group>"; };
 		63C2DC782D8C4AB600E6E0A0 /* ContextMenuHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuHelper.swift; sourceTree = "<group>"; };
+		63C9898C2EE5FB17007C68A7 /* SettingSubFAQView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingSubFAQView.swift; sourceTree = "<group>"; };
+		63CD136B2ED886EB00C81BA9 /* StoreKitSubscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitSubscriptionService.swift; sourceTree = "<group>"; };
+		63CD136D2ED887BF00C81BA9 /* SubscriptionCoordinatorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionCoordinatorService.swift; sourceTree = "<group>"; };
 		63CD66972D367EBD0053C93C /* TaskManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementViewModel.swift; sourceTree = "<group>"; };
 		63CF11B22EABA9360068C1F9 /* ConfigureSelectedFolderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureSelectedFolderView.swift; sourceTree = "<group>"; };
 		63CF11B42EABAD790068C1F9 /* SelectedFolderSettingFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedFolderSettingFormView.swift; sourceTree = "<group>"; };
@@ -520,7 +524,6 @@
 		63286AE82E7B306400483810 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				63BF43932E7994C7008F52D0 /* SubscriptionModel.swift */,
 				63286AF22E7B3A0D00483810 /* SubscriptionCarouselModel.swift */,
 				63BDC3412E7C22F200E92FDC /* SupportLinkModel.swift */,
 			);
@@ -540,6 +543,8 @@
 			isa = PBXGroup;
 			children = (
 				63F39F802E7A07600089E1AE /* SubscriptionNetworkService.swift */,
+				63CD136B2ED886EB00C81BA9 /* StoreKitSubscriptionService.swift */,
+				63CD136D2ED887BF00C81BA9 /* SubscriptionCoordinatorService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -1203,12 +1208,13 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		63ECEDD52EC38DF8008A1F42 /* Sync */ = {
+		63ECEDD52EC38DF8008A1F42 /* FAQViews */ = {
 			isa = PBXGroup;
 			children = (
 				63ECEDD62EC38E0F008A1F42 /* SettingSyncFAQView.swift */,
+				63C9898C2EE5FB17007C68A7 /* SettingSubFAQView.swift */,
 			);
-			path = Sync;
+			path = FAQViews;
 			sourceTree = "<group>";
 		};
 		63F6C6F52D29B40600716AB0 /* Folders */ = {
@@ -1280,7 +1286,7 @@
 		63F6C70A2D2AAA8500716AB0 /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
-				63ECEDD52EC38DF8008A1F42 /* Sync */,
+				63ECEDD52EC38DF8008A1F42 /* FAQViews */,
 				630F54802E6F736C00DF57E6 /* Profile */,
 				63F6C70D2D2AAD0100716AB0 /* SettingsNavBar.swift */,
 				634877AB2D369B21009110B0 /* SettingFormRow.swift */,
@@ -1479,6 +1485,7 @@
 				63BDC3422E7C22F600E92FDC /* SupportLinkModel.swift in Sources */,
 				63CF11B52EABAD790068C1F9 /* SelectedFolderSettingFormView.swift in Sources */,
 				6378A7532D3EB6B100C1B858 /* ImmediateKeyboardModifier.swift in Sources */,
+				63C9898D2EE5FB17007C68A7 /* SettingSubFAQView.swift in Sources */,
 				634877AC2D369B2C009110B0 /* SettingFormRow.swift in Sources */,
 				63F6C7022D2AA38C00716AB0 /* DateFormatter.swift in Sources */,
 				635DBBB52D6A1E4A0050476C /* NavigationTransitionModifier.swift in Sources */,
@@ -1558,12 +1565,14 @@
 				63286AEF2E7B332A00483810 /* SubscriptionNavBar.swift in Sources */,
 				63AE658A2D731A15009A3541 /* CustomNavBarContainerView.swift in Sources */,
 				6377871D2D75E99B006DE892 /* FullSwipeNavigationStack.swift in Sources */,
+				63CD136C2ED886EB00C81BA9 /* StoreKitSubscriptionService.swift in Sources */,
 				63ADCBBA2D92CE6900C80DCB /* TaskManagementPreview.swift in Sources */,
 				63A0928C2D7C5EC80026A64D /* ToastModel.swift in Sources */,
 				63A5B6672D493C4200B0E408 /* TaskCustomCalendar.swift in Sources */,
 				63FD574F2E68B83400B7B062 /* AppleAuthService.swift in Sources */,
 				631315BB2D7DDBBE0030D446 /* CalendarTaskRowWithActions.swift in Sources */,
 				63F6C6F92D29B78400716AB0 /* FoldersScrollView.swift in Sources */,
+				63CD136E2ED887BF00C81BA9 /* SubscriptionCoordinatorService.swift in Sources */,
 				63F39F812E7A07600089E1AE /* SubscriptionNetworkService.swift in Sources */,
 				63BCB7202DAFF44F008603D4 /* MainPageOverviewTip.swift in Sources */,
 				632C002C2E81B2D60099C7FD /* ListNetworkService.swift in Sources */,
@@ -1580,7 +1589,6 @@
 				63AE657F2D72172E009A3541 /* TaskCreationPageModel.swift in Sources */,
 				6328D5C52E8939EC000574AE /* ListNetworkAppliedService.swift in Sources */,
 				630F54822E6F7BAC00DF57E6 /* SettingAccountView.swift in Sources */,
-				63BF43942E7994CA008F52D0 /* SubscriptionModel.swift in Sources */,
 				63AE65832D721AED009A3541 /* SettingAboutPageView.swift in Sources */,
 				63A092912D7C5F380026A64D /* ToastViewModel.swift in Sources */,
 				632D0DD22D36BAF50071684D /* CustomNavBar.swift in Sources */,

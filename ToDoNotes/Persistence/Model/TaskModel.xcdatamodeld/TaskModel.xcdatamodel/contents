@@ -50,6 +50,15 @@
         <attribute name="usedAt" optional="YES" attributeType="String"/>
         <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TaskEntity" inverseName="share" inverseEntity="TaskEntity"/>
     </entity>
+    <entity name="SubscriptionEntity" representedClassName="SubscriptionEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="plan" optional="YES" attributeType="String"/>
+        <attribute name="status" optional="YES" attributeType="String"/>
+        <attribute name="trialUsed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
+        <attribute name="validFrom" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="validUntil" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserEntity" inverseName="subscription" inverseEntity="UserEntity"/>
+    </entity>
     <entity name="TaskEntity" representedClassName="TaskEntity" syncable="YES" codeGenerationType="class">
         <attribute name="completed" optional="YES" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -79,6 +88,6 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="provider" optional="YES" attributeType="String"/>
         <attribute name="sub" optional="YES" attributeType="String"/>
-        <attribute name="subscription" optional="YES" attributeType="String"/>
+        <relationship name="subscription" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SubscriptionEntity" inverseName="user" inverseEntity="SubscriptionEntity"/>
     </entity>
 </model>
