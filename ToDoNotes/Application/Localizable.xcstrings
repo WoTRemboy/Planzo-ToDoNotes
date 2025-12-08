@@ -3949,25 +3949,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In the app settings, tap “Restore Purchases” to retrieve your active subscription from the App Store."
+            "value" : "In the offer page, tap “Restore Purchases” to retrieve your active subscription from the App Store."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "En la configuración de la aplicación, toque “Restaurar compras” para recuperar su suscripción activa desde la App Store."
+            "value" : "En la página de la oferta, toque « Restaurar compras » para recuperar su suscripción activa desde el App Store."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dans les réglages de l’application, appuyez sur « Restaurer les achats » pour récupérer votre abonnement actif depuis l’App Store."
+            "value" : "Sur la page de l’offre, appuyez sur « Restaurer les achats » pour récupérer votre abonnement actif depuis l’App Store."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "В настройках приложения нажмите кнопку «Восстановить покупки», чтобы подтянуть активную подписку из App Store."
+            "value" : "На странице предложения нажмите «Восстановить покупки», чтобы подтянуть вашу активную подписку из App Store."
           }
         }
       }
