@@ -228,6 +228,7 @@ struct SubscriptionView: View {
                 case .success:
                     DispatchQueue.main.async {
                         justPurchased = true
+                        authService.loadPersistedProfile()
                     }
                 case .failure(_):
                     DispatchQueue.main.async {

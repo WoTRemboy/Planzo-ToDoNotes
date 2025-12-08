@@ -90,7 +90,11 @@ struct SubscriptionNavBar: View {
     
     private var restoreButton: some View {
         Button {
-            viewModel.restorePurchases()
+            viewModel.restorePurchases { success in
+                if success {
+                    authService.loadPersistedProfile()
+                }
+            }
         } label: {
             Text(Texts.Subscription.Page.restore)
                 .foregroundStyle(Color.LabelColors.labelPrimary)

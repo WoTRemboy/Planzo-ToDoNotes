@@ -109,16 +109,18 @@ final class SubscriptionViewModel: ObservableObject {
         appleAuthService.startAppleSignIn()
     }
     
-    internal func restorePurchases() {
+    internal func restorePurchases(completion: ((Bool) -> Void)? = nil) {
         SubscriptionCoordinatorService.shared.restorePurchases { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success:
                     self?.successAlertMessage = Texts.Subscription.State.restored
                     self?.showingSuccessAlert = true
+                    completion?(true)
                 case .failure(let error):
                     self?.showingErrorAlert = true
                     logger.error("Restore purchases failed: \(error.localizedDescription)")
+                    completion?(false)
                 }
             }
         }

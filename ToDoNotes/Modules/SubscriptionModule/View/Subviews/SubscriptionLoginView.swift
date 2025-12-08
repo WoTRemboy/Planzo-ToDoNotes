@@ -32,9 +32,9 @@ struct SubscriptionLoginView: View {
             LoginButtonView(type: .apple) {
                 viewModel.handleAppleSignIn(appleAuthService: appleAuthService)
             }
-            LoginButtonView(type: .google) {
-                viewModel.handleGoogleSignIn(googleAuthService: googleAuthService)
-            }
+//            LoginButtonView(type: .google) {
+//                viewModel.handleGoogleSignIn(googleAuthService: googleAuthService)
+//            }
         }
     }
 }

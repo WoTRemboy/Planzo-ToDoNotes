@@ -162,7 +162,28 @@ final class SubscriptionCoordinatorService: ObservableObject {
         storekit.refreshSubscriptionStatus { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .success(_):
+            case .success(let isSubscribed):
+                if isSubscribed == false {
+                    Task { @MainActor in
+                        self.status = .notSubscribed
+                        if let current = UserCoreDataService.shared.loadUser() {
+                            let updated = User(
+                                id: current.id,
+                                provider: current.provider,
+                                sub: current.sub,
+                                createdAt: current.createdAt,
+                                name: current.name,
+                                email: current.email,
+                                avatarUrl: current.avatarUrl,
+                                subscription: nil,
+                                lastSyncAt: current.lastSyncAt
+                            )
+                            UserCoreDataService.shared.saveUser(updated)
+                        }
+                        completion?(.success(()))
+                    }
+                    return
+                }
                 self.storekit.currentEntitlement { entitlementResult in
                     switch entitlementResult {
                     case .success(let transaction):
@@ -219,17 +240,24 @@ final class SubscriptionCoordinatorService: ObservableObject {
                     }
 
                     @MainActor func persistAndPublish(from resp: SubscriptionResponse) {
-                        let expiration = isoFormatter.date(from: resp.license.validUntil ?? "")
-                        self.status = .subscribed(expiration: expiration)
+                        self.status = .subscribed(expiration: localExpiration)
                         logger.info("Backend subscription status: \(resp.license.status) plan = \(resp.license.plan) until = \(resp.license.validUntil ?? "")")
                         // Persist updated subscription to Core Data
                         if let current = UserCoreDataService.shared.loadUser() {
+                            let effectiveValidUntil: String? = {
+                                if let localExpiration {
+                                    return isoFormatter.string(from: localExpiration)
+                                } else {
+                                    return resp.license.validUntil
+                                }
+                            }()
+
                             let subscription = Subscription(
                                 type: resp.license.type,
                                 plan: resp.license.plan,
                                 status: resp.license.status,
                                 validFrom: resp.license.validFrom,
-                                validUntil: resp.license.validUntil,
+                                validUntil: effectiveValidUntil,
                                 trialUsed: resp.license.trialUsed
                             )
                             let updated = User(
