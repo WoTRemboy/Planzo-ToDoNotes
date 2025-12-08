@@ -11,12 +11,18 @@ import OSLog
 
 private let logger = Logger(subsystem: "com.todonotes.subscription", category: "SubscriptionViewModel")
 
+@MainActor
 final class SubscriptionViewModel: ObservableObject {
     
     @Published internal var selectedFreePlan: Bool = false
     @Published internal var selectedSubscriptionPlan: SubscriptionPlan = .annual
     
     @Published internal var showingErrorAlert: Bool = false
+    
+    @Published internal var successAlertMessage: String = ""
+    @Published internal var showingSuccessAlert: Bool = false
+    
+    @Published internal var shouldDismiss: Bool = false
     
     private(set) var steps = SubscriptionCarousel.stepsSetup()
     
@@ -42,6 +48,10 @@ final class SubscriptionViewModel: ObservableObject {
         showingErrorAlert.toggle()
     }
     
+    internal func setAlertMessage(_ message: String) {
+        successAlertMessage = message
+    }
+    
     internal func openSupportLink(url: String) {
         if let url = URL(string: url) {
             UIApplication.shared.open(url)
@@ -61,7 +71,7 @@ final class SubscriptionViewModel: ObservableObject {
                 guard let self = self else { return }
                 switch result {
                 case .success:
-                    break
+                    self.checkAndRequestDismissIfSubscribed()
                 case .failure(let error):
                     self.showingErrorAlert = true
                     logger.error("Google Sign-In failed: \(error.localizedDescription)")
@@ -80,7 +90,7 @@ final class SubscriptionViewModel: ObservableObject {
                 LoadingOverlay.shared.hide()
                 switch result {
                 case .success:
-                    break
+                    self.checkAndRequestDismissIfSubscribed()
                 case .failure(let error):
                     self.showingErrorAlert = true
                     logger.error("Apple Sign-In backend failed: \(error.localizedDescription)")
@@ -98,4 +108,35 @@ final class SubscriptionViewModel: ObservableObject {
         }
         appleAuthService.startAppleSignIn()
     }
+    
+    internal func restorePurchases() {
+        SubscriptionCoordinatorService.shared.restorePurchases { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self?.successAlertMessage = Texts.Subscription.State.restored
+                    self?.showingSuccessAlert = true
+                case .failure(let error):
+                    self?.showingErrorAlert = true
+                    logger.error("Restore purchases failed: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    private func checkAndRequestDismissIfSubscribed() {
+        let service = SubscriptionCoordinatorService.shared
+        service.refreshStatusFromBoth { [weak self] _ in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                switch service.status {
+                case .subscribed(_):
+                    self.shouldDismiss = true
+                default:
+                    break
+                }
+            }
+        }
+    }
 }
+

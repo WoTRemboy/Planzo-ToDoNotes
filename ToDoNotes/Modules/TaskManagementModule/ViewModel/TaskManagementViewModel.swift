@@ -84,6 +84,7 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var showingDeniedAlert: Bool = false
     @Published internal var showingStopSharingAlert: Bool = false
     @Published internal var showingRemoveMemberAlert: Bool = false
+    @Published internal var showingSubscriptionPage = false
     
     /// The selected share access type for the task.
     @Published internal var shareAccess: ShareAccess = .viewOnly
@@ -357,6 +358,10 @@ final class TaskManagementViewModel: ObservableObject {
     
     internal func toggleShowingRemoveMemberAlert() {
         showingRemoveMemberAlert.toggle()
+    }
+    
+    internal func toggleShowingSubscriptionPage() {
+        showingSubscriptionPage.toggle()
     }
     
     /// Sets whether a date is shown for the task.

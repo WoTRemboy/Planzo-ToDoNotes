@@ -123,7 +123,9 @@ struct SettingsView: View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 16) {
                 profileButton
-                subscriptionPromoteRow
+                if authService.currentUser?.isPremium != true {
+                    subscriptionPromoteRow
+                }
                 syncButton
                 
                 VStack(spacing: 0) {
@@ -133,23 +135,17 @@ struct SettingsView: View {
                             viewModel.readNotificationStatus()
                         }
                     languageButton
-//                    resetTasksButton
                     taskCreationSettingsButton
-                }
-                .clipShape(.rect(cornerRadius: 10))
-                .padding(.horizontal)
-                
-                VStack(spacing: 0) {
-                    timeFormatButton
                     weekFirstDayButton
                 }
                 .clipShape(.rect(cornerRadius: 10))
-                .padding([.horizontal])
+                .padding(.horizontal)
                 
                 aboutAppButton
                 logoutButton
             }
             .padding(.bottom)
+            .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
         }
         .scrollContentBackground(.hidden)
     }
@@ -166,7 +162,7 @@ struct SettingsView: View {
                         SettingsProfileRow(
                             title: user.name ?? user.email,
                             image: user.avatarUrl,
-                            details: authService.currentUser?.subscription.plan,
+                            details: planTitle,
                             chevron: true,
                             isProfile: true,
                             last: true)
@@ -237,7 +233,9 @@ struct SettingsView: View {
             SubscriptionPromoteRow()
         }
         .clipShape(.rect(cornerRadius: 10))
+        .transition(.blurReplace)
         .padding(.horizontal)
+        .animation(.easeInOut(duration: 0.25), value: authService.currentUser?.isPremium)
     }
     
     private var syncButton: some View {
@@ -341,7 +339,7 @@ struct SettingsView: View {
                     title: Texts.Settings.TaskCreate.title,
                     image: Image.Settings.taskCreate,
                     chevron: true,
-                    last: true)
+                    last: false)
             })
     }
     
@@ -458,6 +456,14 @@ struct SettingsView: View {
             primaryAction: {
                 viewModel.toggleShowingErrorAlert()
             })
+    }
+    
+    private var planTitle: String {
+        if authService.currentUser?.isPremium == true {
+            Texts.Settings.Plans.proPlan
+        } else {
+            Texts.Settings.Plans.freePlan
+        }
     }
 }
 

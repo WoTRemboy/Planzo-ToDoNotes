@@ -32,13 +32,13 @@ extension SubscriptionCarousel {
             image: .Subscription.secondBenefit)
         
         let third = SubscriptionCarousel(
-            name: Texts.Subscription.Benefits.secondTitle,
-            description: Texts.Subscription.Benefits.secondDescription,
+            name: Texts.Subscription.Benefits.thirdTitle,
+            description: Texts.Subscription.Benefits.thirdDescription,
             image: .Subscription.thirdBenefit)
         
         let fourth = SubscriptionCarousel(
-            name: Texts.Subscription.Benefits.secondTitle,
-            description: Texts.Subscription.Benefits.secondDescription,
+            name: Texts.Subscription.Benefits.fourthTitle,
+            description: Texts.Subscription.Benefits.fourthDescription,
             image: .Subscription.fourthBenefit)
         
         return [first, second, third, fourth]
