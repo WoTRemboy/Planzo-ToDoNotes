@@ -672,6 +672,7 @@
 			children = (
 				635FEF6B2D24B71C007FFBBA /* ToDoNotes */,
 				63B88F532DBE532A00C9EA8A /* ToDoNotesTests */,
+				63753A812E78678800D75DAF /* ci_scripts */,
 				635FEF562D24B715007FFBBA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -696,7 +697,6 @@
 		635FEF6B2D24B71C007FFBBA /* ToDoNotes */ = {
 			isa = PBXGroup;
 			children = (
-				63753A812E78678800D75DAF /* ci_scripts */,
 				635FEF712D24B72E007FFBBA /* Application */,
 				6303E2C82D3469DC0096DB64 /* Persistence */,
 				63FD574B2E68B76F00B7B062 /* Network */,
