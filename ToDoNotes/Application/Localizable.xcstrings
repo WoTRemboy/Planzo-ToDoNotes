@@ -2900,22 +2900,178 @@
       }
     },
     "SettingsPagePlansError" : {
-      "comment" : "Unable to retrieve subscription end date"
+      "comment" : "Unable to retrieve subscription end date",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to retrieve subscription end date"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede obtener la fecha de finalización de la suscripción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible d’obtenir la date de fin d’abonnement"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось получить дату окончания подписки"
+          }
+        }
+      }
     },
     "SettingsPagePlansFree" : {
-      "comment" : "Free"
+      "comment" : "Free",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gratis"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gratuit"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Бесплатно"
+          }
+        }
+      }
     },
     "SettingsPagePlansFreePlan" : {
-      "comment" : "Free Plan"
+      "comment" : "Free Plan",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free Plan"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plan gratuito"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forfait gratuit"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Бесплатный план"
+          }
+        }
+      }
     },
     "SettingsPagePlansPro" : {
-      "comment" : "Pro"
+      "comment" : "Pro",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro"
+          }
+        }
+      }
     },
     "SettingsPagePlansProPlan" : {
-      "comment" : "Pro Plan"
+      "comment" : "Pro Plan",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro Plan"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plan Pro"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forfait Pro"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "План Pro"
+          }
+        }
+      }
     },
     "SettingsPagePlansTitle" : {
-      "comment" : "Subscription"
+      "comment" : "Subscription",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscription"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suscripción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abonnement"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подписка"
+          }
+        }
+      }
     },
     "SettingsPageResetConfirm" : {
       "comment" : "Confirm",
@@ -4484,7 +4640,33 @@
       }
     },
     "SubscriptionAnnual" : {
-      "comment" : "Annual Plan"
+      "comment" : "Annual Plan",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annual Plan"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plan anual"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forfait annuel"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Годовой план"
+          }
+        }
+      }
     },
     "SubscriptionBenefitsFirstDescription" : {
       "comment" : "Share tasks with friends and family.",
@@ -4544,6 +4726,64 @@
         }
       }
     },
+    "SubscriptionBenefitsFourthDescription" : {
+      "comment" : "Shared tasks are stored in a separate folder.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shared tasks are stored in a separate folder."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las tareas compartidas se almacenan en una carpeta separada."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les tâches partagées sont stockées dans un dossier séparé."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Общие задачи хранятся в отдельной папке."
+          }
+        }
+      }
+    },
+    "SubscriptionBenefitsFourthTitle" : {
+      "comment" : "Special Folder",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Special Folder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carpeta especial"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dossier spécial"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Специальная папка"
+          }
+        }
+      }
+    },
     "SubscriptionBenefitsSecondDescription" : {
       "comment" : "Grant view-only or editing access.",
       "localizations" : {
@@ -4568,7 +4808,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Доступ только для просмотра или редактирования. "
+            "value" : "Доступ для просмотра или редактирования. "
           }
         }
       }
@@ -4598,6 +4838,64 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Совместная работа в Planzo Pro"
+          }
+        }
+      }
+    },
+    "SubscriptionBenefitsThirdDescription" : {
+      "comment" : "Monitor and change member access.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monitor and change member access."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supervise y modifique el acceso de los miembros."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Surveillez et modifiez l’accès des membres."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отслеживайте и изменяйте доступ участников."
+          }
+        }
+      }
+    },
+    "SubscriptionBenefitsThirdTitle" : {
+      "comment" : "Manage Members",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage Members"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestionar miembros"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gérer les membres"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Управление участниками"
           }
         }
       }
@@ -4777,7 +5075,33 @@
       }
     },
     "SubscriptionMonthly" : {
-      "comment" : "Monthly Plan"
+      "comment" : "Monthly Plan",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monthly Plan"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plan mensual"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forfait mensuel"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Месячный план"
+          }
+        }
+      }
     },
     "SubscriptionPageChoosePlanTitle" : {
       "comment" : "Choose your Plan",
@@ -4931,6 +5255,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Get 7-day trial"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtener prueba de 7 días"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtenir l’essai de 7 jours"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Получить 7-дневный пробный период"
           }
         }
       }

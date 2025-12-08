@@ -29,7 +29,9 @@ struct SubscriptionBenefitsCarousel: View {
             VStack(spacing: 0) {
                 viewModel.steps[index].image
                     .resizable()
-                    .frame(width: 176, height: 130)
+                    .scaledToFit()
+                    .frame(height: 130)
+                    .clipShape(.rect(cornerRadius: 10))
                     .padding(.horizontal)
                 
                 Text(viewModel.steps[index].name)

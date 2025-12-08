@@ -443,6 +443,10 @@ final class Texts {
             static let firstDescription = NSLocalizedString("SubscriptionBenefitsFirstDescription", comment: "Share tasks with friends and family.")
             static let secondTitle = NSLocalizedString("SubscriptionBenefitsSecondTitle", comment: "Collaborate with Planzo Pro")
             static let secondDescription = NSLocalizedString("SubscriptionBenefitsSecondDescription", comment: "Grant view-only or editing access.")
+            static let thirdTitle = NSLocalizedString("SubscriptionBenefitsThirdTitle", comment: "Manage Members")
+            static let thirdDescription = NSLocalizedString("SubscriptionBenefitsThirdDescription", comment: "Monitor and change member access.")
+            static let fourthTitle = NSLocalizedString("SubscriptionBenefitsFourthTitle", comment: "Special Folder")
+            static let fourthDescription = NSLocalizedString("SubscriptionBenefitsFourthDescription", comment: "Shared tasks are stored in a separate folder.")
         }
         
         enum Page {
