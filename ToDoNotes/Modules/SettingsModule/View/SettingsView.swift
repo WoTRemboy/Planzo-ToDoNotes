@@ -194,7 +194,14 @@ struct SettingsView: View {
             } else {
                 VStack(spacing: 12) {
                     appleLoginButton
-                    googleLoginButton
+//                    googleLoginButton
+                    
+                    termsPolicyLabel
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(Color.LabelColors.labelDetails)
+                        .multilineTextAlignment(.center)
+                        .accentColor(Color.LabelColors.Special.labelSearchBarCancel)
+                    
                     closeButton
                 }
                 .transition(.blurReplace.combined(with: .move(edge: .top)))
@@ -211,6 +218,14 @@ struct SettingsView: View {
     private var googleLoginButton: some View {
         LoginButtonView(type: .google) {
             viewModel.handleGoogleSignIn(googleAuthService: googleAuthService)
+        }
+    }
+    
+    private var termsPolicyLabel: some View {
+        if let attributedText = try? AttributedString(markdown: Texts.OnboardingPage.markdownTerms) {
+            return Text(attributedText)
+        } else {
+            return Text(Texts.OnboardingPage.markdownTermsError)
         }
     }
     
