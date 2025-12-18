@@ -194,7 +194,7 @@ struct SettingsView: View {
             } else {
                 VStack(spacing: 12) {
                     appleLoginButton
-//                    googleLoginButton
+                    googleLoginButton
                     
                     termsPolicyLabel
                         .font(.system(size: 14, weight: .medium))

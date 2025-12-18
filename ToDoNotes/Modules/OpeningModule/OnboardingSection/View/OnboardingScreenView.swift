@@ -192,7 +192,7 @@ struct OnboardingScreenView: View {
     private var signInButtons: some View {
         VStack(spacing: 16) {
             signWithAppleButton
-//            signWithGoogleButton
+            signWithGoogleButton
         }
         .transition(.blurReplace)
         .padding([.top, .horizontal])
