@@ -28,6 +28,7 @@ final class SubscriptionCoordinatorService: ObservableObject {
     @Published private(set) var status: SubscriptionUIStatus = .unknown
     @Published private(set) var purchasingProductId: String? = nil
     @Published private(set) var restoreInProgress: Bool = false
+    @Published private(set) var trialEligibility: Bool = false
     
     private let storekit = StoreKitSubscriptionService.shared
     private let backend = SubscriptionNetworkService.shared
@@ -36,6 +37,28 @@ final class SubscriptionCoordinatorService: ObservableObject {
         // Preload products and status
         loadProducts()
         refreshStatus()
+    }
+    
+    // MARK: - Trial eligibility
+    /// Recomputes free trial eligibility for currently loaded products using StoreKit
+    private func recomputeTrialEligibility() {
+        let currentProducts = self.products
+        Task { @MainActor in
+            for product in currentProducts {
+                if let sub = product.subscription {
+                    // Free trial is represented as an introductory offer. Only check eligibility if offer exists.
+                    let hasIntro = (sub.introductoryOffer != nil)
+                    if hasIntro {
+                        let isEligible = await sub.isEligibleForIntroOffer
+                        guard !isEligible else {
+                            self.trialEligibility = true
+                            return
+                        }
+                    }
+                }
+            }
+            self.trialEligibility = false
+        }
     }
     
     // MARK: - Public API for UI
@@ -49,6 +72,7 @@ final class SubscriptionCoordinatorService: ObservableObject {
             case .success(let products):
                 Task { @MainActor in
                     self.products = products.sorted(by: { $0.displayPrice < $1.displayPrice })
+                    self.recomputeTrialEligibility()
                     // Do not override a concrete status here if it was set later
                     if case .loading = self.status { self.status = .unknown }
                 }
@@ -68,56 +92,30 @@ final class SubscriptionCoordinatorService: ObservableObject {
             switch result {
             case .success(let transaction):
                 logger.info("Purchase succeeded for productId: \(transaction.productID)")
-                // If the purchased product includes a free trial, start the backend trial instead of granting PRO immediately
-                if productId == ProSubscriptionID.annualTrial.rawValue || productId == ProSubscriptionID.monthlyTrial.rawValue {
-                    self.backend.startTrial(days: 7) { trialResult in
-                        switch trialResult {
-                        case .success:
-                            self.refreshStatusFromBoth { backendResult in
-                                switch backendResult {
-                                case .success:
-                                    completion?(.success(()))
-                                case .failure(let error):
-                                    completion?(.failure(error))
-                                }
-                            }
-                        case .failure(let error):
-                            self.refreshStatusFromBoth { _ in
+                let transactionId = String(transaction.id)
+                self.backend.attachAppleSubscription(transactionId: transactionId) { attachResult in
+                    switch attachResult {
+                    case .success(let authResponse):
+                        let tokenStorage = TokenStorageService()
+                        DispatchQueue.main.async {
+                            tokenStorage.save(token: authResponse.accessToken, type: .accessToken)
+                            tokenStorage.save(token: authResponse.refreshToken, type: .refreshToken)
+                        }
+                        self.refreshStatus { backendResult in
+                            switch backendResult {
+                            case .success:
+                                completion?(.success(()))
+                            case .failure(let error):
                                 completion?(.failure(error))
                             }
                         }
-                    }
-                    return
-                }
-                if let expiration = transaction.expirationDate {
-                    let iso = ISO8601DateFormatter().string(from: expiration)
-                    self.backend.grantPro(plan: "PRO", validUntil: iso) { grantResult in
-                        switch grantResult {
-                        case .success:
-                            self.refreshStatusFromBoth { backendResult in
-                                switch backendResult {
-                                case .success:
-                                    completion?(.success(()))
-                                case .failure(let err):
-                                    completion?(.failure(err))
-                                }
-                            }
-                        case .failure(let err):
-                            self.refreshStatusFromBoth { _ in
-                                completion?(.failure(err))
-                            }
-                        }
-                    }
-                } else {
-                    self.refreshStatusFromBoth { backendResult in
-                        switch backendResult {
-                        case .success:
-                            completion?(.success(()))
-                        case .failure(let err):
-                            completion?(.failure(err))
+                    case .failure(let error):
+                        self.refreshStatus { _ in
+                            completion?(.failure(error))
                         }
                     }
                 }
+                return
             case .failure(let error):
                 logger.error("Purchase failed: \(error.localizedDescription)")
                 Task { @MainActor in self.status = .error(error.userFacingMessage) }
@@ -129,12 +127,15 @@ final class SubscriptionCoordinatorService: ObservableObject {
     /// Restores purchases and syncs with backend
     func restorePurchases(completion: ((Result<Void, Error>) -> Void)? = nil) {
         restoreInProgress = true
-        storekit.restorePurchases { [weak self] result in
-            guard let self = self else { return }
-            Task { @MainActor in self.restoreInProgress = false }
-            switch result {
-            case .success(_):
-                self.refreshStatusFromBoth { backendResult in
+        self.backend.refreshAppleSubscription { refreshResult in
+            switch refreshResult {
+            case .success(let authResponse):
+                let tokenStorage = TokenStorageService()
+                DispatchQueue.main.async {
+                    tokenStorage.save(token: authResponse.accessToken, type: .accessToken)
+                    tokenStorage.save(token: authResponse.refreshToken, type: .refreshToken)
+                }
+                self.refreshStatus { backendResult in
                     switch backendResult {
                     case .success:
                         completion?(.success(()))
@@ -143,9 +144,9 @@ final class SubscriptionCoordinatorService: ObservableObject {
                     }
                 }
             case .failure(let error):
-                logger.error("Restore failed: \(error.localizedDescription)")
-                Task { @MainActor in self.status = .error(error.userFacingMessage) }
-                completion?(.failure(error))
+                self.refreshStatus { _ in
+                    completion?(.failure(error))
+                }
             }
         }
     }
@@ -153,166 +154,54 @@ final class SubscriptionCoordinatorService: ObservableObject {
     /// Refreshes entitlement from StoreKit and then queries backend license state
     func refreshStatus() {
         status = .loading
-        refreshStatusFromBoth(completion: nil)
+        refreshStatus(completion: nil)
     }
     
     // MARK: - Internal Orchestration
     
-    internal func refreshStatusFromBoth(completion: ((Result<Void, Error>) -> Void)?) {
-        storekit.refreshSubscriptionStatus { [weak self] result in
+    internal func refreshStatus(completion: ((Result<Void, Error>) -> Void)?) {
+        backend.checkSubscriptionFull { [weak self] backendResult in
             guard let self = self else { return }
-            switch result {
-            case .success(let isSubscribed):
-                if isSubscribed == false {
-                    Task { @MainActor in
-                        self.status = .notSubscribed
-                        if let current = UserCoreDataService.shared.loadUser() {
-                            let updated = User(
-                                id: current.id,
-                                provider: current.provider,
-                                sub: current.sub,
-                                createdAt: current.createdAt,
-                                name: current.name,
-                                email: current.email,
-                                avatarUrl: current.avatarUrl,
-                                subscription: nil,
-                                lastSyncAt: current.lastSyncAt
-                            )
-                            UserCoreDataService.shared.saveUser(updated)
-                        }
-                        completion?(.success(()))
-                    }
-                    return
-                }
-                self.storekit.currentEntitlement { entitlementResult in
-                    switch entitlementResult {
-                    case .success(let transaction):
-                        let localExpiration = transaction?.expirationDate
-                        Task { @MainActor in self.checkSubscriptionAndUpdateState(localExpiration: localExpiration, completion: completion) }
-                    case .failure:
-                        // If we can't fetch entitlement, proceed without local expiration
-                        Task { @MainActor in self.checkSubscriptionAndUpdateState(localExpiration: nil, completion: completion) }
-                    }
-                }
-            case .failure(let error):
-                logger.error("Local entitlement check failed: \(error.localizedDescription)")
-                Task { @MainActor in
-                    self.status = .error(error.userFacingMessage)
-                    completion?(.failure(error))
-                }
-            }
-        }
-    }
-    
-    // MARK: - Backend helpers
-    
-    internal func checkSubscriptionAndUpdateState(localExpiration: Date? = nil, completion: ((Result<Void, Error>) -> Void)?) {
-        backend.checkSubscription { backendResult in
             Task { @MainActor in
                 switch backendResult {
                 case .success(let response):
-                    let isoFormatter = ISO8601DateFormatter()
-                    let backendExpiration = isoFormatter.date(from: response.license.validUntil ?? "")
-                    let backendExp = backendExpiration ?? Date.distantPast
-                    
-                    // If both local and backend expirations are in the past, treat as not subscribed and clear persisted subscription
-                    if let localExp = localExpiration {
-                        let now = Date()
-                        if localExp < now && backendExp < now {
-                            self.status = .notSubscribed
-                            if let current = UserCoreDataService.shared.loadUser() {
-                                let updated = User(
-                                    id: current.id,
-                                    provider: current.provider,
-                                    sub: current.sub,
-                                    createdAt: current.createdAt,
-                                    name: current.name,
-                                    email: current.email,
-                                    avatarUrl: current.avatarUrl,
-                                    subscription: nil,
-                                    lastSyncAt: current.lastSyncAt
-                                )
-                                UserCoreDataService.shared.saveUser(updated)
-                            }
-                            completion?(.success(()))
-                            return
-                        }
+                    let iso = ISO8601DateFormatter()
+                    let backendExpiration = iso.date(from: response.license.validUntil ?? "")
+
+                    if let current = UserCoreDataService.shared.loadUser() {
+                        let subscription = Subscription(
+                            type: response.license.type,
+                            plan: response.license.type,
+                            status: response.license.status,
+                            validFrom: response.license.validFrom,
+                            validUntil: response.license.validUntil,
+                            trialUsed: response.license.trialUsed
+                        )
+                        let updated = User(
+                            id: current.id,
+                            provider: current.provider,
+                            sub: current.sub,
+                            createdAt: current.createdAt,
+                            name: current.name,
+                            email: current.email,
+                            avatarUrl: current.avatarUrl,
+                            subscription: subscription,
+                            lastSyncAt: current.lastSyncAt
+                        )
+                        UserCoreDataService.shared.saveUser(updated)
                     }
 
-                    @MainActor func persistAndPublish(from resp: SubscriptionResponse) {
-                        self.status = .subscribed(expiration: localExpiration)
-                        logger.info("Backend subscription status: \(resp.license.status) plan = \(resp.license.plan) until = \(resp.license.validUntil ?? "")")
-                        // Persist updated subscription to Core Data
-                        if let current = UserCoreDataService.shared.loadUser() {
-                            let effectiveValidUntil: String? = {
-                                if let localExpiration {
-                                    return isoFormatter.string(from: localExpiration)
-                                } else {
-                                    return resp.license.validUntil
-                                }
-                            }()
-
-                            let subscription = Subscription(
-                                type: resp.license.type,
-                                plan: resp.license.plan,
-                                status: resp.license.status,
-                                validFrom: resp.license.validFrom,
-                                validUntil: effectiveValidUntil,
-                                trialUsed: resp.license.trialUsed
-                            )
-                            let updated = User(
-                                id: current.id,
-                                provider: current.provider,
-                                sub: current.sub,
-                                createdAt: current.createdAt,
-                                name: current.name,
-                                email: current.email,
-                                avatarUrl: current.avatarUrl,
-                                subscription: subscription,
-                                lastSyncAt: current.lastSyncAt
-                            )
-                            UserCoreDataService.shared.saveUser(updated)
-                        }
-                    }
-
-                    // Determine if server needs to be updated with a later local expiration
-                    if let localExp = localExpiration, localExp > backendExp.addingTimeInterval(10) {
-                        let newValidUntil = isoFormatter.string(from: localExp)
-                        logger.info("Local entitlement expiration (\(newValidUntil)) is later than backend (\(response.license.validUntil ?? "")). Updating server...")
-                        self.backend.grantPro(plan: "PRO", validUntil: newValidUntil) { grantResult in
-                            switch grantResult {
-                            case .success:
-                                // Re-fetch to ensure consistency and then persist
-                                self.backend.checkSubscription { refreshResult in
-                                    Task { @MainActor in
-                                        switch refreshResult {
-                                        case .success(let refreshed):
-                                            persistAndPublish(from: refreshed)
-                                            completion?(.success(()))
-                                        case .failure(let err):
-                                            self.status = .subscribed(expiration: localExp)
-                                            logger.error("Backend re-check after grant failed: \(err.localizedDescription)")
-                                            completion?(.failure(err))
-                                        }
-                                    }
-                                }
-                            case .failure(let err):
-                                Task { @MainActor in
-                                    self.status = .subscribed(expiration: localExp)
-                                    logger.error("Failed to update backend validUntil: \(err.localizedDescription)")
-                                    completion?(.failure(err))
-                                }
-                            }
-                        }
+                    if let exp = backendExpiration, exp > Date() || response.license.status.lowercased() == "active" {
+                        self.status = .subscribed(expiration: backendExpiration)
                     } else {
-                        // No update needed; publish current backend state
-                        persistAndPublish(from: response)
-                        completion?(.success(()))
+                        self.status = .notSubscribed
                     }
+                    self.recomputeTrialEligibility()
+                    completion?(.success(()))
                 case .failure(let error):
-                    // Fallback to local entitlement if backend fails
-                    logger.error("Backend check failed: \(error.localizedDescription)")
-                    self.status = .subscribed(expiration: nil)
+                    logger.error("Backend check (refresh) failed: \(error.localizedDescription)")
+                    self.status = .error(error.userFacingMessage)
+                    self.recomputeTrialEligibility()
                     completion?(.failure(error))
                 }
             }

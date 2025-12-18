@@ -34,7 +34,7 @@ extension Subscription {
     /// Simple convenience to check if plan is premium-like.
     internal var isPremiumPlan: Bool {
         let p = plan ?? ""
-        return p == "PRO"
+        return p == "PRO" && status == "ACTIVE"
     }
 }
 

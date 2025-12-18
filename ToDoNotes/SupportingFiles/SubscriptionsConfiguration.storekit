@@ -24,7 +24,7 @@
     "_developerTeamID" : "NAJAJ652LV",
     "_disableDialogs" : false,
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 786912017.58439398,
+    "_lastSynchronizedDate" : 787256770.54149103,
     "_locale" : "en_US",
     "_renewalBillingIssuesEnabled" : false,
     "_storefront" : "USA",
@@ -96,7 +96,7 @@
           "groupNumber" : 3,
           "internalID" : "6755833101",
           "introductoryOffer" : {
-            "internalID" : "5CC94064",
+            "internalID" : "B05CED00",
             "numberOfPeriods" : 1,
             "paymentMode" : "free",
             "subscriptionPeriod" : "P1W"
@@ -187,7 +187,7 @@
           "groupNumber" : 4,
           "internalID" : "6755833277",
           "introductoryOffer" : {
-            "internalID" : "640CCF6A",
+            "internalID" : "6567937C",
             "numberOfPeriods" : 1,
             "paymentMode" : "free",
             "subscriptionPeriod" : "P1W"
@@ -204,14 +204,14 @@
               "locale" : "ru"
             },
             {
-              "description" : "Collaboration Planzo Pro",
-              "displayName" : "Accès Pro (mensuel)",
-              "locale" : "fr"
-            },
-            {
               "description" : "Colaboración de Planzo Pro",
               "displayName" : "Acceso Pro (mensual)",
               "locale" : "es_ES"
+            },
+            {
+              "description" : "Collaboration Planzo Pro",
+              "displayName" : "Accès Pro (mensuel)",
+              "locale" : "fr"
             }
           ],
           "productID" : "iOS_todonotes_proaccess_monthly_trial_15",

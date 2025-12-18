@@ -126,6 +126,9 @@ struct SettingsView: View {
                 if authService.currentUser?.isPremium != true {
                     subscriptionPromoteRow
                 }
+                #if DEBUG
+                cancelSubscriptionDevButton
+                #endif
                 syncButton
                 
                 VStack(spacing: 0) {
@@ -135,6 +138,11 @@ struct SettingsView: View {
                             viewModel.readNotificationStatus()
                         }
                     languageButton
+                }
+                .clipShape(.rect(cornerRadius: 10))
+                .padding(.horizontal)
+                
+                VStack(spacing: 0) {
                     taskCreationSettingsButton
                     weekFirstDayButton
                 }
@@ -194,7 +202,7 @@ struct SettingsView: View {
             } else {
                 VStack(spacing: 12) {
                     appleLoginButton
-//                    googleLoginButton
+                    googleLoginButton
                     
                     termsPolicyLabel
                         .font(.system(size: 14, weight: .medium))
@@ -319,7 +327,8 @@ struct SettingsView: View {
                 title: Texts.Settings.Language.title,
                 image: Image.Settings.language,
                 details: Texts.Settings.Language.details,
-                chevron: true)
+                chevron: true,
+                last: true)
         }
     }
     
@@ -480,6 +489,40 @@ struct SettingsView: View {
             Texts.Settings.Plans.freePlan
         }
     }
+    
+    #if DEBUG
+    /// DEV ONLY: Button to reset subscription on backend and save returned tokens.
+    private var cancelSubscriptionDevButton: some View {
+        Button {
+            SubscriptionNetworkService.shared.resetLicenseDev { result in
+                switch result {
+                case .success(let authResponse):
+                    let tokenStorage = TokenStorageService()
+                    DispatchQueue.main.async {
+                        tokenStorage.save(token: authResponse.accessToken, type: .accessToken)
+                        tokenStorage.save(token: authResponse.refreshToken, type: .refreshToken)
+                    }
+                    SubscriptionCoordinatorService.shared.refreshStatus { _ in
+                        DispatchQueue.main.async {
+                            authService.loadPersistedProfile()
+                        }
+                    }
+                    logger.info("DEV: subscription reset succeeded and tokens saved")
+                case .failure(let error):
+                    logger.error("DEV: subscription reset failed: \(error.localizedDescription)")
+                }
+            }
+        } label: {
+            SettingFormRow(
+                title: "DEV: Reset subscription",
+                image: Image.Settings.reset,
+                chevron: false,
+                last: true)
+        }
+        .clipShape(.rect(cornerRadius: 10))
+        .padding(.horizontal)
+    }
+    #endif
 }
 
 // MARK: - Preview

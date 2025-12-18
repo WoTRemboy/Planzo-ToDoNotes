@@ -148,8 +148,8 @@ struct CustomAlertView: View {
         title: "Attention",
         message: "Do you really want to delete this task?",
         primaryButtonTitle: "Delete",
-        primaryAction: { print("Delete tapped") },
+        primaryAction: {},
         secondaryButtonTitle: "Cancel",
-        secondaryAction: { print("Cancel tapped") }
+        secondaryAction: {}
     )
 }

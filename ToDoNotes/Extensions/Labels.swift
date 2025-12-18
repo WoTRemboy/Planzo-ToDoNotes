@@ -87,6 +87,7 @@ final class Texts {
         static let cancel = NSLocalizedString("SettingsPageCancel", comment: "Cancel")
         static let accept = NSLocalizedString("SettingsPageAccept", comment: "Accept")
         static let ok = NSLocalizedString("SettingsPageOk", comment: "OK")
+        static let manage = NSLocalizedString("SettingsPageManage", comment: "Manage")
         static let hide = NSLocalizedString("SettingsPageHide", comment: "Hide")
         
         enum Sync {
@@ -470,6 +471,7 @@ final class Texts {
             static let until = NSLocalizedString("SubscriptionPromoUntil", comment: "Subscription is active until")
             static let untilWithoutDate = NSLocalizedString("SubscriptionPromoUntilWithoutDate", comment: "Subscription is active")
             static let restored = NSLocalizedString("SubscriptionPromoRestored", comment: "Purchases restored successfully.")
+            static let noSubscription = NSLocalizedString("SubscriptionPromoNoSubscription", comment: "You don't have an active subscription.")
         }
         
         enum Error {
@@ -565,3 +567,4 @@ final class Texts {
         static let tabBarShadow = "TabBarShadow"
     }
 }
+

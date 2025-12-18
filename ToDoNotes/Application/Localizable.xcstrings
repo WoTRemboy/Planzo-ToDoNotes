@@ -2725,6 +2725,35 @@
         }
       }
     },
+    "SettingsPageManage" : {
+      "comment" : "Manage",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestionar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gérer"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Управлять"
+          }
+        }
+      }
+    },
     "SettingsPageNotificationsDisabledContent" : {
       "comment" : "Please enable this option in the App Settings.",
       "localizations" : {
@@ -5389,6 +5418,35 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Делитесь задачами, настраивайте календарь, отслеживайте прогресс и многое другое."
+          }
+        }
+      }
+    },
+    "SubscriptionPromoNoSubscription" : {
+      "comment" : "You don't have an active subscription.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don't have an active subscription."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tienes una suscripción activa."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous n’avez pas d’abonnement actif."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "У вас нет активной подписки."
           }
         }
       }
