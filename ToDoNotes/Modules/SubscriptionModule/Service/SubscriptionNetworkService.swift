@@ -31,12 +31,13 @@ struct SubscriptionResponse: Codable {
         /// The type of license
         let type: String
         /// The subscription plan associated with the license
-        let plan: String
+        let plan: String?
         /// The current status of the license
         let status: String
         let trialUsed: Bool
     }
     
+//    let trialAvailable: Bool
     /// License data associated with the subscription
     let license: License
     /// Subscription identifier or subject
@@ -136,22 +137,64 @@ final class SubscriptionNetworkService {
             }
         }
     }
+
+    // MARK: - Check subscription
     
-    // MARK: - Grant PRO
-    
-    /// Grants PRO plan until a specific moment.
-    /// - Parameters:
-    ///   - plan: Plan identifier (e.g., "PRO")
-    ///   - validUntil: ISO8601 date-time string when license expires
-    ///   - completion: Result with `AuthResponse` or `Error`
-    internal func grantPro(plan: String, validUntil: String, completion: @escaping (Result<AuthResponse, Error>) -> Void) {
+    /// Checks the current subscription status of the user with additional fields from DB.
+    /// - Parameter completion: Result with `SubscriptionResponse` or `Error`.
+    internal func checkSubscriptionFull(completion: @escaping (Result<SubscriptionResponse, Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                var components = URLComponents(string: "https://banana.avoqode.com/api/v1/subscription/grant-pro")!
+                guard let url = URL(string: "https://banana.avoqode.com/api/v1/subscription/me/full") else {
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "GET"
+                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+                
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        logger.error("Network error when checking subscription (full): \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.network(error))) }
+                        return
+                    }
+                    guard let data = data, let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                        logger.error("Invalid response when checking subscription (full): \((response as? HTTPURLResponse)?.statusCode ?? -1)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.invalidResponse)) }
+                        return
+                    }
+                    do {
+                        let decoder = JSONDecoder()
+                        let subscriptionStatus = try decoder.decode(SubscriptionResponse.self, from: data)
+                        logger.info("Successfully fetched full subscription status")
+                        DispatchQueue.main.async { completion(.success(subscriptionStatus)) }
+                    } catch {
+                        logger.error("Decoding error when checking subscription (full): \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.decoding(error))) }
+                    }
+                }
+                task.resume()
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    // MARK: - Apple subscription attach
+    
+    /// Attaches an Apple subscription by StoreKit transaction identifier.
+    /// - Parameters:
+    ///   - transactionId: The StoreKit transaction identifier string.
+    ///   - completion: Result with `AuthResponse` or `Error`.
+    internal func attachAppleSubscription(transactionId: String, completion: @escaping (Result<AuthResponse, Error>) -> Void) {
+        AccessTokenManager.shared.getValidAccessToken { result in
+            switch result {
+            case .success(let accessToken):
+                var components = URLComponents(string: "https://banana.avoqode.com/api/v1/subscription/apple/attach")!
                 components.queryItems = [
-                    URLQueryItem(name: "plan", value: plan),
-                    URLQueryItem(name: "validUntil", value: validUntil)
+                    URLQueryItem(name: "transactionId", value: transactionId)
                 ]
                 guard let url = components.url else {
                     completion(.failure(URLError(.badURL)))
@@ -163,21 +206,108 @@ final class SubscriptionNetworkService {
                 
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
-                        logger.error("Network error when granting PRO: \(error.localizedDescription)")
+                        logger.error("Network error when attaching Apple subscription: \(error.localizedDescription)")
                         DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.network(error))) }
                         return
                     }
                     guard let data = data, let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                        logger.error("Invalid response when granting PRO: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
+                        logger.error("Invalid response when attaching Apple subscription: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
                         DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.invalidResponse)) }
                         return
                     }
                     do {
                         let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
-                        logger.info("Successfully granted PRO plan: \(plan) until \(validUntil)")
+                        logger.info("Successfully attached Apple subscription by transactionId")
                         DispatchQueue.main.async { completion(.success(authResponse)) }
                     } catch {
-                        logger.error("Decoding error when granting PRO: \(error.localizedDescription)")
+                        logger.error("Decoding error when attaching Apple subscription: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.decoding(error))) }
+                    }
+                }
+                task.resume()
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    // MARK: - Apple subscription refresh
+    
+    /// Forces refresh of the Apple subscription state using saved transaction identifiers.
+    /// - Parameter completion: Result with `AuthResponse` or `Error`.
+    internal func refreshAppleSubscription(completion: @escaping (Result<AuthResponse, Error>) -> Void) {
+        AccessTokenManager.shared.getValidAccessToken { result in
+            switch result {
+            case .success(let accessToken):
+                guard let url = URL(string: "https://banana.avoqode.com/api/v1/subscription/apple/refresh") else {
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "POST"
+                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+                
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        logger.error("Network error when refreshing Apple subscription: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.network(error))) }
+                        return
+                    }
+                    
+                    guard let data = data, let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                        logger.error("Invalid response when refreshing Apple subscription: \((response as? HTTPURLResponse)?.statusCode ?? -1)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.invalidResponse)) }
+                        return
+                    }
+                    do {
+                        let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
+                        logger.info("Successfully refreshed Apple subscription state")
+                        DispatchQueue.main.async { completion(.success(authResponse)) }
+                    } catch {
+                        logger.error("Decoding error when refreshing Apple subscription: \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.decoding(error))) }
+                    }
+                }
+                task.resume()
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    // MARK: - Dev: Reset license
+        
+    /// DEV ONLY: Resets license and Apple subscription state on the server.
+    /// - Parameter completion: Result with `AuthResponse` or `Error`.
+    internal func resetLicenseDev(completion: @escaping (Result<AuthResponse, Error>) -> Void) {
+        AccessTokenManager.shared.getValidAccessToken { result in
+            switch result {
+            case .success(let accessToken):
+                guard let url = URL(string: "https://banana.avoqode.com/api/v1/subscription/dev/reset-license") else {
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "POST"
+                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+                
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        logger.error("Network error when resetting license (dev): \(error.localizedDescription)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.network(error))) }
+                        return
+                    }
+                    guard let data = data, let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                        logger.error("Invalid response when resetting license (dev): \((response as? HTTPURLResponse)?.statusCode ?? -1)")
+                        DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.invalidResponse)) }
+                        return
+                    }
+                    do {
+                        let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
+                        logger.info("Successfully reset license (dev)")
+                        DispatchQueue.main.async { completion(.success(authResponse)) }
+                    } catch {
+                        logger.error("Decoding error when resetting license (dev): \(error.localizedDescription)")
                         DispatchQueue.main.async { completion(.failure(SubscriptionAPIError.decoding(error))) }
                     }
                 }

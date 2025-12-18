@@ -7,7 +7,7 @@ import Foundation
 import StoreKit
 import OSLog
 
-private let skLogger = Logger(subsystem: "com.todonotes.subscription", category: "StoreKitSubscriptionService")
+private let logger = Logger(subsystem: "com.todonotes.subscription", category: "StoreKitSubscriptionService")
 
 /// Public IDs for subscriptions configured in App Store Connect
 /// Update if product identifiers change in ASC
@@ -51,10 +51,10 @@ final class StoreKitSubscriptionService: ObservableObject {
                 await MainActor.run {
                     self.availableProducts = products
                 }
-                skLogger.info("Loaded StoreKit products: \(products.map { $0.id }.joined(separator: ", "))")
+                logger.info("Loaded StoreKit products: \(products.map { $0.id }.joined(separator: ", "))")
                 completion(.success(products))
             } catch {
-                skLogger.error("Failed to load StoreKit products: \(error.localizedDescription)")
+                logger.error("Failed to load StoreKit products: \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }
@@ -95,7 +95,7 @@ final class StoreKitSubscriptionService: ObservableObject {
                     completion(.failure(StoreKitServiceError.unknown))
                 }
             } catch {
-                skLogger.error("Purchase failed: \(error.localizedDescription)")
+                logger.error("Purchase failed: \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }
@@ -113,7 +113,7 @@ final class StoreKitSubscriptionService: ObservableObject {
                 await MainActor.run { self.isSubscribed = status }
                 completion(.success(status))
             } catch {
-                skLogger.error("Restore failed: \(error.localizedDescription)")
+                logger.error("Restore failed: \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }
@@ -157,7 +157,7 @@ final class StoreKitSubscriptionService: ObservableObject {
                     await transaction.finish()
                     await self.updateEntitlements(using: transaction)
                 } catch {
-                    skLogger.error("Transaction update verification failed: \(error.localizedDescription)")
+                    logger.error("Transaction update verification failed: \(error.localizedDescription)")
                 }
             }
         }
@@ -170,7 +170,7 @@ final class StoreKitSubscriptionService: ObservableObject {
             let status = try await self.calculateIsSubscribed()
             self.isSubscribed = status
         } catch {
-            skLogger.error("Failed to update entitlements after transaction: \(error.localizedDescription)")
+            logger.error("Failed to update entitlements after transaction: \(error.localizedDescription)")
         }
     }
     

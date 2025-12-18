@@ -49,6 +49,7 @@
 		632D0DD42D36BB270071684D /* TaskManagementNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD32D36BB210071684D /* TaskManagementNavBar.swift */; };
 		632D0DD72D37D6D70071684D /* TaskManagementShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */; };
 		632D0DDA2D37E0AE0071684D /* HeightReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632D0DD92D37E0A90071684D /* HeightReader.swift */; };
+		633746A92EF2B62100005965 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 633746A82EF2B62100005965 /* StoreKit.framework */; };
 		6337C6312E8468D8008D5DA1 /* ShareNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */; };
 		6338FFA92D7C9FE900E9E4C2 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6338FFA82D7C9FE400E9E4C2 /* PreviewData.swift */; };
 		634877AC2D369B2C009110B0 /* SettingFormRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634877AB2D369B21009110B0 /* SettingFormRow.swift */; };
@@ -254,6 +255,7 @@
 		632D0DD62D37D6D70071684D /* TaskManagementShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementShareView.swift; sourceTree = "<group>"; };
 		632D0DD92D37E0A90071684D /* HeightReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeightReader.swift; sourceTree = "<group>"; };
 		632F9CA92E7CAE3000DBDAF0 /* SubscriptionsConfiguration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = SubscriptionsConfiguration.storekit; sourceTree = "<group>"; };
+		633746A82EF2B62100005965 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNetworkService.swift; sourceTree = "<group>"; };
 		6338FFA82D7C9FE400E9E4C2 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		634877AB2D369B21009110B0 /* SettingFormRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingFormRow.swift; sourceTree = "<group>"; };
@@ -399,6 +401,7 @@
 			files = (
 				63C5A8CF2D31BECD00154101 /* GoogleSignIn in Frameworks */,
 				63C5A8D12D31BECD00154101 /* GoogleSignInSwift in Frameworks */,
+				633746A92EF2B62100005965 /* StoreKit.framework in Frameworks */,
 				63958D2D2D33D8FE00A1913A /* SwiftUIPager in Frameworks */,
 				63BDC3452E7C276100E92FDC /* SwiftUIIntrospect in Frameworks */,
 			);
@@ -635,6 +638,14 @@
 			path = Modifiers;
 			sourceTree = "<group>";
 		};
+		633746A72EF2B62100005965 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				633746A82EF2B62100005965 /* StoreKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		634877AF2D36A168009110B0 /* NavigationViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -673,6 +684,7 @@
 				635FEF6B2D24B71C007FFBBA /* ToDoNotes */,
 				63B88F532DBE532A00C9EA8A /* ToDoNotesTests */,
 				63753A812E78678800D75DAF /* ci_scripts */,
+				633746A72EF2B62100005965 /* Frameworks */,
 				635FEF562D24B715007FFBBA /* Products */,
 			);
 			sourceTree = "<group>";
