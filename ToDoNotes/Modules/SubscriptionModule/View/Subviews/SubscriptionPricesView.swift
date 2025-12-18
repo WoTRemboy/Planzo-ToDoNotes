@@ -27,12 +27,7 @@ struct SubscriptionPricesView: View {
     }
 
     private func currencyString(_ value: Decimal, product: Product) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        // Use the product's currency and locale to match StoreKit display formatting
-        formatter.currencyCode = product.priceFormatStyle.currencyCode
-        formatter.locale = product.priceFormatStyle.locale
-        return formatter.string(from: value as NSDecimalNumber) ?? "--"
+        return product.priceFormatStyle.format(value)
     }
 
     private func perMonthString(for product: Product, months: Int) -> String {
@@ -99,7 +94,7 @@ struct SubscriptionPricesView: View {
                     if type == .annual {
                         return "(\(perMonthString(for: p, months: 12))/\(Texts.Subscription.Page.month))"
                     } else {
-                        return "(\(p.displayPrice)/\(Texts.Subscription.Page.month))"
+                        return "(\(perMonthString(for: p, months: 1))/\(Texts.Subscription.Page.month))"
                     }
                 } else {
                     return "--/\(Texts.Subscription.Page.month))"

@@ -188,7 +188,7 @@ final class MainViewModel: ObservableObject {
                 self.allTasks = tasks
             }
         } catch {
-            print("Failed to fetch tasks: \(error)")
+            logger.error("Failed to fetch tasks: \(error)")
         }
     }
     
