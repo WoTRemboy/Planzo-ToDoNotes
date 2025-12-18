@@ -87,6 +87,7 @@ final class Texts {
         static let cancel = NSLocalizedString("SettingsPageCancel", comment: "Cancel")
         static let accept = NSLocalizedString("SettingsPageAccept", comment: "Accept")
         static let ok = NSLocalizedString("SettingsPageOk", comment: "OK")
+        static let manage = NSLocalizedString("SettingsPageManage", comment: "Manage")
         static let hide = NSLocalizedString("SettingsPageHide", comment: "Hide")
         
         enum Sync {
@@ -566,3 +567,4 @@ final class Texts {
         static let tabBarShadow = "TabBarShadow"
     }
 }
+
