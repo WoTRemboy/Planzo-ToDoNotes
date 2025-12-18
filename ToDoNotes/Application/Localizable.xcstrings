@@ -2725,6 +2725,35 @@
         }
       }
     },
+    "SettingsPageManage" : {
+      "comment" : "Manage",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestionar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gérer"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Управлять"
+          }
+        }
+      }
+    },
     "SettingsPageNotificationsDisabledContent" : {
       "comment" : "Please enable this option in the App Settings.",
       "localizations" : {
