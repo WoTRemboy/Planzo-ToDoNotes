@@ -470,6 +470,7 @@ final class Texts {
             static let until = NSLocalizedString("SubscriptionPromoUntil", comment: "Subscription is active until")
             static let untilWithoutDate = NSLocalizedString("SubscriptionPromoUntilWithoutDate", comment: "Subscription is active")
             static let restored = NSLocalizedString("SubscriptionPromoRestored", comment: "Purchases restored successfully.")
+            static let noSubscription = NSLocalizedString("SubscriptionPromoNoSubscription", comment: "You don't have an active subscription.")
         }
         
         enum Error {

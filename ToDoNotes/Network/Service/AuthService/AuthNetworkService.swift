@@ -74,7 +74,7 @@ final class AuthNetworkService: ObservableObject {
                     FullSyncNetworkService.shared.syncAllData { result in
                         switch result {
                         case .success(_):
-                            SubscriptionCoordinatorService.shared.checkSubscriptionAndUpdateState { subResult in
+                            SubscriptionCoordinatorService.shared.refreshStatus { subResult in
                                 switch subResult {
                                 case .success:
                                     logger.info("Google login: subscription check succeeded")
@@ -145,7 +145,7 @@ final class AuthNetworkService: ObservableObject {
                     FullSyncNetworkService.shared.syncAllData { result in
                         switch result {
                         case .success(_):
-                            SubscriptionCoordinatorService.shared.refreshStatusFromBoth { subResult in
+                            SubscriptionCoordinatorService.shared.refreshStatus { subResult in
                                 switch subResult {
                                 case .success:
                                     logger.info("Apple login: subscription refresh succeeded")

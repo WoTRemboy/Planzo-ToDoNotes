@@ -60,7 +60,7 @@ struct ToDoNotesApp: App {
                     backgroundSyncTask = Task {
                         while !Task.isCancelled {
                             if authService.isAuthorized, let user = authService.currentUser {
-                                SubscriptionCoordinatorService.shared.refreshStatusFromBoth { result in
+                                SubscriptionCoordinatorService.shared.refreshStatus { result in
                                     switch result {
                                     case .success:
                                         logger.info("Subscription status refresh succeeded")

@@ -107,7 +107,7 @@ struct SubscriptionView: View {
                 switch subscription.status {
                 case .subscribed(let expiration):
                     if let exp = expiration {
-                        viewModel.setAlertMessage("\(Texts.Subscription.State.until):  \(formattedDate(exp))")
+                        viewModel.setAlertMessage("\(Texts.Subscription.State.until): \(formattedDate(exp))")
                     } else {
                         viewModel.setAlertMessage(Texts.Subscription.State.untilWithoutDate)
                     }
@@ -172,7 +172,7 @@ struct SubscriptionView: View {
     private var subscriptionView: some View {
         VStack {
             planTitle
-            if shouldShowTrialToggle {
+            if subscription.trialEligibility {
                 trialToggle
             }
             subscriptionPricesView
@@ -193,15 +193,6 @@ struct SubscriptionView: View {
             .padding(.top, 8)
     }
     
-    private var shouldShowTrialToggle: Bool {
-        let backendAllows = authService.currentUser?.subscription?.trialUsed == false
-        let storeKitAllows = subscription.products.contains { product in
-            product.id == ProSubscriptionID.annualTrial.rawValue ||
-            product.id == ProSubscriptionID.monthlyTrial.rawValue
-        }
-        return backendAllows && storeKitAllows
-    }
-    
     private var subscriptionPricesView: some View {
         SubscriptionPricesView()
             .padding(.top)
@@ -220,6 +211,7 @@ struct SubscriptionView: View {
                     : ProSubscriptionID.monthly.rawValue
                 }
             }()
+            LoadingOverlay.shared.show()
             subscription.purchase(productId: productId) { result in
                 switch result {
                 case .success:
@@ -232,6 +224,7 @@ struct SubscriptionView: View {
                         viewModel.toggleShowingErrorAlert()
                     }
                 }
+                LoadingOverlay.shared.hide()
             }
         } label: {
             Text(viewModel.selectedFreePlan

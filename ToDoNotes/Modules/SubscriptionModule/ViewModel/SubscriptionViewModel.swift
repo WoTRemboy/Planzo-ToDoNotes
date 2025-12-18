@@ -110,6 +110,7 @@ final class SubscriptionViewModel: ObservableObject {
     }
     
     internal func restorePurchases(completion: ((Bool) -> Void)? = nil) {
+        LoadingOverlay.shared.show()
         SubscriptionCoordinatorService.shared.restorePurchases { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
@@ -118,17 +119,19 @@ final class SubscriptionViewModel: ObservableObject {
                     self?.showingSuccessAlert = true
                     completion?(true)
                 case .failure(let error):
-                    self?.showingErrorAlert = true
+                    self?.successAlertMessage = Texts.Subscription.State.noSubscription
+                    self?.showingSuccessAlert = true
                     logger.error("Restore purchases failed: \(error.localizedDescription)")
                     completion?(false)
                 }
+                LoadingOverlay.shared.hide()
             }
         }
     }
     
     private func checkAndRequestDismissIfSubscribed() {
         let service = SubscriptionCoordinatorService.shared
-        service.refreshStatusFromBoth { [weak self] _ in
+        service.refreshStatus { [weak self] _ in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 switch service.status {

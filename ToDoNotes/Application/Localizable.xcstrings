@@ -5393,6 +5393,35 @@
         }
       }
     },
+    "SubscriptionPromoNoSubscription" : {
+      "comment" : "You don't have an active subscription.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don't have an active subscription."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tienes una suscripción activa."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous n’avez pas d’abonnement actif."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "У вас нет активной подписки."
+          }
+        }
+      }
+    },
     "SubscriptionPromoPro" : {
       "comment" : "Pro",
       "localizations" : {
