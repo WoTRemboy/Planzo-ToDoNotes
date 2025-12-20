@@ -34,10 +34,15 @@ final class AccessTokenManager {
                 case .success(let authResponse):
                     // Persist accessTokenExpiresAt in UserDefaults
                     UserDefaults.standard.setValue(authResponse.accessTokenExpiresAt, forKey: "AccessTokenExpiresAt")
-                    if let token = self.tokenStorage.load(type: .accessToken) {
-                        completion(.success(token))
-                    } else {
-                        completion(.failure(URLError(.userAuthenticationRequired)))
+
+                    Task { @MainActor in
+                        SubscriptionCoordinatorService.shared.restorePurchases { _ in
+                            if let token = self.tokenStorage.load(type: .accessToken) {
+                                completion(.success(token))
+                            } else {
+                                completion(.failure(URLError(.userAuthenticationRequired)))
+                            }
+                        }
                     }
                 case .failure(let error):
                     completion(.failure(error))
@@ -46,3 +51,4 @@ final class AccessTokenManager {
         }
     }
 }
+
