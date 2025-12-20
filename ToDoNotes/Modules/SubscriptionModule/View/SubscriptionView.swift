@@ -31,6 +31,7 @@ struct SubscriptionView: View {
     @State private var showingProductsError: Bool = false
     
     @State private var justPurchased: Bool = false
+    @State private var selectedProductPurchased: Bool = false
     
     
     init(namespace: Namespace.ID, networkService: AuthNetworkService) {
@@ -88,19 +89,21 @@ struct SubscriptionView: View {
                 }
             )
         }
-        .navigationTransition(
-            id: Texts.NamespaceID.subscriptionButton,
-            namespace: namespace)
+//        .navigationTransition(
+//            id: Texts.NamespaceID.subscriptionButton,
+//            namespace: namespace)
         .onAppear {
             subscription.loadProducts()
             subscription.refreshStatus()
+            checkSelectedProductPurchased()
         }
         .onChange(of: subscription.status) { _, newStatus in
             if newStatus != .loading, subscription.products.count == 0 {
                 showingProductsError = true
             }
         }
-        .onChange(of: viewModel.shouldDismiss) { _, _ in dismiss()
+        .onChange(of: viewModel.shouldDismiss) { _, _ in
+            dismiss()
         }
         .onChange(of: justPurchased) { _, newValue in
             if newValue {
@@ -198,19 +201,25 @@ struct SubscriptionView: View {
             .padding(.top)
     }
     
+    private var selectedProductId: String {
+        if viewModel.selectedFreePlan {
+            return (viewModel.selectedSubscriptionPlan == .annual)
+            ? ProSubscriptionID.annualTrial.rawValue
+            : ProSubscriptionID.monthlyTrial.rawValue
+        } else {
+            return (viewModel.selectedSubscriptionPlan == .annual)
+            ? ProSubscriptionID.annual.rawValue
+            : ProSubscriptionID.monthly.rawValue
+        }
+    }
+    
     private var continueButton: some View {
         Button {
-            let productId: String = {
-                if viewModel.selectedFreePlan {
-                    return (viewModel.selectedSubscriptionPlan == .annual)
-                    ? ProSubscriptionID.annualTrial.rawValue
-                    : ProSubscriptionID.monthlyTrial.rawValue
-                } else {
-                    return (viewModel.selectedSubscriptionPlan == .annual)
-                    ? ProSubscriptionID.annual.rawValue
-                    : ProSubscriptionID.monthly.rawValue
-                }
-            }()
+            guard !selectedProductPurchased else {
+                subscription.openManageSubscriptions()
+                return
+            }
+            let productId = selectedProductId
             LoadingOverlay.shared.show()
             subscription.purchase(productId: productId) { result in
                 switch result {
@@ -227,9 +236,11 @@ struct SubscriptionView: View {
                 LoadingOverlay.shared.hide()
             }
         } label: {
-            Text(viewModel.selectedFreePlan
-                 ? Texts.Subscription.Page.trialContinue
-                 : Texts.Subscription.Page.continueButton)
+            Text(selectedProductPurchased
+                 ? Texts.Subscription.Page.alreadySubscribed
+                 : (viewModel.selectedFreePlan
+                    ? Texts.Subscription.Page.trialContinue
+                    : Texts.Subscription.Page.continueButton))
                 .font(.system(size: 17, weight: .medium))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 .minimumScaleFactor(0.4)
@@ -241,14 +252,22 @@ struct SubscriptionView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .frame(height: 50)
-        .disabled(subscription.purchasingProductId != nil || subscription.restoreInProgress || (subscription.status == .loading))
+        .disabled(subscription.purchasingProductId != nil || (subscription.status == .loading))
         .frame(maxWidth: .infinity)
         .minimumScaleFactor(0.4)
         
         .transition(.blurReplace)
+        .animation(.easeInOut(duration: 0.2), value: selectedProductPurchased)
         .padding([.horizontal, .top], 16)
     }
         
+    private func checkSelectedProductPurchased() {
+        Task {
+            let purchased = await subscription.isAnyProductPurchased()
+            await MainActor.run { self.selectedProductPurchased = purchased }
+        }
+    }
+    
     private var termsPolicyLabel: some View {
         if let attributedText = try? AttributedString(markdown: Texts.OnboardingPage.markdownTerms) {
             return Text(attributedText)

@@ -159,7 +159,8 @@ struct SettingAccountView: View {
             },
             secondaryButtonTitle: Texts.Settings.manage,
             secondaryAction: {
-                openManageSubscriptions()
+                SubscriptionCoordinatorService.shared.openManageSubscriptions()
+                showingPlanAlert = false
             }
         )
     }
@@ -169,31 +170,6 @@ struct SettingAccountView: View {
             Texts.Settings.Plans.pro
         } else {
             Texts.Settings.Plans.free
-        }
-    }
-    
-    private func openManageSubscriptions() {
-        guard let scene = UIApplication.shared.connectedScenes
-            .compactMap({ $0 as? UIWindowScene })
-            .first else {
-            // Fallback to URL if we can't find a scene
-            if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
-                UIApplication.shared.open(url)
-            }
-            showingPlanAlert = false
-            return
-        }
-        Task {
-            do {
-                try await AppStore.showManageSubscriptions(in: scene)
-                showingPlanAlert = false
-            } catch {
-                // Fallback to URL if StoreKit call fails
-                if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
-                    await UIApplication.shared.open(url)
-                }
-                showingPlanAlert = false
-            }
         }
     }
     

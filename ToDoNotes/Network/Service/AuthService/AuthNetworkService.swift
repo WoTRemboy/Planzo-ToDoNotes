@@ -74,14 +74,14 @@ final class AuthNetworkService: ObservableObject {
                     FullSyncNetworkService.shared.syncAllData { result in
                         switch result {
                         case .success(_):
-                            SubscriptionCoordinatorService.shared.refreshStatus { subResult in
+                            SubscriptionCoordinatorService.shared.restorePurchases { subResult in
                                 switch subResult {
                                 case .success:
-                                    logger.info("Google login: subscription check succeeded")
+                                    logger.info("Google login: restorePurchases succeeded")
                                     self.loadPersistedProfile()
                                     completion(.success(authResponse))
                                 case .failure(let error):
-                                    logger.error("Google login: subscription check failed: \(error.localizedDescription)")
+                                    logger.error("Google login: restorePurchases failed: \(error.localizedDescription)")
                                     completion(.success(authResponse))
                                 }
                             }
@@ -145,14 +145,14 @@ final class AuthNetworkService: ObservableObject {
                     FullSyncNetworkService.shared.syncAllData { result in
                         switch result {
                         case .success(_):
-                            SubscriptionCoordinatorService.shared.refreshStatus { subResult in
+                            SubscriptionCoordinatorService.shared.restorePurchases { subResult in
                                 switch subResult {
                                 case .success:
-                                    logger.info("Apple login: subscription refresh succeeded")
+                                    logger.info("Apple login: restorePurchases succeeded")
                                     self.loadPersistedProfile()
                                     completion(.success(authResponse))
                                 case .failure(let error):
-                                    logger.error("Apple login: subscription refresh failed: \(error.localizedDescription)")
+                                    logger.error("Apple login: restorePurchases failed: \(error.localizedDescription)")
                                     completion(.success(authResponse))
                                 }
                             }
