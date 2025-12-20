@@ -156,6 +156,52 @@ final class SubscriptionCoordinatorService: ObservableObject {
         status = .loading
         refreshStatus(completion: nil)
     }
+
+    /// Checks across all current StoreKit entitlements whether any purchase is active
+    /// - Returns: true if there is at least one active, non-revoked entitlement (subscription or lifetime), otherwise false
+    func isAnyProductPurchased() async -> Bool {
+        for await entitlement in Transaction.currentEntitlements {
+            if case .verified(let transaction) = entitlement {
+                if transaction.revocationDate == nil {
+                    if let exp = transaction.expirationDate {
+                        if exp > Date() { return true }
+                    } else {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+
+    /// Convenience wrapper for completion-based callers that checks all entitlements
+    func isAnyProductPurchased(completion: @escaping (Bool) -> Void) {
+        Task { [weak self] in
+            guard let self else { await MainActor.run { completion(false) }; return }
+            let purchased = await self.isAnyProductPurchased()
+            await MainActor.run { completion(purchased) }
+        }
+    }
+    
+    internal func openManageSubscriptions() {
+        guard let scene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first else {
+            if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
+                UIApplication.shared.open(url)
+            }
+            return
+        }
+        Task {
+            do {
+                try await AppStore.showManageSubscriptions(in: scene)
+            } catch {
+                if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
+                    await UIApplication.shared.open(url)
+                }
+            }
+        }
+    }
     
     // MARK: - Internal Orchestration
     
