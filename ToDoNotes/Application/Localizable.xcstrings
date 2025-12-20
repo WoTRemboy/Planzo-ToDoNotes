@@ -5132,6 +5132,35 @@
         }
       }
     },
+    "SubscriptionPageAlreadySubscribedTitle" : {
+      "comment" : "Already Purchased",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Already Purchased"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya comprado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déjà acheté"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Уже куплено"
+          }
+        }
+      }
+    },
     "SubscriptionPageChoosePlanTitle" : {
       "comment" : "Choose your Plan",
       "localizations" : {

@@ -453,6 +453,7 @@ final class Texts {
         enum Page {
             static let choosePlan = NSLocalizedString("SubscriptionPageChoosePlanTitle", comment: "Choose your Plan")
             static let continueButton = NSLocalizedString("SubscriptionPageContinueButton", comment: "Continue")
+            static let alreadySubscribed = NSLocalizedString("SubscriptionPageAlreadySubscribedTitle", comment: "Already Purchased")
             static let trialContinue = NSLocalizedString("SubscriptionPageTrialContinueButton", comment: "Get 7-day trial")
             static let restore = NSLocalizedString("SubscriptionPageRestoreButton", comment: "Restore purchases")
             
