@@ -60,8 +60,9 @@ struct RootView<Content: View>: View {
                 if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                    loadingOverlayWindow == nil {
                     
-                    let window = PassthroughWindow(windowScene: windowScene)
+                    let window = UIWindow(windowScene: windowScene)
                     window.backgroundColor = .clear
+                    window.windowLevel = .alert
                     
                     let controller = UIHostingController(rootView: AnyView(
                         LoadingOverlayGroup().preferredColorScheme(userTheme.colorScheme)
