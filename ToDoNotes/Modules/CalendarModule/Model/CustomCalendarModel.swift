@@ -57,6 +57,11 @@ extension Date {
         }
     }
     
+    /// Returns today's day of month as an Int (1–31).
+    static var todayDay: Int {
+        Calendar.current.component(.day, from: .now)
+    }
+    
     // MARK: - Instance Properties
     
     /// Returns the month component (1–12) of the date.

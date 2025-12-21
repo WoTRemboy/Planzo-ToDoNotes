@@ -26,9 +26,10 @@ struct TabItems {
     /// - Parameter isSelected: A boolean indicating whether the tab is currently selected.
     /// - Returns: A `TodayView` wrapped in a tab item.
     static func todayTab(isSelected: Bool) -> some View {
-        TodayView()
+        let todayDay = Date.todayDay
+        return TodayView()
             .tabItem {
-                isSelected ? Image.TabBar.Selected.today : Image.TabBar.Unselected.today
+                isSelected ? Image.TabBar.Selected.today(for: todayDay) : Image.TabBar.Unselected.today(for: todayDay)
                     .renderingMode(.template)
                 Text(Texts.Tabbar.today)
             }
