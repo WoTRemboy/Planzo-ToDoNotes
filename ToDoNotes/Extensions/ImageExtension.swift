@@ -58,16 +58,22 @@ extension Image {
     enum TabBar {
         enum Selected {
             static let home = Image("TabBarIconSelectedHome")
-            static let today = Image("TabBarIconSelectedToday")
             static let calendar = Image("TabBarIconSelectedCalendar")
             static let settings = Image("TabBarIconSelectedSettings")
+            
+            static func today(for day: Int) -> Image {
+                Image("TabBarIconSelectedToday\(day)")
+            }
         }
         
         enum Unselected {
             static let home = Image("TabBarIconHome")
-            static let today = Image("TabBarIconToday")
             static let calendar = Image("TabBarIconCalendar")
             static let settings = Image("TabBarIconSettings")
+            
+            static func today(for day: Int) -> Image {
+                Image("TabBarIconToday\(day)")
+            }
         }
     }
     

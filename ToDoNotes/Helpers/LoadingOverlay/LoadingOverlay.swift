@@ -50,7 +50,29 @@ struct LoadingOverlayGroup: View {
                     .transition(.opacity)
             }
         }
+        .allowsHitTesting(overlay.isVisible)
         .animation(.easeInOut, value: overlay.isVisible)
+        .onChange(of: overlay.isVisible) { _, newValue in
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                for window in windowScene.windows where window.tag == 1010 {
+                    window.isUserInteractionEnabled = newValue
+                }
+            }
+        }
+        .onAppear {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                for window in windowScene.windows where window.tag == 1010 {
+                    window.isUserInteractionEnabled = overlay.isVisible
+                }
+            }
+        }
+        .onDisappear {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                for window in windowScene.windows where window.tag == 1010 {
+                    window.isUserInteractionEnabled = false
+                }
+            }
+        }
     }
 }
 

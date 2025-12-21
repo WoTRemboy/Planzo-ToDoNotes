@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "TodayIcon16.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
