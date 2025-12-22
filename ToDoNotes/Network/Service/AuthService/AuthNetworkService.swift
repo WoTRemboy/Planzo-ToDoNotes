@@ -266,6 +266,14 @@ final class AuthNetworkService: ObservableObject {
         task.resume()
     }
     
+    internal func logoutLocal(completion: ((Result<Void, Error>) -> Void)? = nil) {
+        self.clearProfile()
+        logger.info("Local logout completed: tokens and profile cleared.")
+        DispatchQueue.main.async {
+            completion?(.success(()))
+        }
+    }
+    
     func loadPersistedProfile() {
         let user = UserCoreDataService.shared.loadUser()
         self.currentUser = user
@@ -346,4 +354,3 @@ private extension AuthNetworkService {
         return (try? JSONSerialization.jsonObject(with: payloadData, options: [])) as? [String: Any]
     }
 }
-
