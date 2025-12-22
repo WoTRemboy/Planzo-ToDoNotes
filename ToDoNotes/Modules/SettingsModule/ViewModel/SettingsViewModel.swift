@@ -232,7 +232,7 @@ final class SettingsViewModel: ObservableObject {
     /// Handles logout with animation and error reporting.
     internal func handleLogout(authService: AuthNetworkService) {
         LoadingOverlay.shared.show()
-        authService.logout { [weak self] result in
+        authService.logoutLocal { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 
