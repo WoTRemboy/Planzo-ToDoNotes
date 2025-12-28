@@ -8,7 +8,7 @@ set -euo pipefail
 #  Purpose: Prepare environment before Xcode build in Xcode Cloud.
 #  - Validates required environment variables
 #  - Ensures destination directory exists
-#  - Writes a Secrets.json file with properly escaped JSON (GOOGLE_CLIENT_ID, GOOGLE_URL_SCHEME, API_BASE_URL, API_BASE_URL_DEBUG)
+#  - Writes a Secrets.json file with properly escaped JSON (GOOGLE_CLIENT_ID, GOOGLE_URL_SCHEME, API_BASE_URL [optional], API_BASE_URL_DEBUG [optional])
 # -----------------------------------------------------------------------------
 
 echo "Stage: PRE-Xcode Build is activated .... "
@@ -20,8 +20,17 @@ cd "$REPO_ROOT"
 # Validate required environment variables (fail with a clear message if missing)
 : "${GOOGLE_CLIENT_ID:?Environment variable GOOGLE_CLIENT_ID is not set}"
 : "${GOOGLE_URL_SCHEME:?Environment variable GOOGLE_URL_SCHEME is not set}"
-: "${API_BASE_URL:?Environment variable API_BASE_URL is not set}"
-: "${API_BASE_URL_DEBUG:?Environment variable API_BASE_URL_DEBUG is not set}"
+
+# Make API endpoints optional: default to empty if unset and warn
+API_BASE_URL="${API_BASE_URL-}"
+API_BASE_URL_DEBUG="${API_BASE_URL_DEBUG-}"
+
+if [ -z "${API_BASE_URL}" ]; then
+  echo "Warning: API_BASE_URL is not set; writing an empty value to Secrets.json"
+fi
+if [ -z "${API_BASE_URL_DEBUG}" ]; then
+  echo "Warning: API_BASE_URL_DEBUG is not set; writing an empty value to Secrets.json"
+fi
 
 # Define destination paths
 TARGET_DIR="ToDoNotes/SupportingFiles"
@@ -50,8 +59,8 @@ elif command -v jq >/dev/null 2>&1; then
   jq -n \
     --arg GOOGLE_CLIENT_ID "$GOOGLE_CLIENT_ID" \
     --arg GOOGLE_URL_SCHEME "$GOOGLE_URL_SCHEME" \
-    --arg API_BASE_URL "$API_BASE_URL" \
-    --arg API_BASE_URL_DEBUG "$API_BASE_URL_DEBUG" \
+    --arg API_BASE_URL "${API_BASE_URL-}" \
+    --arg API_BASE_URL_DEBUG "${API_BASE_URL_DEBUG-}" \
     '{GOOGLE_CLIENT_ID:$GOOGLE_CLIENT_ID, GOOGLE_URL_SCHEME:$GOOGLE_URL_SCHEME, API_BASE_URL:$API_BASE_URL, API_BASE_URL_DEBUG:$API_BASE_URL_DEBUG}' > "$TARGET_FILE"
 else
   echo "ERROR: Neither python3 nor jq is available to safely generate JSON." >&2
