@@ -12,14 +12,13 @@ private let logger = Logger(subsystem: "com.todonotes.sharing", category: "Share
 
 final class ShareAccessService: ObservableObject {
     static let shared = ShareAccessService()
-    private let baseURL = "https://banana.avoqode.com/api/v1/lists/"
 
     /// Loads members for a list by id.
     func getMembers(for listId: String, completion: @escaping (Result<[SharingMember], Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: self.baseURL + "\(listId)/members") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(listId)/members") else {
                     logger.error("Invalid members URL for listId: \(listId)")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -60,7 +59,7 @@ final class ShareAccessService: ObservableObject {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: self.baseURL + "\(listId)/members/\(memberId)") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(listId)/members/\(memberId)") else {
                     logger.error("Invalid delete member URL: listId=\(listId), memberId=\(memberId)")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -99,7 +98,7 @@ final class ShareAccessService: ObservableObject {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: self.baseURL + "\(listId)/my-membership") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(listId)/my-membership") else {
                     logger.error("Invalid my-membership DELETE URL for listId: \(listId)")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -138,7 +137,7 @@ final class ShareAccessService: ObservableObject {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: self.baseURL + "\(listId)/my-role") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(listId)/my-role") else {
                     logger.error("Invalid my-role URL for listId: \(listId)")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -179,7 +178,7 @@ final class ShareAccessService: ObservableObject {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: self.baseURL + "\(listId)/members/\(memberId)/role") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(listId)/members/\(memberId)/role") else {
                     logger.error("Invalid PATCH member role URL: listId=\(listId), memberId=\(memberId)")
                     completion(.failure(URLError(.badURL)))
                     return

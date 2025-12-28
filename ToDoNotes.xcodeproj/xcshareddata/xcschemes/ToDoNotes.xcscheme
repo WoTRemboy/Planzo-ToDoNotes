@@ -80,6 +80,26 @@
             value = "com.googleusercontent.apps.1024130776338-16an5gj724mcvre2llpmf48g7s7uig1s"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "API_BASE_URL_DEBUG"
+            value = "https://banana.avoqode.com"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "API_BASE_URL"
+            value = "https://planzo-us.avoqode.com"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "API_BASE_URL_SHARE_DEBUG"
+            value = "https://banana.avoqode.com/l"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "API_BASE_URL_SHARE"
+            value = "https://s.planzo.pro"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption

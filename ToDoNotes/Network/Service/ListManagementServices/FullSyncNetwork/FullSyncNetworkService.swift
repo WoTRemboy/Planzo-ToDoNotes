@@ -65,7 +65,7 @@ final class FullSyncNetworkService: ObservableObject {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/sync/snapshot") else {
+                guard let url = NetworkConfig.url("/api/v1/sync/snapshot") else {
                     logger.error("Invalid URL for full sync.")
                     self.setSyncStatus(to: .failed)
                     completion(.failure(URLError(.badURL)))
@@ -135,7 +135,7 @@ final class FullSyncNetworkService: ObservableObject {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/sync/delta?since=\(since)") else {
+                guard let url = NetworkConfig.url("/api/v1/sync/delta?since=\(since)") else {
                     logger.error("Invalid URL for delta sync.")
                     self.setSyncStatus(to: .failed)
                     completion(.failure(URLError(.badURL)))

@@ -47,7 +47,11 @@ final class ListNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                var components = URLComponents(string: "https://banana.avoqode.com/api/v1/lists")!
+                guard let base = NetworkConfig.url("/api/v1/lists") else {
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var components = URLComponents(url: base, resolvingAgainstBaseURL: false)!
                 if let since = since {
                     components.queryItems = [URLQueryItem(name: "since", value: since)]
                 }
@@ -101,7 +105,7 @@ extension ListNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists") else {
+                guard let url = NetworkConfig.url("/api/v1/lists") else {
                     logger.error("Invalid URL for list creation.")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -171,7 +175,7 @@ extension ListNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(task.serverId ?? "")") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(task.serverId ?? "")") else {
                     logger.error("Invalid URL for list update.")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -243,7 +247,7 @@ extension ListNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(id)") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(id)") else {
                     logger.error("Invalid URL for list deletion.")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -279,7 +283,7 @@ extension ListNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(id)") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(id)") else {
                     logger.error("Invalid URL for list fetch by id.")
                     completion(.failure(URLError(.badURL)))
                     return

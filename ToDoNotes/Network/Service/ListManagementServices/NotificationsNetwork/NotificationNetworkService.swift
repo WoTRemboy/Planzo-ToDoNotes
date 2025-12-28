@@ -24,7 +24,11 @@ final class NotificationNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                var components = URLComponents(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/notifications")!
+                guard let base = NetworkConfig.url("/api/v1/lists\(listId)/notifications") else {
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var components = URLComponents(url: base, resolvingAgainstBaseURL: false)!
                 if let since = since {
                     components.queryItems = [URLQueryItem(name: "since", value: since)]
                 }
@@ -80,7 +84,7 @@ final class NotificationNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/notifications") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(listId)/notifications") else {
                     logger.error("Invalid URL for notification creation.")
                     DispatchQueue.main.async {
                         completion(.failure(URLError(.badURL)))
@@ -147,7 +151,7 @@ final class NotificationNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/notifications/\(id)") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(listId)/notifications/\(id)") else {
                     logger.error("Invalid URL for notification deletion.")
                     DispatchQueue.main.async {
                         completion(.failure(URLError(.badURL)))
@@ -191,7 +195,7 @@ final class NotificationNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/notifications/\(id)") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(listId)/notifications/\(id)") else {
                     logger.error("Invalid URL for notification update.")
                     DispatchQueue.main.async {
                         completion(.failure(URLError(.badURL)))

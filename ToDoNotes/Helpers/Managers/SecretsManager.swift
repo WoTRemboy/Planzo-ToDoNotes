@@ -22,4 +22,20 @@ struct Secrets {
     static var googleURLScheme: String {
         return secrets()["GOOGLE_URL_SCHEME"] as? String ?? String()
     }
+
+    static var apiBaseURL: String {
+        return secrets()["API_BASE_URL"] as? String ?? String()
+    }
+
+    static var apiBaseURLDebug: String {
+        return secrets()["API_BASE_URL_DEBUG"] as? String ?? String()
+    }
+    
+    static var apiBaseURLShare: String {
+        return secrets()["API_BASE_URL_SHARE"] as? String ?? String()
+    }
+
+    static var apiBaseURLShareDebug: String {
+        return secrets()["API_BASE_URL_SHARE_DEBUG"] as? String ?? String()
+    }
 }

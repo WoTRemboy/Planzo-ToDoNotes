@@ -57,7 +57,11 @@ final class SubscriptionNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                var components = URLComponents(string: "https://banana.avoqode.com/api/v1/subscription/trial")!
+                guard let base = NetworkConfig.url("/api/v1/subscription/trial") else {
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var components = URLComponents(url: base, resolvingAgainstBaseURL: false)!
                 components.queryItems = [ URLQueryItem(name: "days", value: String(days)) ]
                 guard let url = components.url else {
                     completion(.failure(URLError(.badURL)))
@@ -102,7 +106,7 @@ final class SubscriptionNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/subscription/me") else {
+                guard let url = NetworkConfig.url("/api/v1/subscription/me") else {
                     completion(.failure(URLError(.badURL)))
                     return
                 }
@@ -146,7 +150,7 @@ final class SubscriptionNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/subscription/me/full") else {
+                guard let url = NetworkConfig.url("/api/v1/subscription/me/full") else {
                     completion(.failure(URLError(.badURL)))
                     return
                 }
@@ -192,7 +196,11 @@ final class SubscriptionNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                var components = URLComponents(string: "https://banana.avoqode.com/api/v1/subscription/apple/attach")!
+                guard let base = NetworkConfig.url("/api/v1/subscription/apple/attach") else {
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var components = URLComponents(url: base, resolvingAgainstBaseURL: false)!
                 components.queryItems = [
                     URLQueryItem(name: "transactionId", value: transactionId)
                 ]
@@ -239,7 +247,7 @@ final class SubscriptionNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/subscription/apple/refresh") else {
+                guard let url = NetworkConfig.url("/api/v1/subscription/apple/refresh") else {
                     completion(.failure(URLError(.badURL)))
                     return
                 }
@@ -283,7 +291,7 @@ final class SubscriptionNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/subscription/dev/reset-license") else {
+                guard let url = NetworkConfig.url("/api/v1/subscription/dev/reset-license") else {
                     completion(.failure(URLError(.badURL)))
                     return
                 }

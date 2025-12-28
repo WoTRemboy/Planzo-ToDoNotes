@@ -18,7 +18,12 @@ final class FolderNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                var components = URLComponents(string: "https://banana.avoqode.com/api/v1/folders")!
+                guard let base = NetworkConfig.url("/api/v1/folders") else {
+                    folderLogger.error("Invalid folders URL.")
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var components = URLComponents(url: base, resolvingAgainstBaseURL: false)!
                 if let since = since {
                     components.queryItems = [URLQueryItem(name: "since", value: since)]
                 }
@@ -67,7 +72,7 @@ final class FolderNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/folders") else {
+                guard let url = NetworkConfig.url("/api/v1/folders") else {
                     folderLogger.error("Invalid URL for folder creation.")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -123,7 +128,7 @@ final class FolderNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/folders/\(id)") else {
+                guard let url = NetworkConfig.url("/api/v1/folders/\(id)") else {
                     folderLogger.error("Invalid URL for folder update.")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -179,7 +184,7 @@ final class FolderNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/folders/\(id)") else {
+                guard let url = NetworkConfig.url("/api/v1/folders/\(id)") else {
                     folderLogger.error("Invalid URL for folder deletion.")
                     completion(.failure(URLError(.badURL)))
                     return

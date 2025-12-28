@@ -22,7 +22,11 @@ final class ListItemNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                var components = URLComponents(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/items")!
+                guard let base = NetworkConfig.url("/api/v1/lists/\(listId)/items") else {
+                    completion(.failure(URLError(.badURL)))
+                    return
+                }
+                var components = URLComponents(url: base, resolvingAgainstBaseURL: false)!
                 if let since = since {
                     components.queryItems = [URLQueryItem(name: "since", value: since)]
                 }
@@ -79,7 +83,7 @@ final class ListItemNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/items") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(listId)/items") else {
                     logger.error("Invalid URL for item creation.")
                     DispatchQueue.main.async {
                         completion(.failure(URLError(.badURL)))
@@ -146,7 +150,7 @@ final class ListItemNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/items/\(id)") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(listId)/items/\(id)") else {
                     logger.error("Invalid URL for item deletion.")
                     DispatchQueue.main.async {
                         completion(.failure(URLError(.badURL)))
@@ -198,7 +202,7 @@ final class ListItemNetworkService {
                     }
                     return
                 }
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/lists/\(listId)/items/\(id)") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(listId)/items/\(id)") else {
                     logger.error("Invalid URL for item update.")
                     DispatchQueue.main.async {
                         completion(.failure(URLError(.badURL)))

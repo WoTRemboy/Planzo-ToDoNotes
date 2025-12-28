@@ -30,8 +30,8 @@ final class AuthNetworkService: ObservableObject {
     }
     
     internal func googleAuthorize(idToken: String, completion: @escaping (Result<AuthResponse, Error>) -> Void) {
-        guard let url = URL(string: "https://banana.avoqode.com/api/v1/auth/google") else {
-            logger.error("Invalid Google authorization URL.")
+        guard let url = NetworkConfig.url("/api/v1/auth/google") else {
+            logger.error("Invalid authorization URL.")
             DispatchQueue.main.async {
                 completion(.failure(URLError(.badURL)))
             }
@@ -102,8 +102,8 @@ final class AuthNetworkService: ObservableObject {
     }
     
     internal func appleAuthorize(idToken: String, completion: @escaping (Result<AuthResponse, Error>) -> Void) {
-        guard let url = URL(string: "https://banana.avoqode.com/api/v1/auth/apple") else {
-            logger.error("Invalid Apple authorization URL.")
+        guard let url = NetworkConfig.url("/api/v1/auth/apple") else {
+            logger.error("Invalid authorization URL.")
             DispatchQueue.main.async {
                 completion(.failure(URLError(.badURL)))
             }
@@ -172,7 +172,7 @@ final class AuthNetworkService: ObservableObject {
     }
     
     internal func refreshTokens(completion: @escaping (Result<AuthResponse, Error>) -> Void) {
-        guard let url = URL(string: "https://banana.avoqode.com/api/v1/auth/refresh") else {
+        guard let url = NetworkConfig.url("/api/v1/auth/refresh") else {
             logger.error("Invalid refresh token endpoint URL.")
             DispatchQueue.main.async {
                 completion(.failure(URLError(.badURL)))
@@ -230,7 +230,7 @@ final class AuthNetworkService: ObservableObject {
     }
     
     internal func logout(completion: ((Result<Void, Error>) -> Void)? = nil) {
-        guard let url = URL(string: "https://banana.avoqode.com/api/v1/auth/logout") else {
+        guard let url = NetworkConfig.url("/api/v1/auth/logout") else {
             logger.error("Invalid logout endpoint URL.")
             completion?(.failure(URLError(.badURL)))
             return

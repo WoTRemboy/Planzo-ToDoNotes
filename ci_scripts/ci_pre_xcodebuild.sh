@@ -8,8 +8,7 @@ set -euo pipefail
 #  Purpose: Prepare environment before Xcode build in Xcode Cloud.
 #  - Validates required environment variables
 #  - Ensures destination directory exists
-#  - Writes a Secrets.json file with properly escaped JSON
-#  - Uses absolute paths based on CI_PRIMARY_REPOSITORY_PATH
+#  - Writes a Secrets.json file with properly escaped JSON (GOOGLE_CLIENT_ID, GOOGLE_URL_SCHEME, API_BASE_URL, API_BASE_URL_DEBUG)
 # -----------------------------------------------------------------------------
 
 echo "Stage: PRE-Xcode Build is activated .... "
@@ -21,6 +20,8 @@ cd "$REPO_ROOT"
 # Validate required environment variables (fail with a clear message if missing)
 : "${GOOGLE_CLIENT_ID:?Environment variable GOOGLE_CLIENT_ID is not set}"
 : "${GOOGLE_URL_SCHEME:?Environment variable GOOGLE_URL_SCHEME is not set}"
+: "${API_BASE_URL:?Environment variable API_BASE_URL is not set}"
+: "${API_BASE_URL_DEBUG:?Environment variable API_BASE_URL_DEBUG is not set}"
 
 # Define destination paths
 TARGET_DIR="ToDoNotes/SupportingFiles"
@@ -37,7 +38,9 @@ import json, os, sys
 
 data = {
     "GOOGLE_CLIENT_ID": os.environ.get("GOOGLE_CLIENT_ID", ""),
-    "GOOGLE_URL_SCHEME": os.environ.get("GOOGLE_URL_SCHEME", "")
+    "GOOGLE_URL_SCHEME": os.environ.get("GOOGLE_URL_SCHEME", ""),
+    "API_BASE_URL": os.environ.get("API_BASE_URL", ""),
+    "API_BASE_URL_DEBUG": os.environ.get("API_BASE_URL_DEBUG", "")
 }
 json.dump(data, sys.stdout, ensure_ascii=False)
 sys.stdout.write("\n")
@@ -47,7 +50,9 @@ elif command -v jq >/dev/null 2>&1; then
   jq -n \
     --arg GOOGLE_CLIENT_ID "$GOOGLE_CLIENT_ID" \
     --arg GOOGLE_URL_SCHEME "$GOOGLE_URL_SCHEME" \
-    '{GOOGLE_CLIENT_ID:$GOOGLE_CLIENT_ID, GOOGLE_URL_SCHEME:$GOOGLE_URL_SCHEME}' > "$TARGET_FILE"
+    --arg API_BASE_URL "$API_BASE_URL" \
+    --arg API_BASE_URL_DEBUG "$API_BASE_URL_DEBUG" \
+    '{GOOGLE_CLIENT_ID:$GOOGLE_CLIENT_ID, GOOGLE_URL_SCHEME:$GOOGLE_URL_SCHEME, API_BASE_URL:$API_BASE_URL, API_BASE_URL_DEBUG:$API_BASE_URL_DEBUG}' > "$TARGET_FILE"
 else
   echo "ERROR: Neither python3 nor jq is available to safely generate JSON." >&2
   echo "Please ensure /usr/bin/python3 or jq is installed in the CI environment." >&2

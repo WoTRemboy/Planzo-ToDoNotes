@@ -142,7 +142,7 @@ extension ShareNetworkService {
         self.createShare(for: task, expiresAt: expiresAt, grantRole: grantRole) { result in
             switch result {
             case .success(let serverID):
-                let urlString = "https://banana.avoqode.com/l/\(serverID)"
+                let urlString = "\(NetworkConfig.baseURLShareString)/\(serverID)"
                 guard let url = URL(string: urlString) else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     guard let rootVC = RootViewControllerMethods.getRootViewController() else { return }

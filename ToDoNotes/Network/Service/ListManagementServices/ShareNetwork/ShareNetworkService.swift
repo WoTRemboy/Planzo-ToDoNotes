@@ -12,14 +12,13 @@ private let logger = Logger(subsystem: "com.todonotes.opening", category: "Share
 
 final class ShareNetworkService: ObservableObject {
     static let shared = ShareNetworkService()
-    private let baseURL = "https://banana.avoqode.com/api/v1/lists/"
     
     /// Loads share info for a list by id.
     func getShareInfo(for listId: String, completion: @escaping (Result<[ShareLink], Error>) -> Void) {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: self.baseURL + "\(listId)/share") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(listId)/share") else {
                     logger.error("Invalid share URL for listId: \(listId)")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -82,7 +81,7 @@ final class ShareNetworkService: ObservableObject {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: self.baseURL + "\(listId)/share") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(listId)/share") else {
                     logger.error("Invalid share URL for listId: \(listId)")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -142,7 +141,7 @@ final class ShareNetworkService: ObservableObject {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: self.baseURL + "\(listId)/share/\(shareId)") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(listId)/share/\(shareId)") else {
                     logger.error("Invalid delete share URL: listId=\(listId), shareId=\(shareId)")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -194,7 +193,7 @@ final class ShareNetworkService: ObservableObject {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = URL(string: "https://banana.avoqode.com/api/v1/share/accept") else {
+                guard let url = NetworkConfig.url("/api/v1/share/accept") else {
                     logger.error("Invalid accept share URL")
                     completion(.failure(URLError(.badURL)))
                     return
