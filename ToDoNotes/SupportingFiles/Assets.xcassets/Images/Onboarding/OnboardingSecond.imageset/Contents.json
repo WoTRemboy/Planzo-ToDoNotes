@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "OnboardingFirst.png",
+      "filename" : "OnboardingSecondLight.png",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "OnboardingFirstDark.png",
+      "filename" : "OnboardingSecondDark.png",
       "idiom" : "universal"
     }
   ],
