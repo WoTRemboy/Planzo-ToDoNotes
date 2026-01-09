@@ -1825,7 +1825,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				GOOGLE_URL_SCHEME = "com.googleusercontent.apps.1024130776338-16an5gj724mcvre2llpmf48g7s7uig1s";
 				INFOPLIST_FILE = ToDoNotes/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Planzo;
+				INFOPLIST_KEY_CFBundleDisplayName = AvoDo;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1863,7 +1863,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				GOOGLE_URL_SCHEME = "com.googleusercontent.apps.1024130776338-16an5gj724mcvre2llpmf48g7s7uig1s";
 				INFOPLIST_FILE = ToDoNotes/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Planzo;
+				INFOPLIST_KEY_CFBundleDisplayName = AvoDo;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

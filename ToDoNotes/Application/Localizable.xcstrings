@@ -1529,19 +1529,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Planzo"
+            "value" : "AvoDo"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Planzo"
+            "value" : "AvoDo"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Planzo"
+            "value" : "AvoDo"
           }
         }
       }
@@ -2863,19 +2863,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sign in to your Planzo account so your tasks sync across all devices and stay protected from loss."
+            "value" : "Sign in to your AvoDo account so your tasks sync across all devices and stay protected from loss."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inicie sesión en su cuenta de Planzo para que sus tareas se sincronicen en todos sus dispositivos y estén protegidas contra pérdidas."
+            "value" : "Inicie sesión en su cuenta de AvoDo para que sus tareas se sincronicen en todos sus dispositivos y estén protegidas contra pérdidas."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Connectez-vous à votre compte Planzo pour que vos tâches soient synchronisées sur tous vos appareils et protégées contre la perte."
+            "value" : "Connectez-vous à votre compte AvoDo pour que vos tâches soient synchronisées sur tous vos appareils et protégées contre la perte."
           }
         }
       }
@@ -3093,19 +3093,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Planzo uses App Store subscriptions. Payment and subscription management are handled through the Apple ID used to purchase it."
+            "value" : "AvoDo uses App Store subscriptions. Payment and subscription management are handled through the Apple ID used to purchase it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Planzo utiliza suscripciones de la App Store. El pago y la gestión de la suscripción se realizan a través del Apple ID con el que fue adquirida."
+            "value" : "AvoDo utiliza suscripciones de la App Store. El pago y la gestión de la suscripción se realizan a través del Apple ID con el que fue adquirida."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Planzo utilise les abonnements de l’App Store. Le paiement et la gestion de l’abonnement sont effectués via l’Apple ID utilisé lors de l’achat."
+            "value" : "AvoDo utilise les abonnements de l’App Store. Le paiement et la gestion de l’abonnement sont effectués via l’Apple ID utilisé lors de l’achat."
           }
         }
       }
@@ -3760,19 +3760,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Collaborate with Planzo Pro"
+            "value" : "Collaborate with AvoDo Pro"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Colaboración en Planzo Pro"
+            "value" : "Colaboración en AvoDo Pro"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Travail collaboratif dans Planzo Pro"
+            "value" : "Travail collaboratif dans AvoDo Pro"
           }
         }
       }
@@ -3852,19 +3852,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Collaborate with Planzo Pro"
+            "value" : "Collaborate with AvoDo Pro"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Colaboración en Planzo Pro"
+            "value" : "Colaboración en AvoDo Pro"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Travail collaboratif dans Planzo Pro"
+            "value" : "Travail collaboratif dans AvoDo Pro"
           }
         }
       }
@@ -4404,19 +4404,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Upgrade to Planzo"
+            "value" : "Upgrade to AvoDo"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mejorar a Planzo"
+            "value" : "Mejorar a AvoDo"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Passer à Planzo"
+            "value" : "Passer à AvoDo"
           }
         }
       }
