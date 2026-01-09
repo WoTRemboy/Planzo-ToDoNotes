@@ -58,6 +58,9 @@ struct OnboardingScreenView: View {
                             logger.error("Tips configuration failed: \(error.localizedDescription).")
                         }
                     }
+                    .onAppear {
+                        NotificationCenter.default.post(name: .appDidBecomeReadyForDeepLinks, object: nil)
+                    }
             }
         } else {
             // Displays onboarding flow
@@ -297,3 +300,4 @@ struct OnboardingScreenView: View {
         .environmentObject(OnboardingViewModel())
         .environmentObject(AuthNetworkService())
 }
+
