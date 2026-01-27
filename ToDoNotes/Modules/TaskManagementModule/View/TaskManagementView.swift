@@ -305,7 +305,8 @@ struct TaskManagementView: View {
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 7)
+                .padding(7)
+                .lineLimit(1)
                 .background(
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .fill(Color.BackColors.backDefault)
@@ -327,8 +328,10 @@ struct TaskManagementView: View {
             calendarModule  // Button to select date
             checkButton     // Button to toggle task check status
             
-            if viewModel.accessToEdit {
+            if shouldShowFullScreenContent, viewModel.accessToEdit {
                 addPointButton
+            } else {
+                Spacer()
             }
             
             if viewModel.accessToEdit {
