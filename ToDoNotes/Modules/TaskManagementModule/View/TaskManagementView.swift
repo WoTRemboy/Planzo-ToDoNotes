@@ -295,6 +295,7 @@ struct TaskManagementView: View {
                 .foregroundStyle(Color.LabelColors.labelPlaceholder)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .padding(.bottom, 100)
     }
     
     // MARK: - Bottom Action Buttons

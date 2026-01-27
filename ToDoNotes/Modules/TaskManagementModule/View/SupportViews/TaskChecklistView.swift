@@ -42,43 +42,47 @@ struct TaskChecklistView: View {
     
     /// Builds the checklist layout using a vertical lazy grid.
     internal var body: some View {
-        let columns = Array(
-            repeating: GridItem(.flexible(), spacing: 6),
-            count: 1)
-        
-        LazyVGrid(columns: columns, spacing: 0) {
-            ForEach($viewModel.checklistLocal) { $item in
-                HStack {
-                    checkbox(item: $item)
-                    textField(item: $item)
-                    
-                    if !preview, viewModel.accessToEdit {
-                        removeButton(item: $item)
-                        dragHandle(for: $item)
+        ScrollView(.vertical) {
+            LazyVStack(spacing: 0) {
+                ForEach($viewModel.checklistLocal) { $item in
+                    HStack(alignment: .top) {
+                        checkbox(item: $item)
+                        textField(item: $item)
+                        
+                        if !preview, viewModel.accessToEdit {
+                            removeButton(item: $item)
+                            dragHandle(for: $item)
+                        }
                     }
+                    .padding(.vertical, 3)
+                    .padding(.horizontal, 8)
+                    
+                    // Handle drag and drop
+                    .dropDestination(for: ChecklistItem.self) { item, location in
+                        viewModel.setDraggingItem(for: nil)
+                        return false
+                    } isTargeted: { status in
+                        viewModel.setDraggingTargetResult(for: item, status: status)
+                    }
+                    .id(item.id)
                 }
-                .padding(.vertical, 3)
-                .padding(.horizontal, 8)
-                
-                // Handle drag and drop
-                .dropDestination(for: ChecklistItem.self) { item, location in
-                    viewModel.setDraggingItem(for: nil)
-                    return false
-                } isTargeted: { status in
-                    viewModel.setDraggingTargetResult(for: item, status: status)
-                }
-                // Handle deletion on empty input
-                .onChange(of: item.name) { _, newValue in
-                    if newValue == String() {
-                        focusOnPreviousItem(before: item.id)
-                        withAnimation(.linear(duration: 0.2)) {
-                            viewModel.removeChecklistItem(for: item.id)
+            }
+            .padding(.vertical, 4)
+            .onChange(of: viewModel.checklistLocal.map { $0.id }) { oldIDs, newIDs in
+                // Move focus to the newly added item when it was appended via "add point"
+                guard !preview, viewModel.accessToEdit else { return }
+                let oldSet = Set(oldIDs)
+                let newSet = Set(newIDs)
+                let inserted = newSet.subtracting(oldSet)
+                if inserted.count == 1, let insertedID = inserted.first {
+                    if newIDs.last == insertedID {
+                        DispatchQueue.main.async {
+                            focusedItemID = insertedID
                         }
                     }
                 }
             }
         }
-        .padding(.vertical, 4)
     }
     
     // MARK: - Components
@@ -99,7 +103,6 @@ struct TaskChecklistView: View {
                     (item.wrappedValue.completed || item.wrappedValue.name.isEmpty) ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
             
                 .frame(width: 18, height: 18)
-                .animation(.easeInOut(duration: 0.2), value: item.wrappedValue.name)
         }
         .disabled(preview || !viewModel.accessToEdit)
         .onAppear {
@@ -113,7 +116,7 @@ struct TaskChecklistView: View {
     private func textField(item: Binding<ChecklistItem>) -> some View {
         TextField(Texts.TaskManagement.point,
                   text: item.name,
-                  axis: preview ? .vertical : .horizontal)
+                  axis: .vertical)
         .font(.system(size: 17, weight: .regular))
         .foregroundStyle(
             item.wrappedValue.completed ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
@@ -121,16 +124,31 @@ struct TaskChecklistView: View {
         .disabled(preview || !viewModel.accessToEdit)
         .submitLabel(.next)
         .focused($focusedItemID, equals: item.id)
-        .introspect(.textField, on: .iOS(.v16, .v17, .v18, .v26)) { textField in
-            setupDelegate(for: textField, itemID: item.id)
-        }
+        .contentShape(.rect)
     }
     
     /// Button to remove the checklist item.
     private func removeButton(item: Binding<ChecklistItem>) -> some View {
         Button {
-            withAnimation(.bouncy(duration: 0.2)) {
-                viewModel.removeChecklistItem(item.wrappedValue)
+            let removingID = item.wrappedValue.id
+            let isFocused = (focusedItemID == removingID)
+            var previousID: UUID?
+            if let idx = viewModel.checklistLocal.firstIndex(where: { $0.id == removingID }), idx > 0 {
+                previousID = viewModel.checklistLocal[idx - 1].id
+            }
+            if isFocused {
+                if let prev = previousID {
+                    focusedItemID = prev
+                } else {
+                    DispatchQueue.main.async {
+                        focusedItemID = nil
+                    }
+                }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation(.bouncy(duration: 0.2)) {
+                    viewModel.removeChecklistItem(item.wrappedValue)
+                }
             }
         } label: {
             Rectangle()
@@ -234,3 +252,4 @@ extension TaskChecklistView {
         }
     }
 }
+
