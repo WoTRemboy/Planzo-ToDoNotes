@@ -64,6 +64,16 @@ final class SettingsViewModel: ObservableObject {
     @Published internal var notificationsEnabled: Bool
     /// Whether the "notifications prohibited" alert should be shown.
     @Published internal var showingNotificationAlert: Bool = false
+
+    // MARK: - About Page Export/Import State
+    @Published internal var isImporting: Bool = false
+    @Published internal var lastExportURL: URL? = nil
+    @Published internal var showingExportAlert: Bool = false
+    @Published internal var exportAlertMessage: String = ""
+    @Published internal var showingImportAlert: Bool = false
+    @Published internal var importAlertMessage: String = ""
+    @Published internal var isSharing: Bool = false
+    @Published internal var shareURL: URL? = nil
     
     // MARK: - Initialization
     
@@ -334,6 +344,17 @@ final class SettingsViewModel: ObservableObject {
         relativeFormatter.unitsStyle = .short
         let relativeString = relativeFormatter.localizedString(for: date, relativeTo: now)
         return relativeString
+    }
+    
+    // MARK: - Data Export/Import
+    /// Exports local snapshot to JSON using FullSyncNetworkService
+    internal func exportJSON(completion: @escaping (Result<URL, Error>) -> Void) {
+        FullSyncNetworkService.shared.exportLocalSnapshot(completion: completion)
+    }
+    
+    /// Imports local snapshot from JSON using FullSyncNetworkService
+    internal func importJSON(from url: URL, completion: @escaping (Result<Void, Error>) -> Void) {
+        FullSyncNetworkService.shared.importLocalSnapshot(from: url, completion: completion)
     }
 }
 
