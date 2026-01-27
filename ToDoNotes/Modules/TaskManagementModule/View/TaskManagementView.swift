@@ -116,10 +116,6 @@ struct TaskManagementView: View {
                 ListItemNetworkService.shared.syncChecklistForTaskEntity(entity, since: since) {
                     viewModel.reloadChecklist(from: entity.checklist)
                 }
-//                NotificationNetworkService.shared.syncNotificationsIfNeeded(for: entity, since: since) {
-//                    viewModel.reloadNotifications(from: entity.notifications)
-//                    UNUserNotificationCenter.current().logNotifications(for: entity.notifications)
-//                }
                 viewModel.loadMembersForSharingTaskWithToasts()
             }
         }
@@ -170,24 +166,38 @@ struct TaskManagementView: View {
     /// Main content block: task name, description, checklist, and action buttons.
     private var content: some View {
         VStack(spacing: 0) {
-            // Scrollable form containing text fields and checklist
-            ScrollView {
-                // Title text field with optional checkbox
-                nameInput
-                
-                if shouldShowFullScreenContent {
-                    descriptionCoverInput   // Multiline description input
+            ScrollViewReader { outerProxy in
+                ScrollView {
+                    // Title text field with optional checkbox
+                    nameInput
                     
-                    TaskChecklistView(viewModel: viewModel) // Checklist (points) editor
-                        .padding(.horizontal, -8)
-                    
-                    if viewModel.accessToEdit {
-                        addPointButton  // "Add point" button
+                    if shouldShowFullScreenContent {
+                        descriptionCoverInput   // Multiline description input
+                        
+                        TaskChecklistView(viewModel: viewModel) // Checklist (points) editor
+                            .padding(.horizontal, -8)
+                            .padding(.bottom, 100)
+                    } else {
+                        // Simplified description field for sheet mode
+                        descriptionSheetInput
+                            .background(HeightReader(height: $taskManagementHeight))
                     }
-                } else {
-                    // Simplified description field for sheet mode
-                    descriptionSheetInput
-                        .background(HeightReader(height: $taskManagementHeight))
+                    
+                    Color.clear
+                        .frame(height: 1)
+                        .id("checklistBottomAnchor")
+                }
+                .onChange(of: viewModel.checklistLocal.map { $0.id }) { oldIDs, newIDs in
+                    let oldSet = Set(oldIDs)
+                    let newSet = Set(newIDs)
+                    let inserted = newSet.subtracting(oldSet)
+                    if inserted.count == 1, let insertedID = inserted.first, newIDs.last == insertedID {
+                        DispatchQueue.main.async {
+                            withAnimation(.easeInOut(duration: 0.25)) {
+                                outerProxy.scrollTo("checklistBottomAnchor", anchor: .bottom)
+                            }
+                        }
+                    }
                 }
             }
             .scrollIndicators(.hidden)
@@ -292,21 +302,35 @@ struct TaskManagementView: View {
             }
         } label: {
             Text(Texts.TaskManagement.addPoint)
-                .foregroundStyle(Color.LabelColors.labelPlaceholder)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(Color.LabelColors.labelPrimary)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 7)
+                .background(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(Color.BackColors.backDefault)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(Color.LabelColors.labelGreyLight, lineWidth: 2)
+                )
+                .contentShape(.rect)
         }
-        .padding(.bottom, 100)
+        .buttonStyle(.plain)
     }
     
     // MARK: - Bottom Action Buttons
     
     /// Bottom action buttons: calendar picker, check/uncheck toggle, and save button.
     private var buttons: some View {
-        HStack(alignment: .bottom, spacing: 16) {
+        HStack(alignment: .center, spacing: 16) {
             calendarModule  // Button to select date
             checkButton     // Button to toggle task check status
             
-            Spacer()
+            if viewModel.accessToEdit {
+                addPointButton
+            }
+            
             if viewModel.accessToEdit {
                 acceptButton    // Save (accept or update) button
                     .transition(.scale)
@@ -593,3 +617,4 @@ private extension View {
         }
     }
 }
+

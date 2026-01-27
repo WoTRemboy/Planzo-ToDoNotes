@@ -122,7 +122,6 @@ struct TaskChecklistView: View {
             item.wrappedValue.completed ? Color.LabelColors.labelDetails : Color.LabelColors.labelPrimary)
         
         .disabled(preview || !viewModel.accessToEdit)
-        .submitLabel(.next)
         .focused($focusedItemID, equals: item.id)
         .contentShape(.rect)
     }
