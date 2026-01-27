@@ -29,21 +29,15 @@ struct SettingAboutPageView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .fileImporter(isPresented: $viewModel.isImporting, allowedContentTypes: [UTType.json]) { result in
-            switch result {
-            case .success(let url):
-                viewModel.importJSON(from: url) { importResult in
-                    switch importResult {
-                    case .success:
-                        viewModel.importAlertMessage = Texts.Settings.About.JSON.importSuccess
-                        viewModel.showingImportAlert = true
-                    case .failure(let error):
-                        viewModel.importAlertMessage = "\(Texts.Settings.About.JSON.importFailed): \(error.localizedDescription)"
-                        viewModel.showingImportAlert = true
-                    }
+            viewModel.importFromPickerResult(result) { importResult in
+                switch importResult {
+                case .success:
+                    viewModel.importAlertMessage = Texts.Settings.About.JSON.importSuccess
+                    viewModel.showingImportAlert = true
+                case .failure(let error):
+                    viewModel.importAlertMessage = "\(Texts.Settings.About.JSON.importFailed): \(error.localizedDescription)"
+                    viewModel.showingImportAlert = true
                 }
-            case .failure(let error):
-                viewModel.importAlertMessage = "\(Texts.Settings.About.JSON.openFailure): \(error.localizedDescription)"
-                viewModel.showingImportAlert = true
             }
         }
         .alert(Texts.Settings.About.JSON.exportData, isPresented: $viewModel.showingExportAlert, actions: {
@@ -177,3 +171,4 @@ struct ActivityView: UIViewControllerRepresentable {
     SettingAboutPageView()
         .environmentObject(SettingsViewModel(notificationsEnabled: false))
 }
+

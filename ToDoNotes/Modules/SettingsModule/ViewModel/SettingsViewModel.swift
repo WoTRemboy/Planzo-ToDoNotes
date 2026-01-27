@@ -356,5 +356,46 @@ final class SettingsViewModel: ObservableObject {
     internal func importJSON(from url: URL, completion: @escaping (Result<Void, Error>) -> Void) {
         FullSyncNetworkService.shared.importLocalSnapshot(from: url, completion: completion)
     }
-}
+    
+    /// Handles a file importer result by securing access, coordinating read, copying to temp, and importing.
+    internal func importFromPickerResult(_ result: Result<URL, Error>, completion: @escaping (Result<Void, Error>) -> Void) {
+        switch result {
+        case .success(let url):
+            // Start security-scoped access
+            let needsRelease = url.startAccessingSecurityScopedResource()
+            defer { if needsRelease { url.stopAccessingSecurityScopedResource() } }
 
+            var coordinatedError: NSError?
+            let coordinator = NSFileCoordinator(filePresenter: nil)
+            var tempURL: URL? = nil
+
+            coordinator.coordinate(readingItemAt: url, options: [], error: &coordinatedError) { coordinatedURL in
+                let fm = FileManager.default
+                let destination = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("import-\(UUID().uuidString).json")
+                do {
+                    if fm.fileExists(atPath: destination.path) {
+                        try fm.removeItem(at: destination)
+                    }
+                    try fm.copyItem(at: coordinatedURL, to: destination)
+                    tempURL = destination
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+
+            if let coordinatedError {
+                completion(.failure(coordinatedError))
+                return
+            }
+
+            guard let tempURL else {
+                completion(.failure(URLError(.fileDoesNotExist)))
+                return
+            }
+
+            self.importJSON(from: tempURL, completion: completion)
+        case .failure(let error):
+            completion(.failure(error))
+        }
+    }
+}
