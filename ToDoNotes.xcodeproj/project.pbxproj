@@ -100,6 +100,7 @@
 		63837AD02EB4F2A80061EB49 /* NotificationNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63837ACF2EB4F2A80061EB49 /* NotificationNetworkService.swift */; };
 		63837AD22EB4F5FD0061EB49 /* NotificationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63837AD12EB4F5F40061EB49 /* NotificationModel.swift */; };
 		63837AD42EB4F6870061EB49 /* NotificationNetworkAppliedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63837AD32EB4F6870061EB49 /* NotificationNetworkAppliedService.swift */; };
+		63892F442F29216600D1FCA7 /* SnapshotImportExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63892F432F29215D00D1FCA7 /* SnapshotImportExport.swift */; };
 		638B1B632EBA3CA500EE9DBA /* ShareCoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638B1B622EBA3CA500EE9DBA /* ShareCoreDataService.swift */; };
 		638B1B692EBA3F1F00EE9DBA /* ShareNetworkAppliedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638B1B682EBA3F1F00EE9DBA /* ShareNetworkAppliedService.swift */; };
 		638E21962D2C209200FB1464 /* TaskManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638E21952D2C209200FB1464 /* TaskManagementView.swift */; };
@@ -308,6 +309,7 @@
 		63837ACF2EB4F2A80061EB49 /* NotificationNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNetworkService.swift; sourceTree = "<group>"; };
 		63837AD12EB4F5F40061EB49 /* NotificationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModel.swift; sourceTree = "<group>"; };
 		63837AD32EB4F6870061EB49 /* NotificationNetworkAppliedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNetworkAppliedService.swift; sourceTree = "<group>"; };
+		63892F432F29215D00D1FCA7 /* SnapshotImportExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotImportExport.swift; sourceTree = "<group>"; };
 		638B1B622EBA3CA500EE9DBA /* ShareCoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCoreDataService.swift; sourceTree = "<group>"; };
 		638B1B682EBA3F1F00EE9DBA /* ShareNetworkAppliedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNetworkAppliedService.swift; sourceTree = "<group>"; };
 		638E21952D2C209200FB1464 /* TaskManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementView.swift; sourceTree = "<group>"; };
@@ -487,6 +489,7 @@
 			isa = PBXGroup;
 			children = (
 				63222CEA2EBCD7F000496BFB /* FullSyncNetworkService.swift */,
+				63892F432F29215D00D1FCA7 /* SnapshotImportExport.swift */,
 			);
 			path = FullSyncNetwork;
 			sourceTree = "<group>";
@@ -1650,6 +1653,7 @@
 				63ECEDD92EC39072008A1F42 /* FAQBulletModel.swift in Sources */,
 				630F547D2E6F5F1F00DF57E6 /* SettingProfileRow.swift in Sources */,
 				637B9F582D2969940010F13B /* TodayView.swift in Sources */,
+				63892F442F29216600D1FCA7 /* SnapshotImportExport.swift in Sources */,
 				631FBB922DB0114D00BEABD0 /* TodayPageOverviewTip.swift in Sources */,
 				63E870E92D55313000699091 /* ResetMessageModel.swift in Sources */,
 				637B9F632D29702E0010F13B /* TabItems.swift in Sources */,
@@ -1837,7 +1841,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.2;
+				MARKETING_VERSION = 1.3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1875,7 +1879,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.2;
+				MARKETING_VERSION = 1.3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.avoqode.ToDoNotes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

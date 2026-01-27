@@ -137,6 +137,18 @@ final class Texts {
             static let release = "release"
             static let version = NSLocalizedString("SettingsPageAboutVersion", comment: "Version")
             static let copyright = "2025 Avoqode LTD"
+            
+            enum JSON {
+                static let exportData = NSLocalizedString("SettingsPageAboutJSONExport", comment: "JSON Export")
+                static let importData = NSLocalizedString("SettingsPageAboutJSONImportData", comment: "JSON Import")
+                
+                static let importSuccess = NSLocalizedString("SettingsPageAboutJSONImportSuccess", comment: "JSON Import Success")
+                static let importFailed = NSLocalizedString("SettingsPageAboutJSONImportFailed", comment: "JSON Import Failed")
+                
+                static let exportSuccess = NSLocalizedString("SettingsPageAboutJSONExportSuccess", comment: "JSON Export Success")
+                static let exportFailed = NSLocalizedString("SettingsPageAboutJSONExportFailed", comment: "JSON Export Failed")
+                static let openFailure = NSLocalizedString("SettingsPageAboutJSONOpenFailure", comment: "File Open Failed")
+            }
         }
         
         enum Language {
