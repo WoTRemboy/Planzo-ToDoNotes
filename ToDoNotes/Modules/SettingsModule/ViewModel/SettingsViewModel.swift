@@ -64,6 +64,16 @@ final class SettingsViewModel: ObservableObject {
     @Published internal var notificationsEnabled: Bool
     /// Whether the "notifications prohibited" alert should be shown.
     @Published internal var showingNotificationAlert: Bool = false
+
+    // MARK: - About Page Export/Import State
+    @Published internal var isImporting: Bool = false
+    @Published internal var lastExportURL: URL? = nil
+    @Published internal var showingExportAlert: Bool = false
+    @Published internal var exportAlertMessage: String = ""
+    @Published internal var showingImportAlert: Bool = false
+    @Published internal var importAlertMessage: String = ""
+    @Published internal var isSharing: Bool = false
+    @Published internal var shareURL: URL? = nil
     
     // MARK: - Initialization
     
@@ -335,5 +345,57 @@ final class SettingsViewModel: ObservableObject {
         let relativeString = relativeFormatter.localizedString(for: date, relativeTo: now)
         return relativeString
     }
-}
+    
+    // MARK: - Data Export/Import
+    /// Exports local snapshot to JSON using FullSyncNetworkService
+    internal func exportJSON(completion: @escaping (Result<URL, Error>) -> Void) {
+        FullSyncNetworkService.shared.exportLocalSnapshot(completion: completion)
+    }
+    
+    /// Imports local snapshot from JSON using FullSyncNetworkService
+    internal func importJSON(from url: URL, completion: @escaping (Result<Void, Error>) -> Void) {
+        FullSyncNetworkService.shared.importLocalSnapshot(from: url, completion: completion)
+    }
+    
+    /// Handles a file importer result by securing access, coordinating read, copying to temp, and importing.
+    internal func importFromPickerResult(_ result: Result<URL, Error>, completion: @escaping (Result<Void, Error>) -> Void) {
+        switch result {
+        case .success(let url):
+            // Start security-scoped access
+            let needsRelease = url.startAccessingSecurityScopedResource()
+            defer { if needsRelease { url.stopAccessingSecurityScopedResource() } }
 
+            var coordinatedError: NSError?
+            let coordinator = NSFileCoordinator(filePresenter: nil)
+            var tempURL: URL? = nil
+
+            coordinator.coordinate(readingItemAt: url, options: [], error: &coordinatedError) { coordinatedURL in
+                let fm = FileManager.default
+                let destination = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("import-\(UUID().uuidString).json")
+                do {
+                    if fm.fileExists(atPath: destination.path) {
+                        try fm.removeItem(at: destination)
+                    }
+                    try fm.copyItem(at: coordinatedURL, to: destination)
+                    tempURL = destination
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+
+            if let coordinatedError {
+                completion(.failure(coordinatedError))
+                return
+            }
+
+            guard let tempURL else {
+                completion(.failure(URLError(.fileDoesNotExist)))
+                return
+            }
+
+            self.importJSON(from: tempURL, completion: completion)
+        case .failure(let error):
+            completion(.failure(error))
+        }
+    }
+}
