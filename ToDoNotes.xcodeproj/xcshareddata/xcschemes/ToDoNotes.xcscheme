@@ -97,7 +97,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "API_BASE_URL_SHARE"
-            value = "https://s.planzo.pro"
+            value = "https://s.avodo.app"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
