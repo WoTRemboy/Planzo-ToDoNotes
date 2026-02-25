@@ -233,21 +233,16 @@ extension MainView {
     
     /// Plus button to create a new task.
     private var plusButton: some View {
-        Button {
-            viewModel.toggleShowingCreateView()
-            overviewTip.invalidate(reason: .tipClosed)
-        } label: {
-            Image.TaskManagement.plus
-                .resizable()
-                .scaledToFit()
-                .frame(width: 58, height: 58)
-        }
-        .matchedGeometryEffect(id: Texts.NamespaceID.floatingButtons, in: animation)
+        FloatingPlusButton(
+            action: {
+                viewModel.toggleShowingCreateView()
+                overviewTip.invalidate(reason: .tipClosed)
+            },
+            namespace: animation,
+            glowAvailable: viewModel.addTaskButtonGlow,
+            matchedGeometryID: Texts.NamespaceID.floatingButtons)
         .transition(.blurReplace)
-        .navigationTransitionSource(id: Texts.NamespaceID.selectedEntity,
-                                    namespace: animation)
         .padding(.bottom)
-        .glow(available: viewModel.addTaskButtonGlow)
     }
     
     /// Button to remove all deleted tasks.

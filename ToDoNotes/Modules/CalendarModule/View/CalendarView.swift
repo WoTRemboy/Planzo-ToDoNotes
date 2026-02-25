@@ -225,19 +225,15 @@ struct CalendarView: View {
     private var plusButton: some View {
         VStack {
             Spacer()
-            Button {
-                viewModel.toggleShowingTaskCreateView()
-                overviewTip.invalidate(reason: .tipClosed)
-            } label: {
-                Image.TaskManagement.plus
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 58, height: 58)
-            }
-            .navigationTransitionSource(id: Texts.NamespaceID.selectedEntity,
-                                        namespace: animation)
+            FloatingPlusButton(
+                action: {
+                    viewModel.toggleShowingTaskCreateView()
+                    overviewTip.invalidate(reason: .tipClosed)
+                },
+                namespace: animation,
+                glowAvailable: viewModel.addTaskButtonGlow,
+                matchedGeometryID: nil)
             .padding()
-            .glow(available: viewModel.addTaskButtonGlow)
         }
         .ignoresSafeArea(.keyboard)
     }
