@@ -17,6 +17,9 @@ struct RootView<Content: View>: View {
     @AppStorage(Texts.UserDefaults.theme)
     private var userTheme: Theme = .systemDefault
     
+    @EnvironmentObject private var passcodeManager: PasscodeManager
+    @EnvironmentObject private var networkService: AuthNetworkService
+
     /// The main content of the app, passed in by the parent.
     @ViewBuilder internal var content: Content
     /// A reference to the overlay window used to display toasts.
@@ -28,6 +31,11 @@ struct RootView<Content: View>: View {
     @State private var loadingOverlayWindow: UIWindow?
     /// A reference to the hosting controller displaying the loading overlay views.
     @State private var loadingOverlayHostingController: UIHostingController<AnyView>? = nil
+
+    /// A reference to the overlay window used to display passcode lock.
+    @State private var passcodeOverlayWindow: UIWindow?
+    /// A reference to the hosting controller displaying the passcode overlay views.
+    @State private var passcodeOverlayHostingController: UIHostingController<AnyView>? = nil
     
     // MARK: - Body
     
@@ -78,6 +86,30 @@ struct RootView<Content: View>: View {
                     loadingOverlayWindow = window
                     loadingOverlayHostingController = controller
                 }
+
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   passcodeOverlayWindow == nil {
+                    let window = UIWindow(windowScene: windowScene)
+                    window.backgroundColor = .clear
+                    window.windowLevel = .alert + 1
+
+                    let controller = UIHostingController(rootView: AnyView(
+                        PasscodeOverlayGroup()
+                            .environmentObject(passcodeManager)
+                            .environmentObject(networkService)
+                            .preferredColorScheme(userTheme.colorScheme)
+                    ))
+                    controller.view.frame = windowScene.keyWindow?.frame ?? .zero
+                    controller.view.backgroundColor = .clear
+                    window.rootViewController = controller
+
+                    window.isHidden = false
+                    window.isUserInteractionEnabled = false
+                    window.tag = 1011
+
+                    passcodeOverlayWindow = window
+                    passcodeOverlayHostingController = controller
+                }
             }
             .onChange(of: userTheme) { _, newTheme in
                 // Smoothly updates the toast appearance when theme changes
@@ -88,6 +120,13 @@ struct RootView<Content: View>: View {
                     
                     loadingOverlayHostingController?.rootView = AnyView(
                         LoadingOverlayGroup().preferredColorScheme(newTheme.colorScheme)
+                    )
+
+                    passcodeOverlayHostingController?.rootView = AnyView(
+                        PasscodeOverlayGroup()
+                            .environmentObject(passcodeManager)
+                            .environmentObject(networkService)
+                            .preferredColorScheme(newTheme.colorScheme)
                     )
                 }
             }

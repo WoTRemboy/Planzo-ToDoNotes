@@ -32,6 +32,7 @@ struct ToDoNotesApp: App {
     @StateObject private var authService = AuthNetworkService()
     @StateObject private var tokenService = TokenStorageService()
     @StateObject private var subscriptionService = SubscriptionViewModel()
+    @StateObject private var passcodeManager = PasscodeManager()
     
     /// Background sync task for periodic server sync
     @State private var backgroundSyncTask: Task<Void, Never>?
@@ -54,6 +55,7 @@ struct ToDoNotesApp: App {
                 .environmentObject(authService)
                 .environmentObject(tokenService)
                 .environmentObject(subscriptionService)
+                .environmentObject(passcodeManager)
                 .task {
                     authService.loadPersistedProfile()
                     

@@ -118,6 +118,11 @@ extension Image {
             static let popup = Image("TaskCreationPopup")
             static let fullScreen = Image("TaskCreationFullScreen")
         }
+        
+        enum Passcode {
+            static let delete = Image("PasscodeDeleteLeft")
+            static let close = Image("PasscodeClose")
+        }
     }
     
     // MARK: - Selector Images

@@ -36,5 +36,7 @@
 			<dict/>
 		</dict>
 	</array>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Use Face ID to unlock Planzo faster.</string>
 </dict>
 </plist>
