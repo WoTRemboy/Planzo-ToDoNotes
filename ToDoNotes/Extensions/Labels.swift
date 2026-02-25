@@ -437,6 +437,51 @@ final class Texts {
             static let retryLater = NSLocalizedString("AuthorizationRetryLater", comment: "Please try again later")
         }
     }
+
+    enum Passcode {
+        static let settingsTitle = NSLocalizedString("PasscodeSettingsTitle", comment: "Face ID & Passcode")
+        static let settingsTitleFormat = NSLocalizedString("PasscodeSettingsTitleFormat", comment: "%@ & Passcode")
+        static let passcodeTitle = NSLocalizedString("PasscodeTitle", comment: "Passcode")
+        static let changeTitle = NSLocalizedString("PasscodeChangeTitle", comment: "Change Passcode")
+        static let faceIdTitle = NSLocalizedString("PasscodeFaceIdTitle", comment: "Face ID")
+        static let description = NSLocalizedString("PasscodeDescription", comment: "Passcode is used for private access to the app. Face ID allows you to unlock faster.")
+        static let descriptionFormat = NSLocalizedString("PasscodeDescriptionFormat", comment: "Passcode is used for private access to the app. %@ allows you to unlock faster.")
+        static let touchIdTitle = NSLocalizedString("PasscodeTouchIdTitle", comment: "Touch ID")
+        static let touchIdReason = NSLocalizedString("PasscodeTouchIdReason", comment: "Unlock your tasks")
+        static let resetAuthPrompt = NSLocalizedString("PasscodeResetAuthPrompt", comment: "Sign in to reset your passcode")
+        static let statusOn = NSLocalizedString("PasscodeStatusOn", comment: "On")
+        static let statusOff = NSLocalizedString("PasscodeStatusOff", comment: "Off")
+
+        static let createTitle = NSLocalizedString("PasscodeCreateTitle", comment: "Create Passcode")
+        static let createSubtitle = NSLocalizedString("PasscodeCreateSubtitle", comment: "Create a 4-digit code")
+        static let confirmTitle = NSLocalizedString("PasscodeConfirmTitle", comment: "Re-enter Passcode")
+        static let confirmSubtitle = NSLocalizedString("PasscodeConfirmSubtitle", comment: "Repeat your new passcode")
+        static let enterTitle = NSLocalizedString("PasscodeEnterTitle", comment: "Enter Passcode")
+        static let verifyCurrentTitle = NSLocalizedString("PasscodeVerifyCurrentTitle", comment: "Enter Current Passcode")
+        static let verifyCurrentSubtitle = NSLocalizedString("PasscodeVerifyCurrentSubtitle", comment: "Confirm your existing passcode")
+        static let newTitle = NSLocalizedString("PasscodeNewTitle", comment: "New Passcode")
+        static let newSubtitle = NSLocalizedString("PasscodeNewSubtitle", comment: "Enter a new 4-digit code")
+        static let resetTitle = NSLocalizedString("PasscodeResetTitle", comment: "Create New Passcode")
+        static let resetSubtitle = NSLocalizedString("PasscodeResetSubtitle", comment: "Create a new 4-digit code")
+        static let forgot = NSLocalizedString("PasscodeForgot", comment: "Forgot?")
+        static let forgotAlertTitle = NSLocalizedString("PasscodeForgotAlertTitle", comment: "Reset passcode")
+        static let forgotAlertMessage = NSLocalizedString("PasscodeForgotAlertMessage", comment: "You will need to sign in again to reset your passcode.")
+        static let forgotAlertConfirm = NSLocalizedString("PasscodeForgotAlertConfirm", comment: "Sign in")
+        static let forgotAlertCancel = NSLocalizedString("PasscodeForgotAlertCancel", comment: "Cancel")
+
+        static let errorIncorrect = NSLocalizedString("PasscodeErrorIncorrect", comment: "Incorrect passcode")
+        static let errorMismatch = NSLocalizedString("PasscodeErrorMismatch", comment: "Passcodes do not match")
+        static let errorGeneric = NSLocalizedString("PasscodeErrorGeneric", comment: "Unable to update passcode")
+
+        static let disableTitle = NSLocalizedString("PasscodeDisableTitle", comment: "Disable Passcode")
+        static let disableMessage = NSLocalizedString("PasscodeDisableMessage", comment: "To disable passcode, you will need to sign in again.")
+        static let faceIdReason = NSLocalizedString("PasscodeFaceIdReason", comment: "Unlock your tasks")
+
+        static let resetAuthTitle = NSLocalizedString("PasscodeResetAuthTitle", comment: "Authorization")
+        static let resetAuthSubtitle = NSLocalizedString("PasscodeResetAuthSubtitle", comment: "Sign in to confirm your identity before resetting the passcode.")
+        static let resetReady = NSLocalizedString("PasscodeResetReady", comment: "You are signed in. You can reset your passcode.")
+        static let resetStart = NSLocalizedString("PasscodeResetStart", comment: "Reset Passcode")
+    }
     
     enum Subscription {
         static let plan = NSLocalizedString("SubscriptionPlan", comment: "Plan")
@@ -516,6 +561,7 @@ final class Texts {
         
         static let changedFolder = NSLocalizedString("ToastsChangedFolder", comment: "Moved to")
         static let sameFolders = NSLocalizedString("ToastsSameFolders", comment: "Already in this folder")
+        static let passcodeSet = NSLocalizedString("ToastsPasscodeSet", comment: "Passcode successfully set")
     }
     
     // MARK: - Tips Module Texts
@@ -561,6 +607,8 @@ final class Texts {
         static let timeFormat = "TimeFormat"
         static let firstDayOfWeek = "FirstDayOfWeek"
         static let didCreateDefaultFolders = "DidCreateDefaultFoldersSet"
+        static let passcodeEnabled = "PasscodeEnabled"
+        static let faceIDEnabled = "FaceIDEnabled"
     }
     
     // MARK: - Namespace ID Keys
