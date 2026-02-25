@@ -14,12 +14,12 @@ struct PasscodeDotsView: View {
     let shakeTrigger: Int
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 16) {
             ForEach(0..<count, id: \.self) { index in
                 let isFilled = index < filled
                 Circle()
                     .fill(dotFillColor(isFilled: isFilled))
-                    .frame(width: 10, height: 10)
+                    .frame(width: 16, height: 16)
                     .scaleEffect(dotScale(isFilled: isFilled))
                     .overlay(
                         Circle()

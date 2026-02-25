@@ -42,20 +42,16 @@ struct PasscodeFlowView: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            navBar
-            VStack(spacing: 12) {
-                Text(step.title)
-                    .font(.system(size: 18, weight: .medium))
-                    .foregroundStyle(Color.LabelColors.labelPrimary)
-
-                if let subtitle = step.subtitle {
-                    Text(subtitle)
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundStyle(Color.LabelColors.labelSecondary)
-                }
-
+            Text(step.title)
+                .font(.system(size: 18, weight: .medium))
+                .foregroundStyle(Color.LabelColors.labelPrimary)
+            
+            if let subtitle = step.subtitle {
+                Text(subtitle)
+                    .font(.system(size: 14, weight: .regular))
+                    .foregroundStyle(Color.LabelColors.labelSecondary)
+                    .multilineTextAlignment(.center)
             }
-            .multilineTextAlignment(.center)
 
             PasscodeDotsView(
                 count: passcodeLength,
@@ -87,10 +83,12 @@ struct PasscodeFlowView: View {
                 showsFaceID: step.showsFaceID && passcodeManager.isFaceIDEnabled && passcodeManager.isBiometricsAvailable,
                 biometricIconName: passcodeManager.biometricIconName
             )
-            Spacer()
         }
-        .padding(.top, 16)
         .padding(.horizontal, 28)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .safeAreaInset(edge: .top, content: {
+            navBar
+        })
         .onAppear {
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             if step.shouldTriggerBiometrics {
@@ -107,41 +105,20 @@ struct PasscodeFlowView: View {
     }
 
     private var navBar: some View {
-        HStack {
+        HStack(spacing: 16) {
             if step.showsClose {
                 Button {
                     dismiss()
                 } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 15, weight: .medium))
-                        .foregroundStyle(Color.LabelColors.labelPrimary)
-                        .frame(width: 32, height: 32)
-                        .background(Circle().fill(Color.SupportColors.supportButton))
+                    Image.Settings.Passcode.close
                 }
-            } else {
-                Spacer()
-                    .frame(width: 32, height: 32)
+                .contentShape(.circle)
+                .buttonStyle(.plain)
             }
-
             Spacer()
-
-            if step.showsConfirm {
-                let canConfirm = input.count == passcodeLength
-                Button {
-                    finalizeFlow()
-                } label: {
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(canConfirm ? Color.LabelColors.labelPrimary : Color.LabelColors.labelSecondary)
-                        .frame(width: 32, height: 32)
-                        .background(Circle().fill(Color.SupportColors.supportButton))
-                }
-                .disabled(!canConfirm)
-            } else {
-                Spacer()
-                    .frame(width: 32, height: 32)
-            }
         }
+        .padding(.top, 24)
+        .padding(.horizontal)
     }
 
     private func handleDigit(_ digit: String) {
@@ -394,7 +371,7 @@ extension PasscodeFlowView {
 }
 
 #Preview {
-    PasscodeFlowView(flow: .unlock)
+    PasscodeFlowView(flow: .create)
         .environmentObject(PasscodeManager())
         .background(Color.BackColors.backDefault)
 }

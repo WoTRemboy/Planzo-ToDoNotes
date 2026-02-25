@@ -463,7 +463,7 @@ final class Texts {
         static let newSubtitle = NSLocalizedString("PasscodeNewSubtitle", comment: "Enter a new 4-digit code")
         static let resetTitle = NSLocalizedString("PasscodeResetTitle", comment: "Create New Passcode")
         static let resetSubtitle = NSLocalizedString("PasscodeResetSubtitle", comment: "Create a new 4-digit code")
-        static let forgot = NSLocalizedString("PasscodeForgot", comment: "Forgot?")
+        static let forgot = NSLocalizedString("PasscodeForgot", comment: "Forgot Passcode")
         static let forgotAlertTitle = NSLocalizedString("PasscodeForgotAlertTitle", comment: "Reset passcode")
         static let forgotAlertMessage = NSLocalizedString("PasscodeForgotAlertMessage", comment: "You will need to sign in again to reset your passcode.")
         static let forgotAlertConfirm = NSLocalizedString("PasscodeForgotAlertConfirm", comment: "Sign in")

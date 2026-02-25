@@ -1776,6 +1776,424 @@
         }
       }
     },
+    "PasscodeChangeTitle" : {
+      "comment" : "Change Passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change Passcode"
+          }
+        }
+      }
+    },
+    "PasscodeConfirmSubtitle" : {
+      "comment" : "Repeat your new passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repeat your new passcode"
+          }
+        }
+      }
+    },
+    "PasscodeConfirmTitle" : {
+      "comment" : "Re-enter Passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Re-enter Passcode"
+          }
+        }
+      }
+    },
+    "PasscodeCreateSubtitle" : {
+      "comment" : "Create a 4-digit code",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a 4-digit code"
+          }
+        }
+      }
+    },
+    "PasscodeCreateTitle" : {
+      "comment" : "Create Passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create Passcode"
+          }
+        }
+      }
+    },
+    "PasscodeDescription" : {
+      "comment" : "Passcode is used for private access to the app. Face ID allows you to unlock faster.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passcode is used for private access to the app. Face ID allows you to unlock faster."
+          }
+        }
+      }
+    },
+    "PasscodeDescriptionFormat" : {
+      "comment" : "Passcode is used for private access to the app. %@ allows you to unlock faster.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passcode is used for private access to the app. %@ allows you to unlock faster."
+          }
+        }
+      }
+    },
+    "PasscodeDisableMessage" : {
+      "comment" : "To disable passcode, you will need to sign in again.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To disable passcode, you will need to sign in again."
+          }
+        }
+      }
+    },
+    "PasscodeDisableTitle" : {
+      "comment" : "Disable Passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disable Passcode"
+          }
+        }
+      }
+    },
+    "PasscodeEnterTitle" : {
+      "comment" : "Enter Passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter Passcode"
+          }
+        }
+      }
+    },
+    "PasscodeErrorGeneric" : {
+      "comment" : "Unable to update passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to update passcode"
+          }
+        }
+      }
+    },
+    "PasscodeErrorIncorrect" : {
+      "comment" : "Incorrect passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incorrect passcode"
+          }
+        }
+      }
+    },
+    "PasscodeErrorMismatch" : {
+      "comment" : "Passcodes do not match",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passcodes do not match"
+          }
+        }
+      }
+    },
+    "PasscodeFaceIdReason" : {
+      "comment" : "Unlock your tasks",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock your tasks"
+          }
+        }
+      }
+    },
+    "PasscodeFaceIdTitle" : {
+      "comment" : "Face ID",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Face ID"
+          }
+        }
+      }
+    },
+    "PasscodeForgot" : {
+      "comment" : "Forgot Passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forgot Passcode"
+          }
+        }
+      }
+    },
+    "PasscodeForgotAlertCancel" : {
+      "comment" : "Cancel",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "PasscodeForgotAlertConfirm" : {
+      "comment" : "Sign in",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in"
+          }
+        }
+      }
+    },
+    "PasscodeForgotAlertMessage" : {
+      "comment" : "You will need to sign in again to reset your passcode.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You will need to sign in again to reset your passcode."
+          }
+        }
+      }
+    },
+    "PasscodeForgotAlertTitle" : {
+      "comment" : "Reset passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset passcode"
+          }
+        }
+      }
+    },
+    "PasscodeNewSubtitle" : {
+      "comment" : "Enter a new 4-digit code",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a new 4-digit code"
+          }
+        }
+      }
+    },
+    "PasscodeNewTitle" : {
+      "comment" : "New Passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Passcode"
+          }
+        }
+      }
+    },
+    "PasscodeResetAuthPrompt" : {
+      "comment" : "Sign in to reset your passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to reset your passcode"
+          }
+        }
+      }
+    },
+    "PasscodeResetAuthSubtitle" : {
+      "comment" : "Sign in to confirm your identity before resetting the passcode.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to confirm your identity before resetting the passcode."
+          }
+        }
+      }
+    },
+    "PasscodeResetAuthTitle" : {
+      "comment" : "Authorization",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authorization"
+          }
+        }
+      }
+    },
+    "PasscodeResetReady" : {
+      "comment" : "You are signed in. You can reset your passcode.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You are signed in. You can reset your passcode."
+          }
+        }
+      }
+    },
+    "PasscodeResetStart" : {
+      "comment" : "Reset Passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset Passcode"
+          }
+        }
+      }
+    },
+    "PasscodeResetSubtitle" : {
+      "comment" : "Create a new 4-digit code",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a new 4-digit code"
+          }
+        }
+      }
+    },
+    "PasscodeResetTitle" : {
+      "comment" : "Create New Passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create New Passcode"
+          }
+        }
+      }
+    },
+    "PasscodeSettingsTitle" : {
+      "comment" : "Face ID & Passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Face ID & Passcode"
+          }
+        }
+      }
+    },
+    "PasscodeSettingsTitleFormat" : {
+      "comment" : "%@ & Passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ & Passcode"
+          }
+        }
+      }
+    },
+    "PasscodeStatusOff" : {
+      "comment" : "Off",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        }
+      }
+    },
+    "PasscodeStatusOn" : {
+      "comment" : "On",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        }
+      }
+    },
+    "PasscodeTitle" : {
+      "comment" : "Passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passcode"
+          }
+        }
+      }
+    },
+    "PasscodeTouchIdReason" : {
+      "comment" : "Unlock your tasks",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock your tasks"
+          }
+        }
+      }
+    },
+    "PasscodeTouchIdTitle" : {
+      "comment" : "Touch ID",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touch ID"
+          }
+        }
+      }
+    },
+    "PasscodeVerifyCurrentSubtitle" : {
+      "comment" : "Confirm your existing passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm your existing passcode"
+          }
+        }
+      }
+    },
+    "PasscodeVerifyCurrentTitle" : {
+      "comment" : "Enter Current Passcode",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter Current Passcode"
+          }
+        }
+      }
+    },
     "SearchBarCancel" : {
       "comment" : "Cancel",
       "localizations" : {
@@ -6951,6 +7369,17 @@
         }
       }
     },
+    "ToastsPasscodeSet" : {
+      "comment" : "Passcode successfully set",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пароль успешно установлен"
+          }
+        }
+      }
+    },
     "ToastsPinnedOff" : {
       "comment" : "Unpinned",
       "localizations" : {
@@ -7154,435 +7583,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aujourd’hui"
-          }
-        }
-      }
-    },
-    "PasscodeSettingsTitle" : {
-      "comment" : "Face ID & Passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Face ID & Passcode"
-          }
-        }
-      }
-    },
-    "PasscodeSettingsTitleFormat" : {
-      "comment" : "%@ & Passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ & Passcode"
-          }
-        }
-      }
-    },
-    "PasscodeTitle" : {
-      "comment" : "Passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Passcode"
-          }
-        }
-      }
-    },
-    "PasscodeChangeTitle" : {
-      "comment" : "Change Passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Change Passcode"
-          }
-        }
-      }
-    },
-    "PasscodeFaceIdTitle" : {
-      "comment" : "Face ID",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Face ID"
-          }
-        }
-      }
-    },
-    "PasscodeDescription" : {
-      "comment" : "Passcode is used for private access to the app. Face ID allows you to unlock faster.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Passcode is used for private access to the app. Face ID allows you to unlock faster."
-          }
-        }
-      }
-    },
-    "PasscodeDescriptionFormat" : {
-      "comment" : "Passcode is used for private access to the app. %@ allows you to unlock faster.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Passcode is used for private access to the app. %@ allows you to unlock faster."
-          }
-        }
-      }
-    },
-    "PasscodeTouchIdTitle" : {
-      "comment" : "Touch ID",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Touch ID"
-          }
-        }
-      }
-    },
-    "PasscodeTouchIdReason" : {
-      "comment" : "Unlock your tasks",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unlock your tasks"
-          }
-        }
-      }
-    },
-    "PasscodeResetAuthPrompt" : {
-      "comment" : "Sign in to reset your passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign in to reset your passcode"
-          }
-        }
-      }
-    },
-    "PasscodeStatusOn" : {
-      "comment" : "On",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "On"
-          }
-        }
-      }
-    },
-    "PasscodeStatusOff" : {
-      "comment" : "Off",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Off"
-          }
-        }
-      }
-    },
-    "PasscodeCreateTitle" : {
-      "comment" : "Create Passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Create Passcode"
-          }
-        }
-      }
-    },
-    "PasscodeCreateSubtitle" : {
-      "comment" : "Create a 4-digit code",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Create a 4-digit code"
-          }
-        }
-      }
-    },
-    "PasscodeConfirmTitle" : {
-      "comment" : "Re-enter Passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Re-enter Passcode"
-          }
-        }
-      }
-    },
-    "PasscodeConfirmSubtitle" : {
-      "comment" : "Repeat your new passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Repeat your new passcode"
-          }
-        }
-      }
-    },
-    "PasscodeEnterTitle" : {
-      "comment" : "Enter Passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter Passcode"
-          }
-        }
-      }
-    },
-    "PasscodeVerifyCurrentTitle" : {
-      "comment" : "Enter Current Passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter Current Passcode"
-          }
-        }
-      }
-    },
-    "PasscodeVerifyCurrentSubtitle" : {
-      "comment" : "Confirm your existing passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Confirm your existing passcode"
-          }
-        }
-      }
-    },
-    "PasscodeNewTitle" : {
-      "comment" : "New Passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "New Passcode"
-          }
-        }
-      }
-    },
-    "PasscodeNewSubtitle" : {
-      "comment" : "Enter a new 4-digit code",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter a new 4-digit code"
-          }
-        }
-      }
-    },
-    "PasscodeResetTitle" : {
-      "comment" : "Create New Passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Create New Passcode"
-          }
-        }
-      }
-    },
-    "PasscodeResetSubtitle" : {
-      "comment" : "Create a new 4-digit code",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Create a new 4-digit code"
-          }
-        }
-      }
-    },
-    "PasscodeForgot" : {
-      "comment" : "Forgot?",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Forgot?"
-          }
-        }
-      }
-    },
-    "PasscodeForgotAlertTitle" : {
-      "comment" : "Reset passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reset passcode"
-          }
-        }
-      }
-    },
-    "PasscodeForgotAlertMessage" : {
-      "comment" : "You will need to sign in again to reset your passcode.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You will need to sign in again to reset your passcode."
-          }
-        }
-      }
-    },
-    "PasscodeForgotAlertConfirm" : {
-      "comment" : "Sign in",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign in"
-          }
-        }
-      }
-    },
-    "PasscodeForgotAlertCancel" : {
-      "comment" : "Cancel",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
-          }
-        }
-      }
-    },
-    "PasscodeErrorIncorrect" : {
-      "comment" : "Incorrect passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Incorrect passcode"
-          }
-        }
-      }
-    },
-    "PasscodeErrorMismatch" : {
-      "comment" : "Passcodes do not match",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Passcodes do not match"
-          }
-        }
-      }
-    },
-    "PasscodeErrorGeneric" : {
-      "comment" : "Unable to update passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unable to update passcode"
-          }
-        }
-      }
-    },
-    "PasscodeDisableTitle" : {
-      "comment" : "Disable Passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disable Passcode"
-          }
-        }
-      }
-    },
-    "PasscodeDisableMessage" : {
-      "comment" : "To disable passcode, you will need to sign in again.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "To disable passcode, you will need to sign in again."
-          }
-        }
-      }
-    },
-    "PasscodeFaceIdReason" : {
-      "comment" : "Unlock your tasks",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unlock your tasks"
-          }
-        }
-      }
-    },
-    "PasscodeResetAuthTitle" : {
-      "comment" : "Authorization",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Authorization"
-          }
-        }
-      }
-    },
-    "PasscodeResetAuthSubtitle" : {
-      "comment" : "Sign in to confirm your identity before resetting the passcode.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign in to confirm your identity before resetting the passcode."
-          }
-        }
-      }
-    },
-    "PasscodeResetReady" : {
-      "comment" : "You are signed in. You can reset your passcode.",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You are signed in. You can reset your passcode."
-          }
-        }
-      }
-    },
-    "PasscodeResetStart" : {
-      "comment" : "Reset Passcode",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reset Passcode"
-          }
-        }
-      }
-    },
-    "ToastsPasscodeSet" : {
-      "comment" : "Passcode successfully set",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Пароль успешно установлен"
           }
         }
       }

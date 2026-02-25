@@ -38,7 +38,7 @@ struct PasscodeKeypadView: View {
                 if showsFaceID, let onFaceID {
                     Button(action: onFaceID) {
                         Image(systemName: biometricIconName)
-                            .font(.system(size: 20, weight: .regular))
+                            .font(.system(size: 25, weight: .regular))
                             .foregroundStyle(Color.LabelColors.labelPrimary)
                             .frame(width: 76, height: 76)
                             .background(
@@ -56,9 +56,7 @@ struct PasscodeKeypadView: View {
                 }
 
                 Button(action: onDelete) {
-                    Image(systemName: "delete.left")
-                        .font(.system(size: 20, weight: .regular))
-                        .foregroundStyle(Color.LabelColors.labelPrimary)
+                    Image.Settings.Passcode.delete
                         .frame(width: 76, height: 76)
                         .background(
                             Circle()
@@ -70,11 +68,10 @@ struct PasscodeKeypadView: View {
             if showsForgot, let onForgot {
                 Button(action: onForgot) {
                     Text(Texts.Passcode.forgot)
-                        .font(.system(size: 15, weight: .regular))
+                        .font(.system(size: 17, weight: .regular))
                         .foregroundStyle(Color.LabelColors.labelSecondary)
-                        .frame(width: 76, height: 32)
                 }
-                .padding(.top, 4)
+                .padding(.top)
             }
         }
     }
@@ -87,7 +84,7 @@ private struct PasscodeKeyButton: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.system(size: 22, weight: .medium))
+                .font(.system(size: 25, weight: .medium))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
                 .frame(width: 76, height: 76)
                 .background(

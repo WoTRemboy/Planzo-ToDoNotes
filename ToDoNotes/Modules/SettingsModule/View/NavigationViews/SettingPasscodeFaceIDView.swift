@@ -23,7 +23,6 @@ struct SettingPasscodeFaceIDView: View {
             VStack(spacing: 16) {
                 passcodeToggle
                 if passcodeManager.isPasscodeEnabled {
-                    changePasscodeButton
                     faceIdToggle
                     descriptionText
                 }
@@ -71,21 +70,30 @@ struct SettingPasscodeFaceIDView: View {
     }
 
     private var passcodeToggle: some View {
-        ZStack(alignment: .trailing) {
-            SettingFormRow(title: Texts.Passcode.passcodeTitle, image: Image(systemName: "lock.fill"))
-            Toggle(isOn: Binding(
-                get: { passcodeManager.isPasscodeEnabled },
-                set: { newValue in
-                    if newValue {
-                        showingCreateFlow = true
-                    } else {
-                        showingDisableFlow = true
+        VStack(spacing: 0) {
+            ZStack(alignment: .trailing) {
+                SettingFormRow(
+                    title: Texts.Passcode.passcodeTitle,
+                    last: !passcodeManager.isPasscodeEnabled)
+                Toggle(isOn: Binding(
+                    get: { passcodeManager.isPasscodeEnabled },
+                    set: { newValue in
+                        if newValue {
+                            showingCreateFlow = true
+                        } else {
+                            showingDisableFlow = true
+                        }
                     }
-                }
-            )) {}
-            .fixedSize()
-            .tint(Color.ToggleColors.main)
-            .padding(.trailing, 14)
+                )) {}
+                    .fixedSize()
+                    .tint(Color.ToggleColors.main)
+                    .padding(.trailing, 14)
+                    .scaleEffect(0.8)
+            }
+            
+            if passcodeManager.isPasscodeEnabled {
+                changePasscodeButton
+            }
         }
         .clipShape(.rect(cornerRadius: 10))
     }
@@ -100,13 +108,12 @@ struct SettingPasscodeFaceIDView: View {
                 last: true
             )
         }
-        .clipShape(.rect(cornerRadius: 10))
     }
 
     private var faceIdToggle: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .trailing) {
-                SettingFormRow(title: passcodeManager.biometricTitle, image: Image(systemName: passcodeManager.biometricIconName))
+                SettingFormRow(title: passcodeManager.biometricTitle, last: true)
                 Toggle(isOn: Binding(
                     get: { passcodeManager.isFaceIDEnabled },
                     set: { newValue in
@@ -129,6 +136,7 @@ struct SettingPasscodeFaceIDView: View {
                 .fixedSize()
                 .tint(Color.ToggleColors.main)
                 .padding(.trailing, 14)
+                .scaleEffect(0.8)
                 .disabled(!passcodeManager.isBiometricsAvailable || isRequestingFaceId)
             }
             .background(Color.SupportColors.supportButton)
@@ -142,7 +150,7 @@ struct SettingPasscodeFaceIDView: View {
             .foregroundStyle(Color.LabelColors.labelSecondary)
             .multilineTextAlignment(.leading)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.top, 8)
+            .padding(.horizontal, 8)
     }
 
     private var forgotAlert: some View {
