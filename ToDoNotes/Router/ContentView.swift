@@ -45,8 +45,10 @@ struct ContentView: View {
         appearance.shadowImage = nil
         appearance.shadowColor = nil
 
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
+        if #available(iOS 26.0, *) {} else {
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
     }
     
     // MARK: - Body
@@ -118,7 +120,9 @@ struct ContentView: View {
 extension UITabBarController {
     public override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        tabBarShadowSetup()
+        if #available(iOS 26.0, *) {} else {
+            tabBarShadowSetup()
+        }
     }
     
     private func tabBarShadowSetup() {

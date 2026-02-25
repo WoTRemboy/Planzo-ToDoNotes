@@ -62,6 +62,9 @@
 		6337C6312E8468D8008D5DA1 /* ShareNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */; };
 		6338FFA92D7C9FE900E9E4C2 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6338FFA82D7C9FE400E9E4C2 /* PreviewData.swift */; };
 		634877AC2D369B2C009110B0 /* SettingFormRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634877AB2D369B21009110B0 /* SettingFormRow.swift */; };
+		634A463D2F4FA90700A3388E /* GlassStyleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634A463C2F4FA90700A3388E /* GlassStyleModifier.swift */; };
+		634A46402F4FA99600A3388E /* FloatingPlusButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634A463F2F4FA99600A3388E /* FloatingPlusButton.swift */; };
+		634A46422F4FB5F200A3388E /* AppIconGlass.icon in Resources */ = {isa = PBXBuildFile; fileRef = 634A46412F4FB5F200A3388E /* AppIconGlass.icon */; };
 		634F64912E8EE66C009AF27F /* UserCoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634F64902E8EE66C009AF27F /* UserCoreDataService.swift */; };
 		6357920E2EAE24F000C179BA /* ConfigureFolderTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6357920D2EAE24F000C179BA /* ConfigureFolderTitleView.swift */; };
 		635792102EAE36FD00C179BA /* ConfigureFoldersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6357920F2EAE36FD00C179BA /* ConfigureFoldersViewModel.swift */; };
@@ -278,6 +281,9 @@
 		6337C6302E8468D8008D5DA1 /* ShareNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNetworkService.swift; sourceTree = "<group>"; };
 		6338FFA82D7C9FE400E9E4C2 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		634877AB2D369B21009110B0 /* SettingFormRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingFormRow.swift; sourceTree = "<group>"; };
+		634A463C2F4FA90700A3388E /* GlassStyleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassStyleModifier.swift; sourceTree = "<group>"; };
+		634A463F2F4FA99600A3388E /* FloatingPlusButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPlusButton.swift; sourceTree = "<group>"; };
+		634A46412F4FB5F200A3388E /* AppIconGlass.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIconGlass.icon; sourceTree = "<group>"; };
 		634F64902E8EE66C009AF27F /* UserCoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCoreDataService.swift; sourceTree = "<group>"; };
 		6357920D2EAE24F000C179BA /* ConfigureFolderTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureFolderTitleView.swift; sourceTree = "<group>"; };
 		6357920F2EAE36FD00C179BA /* ConfigureFoldersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureFoldersViewModel.swift; sourceTree = "<group>"; };
@@ -656,6 +662,7 @@
 				63E870E62D54F44500699091 /* ViewGlow.swift */,
 				632D0DD92D37E0A90071684D /* HeightReader.swift */,
 				63286AFB2E7B506F00483810 /* RoundedCornersShape.swift */,
+				634A463C2F4FA90700A3388E /* GlassStyleModifier.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -714,6 +721,14 @@
 				633299A82F4F5FD00075112C /* SettingPasscodeFaceIDView.swift */,
 			);
 			path = NavigationViews;
+			sourceTree = "<group>";
+		};
+		634A463E2F4FA98F00A3388E /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				634A463F2F4FA99600A3388E /* FloatingPlusButton.swift */,
+			);
+			path = Buttons;
 			sourceTree = "<group>";
 		};
 		635DBBB02D64E8660050476C /* Model */ = {
@@ -819,6 +834,7 @@
 				63753A842E7868F900D75DAF /* Secrets.json */,
 				635FEF682D24B71C007FFBBA /* Assets.xcassets */,
 				632F9CA92E7CAE3000DBDAF0 /* SubscriptionsConfiguration.storekit */,
+				634A46412F4FB5F200A3388E /* AppIconGlass.icon */,
 			);
 			path = SupportingFiles;
 			sourceTree = "<group>";
@@ -1156,6 +1172,7 @@
 				63753A862E786C0600D75DAF /* Managers */,
 				633299992F4F5F340075112C /* Security */,
 				6332BB002F4F67A60063790E /* PasscodeOverlay */,
+				634A463E2F4FA98F00A3388E /* Buttons */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1531,6 +1548,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				634A46422F4FB5F200A3388E /* AppIconGlass.icon in Resources */,
 				635FEF6E2D24B71C007FFBBA /* Preview Assets.xcassets in Resources */,
 				63753A832E7867C800D75DAF /* ci_pre_xcodebuild.sh in Resources */,
 				635FEF6F2D24B71C007FFBBA /* Assets.xcassets in Resources */,
@@ -1660,6 +1678,7 @@
 				6338FFA92D7C9FE900E9E4C2 /* PreviewData.swift in Sources */,
 				63C22F412EBBD2D100C327B1 /* FolderNetworkService.swift in Sources */,
 				63FD574D2E68B77F00B7B062 /* UserModel.swift in Sources */,
+				634A46402F4FA99600A3388E /* FloatingPlusButton.swift in Sources */,
 				632D0DDA2D37E0AE0071684D /* HeightReader.swift in Sources */,
 				638B1B632EBA3CA500EE9DBA /* ShareCoreDataService.swift in Sources */,
 				6357920E2EAE24F000C179BA /* ConfigureFolderTitleView.swift in Sources */,
@@ -1708,6 +1727,7 @@
 				63ECEDD72EC38E0F008A1F42 /* SettingSyncFAQView.swift in Sources */,
 				6396C8102D7DC8B70046DB14 /* TodayTaskRowWithActions.swift in Sources */,
 				635FEF822D24BEA6007FFBBA /* ImageExtension.swift in Sources */,
+				634A463D2F4FA90700A3388E /* GlassStyleModifier.swift in Sources */,
 				638E21962D2C209200FB1464 /* TaskManagementView.swift in Sources */,
 				631FBB942DB0127E00BEABD0 /* CalendarPageOverviewTip.swift in Sources */,
 				633299A12F4F5F670075112C /* PasscodeDotsView.swift in Sources */,
@@ -1883,8 +1903,9 @@
 		635FEF642D24B717007FFBBA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconGlass;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = ToDoNotes/ToDoNotes.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1921,8 +1942,9 @@
 		635FEF652D24B717007FFBBA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconGlass;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = ToDoNotes/ToDoNotes.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
