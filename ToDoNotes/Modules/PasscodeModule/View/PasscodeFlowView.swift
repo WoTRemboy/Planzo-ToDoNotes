@@ -42,15 +42,19 @@ struct PasscodeFlowView: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            Text(step.title)
-                .font(.system(size: 18, weight: .medium))
-                .foregroundStyle(Color.LabelColors.labelPrimary)
+            if !step.showsClose {
+                Text(step.title)
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(Color.LabelColors.labelPrimary)
+            }
             
             if let subtitle = step.subtitle {
                 Text(subtitle)
                     .font(.system(size: 14, weight: .regular))
                     .foregroundStyle(Color.LabelColors.labelSecondary)
                     .multilineTextAlignment(.center)
+                    .contentTransition(.numericText())
+                    .animation(.easeInOut, value: step.subtitle)
             }
 
             PasscodeDotsView(
@@ -105,20 +109,49 @@ struct PasscodeFlowView: View {
     }
 
     private var navBar: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 12) {
             if step.showsClose {
                 Button {
                     dismiss()
                 } label: {
                     Image.Settings.Passcode.close
+                        .frame(width: 24, height: 24)
                 }
                 .contentShape(.circle)
                 .buttonStyle(.plain)
+            } else {
+                Color.clear
+                    .frame(width: 24, height: 24)
             }
+
             Spacer()
+
+            if let navBarTitle {
+                Text(navBarTitle)
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundStyle(Color.LabelColors.labelPrimary)
+            }
+
+            Spacer()
+
+            Color.clear
+                .frame(width: 24, height: 24)
         }
         .padding(.top, 24)
         .padding(.horizontal)
+    }
+
+    private var navBarTitle: String? {
+        switch flow {
+        case .create, .reset:
+            return Texts.Passcode.createPasscodeTitle
+        case .change:
+            return Texts.Passcode.changePasscodeTitle
+        case .disable:
+            return Texts.Passcode.removePasscodeTitle
+        case .unlock:
+            return nil
+        }
     }
 
     private func handleDigit(_ digit: String) {

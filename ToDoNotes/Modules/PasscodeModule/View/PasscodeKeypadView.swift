@@ -65,14 +65,19 @@ struct PasscodeKeypadView: View {
                 }
             }
 
-            if showsForgot, let onForgot {
-                Button(action: onForgot) {
-                    Text(Texts.Passcode.forgot)
-                        .font(.system(size: 17, weight: .regular))
-                        .foregroundStyle(Color.LabelColors.labelSecondary)
+            ZStack {
+                if showsForgot, let onForgot {
+                    Button(action: onForgot) {
+                        Text(Texts.Passcode.forgot)
+                            .font(.system(size: 17, weight: .regular))
+                            .foregroundStyle(Color.LabelColors.labelSecondary)
+                    }
+                } else {
+                    Spacer()
+                        .frame(height: 20)
                 }
-                .padding(.top)
             }
+            .padding(.top)
         }
     }
 }

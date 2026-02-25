@@ -468,6 +468,10 @@ final class Texts {
         static let forgotAlertMessage = NSLocalizedString("PasscodeForgotAlertMessage", comment: "You will need to sign in again to reset your passcode.")
         static let forgotAlertConfirm = NSLocalizedString("PasscodeForgotAlertConfirm", comment: "Sign in")
         static let forgotAlertCancel = NSLocalizedString("PasscodeForgotAlertCancel", comment: "Cancel")
+        
+        static let createPasscodeTitle = NSLocalizedString("PasscodeCreatePasswordTitle", comment: "Create Passcode")
+        static let changePasscodeTitle = NSLocalizedString("PasscodeChangePasswordTitle", comment: "Change Passcode")
+        static let removePasscodeTitle = NSLocalizedString("PasscodeRemovePasswordTitle", comment: "Remove Passcode")
 
         static let errorIncorrect = NSLocalizedString("PasscodeErrorIncorrect", comment: "Incorrect passcode")
         static let errorMismatch = NSLocalizedString("PasscodeErrorMismatch", comment: "Passcodes do not match")
