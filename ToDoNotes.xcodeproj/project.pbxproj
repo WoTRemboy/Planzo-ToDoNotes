@@ -64,6 +64,7 @@
 		634877AC2D369B2C009110B0 /* SettingFormRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634877AB2D369B21009110B0 /* SettingFormRow.swift */; };
 		634A463D2F4FA90700A3388E /* GlassStyleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634A463C2F4FA90700A3388E /* GlassStyleModifier.swift */; };
 		634A46402F4FA99600A3388E /* FloatingPlusButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634A463F2F4FA99600A3388E /* FloatingPlusButton.swift */; };
+		634A46422F4FB5F200A3388E /* AppIconGlass.icon in Resources */ = {isa = PBXBuildFile; fileRef = 634A46412F4FB5F200A3388E /* AppIconGlass.icon */; };
 		634F64912E8EE66C009AF27F /* UserCoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634F64902E8EE66C009AF27F /* UserCoreDataService.swift */; };
 		6357920E2EAE24F000C179BA /* ConfigureFolderTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6357920D2EAE24F000C179BA /* ConfigureFolderTitleView.swift */; };
 		635792102EAE36FD00C179BA /* ConfigureFoldersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6357920F2EAE36FD00C179BA /* ConfigureFoldersViewModel.swift */; };
@@ -282,6 +283,7 @@
 		634877AB2D369B21009110B0 /* SettingFormRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingFormRow.swift; sourceTree = "<group>"; };
 		634A463C2F4FA90700A3388E /* GlassStyleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassStyleModifier.swift; sourceTree = "<group>"; };
 		634A463F2F4FA99600A3388E /* FloatingPlusButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPlusButton.swift; sourceTree = "<group>"; };
+		634A46412F4FB5F200A3388E /* AppIconGlass.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIconGlass.icon; sourceTree = "<group>"; };
 		634F64902E8EE66C009AF27F /* UserCoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCoreDataService.swift; sourceTree = "<group>"; };
 		6357920D2EAE24F000C179BA /* ConfigureFolderTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureFolderTitleView.swift; sourceTree = "<group>"; };
 		6357920F2EAE36FD00C179BA /* ConfigureFoldersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureFoldersViewModel.swift; sourceTree = "<group>"; };
@@ -832,6 +834,7 @@
 				63753A842E7868F900D75DAF /* Secrets.json */,
 				635FEF682D24B71C007FFBBA /* Assets.xcassets */,
 				632F9CA92E7CAE3000DBDAF0 /* SubscriptionsConfiguration.storekit */,
+				634A46412F4FB5F200A3388E /* AppIconGlass.icon */,
 			);
 			path = SupportingFiles;
 			sourceTree = "<group>";
@@ -1545,6 +1548,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				634A46422F4FB5F200A3388E /* AppIconGlass.icon in Resources */,
 				635FEF6E2D24B71C007FFBBA /* Preview Assets.xcassets in Resources */,
 				63753A832E7867C800D75DAF /* ci_pre_xcodebuild.sh in Resources */,
 				635FEF6F2D24B71C007FFBBA /* Assets.xcassets in Resources */,
@@ -1899,8 +1903,9 @@
 		635FEF642D24B717007FFBBA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconGlass;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = ToDoNotes/ToDoNotes.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1937,8 +1942,9 @@
 		635FEF652D24B717007FFBBA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconGlass;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = ToDoNotes/ToDoNotes.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
