@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "AddTaskDark.svg",
+      "filename" : "DeleteLeftIcon 2.svg",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "AddTaskIcon.svg",
+      "filename" : "DeleteLeftIcon 1.svg",
       "idiom" : "universal"
     }
   ],

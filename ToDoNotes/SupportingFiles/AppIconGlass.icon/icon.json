@@ -1,0 +1,50 @@
+{
+  "fill" : "automatic",
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "glass" : true,
+          "hidden" : false,
+          "image-name-specializations" : [
+            {
+              "value" : "Group 1046.svg"
+            },
+            {
+              "appearance" : "light",
+              "value" : "Group 1047.svg"
+            },
+            {
+              "appearance" : "dark",
+              "value" : "Group 1046.svg"
+            }
+          ],
+          "name" : "Group 1047",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              50.93593777402202,
+              -27.849324310984002
+            ]
+          }
+        }
+      ],
+      "lighting" : "individual",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "specular" : true,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.4
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

@@ -12,6 +12,7 @@ struct SettingAccountView: View {
     
     @EnvironmentObject private var authService: AuthNetworkService
     @EnvironmentObject private var viewModel: SettingsViewModel
+    @EnvironmentObject private var passcodeManager: PasscodeManager
     
     @State private var showingPlanAlert: Bool = false
     @State private var planAlertMessage: String = ""
@@ -45,6 +46,7 @@ struct SettingAccountView: View {
                         nicknameView
                     }
                     emailView
+                    faceIdPasscodeView
                     planView
                 }
                 .clipShape(.rect(cornerRadius: 10))
@@ -105,6 +107,20 @@ struct SettingAccountView: View {
         SettingsProfileRow(
             title: Texts.Authorization.Details.email,
             details: authService.currentUser?.email)
+    }
+
+    private var faceIdPasscodeView: some View {
+        CustomNavLink(
+            destination: SettingPasscodeFaceIDView()
+                .environmentObject(viewModel)
+        ) {
+            SettingsProfileRow(
+                title: passcodeManager.settingsTitle,
+                details: passcodeManager.isPasscodeEnabled ? Texts.Passcode.statusOn : Texts.Passcode.statusOff,
+                chevron: true,
+                last: false
+            )
+        }
     }
     
     private var planView: some View {
@@ -200,4 +216,5 @@ struct SettingAccountView: View {
         .environmentObject(AuthNetworkService())
         .environmentObject(SettingsViewModel(notificationsEnabled: true))
         .environmentObject(SubscriptionViewModel())
+        .environmentObject(PasscodeManager())
 }
