@@ -71,17 +71,24 @@ struct CustomCalendarView: View {
     
     /// Displays the calendar days in a grid, with highlighting for selected, today, and days with tasks.
     private var daysGrid: some View {
-        LazyVGrid(columns: columns, spacing: 8) {
+        let weekAnchor = viewModel.selectedDate.weekDisplayDays.first?.startOfDay.timeIntervalSince1970
+            ?? viewModel.selectedDate.startOfDay.timeIntervalSince1970
+        let anchor = viewModel.displayMode == .week ? weekAnchor : viewModel.calendarDate.timeIntervalSince1970
+        let gridID = "\(String(describing: viewModel.displayMode))_\(Int(anchor))"
+
+        return LazyVGrid(columns: columns, spacing: 8) {
             ForEach(viewModel.days, id: \.self) { day in
                 dayCell(for: day)
             }
         }
-        .id(viewModel.calendarDate)
+        .id(gridID)
         .transition(
             .opacity
                 .combined(with: .scale(scale: 0.98, anchor: .center))
         )
-        .animation(.easeInOut(duration: 0.2), value: viewModel.calendarDate)
+        .animation(.easeInOut(duration: 0.25), value: viewModel.displayMode)
+        .animation(.easeInOut(duration: 0.2),
+                   value: viewModel.calendarDate)
     }
 
     private func handleSwipe(_ value: DragGesture.Value) {
@@ -93,14 +100,19 @@ struct CustomCalendarView: View {
         let feedback = UIImpactFeedbackGenerator(style: .light)
         feedback.impactOccurred()
         withAnimation(.easeInOut(duration: 0.2)) {
-            viewModel.calendarMonthMove(for: direction)
+            switch viewModel.displayMode {
+            case .month:
+                viewModel.calendarMonthMove(for: direction)
+            case .week:
+                viewModel.calendarWeekMove(for: direction)
+            }
         }
     }
     
     /// Returns the view for a single day cell.
     private func dayCell(for day: Date) -> some View {
         Group {
-            if day.monthInt != viewModel.calendarDate.monthInt {
+            if viewModel.displayMode == .month && day.monthInt != viewModel.calendarDate.monthInt {
                 // Empty cell for days outside the current month
                 Text(String())
                     .frame(height: 36)

@@ -40,7 +40,23 @@ final class CalendarViewModel: ObservableObject {
     @Published internal var sharingTask: TaskEntity? = nil
     @Published internal var selectedTaskFolder: Folder = .mock()
     /// The date currently selected in the calendar (defaults to today).
-    @Published internal var selectedDate: Date = .now.startOfDay
+    @Published internal var selectedDate: Date = .now.startOfDay {
+        didSet {
+            guard displayMode == .week else { return }
+            updateDays()
+            let newDate = selectedDate.startOfDay
+            if calendarDate != newDate {
+                calendarDate = newDate
+            }
+        }
+    }
+
+    /// The current display mode for the calendar.
+    @Published internal var displayMode: CalendarDisplayMode = .month {
+        didSet {
+            calendarDate = selectedDate.startOfDay
+        }
+    }
     
     /// Height of the task creation or editing panel.
     @Published internal var taskManagementHeight: CGFloat = 15
@@ -49,7 +65,15 @@ final class CalendarViewModel: ObservableObject {
     @Published internal var calendarDate: Date = Date.now {
         didSet {
             updateDays()
-            selectDay()
+            switch displayMode {
+            case .month:
+                selectDay()
+            case .week:
+                let newDate = Calendar.current.startOfDay(for: calendarDate)
+                if selectedDate != newDate {
+                    selectedDate = newDate
+                }
+            }
         }
     }
 
@@ -120,7 +144,12 @@ final class CalendarViewModel: ObservableObject {
     
     /// Updates the array of days to display when the calendar month/year changes.
     private func updateDays() {
-        days = calendarDate.calendarDisplayDays
+        switch displayMode {
+        case .month:
+            days = calendarDate.calendarDisplayDays
+        case .week:
+            days = selectedDate.weekDisplayDays
+        }
     }
     
     /// Updates the selected date to the start of the month (or selected day).
@@ -131,7 +160,11 @@ final class CalendarViewModel: ObservableObject {
     /// Restores today's date as the selected and displayed date, unless already showing today.
     internal func restoreTodayDate() {
         guard selectedDate != .now.startOfDay else { return }
-        calendarDate = .now.startOfDay
+        if displayMode == .week {
+            selectedDate = .now.startOfDay
+        } else {
+            calendarDate = .now.startOfDay
+        }
     }
 
     /// Move the calendar month forward or backward.
@@ -145,6 +178,20 @@ final class CalendarViewModel: ObservableObject {
         }
         if let newDate = Calendar.current.date(byAdding: .month, value: value, to: calendarDate) {
             calendarDate = newDate
+        }
+    }
+
+    /// Move the calendar week forward or backward.
+    internal func calendarWeekMove(for direction: CalendarMovement) {
+        let value: Int
+        switch direction {
+        case .forward:
+            value = 7
+        case .backward:
+            value = -7
+        }
+        if let newDate = Calendar.current.date(byAdding: .day, value: value, to: selectedDate) {
+            selectedDate = newDate.startOfDay
         }
     }
     

@@ -89,6 +89,9 @@ struct CalendarNavBar: View {
                     HStack(spacing: 6) {
                         glassActionButton(content: calendarButtonContent,
                                           action: calendarButtonAction)
+                        glassMenuButton(content: modeButtonContent) {
+                            calendarModeMenu
+                        }
                     }
                 }
             } else {
@@ -97,6 +100,11 @@ struct CalendarNavBar: View {
                         calendarButtonAction()
                     } label: {
                         calendarButtonContent
+                    }
+                    Menu {
+                        calendarModeMenu
+                    } label: {
+                        modeButtonContent
                     }
                 }
             }
@@ -118,6 +126,26 @@ struct CalendarNavBar: View {
             .frame(width: 26, height: 26)
     }
 
+    private var modeButtonContent: some View {
+        Image.NavigationBar.more
+            .resizable()
+            .scaledToFit()
+            .frame(width: 26, height: 26)
+            .foregroundStyle(Color.LabelColors.labelPrimary)
+    }
+
+    @ViewBuilder
+    private var calendarModeMenu: some View {
+        Picker(Texts.CalendarPage.title,
+               selection: $viewModel.displayMode.animation(.easeInOut(duration: 0.2))) {
+            Text(Texts.CalendarPage.month)
+                .tag(CalendarDisplayMode.month)
+            Text(Texts.CalendarPage.week)
+                .tag(CalendarDisplayMode.week)
+        }
+               .contentShape(.rect)
+    }
+
     private func calendarButtonAction() {
         withAnimation(.easeInOut(duration: 0.2)) {
             viewModel.toggleShowingCalendarSelector()
@@ -129,6 +157,19 @@ struct CalendarNavBar: View {
     private func glassActionButton<Content: View>(content: Content, action: @escaping () -> Void) -> some View {
         Button {
             action()
+        } label: {
+            content
+                .padding(8)
+        }
+        .glassEffect(.regular.interactive())
+        .glassEffectUnion(id: "CalendarNavBarActions", namespace: glassNamespace)
+    }
+
+    @available(iOS 26.0, *)
+    @ViewBuilder
+    private func glassMenuButton<Content: View>(content: Content, @ViewBuilder menu: () -> some View) -> some View {
+        Menu {
+            menu()
         } label: {
             content
                 .padding(8)

@@ -78,6 +78,8 @@ final class Texts {
         static let emptyList = NSLocalizedString("CalendarPageCalendarEmptyList", comment: "Free day")
         static let accept = NSLocalizedString("CalendarPageCalendarAccept", comment: "Accept")
         static let close = NSLocalizedString("CalendarPageCalendarClose", comment: "Close")
+        static let month = NSLocalizedString("CalendarPageCalendarMonth", comment: "Month")
+        static let week = NSLocalizedString("CalendarPageCalendarWeek", comment: "Week")
     }
     
     // MARK: - Settings Module Texts

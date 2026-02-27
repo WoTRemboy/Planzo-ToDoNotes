@@ -19,8 +19,23 @@ private struct BackgroundModifier: ViewModifier {
     }
 }
 
+private struct CalendarBackgroundModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.background(Color.BackColors.backDefaultGlass)
+        } else {
+            content
+                .background(Color.BackColors.backDefault)
+        }
+    }
+}
+
 extension View {
     func defaultBackgroundStyle() -> some View {
         modifier(BackgroundModifier())
+    }
+    
+    func calendarBackgroundStyle() -> some View {
+        modifier(CalendarBackgroundModifier())
     }
 }

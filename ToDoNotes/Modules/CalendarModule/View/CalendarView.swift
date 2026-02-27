@@ -35,6 +35,7 @@ struct CalendarView: View {
             content
             plusButton
         }
+        .calendarBackgroundStyle()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         
         // Calendar month selector modal
@@ -118,10 +119,9 @@ struct CalendarView: View {
         let base = VStack(spacing: 0) {
             CustomCalendarView(dates: datesWithTasks,
                                namespace: animation)
-                .padding(.top)
-            
-            separator
-            
+                .padding(.top, calendarTopPadding)
+                .padding(.bottom)
+                        
             if dayTasks.isEmpty {
                 placeholder
             } else {
@@ -138,6 +138,7 @@ struct CalendarView: View {
             base.safeAreaBar(edge: .top) {
                 CalendarNavBar(date: Texts.CalendarPage.today,
                                monthYear: viewModel.calendarDate)
+                
             }
         } else {
             base.safeAreaInset(edge: .top) {
@@ -150,18 +151,17 @@ struct CalendarView: View {
     
     // MARK: - Subviews
     
-    /// A thin separator between the calendar and the task list for better visual structure.
-    private var separator: some View {
-        Rectangle()
-            .foregroundStyle(Color.clear)
-            .frame(height: 0.36)
-            .padding([.top, .horizontal])
+    private var calendarTopPadding: CGFloat {
+        if #available(iOS 26.0, *) {
+            return 24
+        } else {
+            return 16
+        }
     }
     
     /// Displays a list of tasks grouped into pinned, active, and completed sections.
-    @ViewBuilder
     private var taskForm: some View {
-        let form = Form {
+        Form {
             overviewTipView
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
@@ -179,12 +179,6 @@ struct CalendarView: View {
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .defaultBackgroundStyle()
         .scrollContentBackground(.hidden)
-
-        if #available(iOS 26.0, *) {
-            form.contentMargins(.top, 16, for: .scrollContent)
-        } else {
-            form
-        }
     }
     
     /// Builds a section for a specific category of tasks (pinned, active, completed).
