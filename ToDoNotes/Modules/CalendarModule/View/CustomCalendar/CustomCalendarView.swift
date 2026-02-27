@@ -22,6 +22,7 @@ struct CustomCalendarView: View {
     /// Grid layout with 7 flexible columns (for 7 days of the week).
     private let columns = Array(repeating: GridItem(.flexible()),
                                 count: 7)
+    private let swipeThreshold: CGFloat = 44
     
     // MARK: Initialization
     
@@ -43,6 +44,13 @@ struct CustomCalendarView: View {
             daysGrid
         }
         .padding(.horizontal)
+        .contentShape(Rectangle())
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 12, coordinateSpace: .local)
+                .onEnded { value in
+                    handleSwipe(value)
+                }
+        )
     }
     
     // MARK: - Weekday Names
@@ -67,6 +75,25 @@ struct CustomCalendarView: View {
             ForEach(viewModel.days, id: \.self) { day in
                 dayCell(for: day)
             }
+        }
+        .id(viewModel.calendarDate)
+        .transition(
+            .opacity
+                .combined(with: .scale(scale: 0.98, anchor: .center))
+        )
+        .animation(.easeInOut(duration: 0.2), value: viewModel.calendarDate)
+    }
+
+    private func handleSwipe(_ value: DragGesture.Value) {
+        let horizontal = value.translation.width
+        let vertical = value.translation.height
+        guard abs(horizontal) > abs(vertical), abs(horizontal) > swipeThreshold else { return }
+
+        let direction: CalendarMovement = horizontal < 0 ? .forward : .backward
+        let feedback = UIImpactFeedbackGenerator(style: .light)
+        feedback.impactOccurred()
+        withAnimation(.easeInOut(duration: 0.2)) {
+            viewModel.calendarMonthMove(for: direction)
         }
     }
     

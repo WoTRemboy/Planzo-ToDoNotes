@@ -52,7 +52,7 @@ final class CalendarViewModel: ObservableObject {
             selectDay()
         }
     }
-    
+
     /// Days to display in the custom calendar grid.
     @Published internal var days: [Date] = []
     /// Names of the weekdays with capitalized first letters, localized.
@@ -132,6 +132,20 @@ final class CalendarViewModel: ObservableObject {
     internal func restoreTodayDate() {
         guard selectedDate != .now.startOfDay else { return }
         calendarDate = .now.startOfDay
+    }
+
+    /// Move the calendar month forward or backward.
+    internal func calendarMonthMove(for direction: CalendarMovement) {
+        let value: Int
+        switch direction {
+        case .forward:
+            value = 1
+        case .backward:
+            value = -1
+        }
+        if let newDate = Calendar.current.date(byAdding: .month, value: value, to: calendarDate) {
+            calendarDate = newDate
+        }
     }
     
     internal func toggleShowingShareSheet() {
