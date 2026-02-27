@@ -8,7 +8,7 @@
 import Foundation
 
 /// Defines the display mode for the calendar.
-enum CalendarDisplayMode {
+enum CalendarDisplayMode: String {
     case month
     case week
 }

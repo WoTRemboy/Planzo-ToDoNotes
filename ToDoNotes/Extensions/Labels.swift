@@ -612,6 +612,7 @@ final class Texts {
         static let taskCreation = "TaskCreationPage"
         static let timeFormat = "TimeFormat"
         static let firstDayOfWeek = "FirstDayOfWeek"
+        static let calendarDisplayMode = "CalendarDisplayMode"
         static let didCreateDefaultFolders = "DidCreateDefaultFoldersSet"
         static let passcodeEnabled = "PasscodeEnabled"
         static let faceIDEnabled = "FaceIDEnabled"

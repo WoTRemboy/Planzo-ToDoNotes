@@ -23,6 +23,10 @@ final class CalendarViewModel: ObservableObject {
     /// Defines the presentation style for creating a new task (popup or full screen).
     @AppStorage(Texts.UserDefaults.taskCreation)
     private var taskCreationFullScreen: TaskCreation = .popup
+
+    /// Stores the calendar display mode between launches (month/week).
+    @AppStorage(Texts.UserDefaults.calendarDisplayMode)
+    private var storedDisplayMode: String = CalendarDisplayMode.month.rawValue
     
     // MARK: - Published Properties (View State)
     
@@ -54,6 +58,7 @@ final class CalendarViewModel: ObservableObject {
     /// The current display mode for the calendar.
     @Published internal var displayMode: CalendarDisplayMode = .month {
         didSet {
+            storedDisplayMode = displayMode.rawValue
             calendarDate = selectedDate.startOfDay
         }
     }
@@ -98,6 +103,7 @@ final class CalendarViewModel: ObservableObject {
     
     /// Initializes the ViewModel and sets up the initial days array.
     init() {
+        displayMode = CalendarDisplayMode(rawValue: storedDisplayMode) ?? .month
         updateDays()
         daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
         NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: .main) { [weak self] _ in
