@@ -40,8 +40,7 @@ struct CustomNavBar: View {
             let topInset = proxy.safeAreaInsets.top
 
             ZStack(alignment: .top) {
-                Color.SupportColors.supportNavBar
-                    .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
+                background
 
                 content
                     .padding(.top, topInset + 9.5)
@@ -53,6 +52,14 @@ struct CustomNavBar: View {
 
     // MARK: - Subviews
     
+    @ViewBuilder
+    private var background: some View {
+        if #available(iOS 26.0, *) {} else {
+            Color.SupportColors.supportNavBar
+                .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
+        }
+    }
+
     /// Builds the main content view of the navigation bar, containing the back button (if shown) and title label.
     private var content: some View {
         HStack(spacing: 0) {
@@ -62,23 +69,48 @@ struct CustomNavBar: View {
             titleLabel
             
             if showBackButton {
+                let size: CGFloat = {
+                    if #available(iOS 26.0, *) {
+                        return 48
+                    } else {
+                        return 20
+                    }
+                }()
                 Color.clear
-                    .frame(width: 20, height: 20)
+                    .frame(width: size, height: size)
                     .padding(.trailing)
             }
         }
     }
 
     /// A button that dismisses the current view when tapped. Shown only if `showBackButton` is `true`.
+    @ViewBuilder
     private var backButton: some View {
-        Button {
+        let size: CGFloat = {
+            if #available(iOS 26.0, *) {
+                return 26
+            } else {
+                return 20
+            }
+        }()
+
+        let content = Button {
             dismiss()
         } label: {
             Image.NavigationBar.back
                 .resizable()
-                .frame(width: 20, height: 20)
+                .frame(width: size, height: size)
+                .padding(8)
         }
-        .padding(.leading)
+
+        if #available(iOS 26.0, *) {
+            content
+                .glassEffect(.regular.interactive())
+                .padding(.leading)
+        } else {
+            content
+                .padding(.leading)
+        }
     }
 
     /// A text label displaying the navigation bar's title.

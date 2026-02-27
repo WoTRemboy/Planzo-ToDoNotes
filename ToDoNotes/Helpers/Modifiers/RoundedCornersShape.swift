@@ -20,3 +20,13 @@ struct RoundedCorner: Shape {
         return Path(path.cgPath)
     }
 }
+
+struct SystemRowCornerModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.clipShape(.rect(corners: .concentric(minimum: 24)))
+        } else {
+            content.clipShape(.rect(cornerRadius: 10))
+        }
+    }
+}
