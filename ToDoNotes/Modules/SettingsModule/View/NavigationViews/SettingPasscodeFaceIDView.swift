@@ -88,16 +88,23 @@ struct SettingPasscodeFaceIDView: View {
                     .fixedSize()
                     .tint(Color.ToggleColors.main)
                     .padding(.trailing, 14)
-                    .scaleEffect(0.8)
+                    .scaleEffect(toggleScale)
             }
             
             if passcodeManager.isPasscodeEnabled {
                 changePasscodeButton
             }
         }
-        .clipShape(.rect(cornerRadius: 10))
+        .modifier(SystemRowCornerModifier())
     }
 
+    private var toggleScale: CGFloat {
+        if #available(iOS 26.0, *) {
+            return 1
+        }
+        return 0.8
+    }
+    
     private var changePasscodeButton: some View {
         Button {
             showingChangeFlow = true
@@ -136,12 +143,12 @@ struct SettingPasscodeFaceIDView: View {
                 .fixedSize()
                 .tint(Color.ToggleColors.main)
                 .padding(.trailing, 14)
-                .scaleEffect(0.8)
+                .scaleEffect(toggleScale)
                 .disabled(!passcodeManager.isBiometricsAvailable || isRequestingFaceId)
             }
             .background(Color.SupportColors.supportButton)
         }
-        .clipShape(.rect(cornerRadius: 10))
+        .modifier(SystemRowCornerModifier())
     }
 
     private var descriptionText: some View {

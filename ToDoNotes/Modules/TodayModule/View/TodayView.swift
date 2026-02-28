@@ -108,17 +108,25 @@ struct TodayView: View {
     // MARK: - Content Components
     
     /// The main content view containing the navigation bar and the task form.
+    @ViewBuilder
     private var content: some View {
-        VStack(spacing: 0) {
-            TodayNavBar(date: viewModel.todayDate.shortDate,
-                        day: viewModel.todayDate.shortWeekday)
-            .zIndex(1)
-            
-            taskForm
+        let base = taskForm
+            .modifier(RefreshModifier(authService: authService))
+            .animation(.easeInOut(duration: 0.2),
+                       value: tasksResults.isEmpty)
+
+        if #available(iOS 26.0, *) {
+            base.safeAreaBar(edge: .top) {
+                TodayNavBar(date: viewModel.todayDate.shortDate,
+                            day: viewModel.todayDate.shortWeekday)
+            }
+        } else {
+            base.safeAreaInset(edge: .top) {
+                TodayNavBar(date: viewModel.todayDate.shortDate,
+                            day: viewModel.todayDate.shortWeekday)
+                    .zIndex(1)
+            }
         }
-        .modifier(RefreshModifier(authService: authService))
-        .animation(.easeInOut(duration: 0.2),
-                   value: tasksResults.isEmpty)
     }
     
     /// Label shown when there are no tasks for today.
@@ -130,8 +138,9 @@ struct TodayView: View {
     }
     
     /// The form listing today's tasks, grouped by sections.
+    @ViewBuilder
     private var taskForm: some View {
-        Form {
+        let form = Form {
             // Display a TipKit tip at the top
             TipView(overviewTip)
                 .tipBackground(Color.FolderColors.other
@@ -152,11 +161,16 @@ struct TodayView: View {
                 .listRowBackground(Color.clear)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
-        .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)
-        .background(Color.BackColors.backDefault)
+        .defaultBackgroundStyle()
         .scrollContentBackground(.hidden)
         .scrollDisabled(dayTasks.isEmpty)
         .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
+
+        if #available(iOS 26.0, *) {
+            form.contentMargins(.top, 16, for: .scrollContent)
+        } else {
+            form
+        }
     }
     
     /// Creates a task section for a given `TaskSection` type.

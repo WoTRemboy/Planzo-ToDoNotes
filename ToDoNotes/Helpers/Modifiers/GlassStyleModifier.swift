@@ -18,6 +18,15 @@ extension View {
     }
     
     @ViewBuilder
+    func interactiveGlassIfAvailable() -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect(.regular.interactive())
+        } else {
+            self
+        }
+    }
+    
+    @ViewBuilder
     func interactiveTintGlassIfAvailable(color: Color) -> some View {
         if #available(iOS 26.0, *) {
             self.glassEffect(.regular.tint(color).interactive())

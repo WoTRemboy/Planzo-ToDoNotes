@@ -49,7 +49,7 @@ struct SettingAccountView: View {
                     faceIdPasscodeView
                     planView
                 }
-                .clipShape(.rect(cornerRadius: 10))
+                .modifier(SystemRowCornerModifier())
                 .padding(.horizontal)
                 
                 if authService.currentUser?.isPremium == true {
@@ -150,7 +150,7 @@ struct SettingAccountView: View {
         } label: {
             SubscriptionPromoteRow()
         }
-        .clipShape(.rect(cornerRadius: 10))
+        .modifier(SystemRowCornerModifier())
     }
     
     private var userSupportLabel: some View {

@@ -72,7 +72,7 @@ struct SettingSyncView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         
         .background(Color.SupportColors.supportButton)
-        .clipShape(.rect(cornerRadius: 10))
+        .modifier(SystemRowCornerModifier())
     }
     
     private var syncActiveView: some View {
@@ -96,7 +96,7 @@ struct SettingSyncView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         
         .background(Color.SupportColors.supportButton)
-        .clipShape(.rect(cornerRadius: 10))
+        .modifier(SystemRowCornerModifier())
         .transition(.blurReplace)
     }
     
@@ -117,6 +117,7 @@ struct SettingSyncView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 
         }
+        .interactiveGlassIfAvailable()
         .contentTransition(.numericText())
     }
     

@@ -22,6 +22,7 @@ struct CustomCalendarView: View {
     /// Grid layout with 7 flexible columns (for 7 days of the week).
     private let columns = Array(repeating: GridItem(.flexible()),
                                 count: 7)
+    private let swipeThreshold: CGFloat = 44
     
     // MARK: Initialization
     
@@ -43,6 +44,13 @@ struct CustomCalendarView: View {
             daysGrid
         }
         .padding(.horizontal)
+        .contentShape(Rectangle())
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 12, coordinateSpace: .local)
+                .onEnded { value in
+                    handleSwipe(value)
+                }
+        )
     }
     
     // MARK: - Weekday Names
@@ -63,9 +71,40 @@ struct CustomCalendarView: View {
     
     /// Displays the calendar days in a grid, with highlighting for selected, today, and days with tasks.
     private var daysGrid: some View {
-        LazyVGrid(columns: columns, spacing: 8) {
+        let weekAnchor = viewModel.selectedDate.weekDisplayDays.first?.startOfDay.timeIntervalSince1970
+            ?? viewModel.selectedDate.startOfDay.timeIntervalSince1970
+        let anchor = viewModel.displayMode == .week ? weekAnchor : viewModel.calendarDate.timeIntervalSince1970
+        let gridID = "\(String(describing: viewModel.displayMode))_\(Int(anchor))"
+
+        return LazyVGrid(columns: columns, spacing: 8) {
             ForEach(viewModel.days, id: \.self) { day in
                 dayCell(for: day)
+            }
+        }
+        .id(gridID)
+        .transition(
+            .opacity
+                .combined(with: .scale(scale: 0.98, anchor: .center))
+        )
+        .animation(.easeInOut(duration: 0.25), value: viewModel.displayMode)
+        .animation(.easeInOut(duration: 0.2),
+                   value: viewModel.calendarDate)
+    }
+
+    private func handleSwipe(_ value: DragGesture.Value) {
+        let horizontal = value.translation.width
+        let vertical = value.translation.height
+        guard abs(horizontal) > abs(vertical), abs(horizontal) > swipeThreshold else { return }
+
+        let direction: CalendarMovement = horizontal < 0 ? .forward : .backward
+        let feedback = UIImpactFeedbackGenerator(style: .light)
+        feedback.impactOccurred()
+        withAnimation(.easeInOut(duration: 0.2)) {
+            switch viewModel.displayMode {
+            case .month:
+                viewModel.calendarMonthMove(for: direction)
+            case .week:
+                viewModel.calendarWeekMove(for: direction)
             }
         }
     }
@@ -73,7 +112,7 @@ struct CustomCalendarView: View {
     /// Returns the view for a single day cell.
     private func dayCell(for day: Date) -> some View {
         Group {
-            if day.monthInt != viewModel.calendarDate.monthInt {
+            if viewModel.displayMode == .month && day.monthInt != viewModel.calendarDate.monthInt {
                 // Empty cell for days outside the current month
                 Text(String())
                     .frame(height: 36)

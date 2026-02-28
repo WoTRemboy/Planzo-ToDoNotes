@@ -35,6 +35,7 @@ struct CalendarView: View {
             content
             plusButton
         }
+        .calendarBackgroundStyle()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         
         // Calendar month selector modal
@@ -112,19 +113,15 @@ struct CalendarView: View {
     
     // MARK: - Main Content
     
-    /// The main vertical stack containing navigation bar, calendar, separator, and task list or placeholder.
+    /// The main vertical stack containing calendar, separator, and task list or placeholder.
+    @ViewBuilder
     private var content: some View {
-        VStack(spacing: 0) {
-            CalendarNavBar(date: Texts.CalendarPage.today,
-                           monthYear: viewModel.calendarDate)
-            .zIndex(1)
-            
+        let base = VStack(spacing: 0) {
             CustomCalendarView(dates: datesWithTasks,
                                namespace: animation)
-                .padding(.top)
-            
-            separator
-            
+                .padding(.top, calendarTopPadding)
+                .padding(.bottom)
+                        
             if dayTasks.isEmpty {
                 placeholder
             } else {
@@ -136,16 +133,30 @@ struct CalendarView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .animation(.easeInOut(duration: 0.15),
                    value: viewModel.selectedDate)
+
+        if #available(iOS 26.0, *) {
+            base.safeAreaBar(edge: .top) {
+                CalendarNavBar(date: Texts.CalendarPage.today,
+                               monthYear: viewModel.calendarDate)
+                
+            }
+        } else {
+            base.safeAreaInset(edge: .top) {
+                CalendarNavBar(date: Texts.CalendarPage.today,
+                               monthYear: viewModel.calendarDate)
+                    .zIndex(1)
+            }
+        }
     }
     
     // MARK: - Subviews
     
-    /// A thin separator between the calendar and the task list for better visual structure.
-    private var separator: some View {
-        Rectangle()
-            .foregroundStyle(Color.clear)
-            .frame(height: 0.36)
-            .padding([.top, .horizontal])
+    private var calendarTopPadding: CGFloat {
+        if #available(iOS 26.0, *) {
+            return 24
+        } else {
+            return 16
+        }
     }
     
     /// Displays a list of tasks grouped into pinned, active, and completed sections.
@@ -166,8 +177,7 @@ struct CalendarView: View {
                 .listRowBackground(Color.clear)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
-        .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)
-        .background(Color.BackColors.backDefault)
+        .defaultBackgroundStyle()
         .scrollContentBackground(.hidden)
     }
     

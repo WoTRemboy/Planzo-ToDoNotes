@@ -65,6 +65,7 @@
 		634A463D2F4FA90700A3388E /* GlassStyleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634A463C2F4FA90700A3388E /* GlassStyleModifier.swift */; };
 		634A46402F4FA99600A3388E /* FloatingPlusButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634A463F2F4FA99600A3388E /* FloatingPlusButton.swift */; };
 		634A46422F4FB5F200A3388E /* AppIconGlass.icon in Resources */ = {isa = PBXBuildFile; fileRef = 634A46412F4FB5F200A3388E /* AppIconGlass.icon */; };
+		634A46482F52024300A3388E /* BackgroundModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634A46472F52024300A3388E /* BackgroundModifier.swift */; };
 		634F64912E8EE66C009AF27F /* UserCoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634F64902E8EE66C009AF27F /* UserCoreDataService.swift */; };
 		6357920E2EAE24F000C179BA /* ConfigureFolderTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6357920D2EAE24F000C179BA /* ConfigureFolderTitleView.swift */; };
 		635792102EAE36FD00C179BA /* ConfigureFoldersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6357920F2EAE36FD00C179BA /* ConfigureFoldersViewModel.swift */; };
@@ -284,6 +285,7 @@
 		634A463C2F4FA90700A3388E /* GlassStyleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassStyleModifier.swift; sourceTree = "<group>"; };
 		634A463F2F4FA99600A3388E /* FloatingPlusButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPlusButton.swift; sourceTree = "<group>"; };
 		634A46412F4FB5F200A3388E /* AppIconGlass.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIconGlass.icon; sourceTree = "<group>"; };
+		634A46472F52024300A3388E /* BackgroundModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundModifier.swift; sourceTree = "<group>"; };
 		634F64902E8EE66C009AF27F /* UserCoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCoreDataService.swift; sourceTree = "<group>"; };
 		6357920D2EAE24F000C179BA /* ConfigureFolderTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureFolderTitleView.swift; sourceTree = "<group>"; };
 		6357920F2EAE36FD00C179BA /* ConfigureFoldersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureFoldersViewModel.swift; sourceTree = "<group>"; };
@@ -663,6 +665,7 @@
 				632D0DD92D37E0A90071684D /* HeightReader.swift */,
 				63286AFB2E7B506F00483810 /* RoundedCornersShape.swift */,
 				634A463C2F4FA90700A3388E /* GlassStyleModifier.swift */,
+				634A46472F52024300A3388E /* BackgroundModifier.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -1593,6 +1596,7 @@
 				6303E2C02D33FF870096DB64 /* RootViewControllerMethods.swift in Sources */,
 				637B9F5F2D296F3D0010F13B /* TabRouter.swift in Sources */,
 				63286AFA2E7B495A00483810 /* SubscriptionPricesView.swift in Sources */,
+				634A46482F52024300A3388E /* BackgroundModifier.swift in Sources */,
 				63286AEC2E7B309800483810 /* SubscriptionView.swift in Sources */,
 				63CF11BE2EABAF6D0068C1F9 /* FolderConfigureEnumModel.swift in Sources */,
 				632514C62EAD3EBB000B4A3C /* CreateDeleteFolderButtonView.swift in Sources */,

@@ -7,6 +7,12 @@
 
 import Foundation
 
+/// Defines the display mode for the calendar.
+enum CalendarDisplayMode: String {
+    case month
+    case week
+}
+
 /// Extension for `Date` providing utilities for working with custom calendar displays,
 /// like getting weekdays, month names, and calculating calendar layouts.
 extension Date {
@@ -123,6 +129,19 @@ extension Date {
            days.append(newDay)
        }
        return days
+    }
+
+    /// Returns 7 days for the week containing the date, aligned to the user's first weekday.
+    internal var weekDisplayDays: [Date] {
+        let calendar = Calendar.current
+        let weekday = calendar.component(.weekday, from: startOfDay)
+        var offset = weekday - Self.firstDayOfWeek
+        if offset < 0 { offset += 7 }
+
+        let startOfWeek = calendar.date(byAdding: .day, value: -offset, to: startOfDay) ?? startOfDay
+        return (0..<7).compactMap { dayOffset in
+            calendar.date(byAdding: .day, value: dayOffset, to: startOfWeek)
+        }
     }
 }
 
