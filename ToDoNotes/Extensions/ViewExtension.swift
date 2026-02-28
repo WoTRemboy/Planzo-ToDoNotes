@@ -22,4 +22,12 @@ extension View {
     internal func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
+
+    internal func nonMaxSheetExtraHeight(extra: CGFloat = 18, maxSideThreshold: CGFloat = 926) -> CGFloat {
+        if #available(iOS 26.0, *) {
+            let maxSide = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+            return maxSide >= maxSideThreshold ? 0 : extra
+        }
+        return 0
+    }
 }

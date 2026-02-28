@@ -185,49 +185,51 @@ struct TaskManagementView: View {
     /// Main content block: task name, description, checklist, and action buttons.
     private var content: some View {
         VStack(spacing: 0) {
-            ScrollViewReader { outerProxy in
-                ScrollView {
-                    // Title text field with optional checkbox
-                    nameInput
-                    
-                    if shouldShowFullScreenContent {
+            if shouldShowFullScreenContent {
+                ScrollViewReader { outerProxy in
+                    ScrollView {
+                        // Title text field with optional checkbox
+                        nameInput
+                        
                         descriptionCoverInput   // Multiline description input
                         
                         TaskChecklistView(viewModel: viewModel) // Checklist (points) editor
                             .padding(.horizontal, -8)
                             .padding(.bottom, 100)
-                    } else {
-                        // Simplified description field for sheet mode
-                        descriptionSheetInput
-                            .background(HeightReader(height: $taskManagementHeight))
+                        
+                        Color.clear
+                            .frame(height: 1)
+                            .id("checklistBottomAnchor")
                     }
-                    
-                    Color.clear
-                        .frame(height: 1)
-                        .id("checklistBottomAnchor")
-                }
-                .onChange(of: viewModel.checklistLocal.map { $0.id }) { oldIDs, newIDs in
-                    let oldSet = Set(oldIDs)
-                    let newSet = Set(newIDs)
-                    let inserted = newSet.subtracting(oldSet)
-                    if inserted.count == 1, let insertedID = inserted.first, newIDs.last == insertedID {
-                        DispatchQueue.main.async {
-                            withAnimation(.easeInOut(duration: 0.25)) {
-                                outerProxy.scrollTo("checklistBottomAnchor", anchor: .bottom)
+                    .onChange(of: viewModel.checklistLocal.map { $0.id }) { oldIDs, newIDs in
+                        let oldSet = Set(oldIDs)
+                        let newSet = Set(newIDs)
+                        let inserted = newSet.subtracting(oldSet)
+                        if inserted.count == 1, let insertedID = inserted.first, newIDs.last == insertedID {
+                            DispatchQueue.main.async {
+                                withAnimation(.easeInOut(duration: 0.25)) {
+                                    outerProxy.scrollTo("checklistBottomAnchor", anchor: .bottom)
+                                }
                             }
                         }
                     }
                 }
-            }
-            .scrollIndicators(.hidden)
-            .scrollDisabled(!shouldShowFullScreenContent)
-            .padding(.horizontal, !shouldShowFullScreenContent ? 16 : 24)
-            
-            // Bottom bar with calendar button, check toggle and save button
-            if #available(iOS 26.0, *) {} else {
-                Spacer()
-                buttons
-                    .padding(.horizontal, 16)
+                .scrollIndicators(.hidden)
+                .padding(.horizontal, 24)
+            } else {
+                VStack(spacing: 8) {
+                    // Title text field with optional checkbox
+                    nameInput
+                    
+                    // Simplified description field for sheet mode
+                    descriptionSheetInput
+                        .padding(.top, 4)
+                    
+                    buttons
+                        .padding(.top, 8)
+                }
+                .padding(.horizontal, 16)
+                .background(HeightReader(height: $taskManagementHeight))
             }
         }
         .padding(.top, !shouldShowFullScreenContent ? 8 : 0)
