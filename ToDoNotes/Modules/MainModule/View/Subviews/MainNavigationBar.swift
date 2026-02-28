@@ -14,6 +14,7 @@ struct MainCustomNavBar: View {
     @EnvironmentObject private var authService: AuthNetworkService
     @EnvironmentObject private var viewModel: MainViewModel
     @ObservedObject private var syncService = FullSyncNetworkService.shared
+    @Namespace private var glassNamespace
     
     @State private var isRotating = false
     
@@ -34,8 +35,7 @@ struct MainCustomNavBar: View {
             
             ZStack(alignment: .top) {
                 // Background with shadow
-                Color.SupportColors.supportNavBar
-                    .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
+                background
                 
                 VStack(spacing: 0) {
                     if viewModel.showingSearchBar {
@@ -57,13 +57,35 @@ struct MainCustomNavBar: View {
                         .padding(.top, viewModel.showingSearchBar ? 2 : 10)
                     // Folder section
                     FoldersScrollView()
-                        .padding(.top, 10)
+                        .padding(.top, foldersTopPadding)
                 }
                 .padding(.top, topInset + 8)
             }
             .ignoresSafeArea(edges: .top)
         }
-        .frame(height: 140)
+        .frame(height: navBarHeight)
+    }
+
+    private var navBarHeight: CGFloat {
+        if #available(iOS 26.0, *) {
+            return 190
+        }
+        return 140
+    }
+
+    private var foldersTopPadding: CGFloat {
+        if #available(iOS 26.0, *) {
+            return 0
+        }
+        return 10
+    }
+
+    @ViewBuilder
+    private var background: some View {
+        if #available(iOS 26.0, *) {} else {
+            Color.SupportColors.supportNavBar
+                .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
+        }
     }
     
     // MARK: - Title Label
@@ -117,41 +139,87 @@ struct MainCustomNavBar: View {
     
     /// Action buttons for search and importance toggle.
     private var buttons: some View {
-        HStack(spacing: 20) {
-            if authService.currentUser?.isPremium == false || authService.currentUser == nil {
-                subscriptionButton
-            }
-            
-            // Search Button
-            Button {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    viewModel.toggleShowingSearchBar()
+        Group {
+            if #available(iOS 26.0, *) {
+                GlassEffectContainer(spacing: 6) {
+                    HStack(spacing: 6) {
+                        if shouldShowSubscription {
+                            glassTintActionButton(content: subscriptionButtonContent,
+                                                  tint: Color.LabelColors.labelPrimary,
+                                                  action: subscriptionButtonAction)
+                            .padding(.trailing, 8)
+                        }
+                        glassActionButton(content: searchButtonContent,
+                                          action: searchButtonAction)
+                        glassActionButton(content: importanceButtonContent,
+                                          action: importanceButtonAction)
+                    }
                 }
-            } label: {
-                Image.NavigationBar.search
-                    .resizable()
-                    .frame(width: 26, height: 26)
-            }
-            
-            // Favorites Button (importance toggle)
-            Button {
-                viewModel.toggleImportance()
-            } label: {
-                (viewModel.importance ?
-                Image.NavigationBar.MainTodayPages.importantDeselect :
-                Image.NavigationBar.MainTodayPages.importantSelect)
-                    .resizable()
-                    .frame(width: 26, height: 26)
-                    .shadow(color: Color.ShadowColors.navBar,
-                            radius: viewModel.importance ? 5 : 0)
+            } else {
+                HStack(spacing: 20) {
+                    if shouldShowSubscription {
+                        subscriptionButton
+                    }
+                    Button {
+                        searchButtonAction()
+                    } label: {
+                        searchButtonContent
+                    }
+                    Button {
+                        importanceButtonAction()
+                    } label: {
+                        importanceButtonContent
+                    }
+                }
             }
         }
         .padding(.horizontal, 16)
     }
-    
+
+    private var shouldShowSubscription: Bool {
+        authService.currentUser?.isPremium == false || authService.currentUser == nil
+    }
+
+    private var searchButtonContent: some View {
+        Image.NavigationBar.search
+            .resizable()
+            .frame(width: 26, height: 26)
+    }
+
+    private var importanceButtonContent: some View {
+        (viewModel.importance ?
+        Image.NavigationBar.MainTodayPages.importantDeselect :
+        Image.NavigationBar.MainTodayPages.importantSelect)
+            .resizable()
+            .frame(width: 26, height: 26)
+            .shadow(color: Color.ShadowColors.navBar,
+                    radius: viewModel.importance ? 5 : 0)
+    }
+
+    private var subscriptionButtonContent: some View {
+        Text(Texts.Subscription.SubType.pro)
+            .font(.system(size: 22, weight: .semibold))
+            .foregroundStyle(Color.LabelColors.labelSubscriptionAd)
+            .padding(.horizontal)
+    }
+
+    private func searchButtonAction() {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            viewModel.toggleShowingSearchBar()
+        }
+    }
+
+    private func importanceButtonAction() {
+        viewModel.toggleImportance()
+    }
+
+    private func subscriptionButtonAction() {
+        viewModel.toggleShowingSubscriptionPage()
+    }
+
     private var subscriptionButton: some View {
         Button {
-            viewModel.toggleShowingSubscriptionPage()
+            subscriptionButtonAction()
         } label: {
             RoundedRectangle(cornerRadius: 5)
                 .foregroundStyle(Color.LabelColors.labelPrimary)
@@ -162,9 +230,36 @@ struct MainCustomNavBar: View {
                         .foregroundStyle(Color.LabelColors.labelSubscriptionAd)
                 }
         }
+        .interactiveGlassIfAvailable()
         .navigationTransitionSource(
             id: Texts.NamespaceID.subscriptionButton,
             namespace: namespace)
+    }
+
+    @available(iOS 26.0, *)
+    @ViewBuilder
+    private func glassActionButton<Content: View>(content: Content, action: @escaping () -> Void) -> some View {
+        Button {
+            action()
+        } label: {
+            content
+                .padding(8)
+        }
+        .glassEffect(.regular.interactive())
+        .glassEffectUnion(id: "MainNavBarActions", namespace: glassNamespace)
+    }
+
+    @available(iOS 26.0, *)
+    @ViewBuilder
+    private func glassTintActionButton<Content: View>(content: Content, tint: Color, action: @escaping () -> Void) -> some View {
+        Button {
+            action()
+        } label: {
+            content
+                .padding(.vertical, 8)
+        }
+        .frame(width: 70)
+        .glassEffect(.regular.tint(tint).interactive())
     }
     
 }
