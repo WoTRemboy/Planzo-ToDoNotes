@@ -112,10 +112,16 @@ struct TaskManagementView: View {
                                     .padding(.bottom, 8)
                             }
                     } else {
-                        base.safeAreaInset(edge: .top) {
-                            taskManagementNavBar
-                                .zIndex(1)
-                        }
+                        base
+                            .safeAreaInset(edge: .top) {
+                                taskManagementNavBar
+                                    .zIndex(1)
+                            }
+                            .safeAreaInset(edge: .bottom) {
+                                buttons
+                                    .padding(.horizontal, 16)
+                                    .padding(.bottom, 8)
+                            }
                     }
                 } else {
                     base
