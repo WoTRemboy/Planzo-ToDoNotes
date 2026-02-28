@@ -132,7 +132,6 @@ struct TaskCalendarSelectorView: View {
     /// Calendar section for picking a date and optional time.
     private var calendarSection: some View {
         TaskCustomCalendar(viewModel: viewModel, namespace: namespace)
-            .padding(.top)
     }
     
     /// Form for selecting additional date parameters such as notifications.

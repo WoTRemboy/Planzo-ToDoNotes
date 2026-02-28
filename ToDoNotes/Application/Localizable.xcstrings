@@ -465,52 +465,6 @@
         }
       }
     },
-    "CalendarPageCalendarMonth" : {
-      "comment" : "Month",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Month"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mes"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mois"
-          }
-        }
-      }
-    },
-    "CalendarPageCalendarWeek" : {
-      "comment" : "Week",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Week"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Semana"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Semaine"
-          }
-        }
-      }
-    },
     "CalendarPageCalendarEmptyList" : {
       "comment" : "Free day",
       "localizations" : {
@@ -530,6 +484,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jour libre"
+          }
+        }
+      }
+    },
+    "CalendarPageCalendarMonth" : {
+      "comment" : "Month",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mois"
           }
         }
       }
@@ -576,6 +553,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aujourd’hui"
+          }
+        }
+      }
+    },
+    "CalendarPageCalendarWeek" : {
+      "comment" : "Week",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Week"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Semana"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Semaine"
           }
         }
       }
@@ -1818,6 +1818,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Créez des notes ou des tâches avec des échéances et des rappels"
+          }
+        }
+      }
+    },
+    "OnboardingPageWelcome" : {
+      "comment" : "Welcome",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenue"
           }
         }
       }

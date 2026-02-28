@@ -18,6 +18,7 @@ final class Texts {
     // MARK: - Onboarding Module Texts
     
     enum OnboardingPage {
+        static let welcome = NSLocalizedString("OnboardingPageWelcome", comment: "Welcome")
         static let skip = NSLocalizedString("OnboardingPageSkip", comment: "Skip")
         static let next = NSLocalizedString("OnboardingPageNext", comment: "Next")
         static let start = NSLocalizedString("OnboardingPageStart", comment: "Start")
