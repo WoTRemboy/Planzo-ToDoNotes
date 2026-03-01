@@ -14,6 +14,7 @@ struct CalendarNavBar: View {
     
     /// CalendarViewModel from environment to handle date and navigation actions.
     @EnvironmentObject private var viewModel: CalendarViewModel
+    @Namespace private var glassNamespace
 
     /// Label for the "Today" button.
     private let date: String
@@ -40,8 +41,7 @@ struct CalendarNavBar: View {
             
             ZStack(alignment: .top) {
                 // Background color and shadow of the navigation bar.
-                Color.SupportColors.supportNavBar
-                    .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
+                background
                 
                 // Main horizontal layout containing title and buttons.
                 HStack {
@@ -83,18 +83,99 @@ struct CalendarNavBar: View {
     
     /// Displays action buttons like calendar picker.
     private var calendarButton: some View {
-        HStack(spacing: 20) {
-            Button {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    viewModel.toggleShowingCalendarSelector()
+        Group {
+            if #available(iOS 26.0, *) {
+                GlassEffectContainer(spacing: 6) {
+                    HStack(spacing: 6) {
+                        glassActionButton(content: calendarButtonContent,
+                                          action: calendarButtonAction)
+                        glassMenuButton(content: modeButtonContent) {
+                            calendarModeMenu
+                        }
+                    }
                 }
-            } label: {
-                Image.NavigationBar.calendar
-                    .resizable()
-                    .frame(width: 26, height: 26)
+            } else {
+                HStack(spacing: 20) {
+                    Button {
+                        calendarButtonAction()
+                    } label: {
+                        calendarButtonContent
+                    }
+                    Menu {
+                        calendarModeMenu
+                    } label: {
+                        modeButtonContent
+                    }
+                }
             }
         }
         .padding(.horizontal, 16)
+    }
+
+    @ViewBuilder
+    private var background: some View {
+        if #available(iOS 26.0, *) {} else {
+            Color.SupportColors.supportNavBar
+                .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
+        }
+    }
+
+    private var calendarButtonContent: some View {
+        Image.NavigationBar.calendar
+            .resizable()
+            .frame(width: 26, height: 26)
+    }
+
+    private var modeButtonContent: some View {
+        Image.NavigationBar.more
+            .resizable()
+            .scaledToFit()
+            .frame(width: 26, height: 26)
+            .foregroundStyle(Color.LabelColors.labelPrimary)
+    }
+
+    @ViewBuilder
+    private var calendarModeMenu: some View {
+        Picker(Texts.CalendarPage.title,
+               selection: $viewModel.displayMode.animation(.easeInOut(duration: 0.2))) {
+            Text(Texts.CalendarPage.month)
+                .tag(CalendarDisplayMode.month)
+            Text(Texts.CalendarPage.week)
+                .tag(CalendarDisplayMode.week)
+        }
+               .contentShape(.rect)
+    }
+
+    private func calendarButtonAction() {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            viewModel.toggleShowingCalendarSelector()
+        }
+    }
+
+    @available(iOS 26.0, *)
+    @ViewBuilder
+    private func glassActionButton<Content: View>(content: Content, action: @escaping () -> Void) -> some View {
+        Button {
+            action()
+        } label: {
+            content
+                .padding(8)
+        }
+        .glassEffect(.regular.interactive())
+        .glassEffectUnion(id: "CalendarNavBarActions", namespace: glassNamespace)
+    }
+
+    @available(iOS 26.0, *)
+    @ViewBuilder
+    private func glassMenuButton<Content: View>(content: Content, @ViewBuilder menu: () -> some View) -> some View {
+        Menu {
+            menu()
+        } label: {
+            content
+                .padding(8)
+        }
+        .glassEffect(.regular.interactive())
+        .glassEffectUnion(id: "CalendarNavBarActions", namespace: glassNamespace)
     }
 }
 

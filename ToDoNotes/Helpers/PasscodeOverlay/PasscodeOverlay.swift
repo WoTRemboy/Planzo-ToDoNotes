@@ -14,10 +14,11 @@ struct PasscodeOverlayGroup: View {
 
     @State private var isRequestingFaceID = false
     @State private var showingForgotAlert = false
+    @State private var showOverlay = false
 
     var body: some View {
         Group {
-            if passcodeManager.isLocked {
+            if passcodeManager.isLocked && showOverlay {
                 ZStack {
                     Rectangle()
                         .fill(.ultraThinMaterial)
@@ -40,6 +41,9 @@ struct PasscodeOverlayGroup: View {
             forgotAlert
         }
         .onChange(of: passcodeManager.isLocked) { _, newValue in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                showOverlay = newValue
+            }
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
                 for window in windowScene.windows where window.tag == 1011 {
                     window.isUserInteractionEnabled = newValue
@@ -51,6 +55,9 @@ struct PasscodeOverlayGroup: View {
             triggerFaceIDIfNeeded()
         }
         .onAppear {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                showOverlay = passcodeManager.isLocked
+            }
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
                 for window in windowScene.windows where window.tag == 1011 {
                     window.isUserInteractionEnabled = passcodeManager.isLocked

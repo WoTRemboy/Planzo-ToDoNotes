@@ -132,7 +132,6 @@ struct TaskCalendarSelectorView: View {
     /// Calendar section for picking a date and optional time.
     private var calendarSection: some View {
         TaskCustomCalendar(viewModel: viewModel, namespace: namespace)
-            .padding(.top)
     }
     
     /// Form for selecting additional date parameters such as notifications.
@@ -145,7 +144,7 @@ struct TaskCalendarSelectorView: View {
                              isLast: true,
                              viewModel: viewModel)
         }
-        .clipShape(.rect(cornerRadius: 10))
+        .modifier(SystemRowCornerModifier())
         .padding()
     }
     
@@ -159,9 +158,9 @@ struct TaskCalendarSelectorView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             
                 .foregroundColor(Color.LabelColors.labelReversed)
-                .background(Color.LabelColors.labelPrimary)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .modifier(DoneButtonLegacyBackground())
         }
+        .interactiveTintGlassIfAvailable(color: Color.LabelColors.labelPrimary)
         .frame(height: 50)
         .frame(maxWidth: .infinity)
         .minimumScaleFactor(0.4)
@@ -182,6 +181,18 @@ struct TaskCalendarSelectorView: View {
                 .foregroundStyle(Color.ButtonColors.remove)
         }
         .padding(.bottom)
+    }
+}
+
+private struct DoneButtonLegacyBackground: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content
+        } else {
+            content
+                .background(Color.LabelColors.labelPrimary)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
     }
 }
 

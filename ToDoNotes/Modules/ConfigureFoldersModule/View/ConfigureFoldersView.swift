@@ -37,7 +37,7 @@ struct ConfigureFoldersView: View {
             systemVStack
             reordableVStack
         }
-        .clipShape(.rect(cornerRadius: 10))
+        .modifier(SystemRowCornerModifier())
         .padding()
         .scrollContentBackground(.hidden)
         .reorderableForEachContainer(active: $viewModel.active)

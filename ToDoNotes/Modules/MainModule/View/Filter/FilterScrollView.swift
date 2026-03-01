@@ -15,14 +15,42 @@ struct FilterScrollView: View {
     // MARK: - Body
     
     internal var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView(.horizontal) {
-                scrollTabsContent(proxy: proxy)
+        Group {
+            if #available(iOS 26.0, *) {
+                segmentedPicker
+            } else {
+                ScrollViewReader { proxy in
+                    ScrollView(.horizontal) {
+                        scrollTabsContent(proxy: proxy)
+                    }
+                }
+                .scrollIndicators(.hidden)
             }
         }
-        .scrollIndicators(.hidden)
     }
     
+    private var segmentedPicker: some View {
+        Picker(String(), selection: Binding(
+            get: { viewModel.selectedFilter },
+            set: { viewModel.setFilter(to: $0) }
+        )) {
+            ForEach(Filter.allCases, id: \.self) { filter in
+                Image(systemName: filter.systemImageName)
+                    .resizable()
+                    .tag(filter)
+                    .accessibilityLabel(filter.name)
+                    .frame(width: 50)
+            }
+            .frame(width: 50)
+        }
+        .pickerStyle(.segmented)
+        .controlSize(.large)
+        .tint(Color.LabelColors.labelPrimary)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal)
+        .padding(.vertical, 6)
+    }
+
     // MARK: - Scroll Content
     
     /// Displays all filter cells inside a horizontally scrolling HStack.

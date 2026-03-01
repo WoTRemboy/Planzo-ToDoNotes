@@ -17,6 +17,7 @@ extension Color {
         static let backPrimary = Color("BackPrimary")
         static let backSecondary = Color("BackSecondary")
         static let backDefault = Color("BackDefault")
+        static let backDefaultGlass = Color("BackDefaultGlass")
         static let backSheet = Color("BackSheet")
         static let backFormCell = Color("BackFormCell")
     }

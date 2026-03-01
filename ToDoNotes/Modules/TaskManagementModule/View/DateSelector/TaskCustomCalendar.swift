@@ -76,7 +76,9 @@ struct TaskCustomCalendar: View {
             Image.TaskManagement.DateSelector.monthBackward
                 .resizable()
                 .frame(width: 20, height: 20)
+                .padding(8)
         }
+        .interactiveGlassIfAvailable()
     }
     
     /// Button to navigate forward.
@@ -89,7 +91,9 @@ struct TaskCustomCalendar: View {
             Image.TaskManagement.DateSelector.monthForward
                 .resizable()
                 .frame(width: 20, height: 20)
+                .padding(8)
         }
+        .interactiveGlassIfAvailable()
     }
     
     // MARK: - Calendar Subviews

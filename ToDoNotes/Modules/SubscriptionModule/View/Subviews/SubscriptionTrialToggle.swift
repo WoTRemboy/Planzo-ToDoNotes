@@ -22,16 +22,30 @@ struct SubscriptionTrialToggle: View {
                 .fixedSize()
                 .background(Color.SupportColors.supportButton)
                 .tint(Color.ToggleColors.main)
-                .scaleEffect(0.8)
+                .scaleEffect(scaleValue(0.8))
         }
         .padding()
         .background {
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: radiusValue(20))
                 .foregroundStyle(Color.SupportColors.supportButton)
         }
         .onDisappear {
             viewModel.selectedFreePlan = false
         }
+    }
+    
+    private func scaleValue(_ value: CGFloat) -> CGFloat {
+        if #available(iOS 26.0, *) {
+            return 1
+        }
+        return value
+    }
+    
+    private func radiusValue(_ value: CGFloat) -> CGFloat {
+        if #available(iOS 26.0, *) {
+            return 24
+        }
+        return value
     }
 }
 

@@ -21,7 +21,7 @@ struct SettingSyncFAQView: View {
                 }
             }
             .background(Color.SupportColors.supportButton)
-            .clipShape(.rect(cornerRadius: 10))
+            .modifier(SystemRowCornerModifier())
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

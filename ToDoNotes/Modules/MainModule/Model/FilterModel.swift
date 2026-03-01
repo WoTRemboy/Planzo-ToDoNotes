@@ -36,4 +36,22 @@ enum Filter: CaseIterable {
             return Texts.MainPage.Filter.deleted
         }
     }
+
+    /// Returns the SF Symbol name representing the filter.
+    internal var systemImageName: String {
+        switch self {
+        case .active:
+            return "bolt.circle"
+        case .outdated:
+            return "clock.badge.exclamationmark"
+        case .unsorted:
+            return "tray"
+        case .completed:
+            return "checkmark.circle"
+        case .archived:
+            return "archivebox"
+        case .deleted:
+            return "trash"
+        }
+    }
 }

@@ -16,6 +16,7 @@ struct TaskManagementNavBar: View {
     @ObservedObject private var viewModel: TaskManagementViewModel
     
     @EnvironmentObject private var authService: AuthNetworkService
+    @Namespace private var glassNamespace
     
     /// The task entity being edited/created.
     private let entity: TaskEntity?
@@ -50,13 +51,29 @@ struct TaskManagementNavBar: View {
             
             ZStack(alignment: .top) {
                 // Background color and shadow for the navigation bar
-                Color.SupportColors.supportNavBar
-                    .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
+                background
                 
-                VStack(spacing: 0) {
-                    HStack(spacing: 0) {
+                HStack(spacing: 0) {
+                    if #available(iOS 26.0, *) {
+                        glassActionButton(content: backButtonContent, action: backButtonAction)
+                            .padding(.leading)
+                    } else {
                         backButton  // Back button to dismiss the view
-                        titleLabel  // Title showing today's date
+                    }
+                    titleLabel  // Title showing today's date
+                    if #available(iOS 26.0, *) {
+                        GlassEffectContainer(spacing: 6) {
+                            HStack(spacing: 6) {
+                                if entity != nil, authService.isAuthorized, viewModel.isTaskOwner {
+                                    glassActionButton(content: shareButtonContent, action: shareButtonAction)
+                                }
+                                glassMenuButton(content: moreButtonContent) {
+                                    moreButtonMenu
+                                }
+                            }
+                        }
+                        .padding(.trailing)
+                    } else {
                         if entity != nil, authService.isAuthorized, viewModel.isTaskOwner {
                             shareButton
                         }
@@ -75,21 +92,30 @@ struct TaskManagementNavBar: View {
     /// Back button for dismissing the task management view.
     private var backButton: some View {
         Button {
-            onDismiss()
+            backButtonAction()
         } label: {
-            Image.NavigationBar.hide
-                .resizable()
-                .frame(width: 24, height: 24)
+            backButtonContent
         }
         .padding(.leading)
+    }
+
+    private var backButtonContent: some View {
+        Image.NavigationBar.hide
+            .resizable()
+            .frame(width: 24, height: 24)
+    }
+
+    private func backButtonAction() {
+        onDismiss()
     }
     
     /// Title label showing today's date and weekday.
     private var titleLabel: some View {
         HStack(spacing: 4) {
-            Text(Texts.TaskManagement.today)
-                .font(.system(size: 22, weight: .bold))
-                .padding(.leading)
+            if #available(iOS 26.0, *) {} else {
+                Text(Texts.TaskManagement.today)
+                    .font(.system(size: 22, weight: .bold))
+            }
             
             Text(viewModel.todayDate.shortDate)
                 .font(.system(size: 22, weight: .bold))
@@ -99,55 +125,73 @@ struct TaskManagementNavBar: View {
                 .foregroundStyle(Color.LabelColors.labelSecondary)
                 .padding(.trailing)
         }
+        .padding(.leading, 8)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     private var shareButton: some View {
         Button {
-            isPremium ? viewModel.setSharingTask(to: entity) : viewModel.toggleShowingSubscriptionPage()
+            shareButtonAction()
         } label: {
-            (isPremium ? Image.NavigationBar.share : Image.NavigationBar.premiumShare)
-                .resizable()
-                .frame(width: 24, height: 24)
+            shareButtonContent
         }
         .padding(.trailing)
         .disabled(!viewModel.accessToEdit)
+    }
+
+    private var shareButtonContent: some View {
+        (isPremium ? Image.NavigationBar.share : Image.NavigationBar.premiumShare)
+            .resizable()
+            .frame(width: 24, height: 24)
+    }
+
+    private func shareButtonAction() {
+        isPremium ? viewModel.setSharingTask(to: entity) : viewModel.toggleShowingSubscriptionPage()
     }
     
     /// The menu button for additional task actions (important, pinned, delete, duplicate).
     private var moreButton: some View {
         Menu {
-            if entity?.role != ShareAccess.viewOnly.rawValue {
-                ControlGroup {
-                    importanceButton
-                    pinnedButton
-                    if entity != nil {
-                        deleteButton
-                    }
-                }
-                .controlGroupStyle(.compactMenu)
-            } else {
+            moreButtonMenu
+        } label: {
+            moreButtonContent
+        }
+        .padding(.trailing)
+    }
+
+    private var moreButtonContent: some View {
+        Image.NavigationBar.more
+            .resizable()
+            .frame(width: 24, height: 24)
+    }
+
+    @ViewBuilder
+    private var moreButtonMenu: some View {
+        if entity?.role != ShareAccess.viewOnly.rawValue {
+            ControlGroup {
+                importanceButton
+                pinnedButton
                 if entity != nil {
                     deleteButton
                 }
             }
-            
-            if !viewModel.shareMembers.isEmpty, viewModel.currentRole == .owner {
-                shareSettingsButton
-            }
+            .controlGroupStyle(.compactMenu)
+        } else {
             if entity != nil {
-                duplicateButton
+                deleteButton
             }
-            if !viewModel.shareMembers.isEmpty,
-                viewModel.currentRole == .owner {
-                closeSharingButton
-            }
-        } label: {
-            Image.NavigationBar.more
-                .resizable()
-                .frame(width: 24, height: 24)
         }
-        .padding(.trailing)
+        
+        if !viewModel.shareMembers.isEmpty, viewModel.currentRole == .owner {
+            shareSettingsButton
+        }
+        if entity != nil {
+            duplicateButton
+        }
+        if !viewModel.shareMembers.isEmpty,
+            viewModel.currentRole == .owner {
+            closeSharingButton
+        }
     }
     
     // MARK: - Menu Buttons
@@ -275,6 +319,40 @@ struct TaskManagementNavBar: View {
     
     private var isPremium: Bool {
         authService.currentUser?.isPremium ?? false
+    }
+
+    @ViewBuilder
+    private var background: some View {
+        if #available(iOS 26.0, *) {} else {
+            Color.SupportColors.supportNavBar
+                .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
+        }
+    }
+
+    @available(iOS 26.0, *)
+    @ViewBuilder
+    private func glassActionButton<Content: View>(content: Content, action: @escaping () -> Void) -> some View {
+        Button {
+            action()
+        } label: {
+            content
+                .padding(8)
+        }
+        .glassEffect(.regular.interactive())
+        .glassEffectUnion(id: "TaskManagementNavBarActions", namespace: glassNamespace)
+    }
+
+    @available(iOS 26.0, *)
+    @ViewBuilder
+    private func glassMenuButton<Content: View>(content: Content, @ViewBuilder menu: () -> some View) -> some View {
+        Menu {
+            menu()
+        } label: {
+            content
+                .padding(8)
+        }
+        .glassEffect(.regular.interactive())
+        .glassEffectUnion(id: "TaskManagementNavBarActions", namespace: glassNamespace)
     }
 }
 

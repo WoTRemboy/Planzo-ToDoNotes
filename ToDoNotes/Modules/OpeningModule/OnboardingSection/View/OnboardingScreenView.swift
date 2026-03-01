@@ -29,6 +29,8 @@ struct OnboardingScreenView: View {
     /// Current page tracker for the pager.
     @StateObject private var page: Page = .first()
     
+    @State private var ios26PageIndex: Int = 0
+    
     /// Apple authentication service.
     @StateObject private var appleAuthService: AppleAuthService
     
@@ -64,24 +66,13 @@ struct OnboardingScreenView: View {
             }
         } else {
             // Displays onboarding flow
-            VStack(spacing: 0) {
-                content
-                progressCircles
-                selectPageButtons
-                
-                if viewModel.isLastPage(current: page.index) {
-                    signInButtons
-                        .disabled(viewModel.isAuthorizing)
-                    termsPolicyLabel
-                        .padding([.top, .horizontal])
-                        .padding(.bottom, hasNotch() ? 4 : 0)
+            Group {
+                if #available(iOS 26.0, *) {
+                    ios26Onboarding
                 } else {
-                    skipButton
+                    legacyOnboarding
                 }
-                
             }
-            .padding(.vertical)
-            
             .popView(isPresented: $viewModel.showingErrorAlert, onTap: {}, onDismiss: {}) {
                 errorAlert
             }
@@ -91,6 +82,72 @@ struct OnboardingScreenView: View {
         }
     }
     
+    private var ios26Items: [iOS26OnboardingItem] {
+        iOS26OnboardingItem.stepsSetup()
+    }
+
+    private var ios26IsLastPage: Bool {
+        ios26PageIndex == ios26Items.count - 1
+    }
+
+    @available(iOS 26.0, *)
+    private var ios26Onboarding: some View {
+        VStack(spacing: 0) {
+            iOS26StyleOnBoarding(
+                items: ios26Items,
+                currentIndex: $ios26PageIndex,
+                onComplete: viewModel.transferToMainPage
+            )
+
+//            if ios26IsLastPage {
+//                signInButtons
+//                    .disabled(viewModel.isAuthorizing)
+//                termsPolicyLabel
+//                    .padding([.top, .horizontal])
+//                    .padding(.bottom, hasNotch() ? 4 : 0)
+//            } else {
+//                ios26SkipButton
+//            }
+        }
+        .padding(.vertical)
+    }
+
+    private var legacyOnboarding: some View {
+        VStack(spacing: 0) {
+            content
+            progressCircles
+            selectPageButtons
+
+            if viewModel.isLastPage(current: page.index) {
+                signInButtons
+                    .disabled(viewModel.isAuthorizing)
+                termsPolicyLabel
+                    .padding([.top, .horizontal])
+                    .padding(.bottom, hasNotch() ? 4 : 0)
+            } else {
+                skipButton
+            }
+        }
+        .padding(.vertical)
+    }
+
+    private var ios26SkipButton: some View {
+        Text(Texts.OnboardingPage.skip)
+            .font(.system(size: 14))
+            .fontWeight(.medium)
+            .foregroundStyle(Color.LabelColors.labelPrimary)
+            .padding(.top)
+            .padding(.bottom, hasNotch() ? 20 : 16)
+            .onTapGesture {
+                if !ios26IsLastPage {
+                    withAnimation(.easeInOut) {
+                        ios26PageIndex = max(ios26Items.count - 1, 0)
+                    }
+                }
+            }
+            .animation(.easeInOut, value: ios26PageIndex)
+    }
+
     // MARK: - Pager Content
     
     /// Displays onboarding pages with images and titles inside a pager.

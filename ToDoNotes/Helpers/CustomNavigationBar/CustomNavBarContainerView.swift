@@ -32,28 +32,48 @@ struct CustomNavBarContainerView<Content: View>: View {
     // MARK: - Body
     
     internal var body: some View {
-        VStack(spacing: 0) {
-            // Top navigation bar with dynamic title and back button
-            CustomNavBar(
+        content
+            .onPreferenceChange(CustomNavBarTitlePreferenceKey.self, perform: { value in
+                // Updates the navigation bar title when preference changes
+                self.title = value
+            })
+            .onPreferenceChange(CustomNavBarBackButtonPreferenceKey.self, perform: { value in
+                // Updates the back button visibility when preference changes
+                self.showBackButton = value
+            })
+            .onPreferenceChange(CustomNavTitlePositionPreferenceKey.self, perform: { value in
+                // Updates the back button visibility when preference changes
+                self.position = value
+            })
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .customNavBarContainer(
                 title: title,
                 showBackButton: showBackButton,
                 position: position)
-            
-            content
+    }
+}
+
+private extension View {
+    func customNavBarContainer(title: String,
+                               showBackButton: Bool,
+                               position: NavTitlePosition) -> some View {
+        Group {
+            if #available(iOS 26.0, *) {
+                self.safeAreaBar(edge: .top) {
+                    CustomNavBar(
+                        title: title,
+                        showBackButton: showBackButton,
+                        position: position)
+                }
+            } else {
+                self.safeAreaInset(edge: .top) {
+                    CustomNavBar(
+                        title: title,
+                        showBackButton: showBackButton,
+                        position: position)
+                }
+            }
         }
-        .onPreferenceChange(CustomNavBarTitlePreferenceKey.self, perform: { value in
-            // Updates the navigation bar title when preference changes
-            self.title = value
-        })
-        .onPreferenceChange(CustomNavBarBackButtonPreferenceKey.self, perform: { value in
-            // Updates the back button visibility when preference changes
-            self.showBackButton = value
-        })
-        .onPreferenceChange(CustomNavTitlePositionPreferenceKey.self, perform: { value in
-            // Updates the back button visibility when preference changes
-            self.position = value
-        })
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 }
 
