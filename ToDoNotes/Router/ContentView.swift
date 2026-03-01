@@ -22,6 +22,10 @@ struct ContentView: View {
     @StateObject private var settingsVM: SettingsViewModel
     
     @EnvironmentObject private var networkService: AuthNetworkService
+    @EnvironmentObject private var passcodeManager: PasscodeManager
+    @Environment(\.scenePhase) private var scenePhase
+    
+    @State private var showingResetAuth = false
     
     // MARK: - Initialization
     
@@ -41,8 +45,10 @@ struct ContentView: View {
         appearance.shadowImage = nil
         appearance.shadowColor = nil
 
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
+        if #available(iOS 26.0, *) {} else {
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
     }
     
     // MARK: - Body
@@ -70,6 +76,31 @@ struct ContentView: View {
         }
         .accentColor(Color.LabelColors.labelPrimary)
         .environmentObject(router)
+        .environmentObject(settingsVM)
+        .onChange(of: scenePhase) { _, newPhase in
+            switch newPhase {
+            case .active:
+                passcodeManager.refreshBiometricsAvailability()
+            case .background:
+                passcodeManager.lockIfNeeded()
+            case .inactive:
+                break
+            @unknown default:
+                break
+            }
+        }
+        .onChange(of: passcodeManager.shouldShowResetAuth) { _, newValue in
+            if newValue {
+                showingResetAuth = true
+                passcodeManager.shouldShowResetAuth = false
+            }
+        }
+        .fullScreenCover(isPresented: $showingResetAuth) {
+            PasscodeResetAuthorizationView(networkService: networkService)
+                .environmentObject(networkService)
+                .environmentObject(settingsVM)
+                .environmentObject(passcodeManager)
+        }
     }
 }
 
@@ -78,6 +109,8 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environment(\.managedObjectContext, CoreDataProvider.shared.persistentContainer.viewContext)
+        .environmentObject(PasscodeManager())
+        .environmentObject(AuthNetworkService())
 }
 
 // MARK: - UITabBarController Shadow Extension
@@ -87,7 +120,9 @@ struct ContentView: View {
 extension UITabBarController {
     public override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        tabBarShadowSetup()
+        if #available(iOS 26.0, *) {} else {
+            tabBarShadowSetup()
+        }
     }
     
     private func tabBarShadowSetup() {

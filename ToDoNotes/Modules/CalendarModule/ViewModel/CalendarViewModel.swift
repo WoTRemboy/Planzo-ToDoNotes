@@ -23,6 +23,10 @@ final class CalendarViewModel: ObservableObject {
     /// Defines the presentation style for creating a new task (popup or full screen).
     @AppStorage(Texts.UserDefaults.taskCreation)
     private var taskCreationFullScreen: TaskCreation = .popup
+
+    /// Stores the calendar display mode between launches (month/week).
+    @AppStorage(Texts.UserDefaults.calendarDisplayMode)
+    private var storedDisplayMode: String = CalendarDisplayMode.month.rawValue
     
     // MARK: - Published Properties (View State)
     
@@ -40,7 +44,24 @@ final class CalendarViewModel: ObservableObject {
     @Published internal var sharingTask: TaskEntity? = nil
     @Published internal var selectedTaskFolder: Folder = .mock()
     /// The date currently selected in the calendar (defaults to today).
-    @Published internal var selectedDate: Date = .now.startOfDay
+    @Published internal var selectedDate: Date = .now.startOfDay {
+        didSet {
+            guard displayMode == .week else { return }
+            updateDays()
+            let newDate = selectedDate.startOfDay
+            if calendarDate != newDate {
+                calendarDate = newDate
+            }
+        }
+    }
+
+    /// The current display mode for the calendar.
+    @Published internal var displayMode: CalendarDisplayMode = .month {
+        didSet {
+            storedDisplayMode = displayMode.rawValue
+            calendarDate = selectedDate.startOfDay
+        }
+    }
     
     /// Height of the task creation or editing panel.
     @Published internal var taskManagementHeight: CGFloat = 15
@@ -49,10 +70,18 @@ final class CalendarViewModel: ObservableObject {
     @Published internal var calendarDate: Date = Date.now {
         didSet {
             updateDays()
-            selectDay()
+            switch displayMode {
+            case .month:
+                selectDay()
+            case .week:
+                let newDate = Calendar.current.startOfDay(for: calendarDate)
+                if selectedDate != newDate {
+                    selectedDate = newDate
+                }
+            }
         }
     }
-    
+
     /// Days to display in the custom calendar grid.
     @Published internal var days: [Date] = []
     /// Names of the weekdays with capitalized first letters, localized.
@@ -74,6 +103,7 @@ final class CalendarViewModel: ObservableObject {
     
     /// Initializes the ViewModel and sets up the initial days array.
     init() {
+        displayMode = CalendarDisplayMode(rawValue: storedDisplayMode) ?? .month
         updateDays()
         daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
         NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: .main) { [weak self] _ in
@@ -120,7 +150,12 @@ final class CalendarViewModel: ObservableObject {
     
     /// Updates the array of days to display when the calendar month/year changes.
     private func updateDays() {
-        days = calendarDate.calendarDisplayDays
+        switch displayMode {
+        case .month:
+            days = calendarDate.calendarDisplayDays
+        case .week:
+            days = selectedDate.weekDisplayDays
+        }
     }
     
     /// Updates the selected date to the start of the month (or selected day).
@@ -131,7 +166,39 @@ final class CalendarViewModel: ObservableObject {
     /// Restores today's date as the selected and displayed date, unless already showing today.
     internal func restoreTodayDate() {
         guard selectedDate != .now.startOfDay else { return }
-        calendarDate = .now.startOfDay
+        if displayMode == .week {
+            selectedDate = .now.startOfDay
+        } else {
+            calendarDate = .now.startOfDay
+        }
+    }
+
+    /// Move the calendar month forward or backward.
+    internal func calendarMonthMove(for direction: CalendarMovement) {
+        let value: Int
+        switch direction {
+        case .forward:
+            value = 1
+        case .backward:
+            value = -1
+        }
+        if let newDate = Calendar.current.date(byAdding: .month, value: value, to: calendarDate) {
+            calendarDate = newDate
+        }
+    }
+
+    /// Move the calendar week forward or backward.
+    internal func calendarWeekMove(for direction: CalendarMovement) {
+        let value: Int
+        switch direction {
+        case .forward:
+            value = 7
+        case .backward:
+            value = -7
+        }
+        if let newDate = Calendar.current.date(byAdding: .day, value: value, to: selectedDate) {
+            selectedDate = newDate.startOfDay
+        }
     }
     
     internal func toggleShowingShareSheet() {

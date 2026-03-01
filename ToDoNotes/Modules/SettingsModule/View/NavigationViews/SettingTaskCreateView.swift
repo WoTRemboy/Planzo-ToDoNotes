@@ -44,7 +44,7 @@ struct SettingTaskCreateView: View {
         }
         .padding(32)
         .background(Color.SupportColors.supportButton)
-        .clipShape(.rect(cornerRadius: 10))
+        .modifier(SystemRowCornerModifier())
         
     }
     

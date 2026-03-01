@@ -42,13 +42,21 @@ struct SettingsView: View {
     
     internal var body: some View {
         ZStack {
-            VStack(spacing: 0) {
-                SettingsNavBar()
-                    .zIndex(1)
-                
+            let base = VStack(spacing: 0) {
                 settingsList
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+
+            if #available(iOS 26.0, *) {
+                base.safeAreaBar(edge: .top) {
+                    SettingsNavBar()
+                }
+            } else {
+                base.safeAreaInset(edge: .top) {
+                    SettingsNavBar()
+                        .zIndex(1)
+                }
+            }
         }
         .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {
             SubscriptionView(namespace: namespace, networkService: authService)
@@ -139,14 +147,14 @@ struct SettingsView: View {
                         }
                     languageButton
                 }
-                .clipShape(.rect(cornerRadius: 10))
+                .modifier(SystemRowCornerModifier())
                 .padding(.horizontal)
                 
                 VStack(spacing: 0) {
                     taskCreationSettingsButton
                     weekFirstDayButton
                 }
-                .clipShape(.rect(cornerRadius: 10))
+                .modifier(SystemRowCornerModifier())
                 .padding(.horizontal)
                 
                 aboutAppButton
@@ -181,7 +189,7 @@ struct SettingsView: View {
                     .transition(.blurReplace)
             }
         }
-        .clipShape(.rect(cornerRadius: 10))
+        .modifier(SystemRowCornerModifier())
         .padding([.horizontal, .top])
         .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
     }
@@ -255,7 +263,7 @@ struct SettingsView: View {
         } label: {
             SubscriptionPromoteRow()
         }
-        .clipShape(.rect(cornerRadius: 10))
+        .modifier(SystemRowCornerModifier())
         .transition(.blurReplace)
         .padding(.horizontal)
         .animation(.easeInOut(duration: 0.25), value: authService.currentUser?.isPremium)
@@ -273,7 +281,7 @@ struct SettingsView: View {
                     chevron: true,
                     last: true)
             })
-        .clipShape(.rect(cornerRadius: 10))
+        .modifier(SystemRowCornerModifier())
         .padding(.horizontal)
     }
     
@@ -311,11 +319,19 @@ struct SettingsView: View {
             .fixedSize()
             .background(Color.SupportColors.supportButton)
             .tint(Color.ToggleColors.notifications)
-            .scaleEffect(0.8)
+            .scaleEffect(toggleScale)
         
             .onChange(of: viewModel.notificationsEnabled) { _, newValue in
                 setNotificationsStatus(allowed: newValue)
             }
+    }
+    
+    private var toggleScale: CGFloat {
+        if #available(iOS 26.0, *) {
+            return 1
+        } else {
+            return 0.8
+        }
     }
     
     /// Button to prompt language settings update.
@@ -401,7 +417,7 @@ struct SettingsView: View {
                         chevron: true,
                         last: true)
                 }
-                .clipShape(.rect(cornerRadius: 10))
+                .modifier(SystemRowCornerModifier())
                 .padding(.horizontal)
     }
     
@@ -413,7 +429,7 @@ struct SettingsView: View {
                 } label: {
                     SettingLogoutButton()
                 }
-                .clipShape(.rect(cornerRadius: 10))
+                .modifier(SystemRowCornerModifier())
                 .padding(.horizontal)
                 .transition(.blurReplace)
             }
@@ -519,7 +535,7 @@ struct SettingsView: View {
                 chevron: false,
                 last: true)
         }
-        .clipShape(.rect(cornerRadius: 10))
+        .modifier(SystemRowCornerModifier())
         .padding(.horizontal)
     }
     #endif

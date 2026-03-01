@@ -17,6 +17,8 @@ struct SearchBar: View {
     
     /// Focus state to manage the keyboard focus on the search text field.
     @FocusState private var isFocused: Bool
+    @State private var showCancelButtonIOS26: Bool = false
+    @Namespace private var glassNamespace
     
     /// Closure to be called when the cancel button is tapped.
     private var onCancel: () -> Void
@@ -37,19 +39,39 @@ struct SearchBar: View {
     /// The main view body containing the search text field and the cancel button.
     internal var body: some View {
         // Horizontal stack containing the search text field and the cancel button
-        HStack(spacing: 0) {
-            // Search text field with clear button overlay
-            searchTextField
-                .focused($isFocused)
-                .onAppear {
-                    isFocused = true
+        Group {
+            if #available(iOS 26.0, *) {
+                searchContainerIOS26
+                    .focused($isFocused)
+                    .onAppear {
+                        isFocused = true
+                        showCancelButtonIOS26 = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                showCancelButtonIOS26 = true
+                            }
+                        }
+                    }
+                    .onDisappear {
+                        clearTextField()
+                        showCancelButtonIOS26 = false
+                    }
+            } else {
+                HStack(spacing: 0) {
+                    // Search text field with clear button overlay
+                    searchTextField
+                        .focused($isFocused)
+                        .onAppear {
+                            isFocused = true
+                        }
+                        .onDisappear {
+                            clearTextField()
+                        }
+                    
+                    // Cancel button to dismiss the search
+                    cancelButton
                 }
-                .onDisappear {
-                    clearTextField()
-                }
-            
-            // Cancel button to dismiss the search
-            cancelButton
+            }
         }
         .padding(.horizontal)
     }
@@ -111,6 +133,60 @@ struct SearchBar: View {
         }
         .transition(.move(edge: .trailing))
         .padding(.leading)
+    }
+    
+    /// The search text field style for iOS 26+ (Liquid Glass).
+    @available(iOS 26.0, *)
+    private var searchTextFieldIOS26: some View {
+        HStack(spacing: 8) {
+            Image.NavigationBar.SearchBar.glass
+                .padding(.leading, 10)
+            TextField(Texts.SearchBar.placeholder, text: $text)
+                .font(.system(size: 17, weight: .regular))
+                .foregroundStyle(Color.LabelColors.labelPrimary)
+                .overlay(alignment: .trailing) {
+                    if !text.isEmpty {
+                        clearButton
+                            .padding(.trailing, 8)
+                    }
+                }
+        }
+        .glassEffectID("searchTextField", in: glassNamespace)
+        .frame(maxHeight: .infinity)
+        .glassEffect(.regular.interactive())
+    }
+
+    /// The combined container for iOS 26+ search field and cancel button.
+    @available(iOS 26.0, *)
+    private var searchContainerIOS26: some View {
+        GlassEffectContainer(spacing: 8) {
+            HStack(spacing: 8) {
+                searchTextFieldIOS26
+                if showCancelButtonIOS26 {
+                    cancelButtonIOS26
+                }
+            }
+            .frame(height: 44)
+        }
+    }
+
+    /// The cancel button for iOS 26+ (Liquid Glass, circular).
+    @available(iOS 26.0, *)
+    private var cancelButtonIOS26: some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                dismissKeyboard()
+                onCancel()
+            }
+        } label: {
+            Image.Settings.Passcode.close
+                .resizable()
+                .scaledToFit()
+                .padding(8)
+                .frame(maxHeight: .infinity)
+        }
+        .glassEffectID("searchCancel", in: glassNamespace)
+        .glassEffect(.regular.interactive())
     }
 }
 

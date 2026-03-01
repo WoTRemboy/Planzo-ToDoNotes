@@ -1,0 +1,22 @@
+{
+  "images" : [
+    {
+      "filename" : "Simulator Screenshot - iPhone 16 - 2026-03-01 at 04.26.37.png",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "Simulator Screenshot - iPhone 16 - 2026-03-01 at 04.26.34.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

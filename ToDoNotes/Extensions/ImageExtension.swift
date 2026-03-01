@@ -118,6 +118,11 @@ extension Image {
             static let popup = Image("TaskCreationPopup")
             static let fullScreen = Image("TaskCreationFullScreen")
         }
+        
+        enum Passcode {
+            static let delete = Image("PasscodeDeleteLeft")
+            static let close = Image("PasscodeClose")
+        }
     }
     
     // MARK: - Selector Images
@@ -246,5 +251,13 @@ extension UIImage {
         static let pinnedDeselect = UIImage(named: "EditTaskPinnedOnIcon")
         static let copy = UIImage(named: "EditTaskCopyIcon")
         static let trash = UIImage(named: "EditTaskTrashIcon")
+    }
+    
+    enum Onboarding {
+        static let first = UIImage(named: "NewOnboardingFirst")
+        static let second = UIImage(named: "NewOnboardingSecond")
+        static let third = UIImage(named: "NewOnboardingThird")
+        static let fourth = UIImage(named: "NewOnboardingFourth")
+        static let fifth = UIImage(named: "NewOnboardingFifth")
     }
 }

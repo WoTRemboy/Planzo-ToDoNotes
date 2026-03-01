@@ -21,7 +21,7 @@ struct SettingsNavBar: View {
             ZStack(alignment: .top) {
                 navBarBackground
                 titleLabel
-                    .padding(.top, topInset + 9.5)
+                    .padding(.top, topInset + topPaddingAdjustment)
             }
             .ignoresSafeArea(edges: .top)
         }
@@ -31,11 +31,22 @@ struct SettingsNavBar: View {
     // MARK: - Components
     
     /// The background color and shadow for the navigation bar.
+    @ViewBuilder
     private var navBarBackground: some View {
-        Color.SupportColors.supportNavBar
-            .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
+        if #available(iOS 26.0, *) {} else {
+            Color.SupportColors.supportNavBar
+                .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
+        }
     }
     
+    private var topPaddingAdjustment: CGFloat {
+        if #available(iOS 26.0, *) {
+            return 16
+        } else {
+            return 9.5
+        }
+    }
+
     /// The title label of the navigation bar.
     private var titleLabel: some View {
         Text(Texts.Settings.title)

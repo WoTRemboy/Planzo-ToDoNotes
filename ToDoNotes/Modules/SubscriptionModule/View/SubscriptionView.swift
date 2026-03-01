@@ -52,22 +52,28 @@ struct SubscriptionView: View {
     
     internal var body: some View {
         ZStack {
-            VStack(spacing: 0) {
+            let base = subscriptionContent
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            
+            if #available(iOS 26.0, *) {
+                base.safeAreaBar(edge: .top) {
+                    SubscriptionNavBar(
+                        title: Texts.Subscription.SubType.proPlan,
+                        showBackButton: true)
+                }
+        } else {
+            base.safeAreaInset(edge: .top) {
                 SubscriptionNavBar(
                     title: Texts.Subscription.SubType.proPlan,
                     showBackButton: true)
                 .zIndex(1)
-                
-                subscriptionContent
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
-        .safeAreaInset(edge: .bottom) {
-            safeAreaContent
-        }
-        .popView(isPresented: $viewModel.showingErrorAlert, onTap: {}, onDismiss: {}) {
-            errorAlert
-        }
+    }
+        .modifier(SafeAreaContentModifier(safeAreaContent: safeAreaContent))
+    .popView(isPresented: $viewModel.showingErrorAlert, onTap: {}, onDismiss: {}) {
+        errorAlert
+    }
         .popView(isPresented: $showingProductsError, onTap: {}, onDismiss: {
             dismiss()
         }) {
@@ -152,9 +158,11 @@ struct SubscriptionView: View {
         }
         .frame(maxWidth: .infinity)
         .background {
-            Color.SupportColors.supportNavBar
-                .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: -5)
-                .ignoresSafeArea()
+            if #available(iOS 26.0, *) {} else {
+                Color.SupportColors.supportNavBar
+                    .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: -5)
+                    .ignoresSafeArea()
+            }
         }
         .animation(.easeInOut(duration: 0.2), value: authService.isAuthorized)
     }
@@ -248,9 +256,9 @@ struct SubscriptionView: View {
                 .contentTransition(.numericText())
             
                 .foregroundColor(Color.LabelColors.labelReversed)
-                .background(Color.LabelColors.labelPrimary)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .modifier(ContinueButtonLegacyBackground())
         }
+        .interactiveTintGlassIfAvailable(color: Color.LabelColors.labelPrimary)
         .frame(height: 50)
         .disabled(subscription.purchasingProductId != nil || (subscription.status == .loading))
         .frame(maxWidth: .infinity)
@@ -285,6 +293,35 @@ struct SubscriptionView: View {
             primaryAction: {
                 viewModel.toggleShowingErrorAlert()
             })
+    }
+}
+
+private struct SafeAreaContentModifier<BarContent: View>: ViewModifier {
+    let safeAreaContent: BarContent
+
+    @ViewBuilder
+    func body(content base: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            base.safeAreaBar(edge: .bottom) {
+                safeAreaContent
+            }
+        } else {
+            base.safeAreaInset(edge: .bottom) {
+                safeAreaContent
+            }
+        }
+    }
+}
+
+private struct ContinueButtonLegacyBackground: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content
+        } else {
+            content
+                .background(Color.LabelColors.labelPrimary)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
     }
 }
 

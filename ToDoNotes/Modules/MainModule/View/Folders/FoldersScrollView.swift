@@ -15,6 +15,7 @@ struct FoldersScrollView: View {
     @EnvironmentObject private var authService: AuthNetworkService
     /// Namespace for matched geometry effects between selected folders.
     @Namespace private var animation
+    @Namespace private var glassNamespace
     
     // MARK: - Body
     
@@ -36,13 +37,6 @@ struct FoldersScrollView: View {
                 }
             }
             .scrollIndicators(.hidden)
-            
-//            Divider()
-//                .foregroundStyle(Color.LabelColors.labelPrimary)
-//                .frame(height: 36)
-//                .offset(x: -8)
-//            
-//            configFoldersButton
         }
     }
     
@@ -52,34 +46,122 @@ struct FoldersScrollView: View {
     /// Highlights the selected folder with a visual effect.
     @ViewBuilder
     private func scrollContent(proxy: ScrollViewProxy) -> some View {
-        HStack(alignment: .bottom, spacing: 0) {
-            ForEach(viewModel.folders, id: \.id) { folder in
-                FolderCell(folder: folder,
-                           selected: viewModel.compareFolders(with: folder), namespace: animation)
-                .id(folder)
-                .onTapGesture {
-                    viewModel.setFolder(to: folder)
-                    // Smoothly scrolls to the selected folder
-                    withAnimation {
-                        proxy.scrollTo(folder, anchor: .center)
+        if #available(iOS 26.0, *) {
+            GlassEffectContainer(spacing: 10) {
+                LazyHStack(spacing: 10) {
+                    ForEach(viewModel.folders, id: \.id) { folder in
+                        folderBubble(folder)
+                            .id(folder)
+                            .onTapGesture {
+                                viewModel.setFolder(to: folder)
+                                // Smoothly scrolls to the selected folder
+                                withAnimation {
+                                    proxy.scrollTo(folder, anchor: .center)
+                                }
+                            }
                     }
                 }
             }
+            .glassEffectUnion(id: "FoldersBubbles", namespace: glassNamespace)
+            .padding(.horizontal)
+            .padding(.vertical, 2)
+            .animation(.easeInOut(duration: 0.2), value: viewModel.folders)
+        } else {
+            LazyHStack(alignment: .bottom, spacing: 0) {
+                ForEach(viewModel.folders, id: \.id) { folder in
+                    FolderCell(folder: folder,
+                               selected: viewModel.compareFolders(with: folder), namespace: animation)
+                    .id(folder)
+                    .onTapGesture {
+                        viewModel.setFolder(to: folder)
+                        // Smoothly scrolls to the selected folder
+                        withAnimation {
+                            proxy.scrollTo(folder, anchor: .center)
+                        }
+                    }
+                }
+            }
+            .animation(.easeInOut(duration: 0.2), value: viewModel.folders)
+            .frame(height: 36)
+            .padding(.horizontal)
         }
-        .animation(.easeInOut(duration: 0.2), value: viewModel.folders)
-        .frame(height: 36)
-        .padding(.horizontal)
+    }
+
+    @available(iOS 26.0, *)
+    private func folderBubble(_ folder: Folder) -> some View {
+        let isSelected = viewModel.compareFolders(with: folder)
+        let color = folderColor(folder)
+        let textColor = folderTextColor(folder: folder, selected: isSelected, color: color)
+
+        return HStack(alignment: .center, spacing: 6) {
+            if !folder.shared {
+                Text(folder.localizedName)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(textColor)
+            }
+
+            if folder.shared {
+                Image.Folder.shared
+                    .renderingMode(.template)
+                    .resizable()
+                    .foregroundStyle(textColor)
+                    .frame(width: 20, height: 20)
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(isSelected ? color : Color.BackColors.backElevated)
+                .shadow(color: Color.ShadowColors.navBar, radius: 6, x: 0, y: 0)
+        )
+        .contentShape(.rect)
+        .glassEffect(.clear.interactive())
+        .animation(.easeInOut(duration: 0.2), value: isSelected)
+    }
+
+    private func folderColor(_ folder: Folder) -> Color {
+        if folder.system {
+            Color.FolderColors.all
+        } else {
+            folder.color.rgbToColor()
+        }
+    }
+
+    private func folderTextColor(folder: Folder, selected: Bool, color: Color) -> Color {
+        if selected, folder.system {
+            return Color.LabelColors.labelReversed
+        }
+        if selected {
+            return Color.LabelColors.labelBlack
+        }
+        return color
     }
     
     // MARK: - Folder Menu
     
     /// Displays a menu button that opens a `Picker` for choosing a folder.
     private var folderMenu: some View {
-        Menu {
-            allFoldersPicker
-        } label: {
-            Image.Folder.navBar
-                .frame(width: 24, height: 24)
+        Group {
+            if #available(iOS 26.0, *) {
+                GlassEffectContainer(spacing: 0) {
+                    Menu {
+                        allFoldersPicker
+                    } label: {
+                        Image.Folder.navBar
+                            .frame(width: 20, height: 20)
+                            .padding(12)
+                    }
+                }
+                .glassEffect(.regular.interactive())
+            } else {
+                Menu {
+                    allFoldersPicker
+                } label: {
+                    Image.Folder.navBar
+                        .frame(width: 24, height: 24)
+                }
+            }
         }
         .padding(.leading)
     }

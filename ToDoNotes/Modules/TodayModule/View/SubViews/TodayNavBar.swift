@@ -15,6 +15,8 @@ struct TodayNavBar: View {
     
     /// View model for controlling search and importance states.
     @EnvironmentObject private var viewModel: TodayViewModel
+    @Namespace private var glassNamespace
+    private let searchMorphID = "TodayNavBarSearchMorph"
     
     /// A string representing today's date.
     private let date: String
@@ -40,7 +42,9 @@ struct TodayNavBar: View {
             
             ZStack(alignment: .top) {
                 // Background color with shadow
-                background
+                if #available(iOS 26.0, *) {} else {
+                    background
+                }
                 
                 VStack(spacing: 0) {
                     if viewModel.showingSearchBar {
@@ -61,9 +65,12 @@ struct TodayNavBar: View {
     // MARK: - Subviews
     
     /// Background of the navigation bar with shadow.
+    @ViewBuilder
     private var background: some View {
-        Color.SupportColors.supportNavBar
-            .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
+        if #available(iOS 26.0, *) {} else {
+            Color.SupportColors.supportNavBar
+                .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
+        }
     }
     
     /// Main navigation content with title and action buttons.
@@ -100,39 +107,89 @@ struct TodayNavBar: View {
     
     /// Displays action buttons for search and important toggle.
     private var actionButtons: some View {
-        HStack(spacing: 20) {
-            searchButton
-            importantButton
+        Group {
+            if #available(iOS 26.0, *) {
+                GlassEffectContainer(spacing: 6) {
+                    HStack(spacing: 6) {
+                        glassActionButton(content: searchButtonContent,
+                                          action: searchAction)
+                        glassActionButton(content: importantButtonContent,
+                                          action: importantAction)
+                    }
+                }
+            } else {
+                HStack(spacing: 20) {
+                    searchButton
+                    importantButton
+                }
+            }
         }
         .padding(.horizontal, 16)
     }
     
-    /// Button to toggle the search bar.
-    private var searchButton: some View {
-        Button {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                viewModel.toggleShowingSearchBar()
-            }
-        } label: {
+    @ViewBuilder
+    private var searchButtonContent: some View {
+        if #available(iOS 26.0, *) {
             Image.NavigationBar.search
                 .resizable()
                 .frame(width: 26, height: 26)
+                .matchedGeometryEffect(id: searchMorphID, in: glassNamespace)
+        } else {
+            Image.NavigationBar.search
+                .resizable()
+                .frame(width: 26, height: 26)
+        }
+    }
+
+    private var importantButtonContent: some View {
+        (viewModel.importance
+         ? Image.NavigationBar.MainTodayPages.importantDeselect
+         : Image.NavigationBar.MainTodayPages.importantSelect)
+        .resizable()
+        .frame(width: 26, height: 26)
+        .shadow(color: Color.ShadowColors.navBar,
+                radius: viewModel.importance ? 5 : 0)
+    }
+
+    private func searchAction() {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            viewModel.toggleShowingSearchBar()
+        }
+    }
+
+    private func importantAction() {
+        viewModel.toggleImportance()
+    }
+
+    /// Button to toggle the search bar.
+    private var searchButton: some View {
+        Button {
+            searchAction()
+        } label: {
+            searchButtonContent
         }
     }
     
     /// Button to toggle the importance filter.
     private var importantButton: some View {
         Button {
-            viewModel.toggleImportance()
+            importantAction()
         } label: {
-            (viewModel.importance
-             ? Image.NavigationBar.MainTodayPages.importantDeselect
-             : Image.NavigationBar.MainTodayPages.importantSelect)
-            .resizable()
-            .frame(width: 26, height: 26)
-            .shadow(color: Color.ShadowColors.navBar,
-                    radius: viewModel.importance ? 5 : 0)
+            importantButtonContent
         }
+    }
+
+    @available(iOS 26.0, *)
+    @ViewBuilder
+    private func glassActionButton<Content: View>(content: Content, action: @escaping () -> Void) -> some View {
+        Button {
+            action()
+        } label: {
+            content
+                .padding(8)
+        }
+        .glassEffect(.regular.interactive())
+        .glassEffectUnion(id: "TodayNavBarActions", namespace: glassNamespace)
     }
 }
 

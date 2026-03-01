@@ -24,6 +24,7 @@ struct MainView: View {
     
     /// Used for smooth matched geometry transitions between floating buttons and task management screens.
     @Namespace private var animation
+    @Namespace private var glassNamespace
     /// Tip to introduce the overview feature.
     private let overviewTip = MainPageOverview()
     @State private var folderSetupTask: TaskEntity?
@@ -79,7 +80,7 @@ struct MainView: View {
                     viewModel.toggleShowingCreateView()
                     viewModel.setFilter(to: .active)
                 }
-                .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
+                .presentationDetents([.height(viewModel.taskManagementHeight + nonMaxSheetExtraHeight())])
                 .presentationDragIndicator(.visible)
         }
         .sheet(item: $viewModel.sharingTask) { task in
@@ -126,14 +127,30 @@ struct MainView: View {
         }
     }
     
+    private var sheetExtraHeight: CGFloat {
+        if #available(iOS 26.0, *) {
+            return 20
+        }
+        return 0
+    }
+
     // MARK: - Main Content Layout
-    
-    /// Displays the navigation bar and task form inside the main screen.
+    @ViewBuilder
     private var content: some View {
-        VStack(spacing: 0) {
-            MainCustomNavBar(title: Texts.MainPage.title, namespace: animation)
-                .zIndex(1)
-            taskForm
+        let base = taskForm
+            .modifier(RefreshModifier(authService: authService))
+            .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
+            .animation(.easeInOut(duration: 0.1), value: viewModel.allTasks.map { $0.folder })
+
+        if #available(iOS 26.0, *) {
+            base.safeAreaBar(edge: .top) {
+                MainCustomNavBar(title: Texts.MainPage.title, namespace: animation)
+            }
+        } else {
+            base.safeAreaInset(edge: .top) {
+                MainCustomNavBar(title: Texts.MainPage.title, namespace: animation)
+                    .zIndex(1)
+            }
         }
     }
     
@@ -165,15 +182,9 @@ struct MainView: View {
                 .listRowBackground(Color.clear)
         }
         .padding(.horizontal, hasNotch() ? -4 : 0)
-        .shadow(color: Color.ShadowColors.taskSection, radius: 10, x: 2, y: 2)
-        .background(Color.BackColors.backDefault)
+        .defaultBackgroundStyle()
         .scrollContentBackground(.hidden)
         .scrollDisabled(filteredSegmentedTasks.isEmpty)
-        
-        .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
-        .animation(.easeInOut(duration: 0.1), value: viewModel.allTasks.map { $0.folder })
-        
-        .modifier(RefreshModifier(authService: authService))
     }
 }
 
@@ -233,21 +244,17 @@ extension MainView {
     
     /// Plus button to create a new task.
     private var plusButton: some View {
-        Button {
-            viewModel.toggleShowingCreateView()
-            overviewTip.invalidate(reason: .tipClosed)
-        } label: {
-            Image.TaskManagement.plus
-                .resizable()
-                .scaledToFit()
-                .frame(width: 58, height: 58)
-        }
-        .matchedGeometryEffect(id: Texts.NamespaceID.floatingButtons, in: animation)
+        FloatingPlusButton(
+            action: {
+                viewModel.toggleShowingCreateView()
+                overviewTip.invalidate(reason: .tipClosed)
+            },
+            namespace: animation,
+            glowAvailable: viewModel.addTaskButtonGlow,
+            matchedGeometryID: Texts.NamespaceID.floatingButtons)
+        .glassEffectUnionIfAvailable(id: "MainFloatingButtons", namespace: glassNamespace)
         .transition(.blurReplace)
-        .navigationTransitionSource(id: Texts.NamespaceID.selectedEntity,
-                                    namespace: animation)
         .padding(.bottom)
-        .glow(available: viewModel.addTaskButtonGlow)
     }
     
     /// Button to remove all deleted tasks.
@@ -255,16 +262,36 @@ extension MainView {
         Button {
             viewModel.toggleShowingTaskRemoveAlert()
         } label: {
-            Text(Texts.MainPage.Filter.RemoveFilter.buttonTitle)
-                .font(.system(size: 17, weight: .regular))
-                .frame(maxWidth: .infinity, maxHeight: 58)
-                .background(Color.LabelColors.labelPrimary)
-                .foregroundColor(Color.LabelColors.labelReversed)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+            if #available(iOS 26.0, *) {
+                Text(Texts.MainPage.Filter.RemoveFilter.buttonTitle)
+                    .font(.system(size: 17, weight: .regular))
+                    .frame(maxWidth: .infinity, minHeight: 58)
+                    .foregroundColor(Color.LabelColors.labelReversed)
+                    .glassEffect(.regular.tint(Color.LabelColors.labelPrimary).interactive())
+                    .glassEffectUnion(id: "MainFloatingButtons", namespace: glassNamespace)
+            } else {
+                Text(Texts.MainPage.Filter.RemoveFilter.buttonTitle)
+                    .font(.system(size: 17, weight: .regular))
+                    .frame(maxWidth: .infinity, maxHeight: 58)
+                    .background(Color.LabelColors.labelPrimary)
+                    .foregroundColor(Color.LabelColors.labelReversed)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
         }
         .matchedGeometryEffect(id: Texts.NamespaceID.floatingButtons, in: animation)
         .transition(.blurReplace)
         .padding(.bottom)
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func glassEffectUnionIfAvailable(id: String, namespace: Namespace.ID) -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffectUnion(id: id, namespace: namespace)
+        } else {
+            self
+        }
     }
 }
 
