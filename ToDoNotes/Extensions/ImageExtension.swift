@@ -252,4 +252,12 @@ extension UIImage {
         static let copy = UIImage(named: "EditTaskCopyIcon")
         static let trash = UIImage(named: "EditTaskTrashIcon")
     }
+    
+    enum Onboarding {
+        static let first = UIImage(named: "NewOnboardingFirst")
+        static let second = UIImage(named: "NewOnboardingSecond")
+        static let third = UIImage(named: "NewOnboardingThird")
+        static let fourth = UIImage(named: "NewOnboardingFourth")
+        static let fifth = UIImage(named: "NewOnboardingFifth")
+    }
 }
