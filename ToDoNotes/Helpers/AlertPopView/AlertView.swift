@@ -55,20 +55,27 @@ struct CustomAlertView: View {
     
     /// The main view body of the alert, containing the text and buttons.
     internal var body: some View {
-        VStack(spacing: 20) {
+        let content = VStack(spacing: 20) {
             textBlock
             buttons
         }
         .frame(width: 320)
-        
-        .background(Color.BackColors.backSecondary)
-        .cornerRadius(12)
-        .shadow(radius: 10)
-        
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
-        )
+
+        Group {
+            if #available(iOS 26.0, *) {
+                content
+                    .glassEffect(.regular, in: .rect(corners: .concentric(minimum: 24)))
+            } else {
+                content
+                    .background(Color.BackColors.backSecondary)
+                    .cornerRadius(12)
+                    .shadow(radius: 10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                    )
+            }
+        }
     }
     
     // MARK: - Components
@@ -114,7 +121,7 @@ struct CustomAlertView: View {
                 .frame(maxWidth: .infinity, maxHeight: 50)
                 .foregroundColor(Color.LabelColors.labelReversed)
                 .background(Color.LabelColors.labelPrimary)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .modifier(SystemRowCornerModifier())
         }
     }
     
@@ -132,11 +139,16 @@ struct CustomAlertView: View {
                 .frame(maxWidth: .infinity, maxHeight: 50)
                 .background(Color.clear)
                 .foregroundColor(Color.LabelColors.labelPrimary)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.LabelColors.labelDetails, lineWidth: 1)
-                )
+                .modifier(SystemRowCornerModifier())
+                .overlay {
+                    if #available(iOS 26.0, *) {
+                        RoundedRectangle(cornerRadius: 24, style: .continuous)
+                            .stroke(Color.LabelColors.labelDetails, lineWidth: 1)
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.LabelColors.labelDetails, lineWidth: 1)
+                    }
+                }
         }
     }
 }

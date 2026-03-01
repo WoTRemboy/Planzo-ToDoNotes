@@ -55,7 +55,7 @@ struct SelectorView<Option: Hashable>: View {
     }
     
     internal var body: some View {
-        VStack(spacing: 20) {
+        let content = VStack(spacing: 20) {
             titleLabel
             optionsList
             
@@ -66,13 +66,22 @@ struct SelectorView<Option: Hashable>: View {
             .padding([.horizontal, .bottom], 6)
         }
         .frame(width: 320)
-        .background(background)
-        .cornerRadius(cornerRadius)
-        .shadow(radius: 10)
-        .overlay(
-            RoundedRectangle(cornerRadius: cornerRadius)
-                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
-        )
+
+        Group {
+            if #available(iOS 26.0, *) {
+                content
+                    .glassEffect(.regular, in: .rect(corners: .concentric(minimum: 24)))
+            } else {
+                content
+                    .background(background)
+                    .cornerRadius(cornerRadius)
+                    .shadow(radius: 10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: cornerRadius)
+                            .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                    )
+            }
+        }
     }
     
     private var titleLabel: some View {
@@ -117,11 +126,15 @@ struct SelectorView<Option: Hashable>: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .foregroundColor(Color.LabelColors.labelPrimary)
             }
-            .clipShape(.rect(cornerRadius: 10))
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.LabelColors.labelDetails, lineWidth: 1)
-            )
+            .overlay {
+                if #available(iOS 26.0, *) {
+                    RoundedRectangle(cornerRadius: 24, style: .continuous)
+                        .stroke(Color.LabelColors.labelDetails, lineWidth: 1)
+                } else {
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.LabelColors.labelDetails, lineWidth: 1)
+                }
+            }
         }
         .frame(height: 50)
         .frame(maxWidth: .infinity)
@@ -138,7 +151,7 @@ struct SelectorView<Option: Hashable>: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .foregroundColor(Color.LabelColors.labelReversed)
             }
-            .clipShape(.rect(cornerRadius: 10))
+            .modifier(SystemRowCornerModifier())
         }
         .frame(height: 50)
         .frame(maxWidth: .infinity)
