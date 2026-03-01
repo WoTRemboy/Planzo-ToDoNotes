@@ -81,7 +81,7 @@ struct CalendarView: View {
                 namespace: animation) {
                     viewModel.toggleShowingTaskCreateView()
                 }
-                .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
+                .presentationDetents([.height(viewModel.taskManagementHeight + nonMaxSheetExtraHeight())])
                 .presentationDragIndicator(.visible)
         }
         .sheet(item: $viewModel.sharingTask) { task in
@@ -111,6 +111,13 @@ struct CalendarView: View {
         }
     }
     
+    private var sheetExtraHeight: CGFloat {
+        if #available(iOS 26.0, *) {
+            return 20
+        }
+        return 0
+    }
+
     // MARK: - Main Content
     
     /// The main vertical stack containing calendar, separator, and task list or placeholder.

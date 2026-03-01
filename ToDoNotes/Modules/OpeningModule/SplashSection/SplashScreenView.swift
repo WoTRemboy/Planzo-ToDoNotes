@@ -20,7 +20,7 @@ struct SplashScreenView: View {
     @State private var id = 0
     
     /// The texts displayed during the splash screen animation.
-    private let texts = [String(), Texts.AppInfo.title]
+    private let texts = [String(), Texts.OnboardingPage.welcome]
     
     // MARK: - Body
     
@@ -56,8 +56,8 @@ struct SplashScreenView: View {
                 Image.Onboarding.splashScreenLogo
                     .resizable()
                     .scaledToFit()
-                    .clipShape(.buttonBorder)
                     .frame(height: 300)
+                    .padding(.top, 12)
                 
                 // App title text
                 Text(texts[id])

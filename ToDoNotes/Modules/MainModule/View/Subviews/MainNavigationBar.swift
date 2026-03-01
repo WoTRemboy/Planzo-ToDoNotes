@@ -43,6 +43,7 @@ struct MainCustomNavBar: View {
                         SearchBar(text: $viewModel.searchText) {
                             viewModel.toggleShowingSearchBar()
                         }
+                        .padding(.bottom, searchBarPadding)
                         .transition(.move(edge: .top).combined(with: .opacity))
                     } else {
                         // Otherwise, shows title and action buttons
@@ -260,6 +261,13 @@ struct MainCustomNavBar: View {
         }
         .frame(width: 70)
         .glassEffect(.regular.tint(tint).interactive())
+    }
+    
+    private var searchBarPadding: CGFloat {
+        if #available(iOS 26.0, *) {
+            return 6
+        }
+        return 0
     }
     
 }

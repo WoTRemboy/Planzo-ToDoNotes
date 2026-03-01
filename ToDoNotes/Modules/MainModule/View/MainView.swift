@@ -80,7 +80,7 @@ struct MainView: View {
                     viewModel.toggleShowingCreateView()
                     viewModel.setFilter(to: .active)
                 }
-                .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
+                .presentationDetents([.height(viewModel.taskManagementHeight + nonMaxSheetExtraHeight())])
                 .presentationDragIndicator(.visible)
         }
         .sheet(item: $viewModel.sharingTask) { task in
@@ -127,6 +127,13 @@ struct MainView: View {
         }
     }
     
+    private var sheetExtraHeight: CGFloat {
+        if #available(iOS 26.0, *) {
+            return 20
+        }
+        return 0
+    }
+
     // MARK: - Main Content Layout
     @ViewBuilder
     private var content: some View {

@@ -72,9 +72,6 @@ fileprivate struct PopViewHelper<ViewContent: View>: ViewModifier {
     /// - Parameter content: The underlying content view.
     /// - Returns: A view with a pop-up overlay when triggered.
     func body(content: Content) -> some View {
-        let screenHeight = screenSize.height
-        let animateView = animateView
-
         content
             .fullScreenCover(
                 isPresented: $presentFullScreenCover,
@@ -91,30 +88,26 @@ fileprivate struct PopViewHelper<ViewContent: View>: ViewModifier {
                                 onTap()
                             }
 
-                        // Main pop-up content with vertical animation
-                        viewContent
-                            .visualEffect({ content, proxy in
-                                content
-                                    .offset(y: offset(
-                                        proxy,
-                                        screenHeight: screenHeight,
-                                        animateView: animateView))
-                            })
-                            .presentationBackground(.clear)
-                            .task {
-                                // Animates the view in when it appears
-                                guard !animateView else { return }
-                                withAnimation(.snappy(duration: 0.3)) {
-                                    self.animateView = true
-                                }
-                            }
-                            .ignoresSafeArea(.container, edges: .all)
+                        if animateView {
+                            viewContent
+                                .transition(.blurReplace.combined(with: .push(from: .bottom)))
+                                .ignoresSafeArea(.container, edges: .all)
+                        }
+                    }
+                    .presentationBackground(.clear)
+                    .task {
+                        // Animates the view in when it appears
+                        guard !animateView else { return }
+                        withAnimation(.snappy(duration: 0.3)) {
+                            self.animateView = true
+                        }
                     }
                 }
             .onChange(of: isPresented) { _, newValue in
                 // Responds to changes in isPresented binding
                 if newValue {
                     // Shows the pop view
+                    animateView = false
                     toggleView(true)
                 } else {
                     // Hides the pop view with animation and delay
@@ -131,18 +124,6 @@ fileprivate struct PopViewHelper<ViewContent: View>: ViewModifier {
 
     // MARK: - Private Helpers
 
-    /// Calculates vertical offset for animating the pop view based on its visibility.
-    /// - Parameters:
-    ///   - proxy: GeometryProxy for measuring view size.
-    ///   - screenHeight: Height of the screen.
-    ///   - animateView: Whether animation is active.
-    /// - Returns: Y offset for the pop view.
-    nonisolated private func offset(_ proxy: GeometryProxy, screenHeight: CGFloat, animateView: Bool) -> CGFloat {
-        let viewHeight = proxy.size.height
-        // When not animating, moves the pop view off screen; else, show at center
-        return animateView ? 0 : (screenHeight + viewHeight) / 2
-    }
-
     /// Toggles the state of full screen presentation instantly without animation.
     /// - Parameter status: New presentation state.
     private func toggleView(_ status: Bool) {
@@ -151,14 +132,6 @@ fileprivate struct PopViewHelper<ViewContent: View>: ViewModifier {
         withTransaction(transaction) {
             presentFullScreenCover = status
         }
-    }
-
-    /// Retrieves the screen size of the main window.
-    private var screenSize: CGSize {
-        if let screenSize = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.screen.bounds.size {
-            return screenSize
-        }
-        return .zero
     }
 }
 

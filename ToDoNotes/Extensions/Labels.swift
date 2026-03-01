@@ -18,6 +18,7 @@ final class Texts {
     // MARK: - Onboarding Module Texts
     
     enum OnboardingPage {
+        static let welcome = NSLocalizedString("OnboardingPageWelcome", comment: "Welcome")
         static let skip = NSLocalizedString("OnboardingPageSkip", comment: "Skip")
         static let next = NSLocalizedString("OnboardingPageNext", comment: "Next")
         static let start = NSLocalizedString("OnboardingPageStart", comment: "Start")
@@ -27,6 +28,15 @@ final class Texts {
         static let thirdTitle = NSLocalizedString("OnboardingPageThirdTitle", comment: "Create notes or tasks with due dates and reminders")
         static let fourthTitle = NSLocalizedString("OnboardingPageFourthTitle", comment: "Swipe tasks left or right for quick actions")
         static let placeholderContent = NSLocalizedString("OnboardingPagePlaceholderContent", comment: "Here's a little guide to help you get started.")
+        
+        enum OnboardingContent {
+            static let first = NSLocalizedString("OnboardingPageFirst", comment: "Welcome to AvoDo!")
+            static let second = NSLocalizedString("OnboardingPageSecond", comment: "Status & Folders")
+            static let third = NSLocalizedString("OnboardingPageThird", comment: "Subtasks")
+            static let fourth = NSLocalizedString("OnboardingPageFifth", comment: "Reminders")
+            static let fifth = NSLocalizedString("OnboardingPageSixth", comment: "Swipe Actions")
+            static let sixth = NSLocalizedString("OnboardingPageSeventh", comment: "Share")
+        }
         
         static let markdownTerms = NSLocalizedString("OnboardingPageMarkdownTerms", comment: "By clicking Start, you agree to our [Terms of Service](https://avoqode.com/terms-of-service) and [Privacy Policy](https://avoqode.com/privacy-policy).")
         static let markdownTermsError = NSLocalizedString("OnboardingPageMarkdownTermsError", comment: "Error parsing Terms of Service and Privacy Policy")

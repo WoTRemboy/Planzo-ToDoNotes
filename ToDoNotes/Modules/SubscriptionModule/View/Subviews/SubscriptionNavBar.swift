@@ -15,6 +15,7 @@ struct SubscriptionNavBar: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var authService: AuthNetworkService
     @EnvironmentObject private var viewModel: SubscriptionViewModel
+    @Namespace private var glassNamespace
     
     /// The title text to display in the navigation bar.
     private let title: String
@@ -39,8 +40,10 @@ struct SubscriptionNavBar: View {
             let topInset = proxy.safeAreaInsets.top
             
             ZStack(alignment: .top) {
-                Color.SupportColors.supportNavBar
-                    .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
+                if #available(iOS 26.0, *) {} else {
+                    Color.SupportColors.supportNavBar
+                        .shadow(color: Color.ShadowColors.navBar, radius: 15, x: 0, y: 5)
+                }
                 
                 content
                     .padding(.top, topInset + 9.5)
@@ -70,14 +73,24 @@ struct SubscriptionNavBar: View {
     
     /// A button that dismisses the current view when tapped. Shown only if `showBackButton` is `true`.
     private var backButton: some View {
-        Button {
-            dismiss()
-        } label: {
-            Image.NavigationBar.hide
-                .resizable()
-                .frame(width: 24, height: 24)
+        Group {
+            if #available(iOS 26.0, *) {
+                GlassEffectContainer(spacing: 6) {
+                    HStack(spacing: 6) {
+                        glassActionButton(content: backButtonContent) {
+                            dismiss()
+                        }
+                    }
+                }
+            } else {
+                Button {
+                    dismiss()
+                } label: {
+                    backButtonContent
+                }
+            }
         }
-        .padding(.leading)
+        .padding(.leading, 16)
     }
     
     /// A text label displaying the navigation bar's title.
@@ -88,20 +101,58 @@ struct SubscriptionNavBar: View {
             .padding(.leading, showBackButton ? 8 : 16)
     }
     
-    private var restoreButton: some View {
+    private var backButtonContent: some View {
+        Image.NavigationBar.hide
+            .resizable()
+            .frame(width: 24, height: 24)
+    }
+
+    private var restoreButtonContent: some View {
+        Text(Texts.Subscription.Page.restore)
+            .foregroundStyle(Color.LabelColors.labelPrimary)
+    }
+
+    private func restorePurchases() {
+        viewModel.restorePurchases { success in
+            if success {
+                authService.loadPersistedProfile()
+            }
+        }
+    }
+    
+    @available(iOS 26.0, *)
+    @ViewBuilder
+    private func glassActionButton<Content: View>(content: Content, action: @escaping () -> Void) -> some View {
         Button {
-            viewModel.restorePurchases { success in
-                if success {
-                    authService.loadPersistedProfile()
+            action()
+        } label: {
+            content
+                .padding(8)
+        }
+        .glassEffect(.regular.interactive())
+        .glassEffectUnion(id: "SubscriptionNavBarActions", namespace: glassNamespace)
+    }
+
+    private var restoreButton: some View {
+        Group {
+            if #available(iOS 26.0, *) {
+                GlassEffectContainer(spacing: 6) {
+                    HStack(spacing: 6) {
+                        glassActionButton(content: restoreButtonContent,
+                                          action: restorePurchases)
+                    }
+                }
+            } else {
+                Button {
+                    restorePurchases()
+                } label: {
+                    restoreButtonContent
                 }
             }
-        } label: {
-            Text(Texts.Subscription.Page.restore)
-                .foregroundStyle(Color.LabelColors.labelPrimary)
         }
         .transition(.blurReplace)
         .frame(alignment: .trailing)
-        .padding(.horizontal, 16)
+        .padding(.trailing, 16)
     }
 }
 

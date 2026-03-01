@@ -67,7 +67,7 @@ struct FoldersScrollView: View {
             .padding(.vertical, 2)
             .animation(.easeInOut(duration: 0.2), value: viewModel.folders)
         } else {
-            HStack(alignment: .bottom, spacing: 0) {
+            LazyHStack(alignment: .bottom, spacing: 0) {
                 ForEach(viewModel.folders, id: \.id) { folder in
                     FolderCell(folder: folder,
                                selected: viewModel.compareFolders(with: folder), namespace: animation)

@@ -76,7 +76,7 @@ struct TodayView: View {
                 namespace: animation) {
                     viewModel.toggleShowingTaskCreateView()
                 }
-                .presentationDetents([.height(80 + viewModel.taskManagementHeight)])
+                .presentationDetents([.height(viewModel.taskManagementHeight + nonMaxSheetExtraHeight())])
                 .presentationDragIndicator(.visible)
         }
         .sheet(item: $viewModel.sharingTask) { task in
@@ -104,7 +104,7 @@ struct TodayView: View {
                 }
         }
     }
-    
+
     // MARK: - Content Components
     
     /// The main content view containing the navigation bar and the task form.

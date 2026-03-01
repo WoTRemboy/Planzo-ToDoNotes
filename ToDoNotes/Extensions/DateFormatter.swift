@@ -43,6 +43,26 @@ extension Date {
         return TimeLocale.localizedDate(dateString: dateString)
     }
     
+    // MARK: - Short Date Abbreviated (MMM d)
+    
+    private static let shortDateAbbrevFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        switch TimeLocale.locale {
+        case .american:
+            formatter.dateFormat = "MMM d"
+        case .european, .russian:
+            formatter.dateFormat = "d MMM"
+        }
+        
+        formatter.locale = Locale.autoupdatingCurrent
+        return formatter
+    }()
+    
+    internal var shortDateAbbrev: String {
+        let dateString = Date.shortDateAbbrevFormatter.string(from: self)
+        return TimeLocale.localizedDate(dateString: dateString)
+    }
+    
     // MARK: - Long Month Year (LLLL, yyyy)
     
     private static let longMonthYearFormatter: DateFormatter = {
@@ -130,6 +150,39 @@ extension Date {
     
     internal var shortDayMonthHourMinutes: String {
         let dateString = Date.shortDayMonthHourMinutesFormatter.string(from: self)
+        return TimeLocale.localizedDate(dateString: dateString)
+    }
+    
+    // MARK: - Short Day Month Hour Minutes Abbreviated (MMM d, HH:mm)
+    
+    static private var shortDayMonthHourMinutesAbbrevFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        let locale = Locale.autoupdatingCurrent
+        
+        let dayMonthTemplate: String
+        switch TimeLocale.locale {
+        case .american:
+            dayMonthTemplate = "MMM d"
+        case .european, .russian:
+            dayMonthTemplate = "d MMM"
+        }
+        
+        let timeTemplate: String
+        switch TimeFormatSelector.current {
+        case .system:
+            timeTemplate = DateFormatter.dateFormat(fromTemplate: "j:mm", options: 0, locale: locale) ?? "HH:mm"
+        case .twelveHour:
+            timeTemplate = "h:mm a"
+        case .twentyFourHour:
+            timeTemplate = "HH:mm"
+        }
+        formatter.dateFormat = dayMonthTemplate + ", " + timeTemplate
+        formatter.locale = locale
+        return formatter
+    }
+    
+    internal var shortDayMonthHourMinutesAbbrev: String {
+        let dateString = Date.shortDayMonthHourMinutesAbbrevFormatter.string(from: self)
         return TimeLocale.localizedDate(dateString: dateString)
     }
     

@@ -86,13 +86,7 @@ private struct ToastView: View {
         .padding(.horizontal, 20)
         .padding(.vertical, 14)
         
-        .background(item.tint)
-        .background(
-            .background
-                .shadow(.drop(color: .ShadowColors.popup,
-                              radius: 32)),
-            in: .rect(cornerRadius: 12)
-        )
+        .glassToastBackgroundIfAvailable(color: item.tint)
         .contentShape(.rect(cornerRadius: 12))
         
         // Gesture to allow user to drag the toast to dismiss it.
@@ -133,6 +127,26 @@ private struct ToastView: View {
         }
         withAnimation(.snappy(duration: 0.3)) {
             Toast.shared.toasts.removeAll(where: { $0.id == item.id })
+        }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func glassToastBackgroundIfAvailable(color: Color) -> some View {
+        if #available(iOS 26.0, *) {
+            self
+                .clipShape(.rect(cornerRadius: 16))
+                .glassEffect(.regular)
+        } else {
+            self
+                .background(color)
+                .background(
+                    .background
+                        .shadow(.drop(color: .ShadowColors.popup,
+                                      radius: 32)),
+                    in: .rect(cornerRadius: 12)
+                )
         }
     }
 }

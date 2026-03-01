@@ -27,6 +27,7 @@ struct TaskManagementView: View {
     @Binding private var taskManagementHeight: CGFloat
     /// Indicates whether the keyboard is active.
     @State private var isKeyboardActive = false
+    @State private var bottomButtonsHeight: CGFloat = 0
     
     /// Identifier for transition animations.
     private var transitionID: String = Texts.NamespaceID.selectedEntity
@@ -37,6 +38,7 @@ struct TaskManagementView: View {
     private let folder: Folder?
     /// Animation namespace used for matched geometry transitions.
     private let animation: Namespace.ID
+    @Namespace private var glassNamespace
     /// Closure called when the view should be dismissed.
     private let onDismiss: () -> Void
     
@@ -74,6 +76,21 @@ struct TaskManagementView: View {
         }
     }
     
+    private var taskManagementNavBar: some View {
+        TaskManagementNavBar(
+            viewModel: viewModel, entity: entity) {
+                duplicateTask()
+            } onDismiss: {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    if entity != nil {
+                        attemptPerformSave(thenDismiss: true)
+                    } else {
+                        onDismiss()
+                    }
+                }
+            }
+    }
+
     // MARK: - View Body
     
     internal var body: some View {
@@ -82,24 +99,32 @@ struct TaskManagementView: View {
                 // Background color for popup mode if no entity is being edited
                 backgroundLayer
                 
-                VStack(spacing: 0) {
-                    // Navigation bar for full-screen or edit modes
-                    if shouldShowFullScreenContent {
-                        TaskManagementNavBar(
-                            viewModel: viewModel, entity: entity) {
-                                duplicateTask()
-                            } onDismiss: {
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    if entity != nil {
-                                        attemptPerformSave(thenDismiss: true)
-                                    } else {
-                                        onDismiss()
-                                    }
-                                }
+                let base = content
+                if shouldShowFullScreenContent {
+                    if #available(iOS 26.0, *) {
+                        base
+                            .safeAreaBar(edge: .top) {
+                                taskManagementNavBar
                             }
-                            .zIndex(1)  // Ensures the navbar stays above the content
+                            .safeAreaBar(edge: .bottom) {
+                                buttons
+                                    .padding(.horizontal, 16)
+                                    .padding(.bottom, 8)
+                            }
+                    } else {
+                        base
+                            .safeAreaInset(edge: .top) {
+                                taskManagementNavBar
+                                    .zIndex(1)
+                            }
+                            .safeAreaInset(edge: .bottom) {
+                                buttons
+                                    .padding(.horizontal, 16)
+                                    .padding(.bottom, 8)
+                            }
                     }
-                    content
+                } else {
+                    base
                 }
             }
         }
@@ -166,51 +191,55 @@ struct TaskManagementView: View {
     /// Main content block: task name, description, checklist, and action buttons.
     private var content: some View {
         VStack(spacing: 0) {
-            ScrollViewReader { outerProxy in
-                ScrollView {
-                    // Title text field with optional checkbox
-                    nameInput
-                    
-                    if shouldShowFullScreenContent {
+            if shouldShowFullScreenContent {
+                ScrollViewReader { outerProxy in
+                    ScrollView {
+                        // Title text field with optional checkbox
+                        nameInput
+                        
                         descriptionCoverInput   // Multiline description input
                         
                         TaskChecklistView(viewModel: viewModel) // Checklist (points) editor
                             .padding(.horizontal, -8)
                             .padding(.bottom, 100)
-                    } else {
-                        // Simplified description field for sheet mode
-                        descriptionSheetInput
-                            .background(HeightReader(height: $taskManagementHeight))
+                        
+                        Color.clear
+                            .frame(height: 1)
+                            .id("checklistBottomAnchor")
                     }
-                    
-                    Color.clear
-                        .frame(height: 1)
-                        .id("checklistBottomAnchor")
-                }
-                .onChange(of: viewModel.checklistLocal.map { $0.id }) { oldIDs, newIDs in
-                    let oldSet = Set(oldIDs)
-                    let newSet = Set(newIDs)
-                    let inserted = newSet.subtracting(oldSet)
-                    if inserted.count == 1, let insertedID = inserted.first, newIDs.last == insertedID {
-                        DispatchQueue.main.async {
-                            withAnimation(.easeInOut(duration: 0.25)) {
-                                outerProxy.scrollTo("checklistBottomAnchor", anchor: .bottom)
+                    .onChange(of: viewModel.checklistLocal.map { $0.id }) { oldIDs, newIDs in
+                        let oldSet = Set(oldIDs)
+                        let newSet = Set(newIDs)
+                        let inserted = newSet.subtracting(oldSet)
+                        if inserted.count == 1, let insertedID = inserted.first, newIDs.last == insertedID {
+                            DispatchQueue.main.async {
+                                withAnimation(.easeInOut(duration: 0.25)) {
+                                    outerProxy.scrollTo("checklistBottomAnchor", anchor: .bottom)
+                                }
                             }
                         }
                     }
                 }
-            }
-            .scrollIndicators(.hidden)
-            .scrollDisabled(!shouldShowFullScreenContent)
-            .padding(.horizontal, !shouldShowFullScreenContent ? 16 : 24)
-            
-            Spacer()
-            // Bottom bar with calendar button, check toggle and save button
-            buttons
+                .scrollIndicators(.hidden)
+                .padding(.horizontal, 24)
+            } else {
+                VStack(spacing: 8) {
+                    // Title text field with optional checkbox
+                    nameInput
+                    
+                    // Simplified description field for sheet mode
+                    descriptionSheetInput
+                        .padding(.top, 4)
+                    
+                    buttons
+                        .padding(.top, 8)
+                }
                 .padding(.horizontal, 16)
+                .background(HeightReader(height: $taskManagementHeight))
+            }
         }
         .padding(.top, !shouldShowFullScreenContent ? 8 : 0)
-        .padding(.bottom, 8)
+        .padding(.bottom, paddingValue(8))
     }
     
     // MARK: - Name Input
@@ -301,23 +330,37 @@ struct TaskManagementView: View {
                 viewModel.appendChecklistItem()
             }
         } label: {
-            Text(Texts.TaskManagement.addPoint)
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(Color.LabelColors.labelPrimary)
-                .frame(maxWidth: .infinity)
-                .padding(7)
-                .lineLimit(1)
-                .background(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(Color.BackColors.backDefault)
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .stroke(Color.LabelColors.labelGreyLight, lineWidth: 2)
-                )
-                .contentShape(.rect)
+            Group {
+                if #available(iOS 26.0, *) {
+                    Text(Texts.TaskManagement.point)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(Color.LabelColors.labelPrimary)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .padding(7)
+                        .lineLimit(1)
+                        .contentShape(.rect)
+                } else {
+                    Text(Texts.TaskManagement.addPoint)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Color.LabelColors.labelPrimary)
+                        .frame(maxWidth: .infinity)
+                        .padding(7)
+                        .lineLimit(1)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .fill(Color.BackColors.backDefault)
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .stroke(Color.LabelColors.labelGreyLight, lineWidth: 2)
+                        )
+                        .contentShape(.rect)
+                }
+            }
         }
-        .buttonStyle(.plain)
+        .interactiveGlassIfAvailable()
+        .modifier(PlainButtonStyleIfNeeded())
+        .modifier(BottomButtonsHeightIfAvailable(height: bottomButtonsHeight))
     }
     
     // MARK: - Bottom Action Buttons
@@ -325,11 +368,33 @@ struct TaskManagementView: View {
     /// Bottom action buttons: calendar picker, check/uncheck toggle, and save button.
     private var buttons: some View {
         HStack(alignment: .center, spacing: 16) {
-            calendarModule  // Button to select date
-            checkButton     // Button to toggle task check status
+            if #available(iOS 26.0, *) {
+                GlassEffectContainer(spacing: 6) {
+                    HStack(spacing: 6) {
+                        glassBottomAction(content: calendarModule)
+                        glassBottomAction(content: checkButton)
+                    }
+                }
+                .layoutPriority(2)
+                .background(
+                    GeometryReader { proxy in
+                        Color.clear
+                            .preference(key: BottomButtonsHeightPreferenceKey.self,
+                                        value: proxy.size.height)
+                    }
+                )
+                .onPreferenceChange(BottomButtonsHeightPreferenceKey.self) { height in
+                    bottomButtonsHeight = height
+                }
+            } else {
+                calendarModule  // Button to select date
+                checkButton     // Button to toggle task check status
+            }
             
             if shouldShowFullScreenContent, viewModel.accessToEdit {
                 addPointButton
+                    .frame(minWidth: 0)
+                    .layoutPriority(0)
             } else {
                 Spacer()
             }
@@ -353,8 +418,8 @@ struct TaskManagementView: View {
             
             if viewModel.hasDate {
                 Text(viewModel.hasTime
-                     ? viewModel.targetDate.shortDayMonthHourMinutes
-                     : viewModel.targetDate.shortDate)
+                     ? viewModel.targetDate.shortDayMonthHourMinutesAbbrev
+                     : viewModel.targetDate.shortDateAbbrev)
                 .font(.system(size: 13, weight: .regular))
                 .foregroundStyle(Color.LabelColors.labelPrimary)
             }
@@ -387,6 +452,16 @@ struct TaskManagementView: View {
         .disabled(!viewModel.accessToEdit)
     }
     
+    @available(iOS 26.0, *)
+    @ViewBuilder
+    private func glassBottomAction<Content: View>(content: Content) -> some View {
+        content
+            .lineLimit(1)
+            .padding(8)
+            .glassEffect(.regular.interactive())
+            .glassEffectUnion(id: "TaskManagementBottomActions", namespace: glassNamespace)
+    }
+    
     /// Button to save the new or updated task.
     private var acceptButton: some View {
         Button {
@@ -398,8 +473,13 @@ struct TaskManagementView: View {
              ? Image.TaskManagement.EditTask.ready
              : Image.TaskManagement.EditTask.accept)
             .resizable()
-            .frame(width: 30, height: 30)
+            .frame(
+                width: iOS26OrValue(bottomButtonsHeight, fallback: 30),
+                height: iOS26OrValue(bottomButtonsHeight, fallback: 30)
+            )
         }
+        .interactiveGlassIfAvailable()
+        .modifier(BottomButtonsHeightIfAvailable(height: bottomButtonsHeight))
     }
     
     private var syncErrorAlert: some View {
@@ -468,6 +548,56 @@ struct TaskManagementView_Previews: PreviewProvider {
 // MARK: - Heplers
 
 extension TaskManagementView {
+    private struct PlainButtonStyleIfNeeded: ViewModifier {
+        func body(content: Content) -> some View {
+            if #available(iOS 26.0, *) {
+                content
+            } else {
+                content.buttonStyle(.plain)
+            }
+        }
+    }
+    
+    private struct BottomButtonsHeightPreferenceKey: PreferenceKey {
+        static var defaultValue: CGFloat = 0
+
+        static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+            let next = nextValue()
+            if next > 0 {
+                value = next
+            }
+        }
+    }
+
+    private struct BottomButtonsHeightIfAvailable: ViewModifier {
+        let height: CGFloat
+
+        func body(content: Content) -> some View {
+            if #available(iOS 26.0, *) {
+                if height > 0 {
+                    content.frame(height: height)
+                } else {
+                    content
+                }
+            } else {
+                content
+            }
+        }
+    }
+    
+    private func paddingValue(_ value: CGFloat) -> CGFloat {
+        if #available(iOS 26.0, *) {
+            return 0
+        }
+        return value
+    }
+
+    private func iOS26OrValue(_ value: CGFloat, fallback: CGFloat) -> CGFloat {
+        if #available(iOS 26.0, *) {
+            return value
+        }
+        return fallback
+    }
     
     // MARK: - Full Screen Conditions
     
@@ -620,4 +750,3 @@ private extension View {
         }
     }
 }
-
