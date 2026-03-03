@@ -75,11 +75,16 @@ struct SharingAccessManageView: View {
     
     /// Form containing toggles to configure sharing options (view/edit).
     private var paramsForm: some View {
-        VStack(spacing: 3) {
+        VStack(spacing: 0) {
             viewButton
+            Divider()
+                .padding(.horizontal)
             editButton
+            Divider()
+                .padding(.horizontal)
             closeAccessButton
         }
+        .modifier(SystemRowCornerModifier())
         .padding([.top, .horizontal])
         .sensoryFeedback(.selection, trigger: viewModel.selectedShareType)
     }
@@ -119,10 +124,7 @@ struct SharingAccessManageView: View {
                     .padding(.trailing)
             }
             
-            .background {
-                RoundedRectangle(cornerRadius: 10)
-                    .foregroundStyle(Color.SupportColors.supportButton)
-            }
+            .background(Color.SupportColors.supportButton)
         }
         .disabled(viewModel.isUpdatingMemberRole)
     }
@@ -130,9 +132,20 @@ struct SharingAccessManageView: View {
     // MARK: - Action Buttons
     
     private var actionButtons: some View {
-        HStack(spacing: 4) {
-            secondaryButton
-            saveButton
+        Group {
+            if #available(iOS 26.0, *) {
+                GlassEffectContainer(spacing: 4) {
+                    HStack(spacing: 4) {
+                        secondaryButton
+                        saveButton
+                    }
+                }
+            } else {
+                HStack(spacing: 4) {
+                    secondaryButton
+                    saveButton
+                }
+            }
         }
         .padding(.horizontal)
         .padding(.top, 32)
@@ -160,13 +173,14 @@ struct SharingAccessManageView: View {
                     .foregroundStyle(Color.LabelColors.labelReversed)
             }
             .frame(maxWidth: .infinity, minHeight: 50)
-            .background {
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundStyle(Color.LabelColors.labelPrimary)
-            }
+            .background(Color.LabelColors.labelPrimary)
+            .modifier(SystemRowCornerModifier())
+
             .animation(.easeInOut, value: viewModel.isUpdatingMemberRole)
         }
+        .buttonStyle(.plain)
         .disabled(viewModel.isUpdatingMemberRole)
+        .interactiveGlassIfAvailable()
     }
     
     private var updatingIcon: some View {
@@ -195,12 +209,16 @@ struct SharingAccessManageView: View {
                 .frame(maxWidth: .infinity, maxHeight: 50)
                 .background(Color.clear)
                 .foregroundColor(Color.LabelColors.labelPrimary)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.LabelColors.labelDetails, lineWidth: 1)
-                )
+                .modifier(SystemRowCornerModifier())
+                .overlay {
+                    if #available(iOS 26.0, *) {} else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.LabelColors.labelDetails, lineWidth: 1)
+                    }
+                }
         }
+        .buttonStyle(.plain)
+        .interactiveGlassIfAvailable()
     }
     
     private var removeMemberAlert: some View {

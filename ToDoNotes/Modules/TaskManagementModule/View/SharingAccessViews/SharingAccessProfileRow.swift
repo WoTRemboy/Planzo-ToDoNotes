@@ -40,7 +40,7 @@ struct SharingAccessProfileRow: View {
         .padding(.horizontal, 14)
         .frame(height: 56)
         .background(Color.SupportColors.supportButton)
-        .clipShape(.rect(cornerRadius: 10))
+        .modifier(SystemRowCornerModifier())
     }
     
     // MARK: - Components

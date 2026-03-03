@@ -87,7 +87,7 @@ struct MainView: View {
             TaskManagementShareView(viewModel: TaskManagementViewModel(entity: task), onComplete: {
                 viewModel.setSharingTask(to: nil)
             })
-                .presentationDetents([.height(300)])
+                .presentationDetents([.height(330)])
                 .presentationDragIndicator(.visible)
         }
         

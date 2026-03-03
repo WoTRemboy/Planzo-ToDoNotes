@@ -66,10 +66,13 @@ struct TaskManagementShareView: View {
     
     /// Form containing toggles to configure sharing options (view/edit).
     private var paramsForm: some View {
-        VStack(spacing: 3) {
+        VStack(spacing: 0) {
             viewButton
+            Divider()
+                .padding(.horizontal)
             editButton
         }
+        .modifier(SystemRowCornerModifier())
         .padding([.top, .horizontal])
         .sensoryFeedback(.selection, trigger: shareType)
     }
@@ -97,16 +100,12 @@ struct TaskManagementShareView: View {
                     .font(.system(size: 17, weight: .regular))
                     .foregroundStyle(Color.LabelColors.labelPrimary)
                     .padding(.leading)
-                    .frame(maxWidth: .infinity, minHeight: 50, alignment: .leading)
+                    .frame(maxWidth: .infinity, minHeight: 60, alignment: .leading)
                 
                 (shareType == type ? Image.Selector.selected : Image.Selector.unselected)
                     .padding(.trailing)
             }
-            
-            .background {
-                RoundedRectangle(cornerRadius: 10)
-                    .foregroundStyle(Color.SupportColors.supportButton)
-            }
+            .background(Color.SupportColors.supportButton)
         }
         .disabled(isLoading)
     }
@@ -130,12 +129,12 @@ struct TaskManagementShareView: View {
                     .contentTransition(.numericText())
             }
             .frame(maxWidth: .infinity, minHeight: 50)
-            .background {
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundStyle(Color.LabelColors.labelPrimary)
-            }
+            .background(Color.LabelColors.labelPrimary)
+            .modifier(SystemRowCornerModifier())
         }
+        .buttonStyle(.plain)
         .disabled(isLoading)
+        .interactiveGlassIfAvailable()
         .padding(.horizontal)
         .padding(.top, 32)
     }
