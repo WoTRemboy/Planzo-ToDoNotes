@@ -57,7 +57,9 @@ struct LoginButtonView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             .background(Color.ButtonColors.login)
         }
-        .clipShape(.rect(cornerRadius: 12))
+        .buttonStyle(.plain)
+        .modifier(SystemRowCornerModifier())
+        .interactiveGlassIfAvailable()
         .frame(height: 50)
     }
 }

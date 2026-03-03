@@ -58,45 +58,39 @@ struct iOS26StyleOnBoarding: View {
     @ViewBuilder
     func screenshotView() -> some View {
         let shape = ConcentricRectangle(corners: .concentric, isUniform: true)
-        
-        GeometryReader {
-            let size = $0.size
-            
+
+        GeometryReader { proxy in
+            let size = proxy.size
+
             Rectangle()
                 .fill(Color.BackColors.backDefault)
-            
-            ScrollView(.horizontal) {
-                HStack(spacing: 12) {
-                    ForEach(items.indices, id: \.self) { index in
-                        let item = items[index]
-                        
-                        Group {
-                            if let screenshot = item.screenshot {
-                                Image(uiImage: screenshot)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .onGeometryChange(for: CGSize.self) {
-                                        $0.size
-                                    } action: { newValue in
-                                        screenshotSize = newValue
-                                    }
-                                    .clipShape(shape)
-                            } else {
-                                Rectangle()
-                                    .fill(Color.BackColors.backDefault)
-                            }
+
+            ZStack {
+                ForEach(items.indices, id: \.self) { index in
+                    let item = items[index]
+
+                    Group {
+                        if let screenshot = item.screenshot {
+                            Image(uiImage: screenshot)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .onGeometryChange(for: CGSize.self) {
+                                    $0.size
+                                } action: { newValue in
+                                    screenshotSize = newValue
+                                }
+                                .clipShape(shape)
+                        } else {
+                            Rectangle()
+                                .fill(Color.BackColors.backDefault)
                         }
-                        .frame(width: size.width, height: size.height)
                     }
+                    .frame(width: size.width, height: size.height)
+                    .opacity(currentIndex == index ? 1 : 0)
+                    .transition(.blurReplace)
                 }
-                .scrollTargetLayout()
             }
-            .scrollDisabled(true)
-            .scrollTargetBehavior(.viewAligned)
-            .scrollIndicators(.hidden)
-            .scrollPosition(id: .init(get: {
-                return currentIndex
-            }, set: { _ in }))
+            .animation(animation, value: currentIndex)
         }
         .clipShape(shape)
         .overlay {

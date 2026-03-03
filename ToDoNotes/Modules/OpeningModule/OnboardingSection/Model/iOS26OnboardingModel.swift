@@ -52,7 +52,14 @@ extension iOS26OnboardingItem {
                       subtitle: Texts.OnboardingPage.fourthTitle,
                       screenshot: UIImage.Onboarding.fifth,
                       zoomScale: 1.3,
-                      zoomAnchor: .init(x: 0.5, y: 0)),
+                      zoomAnchor: .init(x: 0.5, y: 1)),
+            
+                .init(id: 5,
+                      title: Texts.OnboardingPage.OnboardingContent.fifth,
+                      subtitle: Texts.OnboardingPage.fourthTitle,
+                      screenshot: UIImage.Onboarding.sixth,
+                      zoomScale: 1,
+                      zoomAnchor: .init(x: 0.5, y: 0.8))
         ]
     }
 }
