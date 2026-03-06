@@ -1,0 +1,73 @@
+{
+  "images" : [
+    {
+      "filename" : "Simulator Screenshot - iPhone 16 - 2026-03-02 at 21.41.12 2.png",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "Group 1066.png",
+      "idiom" : "universal"
+    },
+    {
+      "filename" : "Simulator Screenshot - iPhone 16 - 2026-03-02 at 21.41.12 1.png",
+      "idiom" : "universal",
+      "locale" : "en"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "Group 1065.png",
+      "idiom" : "universal",
+      "locale" : "en"
+    },
+    {
+      "filename" : "Group 1052.png",
+      "idiom" : "universal",
+      "locale" : "fr"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "Group 1074.png",
+      "idiom" : "universal",
+      "locale" : "fr"
+    },
+    {
+      "filename" : "Group 1055.png",
+      "idiom" : "universal",
+      "locale" : "es"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "Group 1079.png",
+      "idiom" : "universal",
+      "locale" : "es"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "localizable" : true
+  }
+}

@@ -152,7 +152,7 @@ struct TaskManagementView: View {
             TaskManagementShareView(viewModel: viewModel) {
                 viewModel.setSharingTask(to: nil)
             }
-                .presentationDetents([.height(285)])
+                .presentationDetents([.height(340)])
                 .presentationDragIndicator(.visible)
         }
         // Date Picker Sheet Presentation

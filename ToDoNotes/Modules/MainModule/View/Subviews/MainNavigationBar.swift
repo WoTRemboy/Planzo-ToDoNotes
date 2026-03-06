@@ -94,10 +94,18 @@ struct MainCustomNavBar: View {
     /// Displays the main title on the navigation bar.
     private var titleLabel: some View {
         HStack(spacing: 6) {
-            Text(title)
-                .font(.system(size: 25, weight: .bold))
-                .frame(alignment: .leading)
-                .padding(.leading, 16)
+            Group {
+                if #available(iOS 26.0, *) {
+                    Text(viewModel.selectedFilter.name)
+                        .contentTransition(.numericText())
+                } else {
+                    Text(title)
+                }
+            }
+            .font(.system(size: 25, weight: .bold))
+            .frame(alignment: .leading)
+            .padding(.leading, 16)
+            .animation(.easeInOut(duration: 0.2), value: viewModel.selectedFilter)
             
             if authService.currentUser?.isPremium == true {
                 Text(Texts.Subscription.SubType.pro)
