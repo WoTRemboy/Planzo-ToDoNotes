@@ -259,5 +259,6 @@ extension UIImage {
         static let third = UIImage(named: "NewOnboardingThird")
         static let fourth = UIImage(named: "NewOnboardingFourth")
         static let fifth = UIImage(named: "NewOnboardingFifth")
+        static let sixth = UIImage(named: "NewOnboardingSixth")
     }
 }

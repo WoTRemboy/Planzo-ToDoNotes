@@ -183,13 +183,13 @@ struct SettingsView: View {
                             isProfile: true,
                             last: true)
                     })
+                .modifier(SystemRowCornerModifier())
                 .transition(.blurReplace)
             } else {
                 loginOptionsView
                     .transition(.blurReplace)
             }
         }
-        .modifier(SystemRowCornerModifier())
         .padding([.horizontal, .top])
         .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
     }
@@ -206,6 +206,7 @@ struct SettingsView: View {
                         title: Texts.Authorization.login,
                         last: true)
                 }
+                .modifier(SystemRowCornerModifier())
                 .transition(.blurReplace)
             } else {
                 VStack(spacing: 12) {

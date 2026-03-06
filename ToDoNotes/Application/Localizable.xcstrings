@@ -1684,6 +1684,282 @@
         }
       }
     },
+    "OnboardingPageiOS26Fifth" : {
+      "comment" : "Collaboration",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collaboration"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colaboración"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collaboration"
+          }
+        }
+      }
+    },
+    "OnboardingPageiOS26First" : {
+      "comment" : "Welcome",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenue"
+          }
+        }
+      }
+    },
+    "OnboardingPageiOS26Fourth" : {
+      "comment" : "Reminders",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminders"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recordatorios"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rappels"
+          }
+        }
+      }
+    },
+    "OnboardingPageiOS26Second" : {
+      "comment" : "Status & Folders",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Status & Folders"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estados y carpetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statuts et dossiers"
+          }
+        }
+      }
+    },
+    "OnboardingPageiOS26Sixth" : {
+      "comment" : "Management",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Management"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestión"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestion"
+          }
+        }
+      }
+    },
+    "OnboardingPageiOS26SubtitleFifth" : {
+      "comment" : "Generate a link to the task and share with others.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Generate a link to the task and share with others."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genera un enlace a la tarea y compártelo con otros."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Générez un lien vers la tâche et partagez-le avec d’autres."
+          }
+        }
+      }
+    },
+    "OnboardingPageiOS26SubtitleFirst" : {
+      "comment" : "Here's a short guide to help you get started.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Here's a short guide to help you get started."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aquí tienes una breve guía para empezar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voici un court guide pour bien commencer."
+          }
+        }
+      }
+    },
+    "OnboardingPageiOS26SubtitleFourth" : {
+      "comment" : "Set a reminder to receive notifications about task due date.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set a reminder to receive notifications about task due date."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configura un recordatorio para recibir notificaciones sobre la fecha límite de la tarea."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Définissez un rappel pour recevoir des notifications avant l’échéance de la tâche."
+          }
+        }
+      }
+    },
+    "OnboardingPageiOS26SubtitleSecond" : {
+      "comment" : "Check tasks by status. Use folders to sort things your way.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check tasks by status. Use folders to sort things your way."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revisa las tareas por estado. Usa carpetas para organizarlas a tu manera."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consultez les tâches par statut. Utilisez des dossiers pour les organiser."
+          }
+        }
+      }
+    },
+    "OnboardingPageiOS26SubtitleSixth" : {
+      "comment" : "Manage access to shared notes",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage access to a shared note for each participant"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestiona el acceso a notas compartidas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gérez l’accès aux notes partagées."
+          }
+        }
+      }
+    },
+    "OnboardingPageiOS26SubtitleThird" : {
+      "comment" : "Make the note detailed and track your progress.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make the note detailed and track your progress."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haz la nota más detallada y sigue tu progreso."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajoutez des détails à la note et suivez votre progression."
+          }
+        }
+      }
+    },
+    "OnboardingPageiOS26Third" : {
+      "comment" : "Subtasks",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subtasks"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subtareas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sous-tâches"
+          }
+        }
+      }
+    },
     "OnboardingPageMarkdownTerms" : {
       "comment" : "By clicking Start, you agree to our [Terms of Service](https://avoqode.com/terms-of-service) and [Privacy Policy](https://avoqode.com/privacy-policy).",
       "localizations" : {

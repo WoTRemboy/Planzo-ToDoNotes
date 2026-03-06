@@ -38,6 +38,26 @@ final class Texts {
             static let sixth = NSLocalizedString("OnboardingPageSeventh", comment: "Share")
         }
         
+        enum iOS26Content {
+            enum Title {
+                static let first = NSLocalizedString("OnboardingPageiOS26First", comment: "Welcome")
+                static let second = NSLocalizedString("OnboardingPageiOS26Second", comment: "Status & Folders")
+                static let third = NSLocalizedString("OnboardingPageiOS26Third", comment: "Subtasks")
+                static let fourth = NSLocalizedString("OnboardingPageiOS26Fourth", comment: "Reminders")
+                static let fifth = NSLocalizedString("OnboardingPageiOS26Fifth", comment: "Collaboration")
+                static let sixth = NSLocalizedString("OnboardingPageiOS26Sixth", comment: "Management")
+            }
+            
+            enum Subtitle {
+                static let first = NSLocalizedString("OnboardingPageiOS26SubtitleFirst", comment: "Here's a short guide to help you get started.")
+                static let second = NSLocalizedString("OnboardingPageiOS26SubtitleSecond", comment: "Check tasks by status. Use folders to sort things your way.")
+                static let third = NSLocalizedString("OnboardingPageiOS26SubtitleThird", comment: "Make the note detailed and track your progress.")
+                static let fourth = NSLocalizedString("OnboardingPageiOS26SubtitleFourth", comment: "Set a reminder to receive notifications about task due date.")
+                static let fifth = NSLocalizedString("OnboardingPageiOS26SubtitleFifth", comment: "Generate a link to the task and share with others.")
+                static let sixth = NSLocalizedString("OnboardingPageiOS26SubtitleSixth", comment: "Manage access to shared notes")
+            }
+        }
+        
         static let markdownTerms = NSLocalizedString("OnboardingPageMarkdownTerms", comment: "By clicking Start, you agree to our [Terms of Service](https://avoqode.com/terms-of-service) and [Privacy Policy](https://avoqode.com/privacy-policy).")
         static let markdownTermsError = NSLocalizedString("OnboardingPageMarkdownTermsError", comment: "Error parsing Terms of Service and Privacy Policy")
     }

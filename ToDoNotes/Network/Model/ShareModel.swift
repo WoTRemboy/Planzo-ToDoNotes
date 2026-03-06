@@ -62,6 +62,14 @@ struct SharingMember: Codable, Identifiable, Equatable {
     static var mock: Self {
         SharingMember(id: "691b9afeea81264114031374", listId: "345", userSub: "000546.56ddf35528724485a1665f236097c44a.1446", role: ShareAccess.viewOnly.rawValue, revoked: false, addedAt: "", addedBy: "", updatedAt: "")
     }
+    
+    static var mockList: [Self] {
+        [
+            SharingMember(id: "Mark", listId: "345", userSub: "Mark", role: ShareAccess.edit.rawValue, revoked: false, addedAt: "", addedBy: "", updatedAt: ""),
+            SharingMember(id: "Amanda", listId: "345", userSub: "Amanda", role: ShareAccess.viewOnly.rawValue, revoked: false, addedAt: "", addedBy: "", updatedAt: ""),
+            SharingMember(id: "Tom", listId: "345", userSub: "Tom", role: ShareAccess.edit.rawValue, revoked: false, addedAt: "", addedBy: "", updatedAt: "")
+        ]
+    }
 }
 
 enum ShareAccess: String {
