@@ -135,7 +135,7 @@ struct MainTaskRowWithActions: View {
     
     /// Button to pin or unpin the task.
     private var pinnedButton: some View {
-        Button(role: .cancel) {
+        Button(role: .destructive) {
             withAnimation(.easeInOut(duration: 0.2)) {
                 do {
                     try TaskService.togglePinned(for: entity)

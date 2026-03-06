@@ -86,29 +86,21 @@ struct OnboardingScreenView: View {
         iOS26OnboardingItem.stepsSetup()
     }
 
-    private var ios26IsLastPage: Bool {
-        ios26PageIndex == ios26Items.count - 1
-    }
-
     @available(iOS 26.0, *)
     private var ios26Onboarding: some View {
-        VStack(spacing: 0) {
-            iOS26StyleOnBoarding(
-                items: ios26Items,
-                currentIndex: $ios26PageIndex,
-                onComplete: viewModel.transferToMainPage
-            )
-
-//            if ios26IsLastPage {
-//                signInButtons
-//                    .disabled(viewModel.isAuthorizing)
-//                termsPolicyLabel
-//                    .padding([.top, .horizontal])
-//                    .padding(.bottom, hasNotch() ? 4 : 0)
-//            } else {
-//                ios26SkipButton
-//            }
-        }
+        iOS26StyleOnBoarding(
+            items: ios26Items,
+            currentIndex: $ios26PageIndex,
+            onComplete: viewModel.transferToMainPage,
+            lastPageContent: {
+                signInButtons
+                    .disabled(viewModel.isAuthorizing)
+                termsPolicyLabel
+                    .padding([.top, .horizontal])
+                    .padding(.bottom, hasNotch() ? 4 : 0)
+            },
+            nonLastPageContent: {}
+        )
         .padding(.vertical)
     }
 
@@ -121,6 +113,7 @@ struct OnboardingScreenView: View {
             if viewModel.isLastPage(current: page.index) {
                 signInButtons
                     .disabled(viewModel.isAuthorizing)
+                    .padding(.top)
                 termsPolicyLabel
                     .padding([.top, .horizontal])
                     .padding(.bottom, hasNotch() ? 4 : 0)
@@ -129,23 +122,6 @@ struct OnboardingScreenView: View {
             }
         }
         .padding(.vertical)
-    }
-
-    private var ios26SkipButton: some View {
-        Text(Texts.OnboardingPage.skip)
-            .font(.system(size: 14))
-            .fontWeight(.medium)
-            .foregroundStyle(Color.LabelColors.labelPrimary)
-            .padding(.top)
-            .padding(.bottom, hasNotch() ? 20 : 16)
-            .onTapGesture {
-                if !ios26IsLastPage {
-                    withAnimation(.easeInOut) {
-                        ios26PageIndex = max(ios26Items.count - 1, 0)
-                    }
-                }
-            }
-            .animation(.easeInOut, value: ios26PageIndex)
     }
 
     // MARK: - Pager Content
@@ -255,7 +231,7 @@ struct OnboardingScreenView: View {
             signWithGoogleButton
         }
         .transition(.blurReplace)
-        .padding([.top, .horizontal])
+        .padding(.horizontal)
     }
     
     // MARK: - Sign with Apple Button
