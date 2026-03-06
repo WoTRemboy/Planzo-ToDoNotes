@@ -12,6 +12,9 @@ struct iOS26StyleOnBoarding: View {
     var tint: Color = .SupportColors.supportSubscription
     var items: [iOS26OnboardingItem]
     var onComplete: () -> Void = { }
+
+    private let lastPageContent: AnyView
+    private let nonLastPageContent: AnyView
     
     @Binding private var currentIndex: Int
     @State private var screenshotSize: CGSize = .zero
@@ -20,12 +23,16 @@ struct iOS26StyleOnBoarding: View {
         items: [iOS26OnboardingItem],
         currentIndex: Binding<Int> = .constant(0),
         tint: Color = .SupportColors.supportSubscription,
-        onComplete: @escaping () -> Void = { }
+        onComplete: @escaping () -> Void = { },
+        @ViewBuilder lastPageContent: () -> some View = { EmptyView() },
+        @ViewBuilder nonLastPageContent: () -> some View = { EmptyView() }
     ) {
         self.items = items
         self._currentIndex = currentIndex
         self.tint = tint
         self.onComplete = onComplete
+        self.lastPageContent = AnyView(lastPageContent())
+        self.nonLastPageContent = AnyView(nonLastPageContent())
     }
     
     var body: some View {
@@ -39,19 +46,26 @@ struct iOS26StyleOnBoarding: View {
                 .padding(.top, 35)
                 .padding(.horizontal, 30)
                 .padding(.bottom, 220)
+            
             VStack(spacing: 10) {
                 textContentView()
                 indicatorView()
                 continueButton()
+                
+                if currentIndex == items.count - 1 {
+                    lastPageContent
+                        .padding(.top, 6)
+                } else {
+                    nonLastPageContent
+                }
             }
             .padding(.top, 20)
             .padding(.horizontal, 15)
-            .frame(height: 210)
+            .frame(height: currentIndex == items.count - 1 ? 400 : 210)
             .background {
                 variableGlassBlur(15)
             }
-            
-            backButton()
+            topBarButtons()
         }
     }
     
@@ -171,13 +185,14 @@ struct iOS26StyleOnBoarding: View {
             Text(currentIndex == items.count - 1 ? Texts.Authorization.withoutAuth : Texts.OnboardingPage.next)
                 .fontWeight(.medium)
                 .contentTransition(.numericText())
-                .padding(.vertical, 6)
+                .lineLimit(1)
+                .padding(.vertical, 8)
                 .foregroundStyle(Color.LabelColors.labelWhite)
         }
         .tint(tint)
         .buttonStyle(.glassProminent)
         .buttonSizing(.flexible)
-        .padding(.horizontal, 30)
+        .padding(.horizontal)
     }
     
     @ViewBuilder
@@ -194,20 +209,41 @@ struct iOS26StyleOnBoarding: View {
     }
     
     @ViewBuilder
-    func backButton() -> some View {
-        Button {
-            withAnimation(animation) {
-                currentIndex = max(currentIndex - 1, 0)
+    func topBarButtons() -> some View {
+        HStack {
+            if currentIndex > 0 {
+                Button {
+                    withAnimation(animation) {
+                        currentIndex = max(currentIndex - 1, 0)
+                    }
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.title3)
+                        .frame(width: 20, height: 30)
+                }
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
             }
-        } label: {
-            Image(systemName: "chevron.left")
-                .font(.title3)
-                .frame(width: 20, height: 30)
+
+            Spacer()
+
+            if currentIndex < items.count - 1 {
+                Button {
+                    withAnimation(animation) {
+                        currentIndex = max(items.count - 1, 0)
+                    }
+                } label: {
+                    Text(Texts.OnboardingPage.skip)
+                        .font(.system(size: 16, weight: .medium))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                }
+                .buttonStyle(.glass)
+                .buttonBorderShape(.capsule)
+            }
         }
-        .buttonStyle(.glass)
-        .buttonBorderShape(.circle)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .padding(.leading, 16)
+        .padding(.horizontal, 16)
         .padding(.top, 5)
     }
     
@@ -219,7 +255,6 @@ struct iOS26StyleOnBoarding: View {
             .glassEffect(.clear.tint(tint), in: .rect)
             .blur(radius: radius)
             .padding([.horizontal, .bottom], -radius * 2)
-            .opacity(items[currentIndex].zoomScale != 1 ? 1 : 0)
             .ignoresSafeArea()
     }
     
@@ -233,7 +268,7 @@ struct iOS26StyleOnBoarding: View {
     }
     
     var animation: Animation {
-        .interpolatingSpring(duration: 0.65, bounce: 0, initialVelocity: 0)
+        .interpolatingSpring(duration: 0.4, bounce: 0, initialVelocity: 0)
     }
 }
 
