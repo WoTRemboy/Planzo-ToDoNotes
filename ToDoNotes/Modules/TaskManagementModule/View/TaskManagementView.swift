@@ -194,34 +194,32 @@ struct TaskManagementView: View {
             if shouldShowFullScreenContent {
                 ScrollViewReader { outerProxy in
                     ScrollView {
-                        // Title text field with optional checkbox
-                        nameInput
-                        
-                        descriptionCoverInput   // Multiline description input
-                        
-                        TaskChecklistView(viewModel: viewModel) // Checklist (points) editor
-                            .padding(.horizontal, -8)
-                            .padding(.bottom, 100)
-                        
-                        Color.clear
-                            .frame(height: 1)
-                            .id("checklistBottomAnchor")
+                        VStack(spacing: 0) {
+                            // Title text field with optional checkbox
+                            nameInput
+                            
+                            descriptionCoverInput   // Multiline description input
+                            
+                            TaskChecklistView(viewModel: viewModel) // Checklist (points) editor
+                                .padding(.horizontal, -8)
+                                .padding(.bottom, 100)
+                            
+                            Color.clear
+                                .frame(height: 1)
+                                .id("checklistBottomAnchor")
+                        }
+                        .padding(.horizontal, 24)
                     }
-                    .onChange(of: viewModel.checklistLocal.map { $0.id }) { oldIDs, newIDs in
-                        let oldSet = Set(oldIDs)
-                        let newSet = Set(newIDs)
-                        let inserted = newSet.subtracting(oldSet)
-                        if inserted.count == 1, let insertedID = inserted.first, newIDs.last == insertedID {
-                            DispatchQueue.main.async {
-                                withAnimation(.easeInOut(duration: 0.25)) {
-                                    outerProxy.scrollTo("checklistBottomAnchor", anchor: .bottom)
-                                }
+                    .onChange(of: viewModel.lastAppendedChecklistID) { _, newID in
+                        guard newID != nil else { return }
+                        DispatchQueue.main.async {
+                            withAnimation(.easeInOut(duration: 0.25)) {
+                                outerProxy.scrollTo("checklistBottomAnchor", anchor: .bottom)
                             }
                         }
                     }
                 }
                 .scrollIndicators(.hidden)
-                .padding(.horizontal, 24)
             } else {
                 VStack(spacing: 8) {
                     // Title text field with optional checkbox
