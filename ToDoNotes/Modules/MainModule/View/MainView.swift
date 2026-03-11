@@ -80,7 +80,7 @@ struct MainView: View {
                     viewModel.toggleShowingCreateView()
                     viewModel.setFilter(to: .active)
                 }
-                .presentationDetents([.height(viewModel.taskManagementHeight + nonMaxSheetExtraHeight())])
+                .presentationDetents([.height(viewModel.taskManagementHeight)])
                 .presentationDragIndicator(.visible)
         }
         .sheet(item: $viewModel.sharingTask) { task in
