@@ -281,6 +281,8 @@ final class Texts {
             static let importantDeselect = NSLocalizedString("TaskManagementContextMenuImportantDeselect", comment: "Remove Favorite")
             static let pin = NSLocalizedString("TaskManagementContextMenuPin", comment: "Pin")
             static let unpin = NSLocalizedString("TaskManagementContextMenuUnpit", comment: "Unpin")
+            static let moveToFolder = NSLocalizedString("TaskManagementContextMenuMoveToFolder", comment: "Move to Folder")
+            static let restore = NSLocalizedString("TaskManagementContextMenuRestore", comment: "Restore")
             static let delete = NSLocalizedString("TaskManagementContextMenuDelete", comment: "Remove")
         }
         
