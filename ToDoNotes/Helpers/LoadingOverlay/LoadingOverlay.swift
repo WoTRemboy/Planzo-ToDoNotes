@@ -38,9 +38,15 @@ struct LoadingOverlayGroup: View {
                     .ignoresSafeArea()
                     .overlay(
                         ZStack {
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundStyle(Color.backSheet)
-                                .frame(width: 60, height: 60)
+                            if #available(iOS 26.0, *) {
+                                Circle()
+                                    .frame(width: 64, height: 64)
+                                    .glassEffect(.regular)
+                            } else {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundStyle(Color.backSheet)
+                                    .frame(width: 60, height: 60)
+                            }
                             
                             ProgressView()
                                 .progressViewStyle(.circular)
