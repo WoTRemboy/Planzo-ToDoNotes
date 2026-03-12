@@ -16,8 +16,8 @@ struct CustomContextMenu<Content: View, Preview: View>: View {
     private var content: Content
     /// The preview view shown when the context menu is activated.
     private var preview: Preview
-    /// The menu containing actions available in the context menu.
-    private var menu: UIMenu
+    /// The menu provider for actions available in the context menu.
+    private var actionsProvider: () -> UIMenu
     /// The closure called when the context menu interaction ends.
     private var onEnd: () -> ()
     
@@ -36,7 +36,7 @@ struct CustomContextMenu<Content: View, Preview: View>: View {
     ) {
         self.content = content()
         self.preview = preview()
-        self.menu = actions()
+        self.actionsProvider = actions
         self.onEnd = onEnd
     }
     
@@ -50,7 +50,7 @@ struct CustomContextMenu<Content: View, Preview: View>: View {
                 .overlay {
                     ContextMenuHelper(content: content,
                                       preview: preview,
-                                      actions: menu,
+                                      actionsProvider: actionsProvider,
                                       onEnd: onEnd)
                 }
         }

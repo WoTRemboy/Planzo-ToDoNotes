@@ -81,7 +81,7 @@ struct CalendarView: View {
                 namespace: animation) {
                     viewModel.toggleShowingTaskCreateView()
                 }
-                .presentationDetents([.height(viewModel.taskManagementHeight + nonMaxSheetExtraHeight())])
+                .presentationDetents([.height(viewModel.taskManagementHeight)])
                 .presentationDragIndicator(.visible)
         }
         .sheet(item: $viewModel.sharingTask) { task in

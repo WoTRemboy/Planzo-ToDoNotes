@@ -25,6 +25,8 @@ struct TaskListRow: View {
     private let isLast: Bool
     /// Optional callback to request confirmation for deleting a shared task (non-owner).
     private let onRequestConfirmSharedDelete: ((TaskEntity) -> Void)?
+    /// Optional callback to request folder setup for a task.
+    private let onShowFolderSetup: ((TaskEntity) -> Void)?
     
     // MARK: - Initialization
     
@@ -33,11 +35,13 @@ struct TaskListRow: View {
     ///   - entity: The `TaskEntity` object representing the task.
     ///   - isLast: A Boolean indicating whether this is the last item in the section.
     ///   - onRequestConfirmSharedDelete: Optional closure to trigger shared-delete confirmation.
-    init(entity: TaskEntity, isLast: Bool, onRequestConfirmSharedDelete: ((TaskEntity) -> Void)? = nil) {
+    ///   - onShowFolderSetup: Optional closure to show folder setup for this task.
+    init(entity: TaskEntity, isLast: Bool, onRequestConfirmSharedDelete: ((TaskEntity) -> Void)? = nil, onShowFolderSetup: ((TaskEntity) -> Void)? = nil) {
         self._entity = ObservedObject(wrappedValue: entity)
         self.status = .setupStatus(for: entity)
         self.isLast = isLast
         self.onRequestConfirmSharedDelete = onRequestConfirmSharedDelete
+        self.onShowFolderSetup = onShowFolderSetup
     }
     
     // MARK: - Body
@@ -171,6 +175,18 @@ struct TaskListRow: View {
         }
         return false
     }
+
+    private var canEditTask: Bool {
+        entity.role != ShareAccess.viewOnly.rawValue
+    }
+
+    private var canDuplicateTask: Bool {
+        true
+    }
+
+    private var canChangeFolder: Bool {
+        !isSharedTask && canEditTask && onShowFolderSetup != nil
+    }
         
     /// Displays the task name with optional strikethrough and faded colors depending on the task state.
     private var nameLabel: some View {
@@ -301,6 +317,69 @@ struct TaskListRow: View {
     
     /// Defines a context menu when user long-presses a task row, allowing removing task.
     private var uiContextMenu: UIMenu {
+        let importantAction = UIAction(
+            title: entity.important
+            ? Texts.TaskManagement.ContextMenu.importantDeselect
+            : Texts.TaskManagement.ContextMenu.important,
+            image: entity.important
+            ? UIImage.TaskManagement.importantDeselect
+            : UIImage.TaskManagement.importantSelect
+        ) { _ in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                do {
+                    try TaskService.toggleImportant(for: entity)
+                    Toast.shared.present(
+                        title: entity.important ? Texts.Toasts.importantOn : Texts.Toasts.importantOff)
+                    logger.debug("Toggled important status to \(entity.important) for task: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                } catch {
+                    logger.error("Toggle important status for task failed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                }
+            }
+        }
+        
+        let pinnedAction = UIAction(
+            title: entity.pinned
+            ? Texts.TaskManagement.ContextMenu.unpin
+            : Texts.TaskManagement.ContextMenu.pin,
+            image: entity.pinned
+            ? UIImage.TaskManagement.pinnedDeselect
+            : UIImage.TaskManagement.pinnedSelect
+        ) { _ in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                do {
+                    try TaskService.togglePinned(for: entity)
+                    Toast.shared.present(
+                        title: entity.pinned ? Texts.Toasts.pinnedOn : Texts.Toasts.pinnedOff)
+                    logger.debug("Toggled pinned status to \(entity.pinned) for task: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                } catch {
+                    logger.error("Toggle pinned status for task failed: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
+                }
+            }
+        }
+        
+        let duplicateAction = UIAction(
+            title: Texts.TaskManagement.ContextMenu.dublicate,
+            image: UIImage.TaskManagement.copy
+        ) { _ in
+            do {
+                try TaskService.duplicate(task: entity)
+                Toast.shared.present(
+                    title: Texts.Toasts.duplicated)
+                logger.debug("Task duplicated: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown")")
+            } catch {
+                Toast.shared.present(
+                    title: Texts.Toasts.duplicatedError)
+                logger.error("Task \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown") duplicate Error: \(error.localizedDescription)")
+            }
+        }
+        
+        let folderAction = UIAction(
+            title: Texts.TaskManagement.ContextMenu.moveToFolder,
+            image: UIImage(systemName: "folder")
+        ) { _ in
+            onShowFolderSetup?(entity)
+        }
+        
         let removeAction = UIAction(
             title: Texts.TaskManagement.ContextMenu.delete,
             image: UIImage.TaskManagement.trash,
@@ -312,19 +391,57 @@ struct TaskListRow: View {
             }
             withAnimation(.easeInOut(duration: 0.2)) {
                 do {
-                    try TaskService.toggleRemoved(for: entity)
-                    Toast.shared.present(
-                        title: Texts.Toasts.removed)
-                    logger.debug("Task removed: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown").")
+                    if entity.removed {
+                        try TaskService.deleteRemovedTask(for: entity)
+                        Toast.shared.present(title: Texts.Toasts.deleted)
+                        logger.debug("Task permanently deleted: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown").")
+                    } else {
+                        try TaskService.toggleRemoved(for: entity)
+                        Toast.shared.present(title: Texts.Toasts.removed)
+                        logger.debug("Task removed: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown").")
+                    }
                 } catch {
                     logger.error("Task \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown") could not be removed with error: \(error.localizedDescription).")
                 }
             }
         }
         
-        return UIMenu(title: String(), children: [
-            removeAction
-        ])
+        if entity.removed {
+            var removedActions = [UIMenuElement]()
+            if entity.role == nil || entity.role == ShareAccess.owner.rawValue {
+                let restoreAction = UIAction(
+                    title: Texts.TaskManagement.ContextMenu.restore,
+                    image: UIImage(systemName: "arrow.uturn.left")
+                ) { _ in
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        do {
+                            try TaskService.toggleRemoved(for: entity)
+                            Toast.shared.present(title: Texts.Toasts.restored)
+                            logger.debug("Task restored: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown").")
+                        } catch {
+                            logger.error("Task restore failed: \(entity.name ?? "unnamed") \(entity.id?.uuidString ?? "unknown") \(error.localizedDescription)")
+                        }
+                    }
+                }
+                removedActions.append(restoreAction)
+            }
+            removedActions.append(removeAction)
+            return UIMenu(title: String(), children: removedActions)
+        }
+        
+        var actions = [UIMenuElement]()
+        if canEditTask {
+            actions.append(contentsOf: [pinnedAction, importantAction])
+        }
+        if canDuplicateTask {
+            actions.append(duplicateAction)
+        }
+        if canChangeFolder {
+            actions.append(folderAction)
+        }
+        actions.append(removeAction)
+        
+        return UIMenu(title: String(), children: actions)
     }
 }
 

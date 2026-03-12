@@ -80,7 +80,7 @@ struct MainView: View {
                     viewModel.toggleShowingCreateView()
                     viewModel.setFilter(to: .active)
                 }
-                .presentationDetents([.height(viewModel.taskManagementHeight + nonMaxSheetExtraHeight())])
+                .presentationDetents([.height(viewModel.taskManagementHeight)])
                 .presentationDragIndicator(.visible)
         }
         .sheet(item: $viewModel.sharingTask) { task in
@@ -269,6 +269,7 @@ extension MainView {
                     .foregroundColor(Color.LabelColors.labelReversed)
                     .glassEffect(.regular.tint(Color.LabelColors.labelPrimary).interactive())
                     .glassEffectUnion(id: "MainFloatingButtons", namespace: glassNamespace)
+                    .contentShape(.rect)
             } else {
                 Text(Texts.MainPage.Filter.RemoveFilter.buttonTitle)
                     .font(.system(size: 17, weight: .regular))
@@ -276,8 +277,10 @@ extension MainView {
                     .background(Color.LabelColors.labelPrimary)
                     .foregroundColor(Color.LabelColors.labelReversed)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .contentShape(.rect)
             }
         }
+        .buttonStyle(.plain)
         .matchedGeometryEffect(id: Texts.NamespaceID.floatingButtons, in: animation)
         .transition(.blurReplace)
         .padding(.bottom)
