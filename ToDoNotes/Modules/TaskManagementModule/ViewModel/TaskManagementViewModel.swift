@@ -36,6 +36,10 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var check: TaskCheck
     /// The local, editable checklist items for the task.
     @Published internal var checklistLocal: [ChecklistItem] = []
+    /// Tracks the most recently inserted checklist item (for focus behavior).
+    @Published internal var lastInsertedChecklistID: UUID? = nil
+    /// Tracks the most recently appended checklist item (for scroll-to-bottom).
+    @Published internal var lastAppendedChecklistID: UUID? = nil
     /// The currently dragged checklist item (for drag-and-drop).
     @Published internal var draggingItem: ChecklistItem? = nil
     /// The text for a new checklist item.
@@ -515,6 +519,8 @@ final class TaskManagementViewModel: ObservableObject {
             }
         }
         let newItem = ChecklistItem(name: checkListItemText, order: index)
+        lastInsertedChecklistID = newItem.id
+        lastAppendedChecklistID = nil
         // Animates the insertion for user feedback.
         withAnimation(.bouncy(duration: 0.2)) {
             checklistLocal.insert(newItem, at: index)
@@ -523,7 +529,10 @@ final class TaskManagementViewModel: ObservableObject {
     
     /// Appends a checklist item to the end.
     internal func appendChecklistItem() {
-        checklistLocal.append(ChecklistItem(name: checkListItemText, order: checklistLocal.count))
+        let newItem = ChecklistItem(name: checkListItemText, order: checklistLocal.count)
+        lastInsertedChecklistID = newItem.id
+        lastAppendedChecklistID = newItem.id
+        checklistLocal.append(newItem)
     }
     
     /// Removes a checklist item by id, if more than one remains.
@@ -560,16 +569,16 @@ final class TaskManagementViewModel: ObservableObject {
         setupNotificationsLocal(notifications)
     }
     
-    /// Toggles completion for a checklist item, and moves to top if completed.
+    /// Toggles completion for a checklist item, and moves to bottom if completed.
     /// - Parameter item: A binding to the checklist item.
     internal func toggleChecklistComplete(for item: Binding<ChecklistItem>) {
         item.wrappedValue.completed.toggle()
         if let index = checklistLocal.firstIndex(of: item.wrappedValue),
            item.wrappedValue.completed {
-            // Animates completed item to top.
+            // Animates completed item to bottom.
             withAnimation(.bouncy(duration: 0.2)) {
                 let sourceItem = checklistLocal.remove(at: index)
-                checklistLocal.insert(sourceItem, at: 0)
+                checklistLocal.append(sourceItem)
             }
         }
     }

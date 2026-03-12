@@ -16,18 +16,27 @@ struct CalendarMonthSelector: View {
     // MARK: - Body
         
     internal var body: some View {
-        VStack(spacing: 0) {
+        let container = VStack(spacing: 0) {
             content
             cancelButton
         }
         .frame(width: 350)
-        .background(Color.BackColors.backSecondary)
-        .cornerRadius(12)
-        .shadow(radius: 10)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
-        )
+
+        Group {
+            if #available(iOS 26.0, *) {
+                container
+                    .glassEffect(.regular, in: .rect(corners: .concentric(minimum: 24)))
+            } else {
+                container
+                    .background(Color.BackColors.backSecondary)
+                    .cornerRadius(12)
+                    .shadow(radius: 10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                    )
+            }
+        }
     }
     
     // MARK: - Shape Picker
@@ -63,7 +72,7 @@ struct CalendarMonthSelector: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     .foregroundColor(Color.LabelColors.labelReversed)
             }
-            .clipShape(.rect(cornerRadius: 10))
+            .modifier(SystemRowCornerModifier())
         }
         .frame(height: 50)
         .frame(maxWidth: .infinity)
