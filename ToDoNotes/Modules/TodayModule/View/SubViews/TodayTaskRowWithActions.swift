@@ -55,7 +55,8 @@ struct TodayTaskRowWithSwipeActions: View {
                 isLast: isLast,
                 onRequestConfirmSharedDelete: { task in
                     viewModel.requestConfirmSharedDelete(for: task)
-                }
+                },
+                onShowFolderSetup: onShowFolderSetup
             )
         }
         .swipeActions(edge: .leading, allowsFullSwipe: false) {

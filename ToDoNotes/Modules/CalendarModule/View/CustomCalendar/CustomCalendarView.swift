@@ -94,6 +94,18 @@ struct CustomCalendarView: View {
     private func handleSwipe(_ value: DragGesture.Value) {
         let horizontal = value.translation.width
         let vertical = value.translation.height
+
+        if abs(vertical) > abs(horizontal), abs(vertical) > swipeThreshold {
+            let targetMode: CalendarDisplayMode = vertical < 0 ? .week : .month
+            guard viewModel.displayMode != targetMode else { return }
+            let feedback = UIImpactFeedbackGenerator(style: .light)
+            feedback.impactOccurred()
+            withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.displayMode = targetMode
+            }
+            return
+        }
+
         guard abs(horizontal) > abs(vertical), abs(horizontal) > swipeThreshold else { return }
 
         let direction: CalendarMovement = horizontal < 0 ? .forward : .backward

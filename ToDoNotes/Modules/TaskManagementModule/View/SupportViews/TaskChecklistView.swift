@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUIIntrospect
 
 /// A view that displays and manages the checklist for a task.
 struct TaskChecklistView: View {
@@ -18,8 +17,6 @@ struct TaskChecklistView: View {
     /// ID of the currently focused checklist item.
     @FocusState private var focusedItemID: UUID?
     
-    /// Mapping of each checklist item ID to its text field delegate.
-    private var textFieldDelegates: [UUID: TextFieldDelegate]
     /// Whether the checklist is shown in preview mode (read-only).
     private let preview: Bool
     
@@ -32,54 +29,42 @@ struct TaskChecklistView: View {
     init(viewModel: TaskManagementViewModel, preview: Bool = false) {
         self.viewModel = viewModel
         self.preview = preview
-        
-        self.textFieldDelegates = Dictionary(uniqueKeysWithValues: viewModel.checklistLocal.map {
-            ($0.id, TextFieldDelegate())
-        })
     }
     
     // MARK: - Body
     
     /// Builds the checklist layout using a vertical lazy grid.
     internal var body: some View {
-        ScrollView(.vertical) {
-            LazyVStack(spacing: 0) {
-                ForEach($viewModel.checklistLocal) { $item in
-                    HStack(alignment: .top) {
-                        checkbox(item: $item)
-                        textField(item: $item)
-                        
-                        if !preview, viewModel.accessToEdit {
-                            removeButton(item: $item)
-                            dragHandle(for: $item)
-                        }
-                    }
-                    .padding(.vertical, 3)
-                    .padding(.horizontal, 8)
+        LazyVStack(spacing: 0) {
+            ForEach($viewModel.checklistLocal) { $item in
+                HStack(alignment: .top) {
+                    checkbox(item: $item)
+                    textField(item: $item)
                     
-                    // Handle drag and drop
-                    .dropDestination(for: ChecklistItem.self) { item, location in
-                        viewModel.setDraggingItem(for: nil)
-                        return false
-                    } isTargeted: { status in
-                        viewModel.setDraggingTargetResult(for: item, status: status)
+                    if !preview, viewModel.accessToEdit {
+                        removeButton(item: $item)
+                        dragHandle(for: $item)
                     }
-                    .id(item.id)
                 }
+                .padding(.vertical, 3)
+                .padding(.horizontal, 8)
+                
+                // Handle drag and drop
+                .dropDestination(for: ChecklistItem.self) { item, location in
+                    viewModel.setDraggingItem(for: nil)
+                    return false
+                } isTargeted: { status in
+                    viewModel.setDraggingTargetResult(for: item, status: status)
+                }
+                .id(item.id)
             }
-            .padding(.vertical, 4)
-            .onChange(of: viewModel.checklistLocal.map { $0.id }) { oldIDs, newIDs in
-                // Move focus to the newly added item when it was appended via "add point"
-                guard !preview, viewModel.accessToEdit else { return }
-                let oldSet = Set(oldIDs)
-                let newSet = Set(newIDs)
-                let inserted = newSet.subtracting(oldSet)
-                if inserted.count == 1, let insertedID = inserted.first {
-                    if newIDs.last == insertedID {
-                        DispatchQueue.main.async {
-                            focusedItemID = insertedID
-                        }
-                    }
+        }
+        .padding(.vertical, 4)
+        .onChange(of: viewModel.lastInsertedChecklistID) { _, newID in
+            guard !preview, viewModel.accessToEdit, let newID else { return }
+            if viewModel.checklistLocal.contains(where: { $0.id == newID }) {
+                DispatchQueue.main.async {
+                    focusedItemID = newID
                 }
             }
         }
@@ -199,31 +184,6 @@ struct TaskChecklistView: View {
 // MARK: - Extensions
 
 extension TaskChecklistView {
-    
-    // MARK: - Delegate setup
-    
-    /// Sets up a delegate for a text field to manage keyboard return key behavior.
-    /// - Parameters:
-    ///   - textField: The `UITextField` instance.
-    ///   - itemID: The ID of the checklist item associated with the text field.
-    private func setupDelegate(for textField: UITextField, itemID: UUID) {
-        guard let delegate = textFieldDelegates[itemID] else { return }
-        
-        delegate.shouldReturn = {
-            if let text = textField.text, text.isEmpty {
-                self.focusOnPreviousItem(before: itemID)
-                withAnimation(.linear(duration: 0.2)) {
-                    self.viewModel.removeChecklistItem(for: itemID)
-                }
-            } else {
-                self.viewModel.addChecklistItem(after: itemID)
-                self.focusOnNextItem(after: itemID)
-            }
-            return false
-        }
-        
-        textField.delegate = delegate
-    }
     
     // MARK: - Focus menagement
     

@@ -16,8 +16,8 @@ struct ContextMenuHelper<Content: View, Preview: View>: UIViewRepresentable {
     private var content: Content
     /// The SwiftUI view shown as a preview in the context menu.
     private var preview: Preview
-    /// The menu actions available in the context menu.
-    private var actions: UIMenu
+    /// The menu provider for actions available in the context menu.
+    private var actionsProvider: () -> UIMenu
     /// A closure triggered when the context menu interaction ends.
     private var onEnd: () -> ()
     
@@ -27,12 +27,12 @@ struct ContextMenuHelper<Content: View, Preview: View>: UIViewRepresentable {
     /// - Parameters:
     ///   - content: The SwiftUI view that should support the context menu.
     ///   - preview: The SwiftUI view that will be used as a preview in the context menu.
-    ///   - actions: The set of actions to display in the menu.
+    ///   - actionsProvider: A closure that provides the actions menu on demand.
     ///   - onEnd: A closure to execute when the context menu interaction finishes.
-    init(content: Content, preview: Preview, actions: UIMenu, onEnd: @escaping () -> Void) {
+    init(content: Content, preview: Preview, actionsProvider: @escaping () -> UIMenu, onEnd: @escaping () -> Void) {
         self.content = content
         self.preview = preview
-        self.actions = actions
+        self.actionsProvider = actionsProvider
         self.onEnd = onEnd
     }
     
@@ -69,6 +69,7 @@ struct ContextMenuHelper<Content: View, Preview: View>: UIViewRepresentable {
     /// Updates the UIView with the current SwiftUI content.
     internal func updateUIView(_ uiView: UIView, context: Context) {
         context.coordinator.hostingController?.rootView = content
+        context.coordinator.parent = self
     }
     
     // MARK: - Coordinator
@@ -96,7 +97,7 @@ struct ContextMenuHelper<Content: View, Preview: View>: UIViewRepresentable {
                 )
                 return hostingController
             } actionProvider: { _ in
-                self.parent.actions
+                self.parent.actionsProvider()
             }
         }
         
