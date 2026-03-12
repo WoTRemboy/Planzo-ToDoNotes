@@ -194,7 +194,7 @@ struct TaskManagementView: View {
             if shouldShowFullScreenContent {
                 ScrollViewReader { outerProxy in
                     ScrollView {
-                        VStack(spacing: 0) {
+                        VStack(spacing: 8) {
                             // Title text field with optional checkbox
                             nameInput
                             
