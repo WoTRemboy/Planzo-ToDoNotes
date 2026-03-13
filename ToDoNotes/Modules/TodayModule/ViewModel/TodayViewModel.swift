@@ -8,6 +8,7 @@
 import SwiftUI
 import UserNotifications
 import OSLog
+import UIKit
 
 private let logger = Logger(subsystem: "com.todonotes.today", category: "TodayViewModel")
 
@@ -32,7 +33,7 @@ final class TodayViewModel: ObservableObject {
     @Published internal var selectedTaskFolder: Folder = .mock()
     /// Current text entered into the search bar.
     @Published internal var searchText: String = String() {
-        didSet { rebuildDayTasks() }
+        didSet { updateTaskFetch() }
     }
     /// Height of the task management sheet.
     @Published internal var taskManagementHeight: CGFloat = 15
@@ -73,7 +74,11 @@ final class TodayViewModel: ObservableObject {
     
     init() {
         taskFetchController = TaskFetchController(
-            predicate: TodayViewModel.dayPredicate(for: todayDate),
+            predicate: TodayViewModel.dayPredicate(
+                for: todayDate,
+                searchText: String(),
+                importance: false
+            ),
             sortDescriptors: TodayViewModel.daySortDescriptors
         )
         folderFetchController = FolderFetchController()
@@ -89,6 +94,7 @@ final class TodayViewModel: ObservableObject {
 
         folderFetchController.start()
         taskFetchController.start()
+        updateTaskFetch()
     }
     
     // MARK: - Task Creation Methods
@@ -118,34 +124,48 @@ final class TodayViewModel: ObservableObject {
         NSSortDescriptor(key: "created", ascending: true)
     ]
 
-    private static func dayPredicate(for date: Date) -> NSPredicate {
+    private static func dayPredicate(for date: Date, searchText: String, importance: Bool) -> NSPredicate {
         let calendar = Calendar.current
         let start = calendar.startOfDay(for: date)
         let end = calendar.date(byAdding: .day, value: 1, to: start) ?? start.addingTimeInterval(86400)
-        return NSPredicate(
-            format: "removed == NO AND ((target >= %@ AND target < %@) OR (target == nil AND created >= %@ AND created < %@))",
-            start as NSDate,
-            end as NSDate,
-            start as NSDate,
-            end as NSDate
+        var subpredicates: [NSPredicate] = [
+            NSPredicate(
+                format: "removed == NO AND ((target >= %@ AND target < %@) OR (target == nil AND created >= %@ AND created < %@))",
+                start as NSDate,
+                end as NSDate,
+                start as NSDate,
+                end as NSDate
+            )
+        ]
+
+        if !searchText.isEmpty {
+            subpredicates.append(
+                NSPredicate(
+                    format: "(name CONTAINS[cd] %@) OR (details CONTAINS[cd] %@)",
+                    searchText,
+                    searchText
+                )
+            )
+        }
+
+        if importance {
+            subpredicates.append(NSPredicate(format: "important == YES"))
+        }
+
+        return NSCompoundPredicate(andPredicateWithSubpredicates: subpredicates)
+    }
+
+    private func updateTaskFetch() {
+        let predicate = TodayViewModel.dayPredicate(
+            for: todayDate,
+            searchText: searchText,
+            importance: importance
         )
+        taskFetchController.update(predicate: predicate, sortDescriptors: TodayViewModel.daySortDescriptors)
     }
 
     private func rebuildDayTasks() {
-        let filteredTasks = tasks.lazy.filter { task in
-            if !self.searchText.isEmpty {
-                let searchTerm = self.searchText
-                let nameMatches = task.name?.localizedCaseInsensitiveContains(searchTerm) ?? false
-                let detailsMatches = task.details?.localizedCaseInsensitiveContains(searchTerm) ?? false
-                if !nameMatches && !detailsMatches {
-                    return false
-                }
-            }
-            if self.importance && !task.important { return false }
-            return true
-        }
-
-        let sortedTasks = filteredTasks.sorted { t1, t2 in
+        let sortedTasks = tasks.sorted { t1, t2 in
             if t1.pinned != t2.pinned {
                 return t1.pinned && !t2.pinned
             }
@@ -183,9 +203,13 @@ final class TodayViewModel: ObservableObject {
     
     /// Toggles the importance filter with animation.
     internal func toggleImportance() {
+        let haptic = UIImpactFeedbackGenerator(style: .light)
+        haptic.prepare()
         withAnimation(.easeInOut(duration: 0.2)) {
             importance.toggle()
+            updateTaskFetch()
         }
+        haptic.impactOccurred()
     }
     
     internal func toggleShowShareSheet() {

@@ -164,14 +164,15 @@ struct MainView: View {
     
     /// Displays the task list organized into segments and sections.
     private var taskForm: some View {
-        Form {
+        let segments = viewModel.filteredSegmentedTasks
+        return Form {
             TipView(overviewTip)
                 .tipBackground(Color.FolderColors.lists
                     .opacity(0.3))
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
             
-            ForEach(filteredSegmentedTasks, id: \.0) { segment, tasks in
+            ForEach(segments, id: \.0) { segment, tasks in
                 segmentView(segment: segment, tasks: tasks)
             }
             .listRowSeparator(.hidden)
@@ -184,7 +185,7 @@ struct MainView: View {
         .padding(.horizontal, hasNotch() ? -4 : 0)
         .defaultBackgroundStyle()
         .scrollContentBackground(.hidden)
-        .scrollDisabled(filteredSegmentedTasks.isEmpty)
+        .scrollDisabled(segments.isEmpty)
     }
 }
 
