@@ -70,16 +70,14 @@ struct SettingAccountView: View {
     @ViewBuilder
     private var profileImage: some View {
         if let user = authService.currentUser, let url = user.avatarUrl {
-            AsyncImage(url: URL(string: url)) { image in
-                if let image = image.image {
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 80, height: 80)
-                        .clipShape(.circle)
-                } else {
-                    placeholderImage
-                }
+            CachedAsyncImage(url: URL(string: url)) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 80, height: 80)
+                    .clipShape(.circle)
+            } placeholder: {
+                placeholderImage
             }
         } else if let user = authService.currentUser, let email = user.email, !email.isEmpty {
             EmailInitialCircleView(email: email, type: .large)
