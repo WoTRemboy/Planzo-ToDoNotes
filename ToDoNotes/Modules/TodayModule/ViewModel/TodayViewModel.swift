@@ -31,7 +31,9 @@ final class TodayViewModel: ObservableObject {
     @Published internal var sharingTask: TaskEntity? = nil
     @Published internal var selectedTaskFolder: Folder = .mock()
     /// Current text entered into the search bar.
-    @Published internal var searchText: String = String()
+    @Published internal var searchText: String = String() {
+        didSet { rebuildDayTasks() }
+    }
     /// Height of the task management sheet.
     @Published internal var taskManagementHeight: CGFloat = 15
     
@@ -44,9 +46,13 @@ final class TodayViewModel: ObservableObject {
     @Published internal var showingSearchBar: Bool = false
     @Published internal var showingShareSheet: Bool = false
     /// Whether to filter tasks to show only important ones.
-    @Published internal var importance: Bool = false
+    @Published internal var importance: Bool = false {
+        didSet { rebuildDayTasks() }
+    }
     
     @Published internal var folders: [Folder] = []
+    @Published private(set) var tasks: [TaskEntity] = []
+    @Published private(set) var dayTasks: [TaskSection: [TaskEntity]] = [:]
     
     // MARK: - Shared delete confirmation
     
@@ -62,15 +68,27 @@ final class TodayViewModel: ObservableObject {
     /// The reference date used for today's tasks.
     private(set) var todayDate: Date = Date.now
     
-    private var coreDataObserver: NSObjectProtocol? = nil
+    private let taskFetchController: TaskFetchController
+    private let folderFetchController: FolderFetchController
     
     init() {
-        self.reloadFolders()
-        
-        let context = CoreDataProvider.shared.persistentContainer.viewContext
-        coreDataObserver = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: context, queue: .main) { [weak self] _ in
-            self?.reloadFolders()
+        taskFetchController = TaskFetchController(
+            predicate: TodayViewModel.dayPredicate(for: todayDate),
+            sortDescriptors: TodayViewModel.daySortDescriptors
+        )
+        folderFetchController = FolderFetchController()
+
+        taskFetchController.onUpdate = { [weak self] tasks in
+            self?.tasks = tasks
+            self?.rebuildDayTasks()
         }
+
+        folderFetchController.onUpdate = { [weak self] folders in
+            self?.folders = folders.sorted { $0.order < $1.order }
+        }
+
+        folderFetchController.start()
+        taskFetchController.start()
     }
     
     // MARK: - Task Creation Methods
@@ -94,8 +112,61 @@ final class TodayViewModel: ObservableObject {
         self.sharingTask = task
     }
     
-    internal func reloadFolders() {
-        self.folders = FolderCoreDataService.shared.loadFolders().sorted { $0.order < $1.order }
+    private static let daySortDescriptors: [NSSortDescriptor] = [
+        NSSortDescriptor(key: "pinned", ascending: false),
+        NSSortDescriptor(key: "target", ascending: true),
+        NSSortDescriptor(key: "created", ascending: true)
+    ]
+
+    private static func dayPredicate(for date: Date) -> NSPredicate {
+        let calendar = Calendar.current
+        let start = calendar.startOfDay(for: date)
+        let end = calendar.date(byAdding: .day, value: 1, to: start) ?? start.addingTimeInterval(86400)
+        return NSPredicate(
+            format: "removed == NO AND ((target >= %@ AND target < %@) OR (target == nil AND created >= %@ AND created < %@))",
+            start as NSDate,
+            end as NSDate,
+            start as NSDate,
+            end as NSDate
+        )
+    }
+
+    private func rebuildDayTasks() {
+        let filteredTasks = tasks.lazy.filter { task in
+            if !self.searchText.isEmpty {
+                let searchTerm = self.searchText
+                let nameMatches = task.name?.localizedCaseInsensitiveContains(searchTerm) ?? false
+                let detailsMatches = task.details?.localizedCaseInsensitiveContains(searchTerm) ?? false
+                if !nameMatches && !detailsMatches {
+                    return false
+                }
+            }
+            if self.importance && !task.important { return false }
+            return true
+        }
+
+        let sortedTasks = filteredTasks.sorted { t1, t2 in
+            if t1.pinned != t2.pinned {
+                return t1.pinned && !t2.pinned
+            }
+
+            let firstDate = t1.created ?? .now
+            let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target ?? .now : (Date.distantFuture + firstDate.timeIntervalSinceNow)
+            let secondDate = t2.created ?? .now
+            let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target ?? .now : (Date.distantFuture + secondDate.timeIntervalSinceNow)
+            return d1 < d2
+        }
+
+        var result: [TaskSection: [TaskEntity]] = [:]
+        let pinned = sortedTasks.filter { $0.pinned }
+        let active = sortedTasks.filter { !$0.pinned && $0.completed != 2 }
+        let completed = sortedTasks.filter { !$0.pinned && $0.completed == 2 }
+
+        if !pinned.isEmpty { result[.pinned] = pinned }
+        if !active.isEmpty { result[.active] = active }
+        if !completed.isEmpty { result[.completed] = completed }
+
+        dayTasks = result
     }
     
     // MARK: - UI Toggle Methods

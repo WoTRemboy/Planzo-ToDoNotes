@@ -13,10 +13,6 @@ struct CalendarView: View {
     
     // MARK: - Properties
     
-    /// Fetches all TaskEntity objects stored in Core Data.
-    @FetchRequest(entity: TaskEntity.entity(), sortDescriptors: [])
-    private var tasksResults: FetchedResults<TaskEntity>
-    
     /// ViewModel managing the calendar's logic and state.
     @EnvironmentObject private var viewModel: CalendarViewModel
     @EnvironmentObject private var authService: AuthNetworkService
@@ -259,45 +255,14 @@ struct CalendarView: View {
 // MARK: - Helpers
 
 extension CalendarView {
-    
     /// Groups tasks by type (pinned, active, completed) for the currently selected day.
     private var dayTasks: [TaskSection: [TaskEntity]] {
-        let calendar = Calendar.current
-        let day = calendar.startOfDay(for: viewModel.selectedDate)
-        
-        let filteredTasks = tasksResults.lazy
-            .filter { task in
-            let taskDate = calendar.startOfDay(for: task.target ?? task.created ?? Date.distantPast)
-            return taskDate == day && !task.removed
-        }
-        let sortedTasks = filteredTasks.sorted { t1, t2 in
-            let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target! : (Date.distantFuture + t1.created!.timeIntervalSinceNow)
-            let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target! : (Date.distantFuture + t2.created!.timeIntervalSinceNow)
-            return d1 < d2
-        }
-        var result: [TaskSection: [TaskEntity]] = [:]
-        
-        let pinned = sortedTasks.filter { $0.pinned }
-        let active = sortedTasks.filter { !$0.pinned && $0.completed != 2 }
-        let completed = sortedTasks.filter { !$0.pinned && $0.completed == 2 }
-        
-        if !pinned.isEmpty { result[.pinned] = pinned }
-        if !active.isEmpty { result[.active] = active }
-        if !completed.isEmpty { result[.completed] = completed }
-        return result
+        viewModel.dayTasks
     }
-    
+
     /// Creates a dictionary mapping dates to the number of tasks scheduled for each date.
     private var datesWithTasks: [Date: Int] {
-        var groupedDates: [Date: Int] = [:]
-        
-        for task in tasksResults {
-            guard !task.removed else { continue }
-            let referenceDate = task.target ?? task.created ?? Date.distantPast
-            let day = Calendar.current.startOfDay(for: referenceDate)
-            groupedDates[day, default: 0] += 1
-        }
-        return groupedDates
+        viewModel.datesWithTasks
     }
 }
 

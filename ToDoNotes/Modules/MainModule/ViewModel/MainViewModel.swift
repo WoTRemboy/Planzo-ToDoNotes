@@ -30,7 +30,7 @@ final class MainViewModel: ObservableObject {
     @Published private(set) var selectedFilter: Filter = .active
     /// Currently selected folder (e.g., Reminders, Tasks, Lists).
     @Published internal var selectedFolder: Folder? = nil {
-        didSet { fetchTasks() }
+        didSet { updateTaskFetch(for: selectedFolder) }
     }
     /// Whether only important tasks are displayed.
     @Published internal var importance: Bool = false
@@ -126,70 +126,56 @@ final class MainViewModel: ObservableObject {
     
     // MARK: - Private Properties
     
-    private var coreDataObserver: NSObjectProtocol? = nil
+    private let taskFetchController: TaskFetchController
+    private let folderFetchController: FolderFetchController
     
     // MARK: - Initializer
 
     init() {
-        self.reloadFolders()
-        self.fetchTasks()
-        
-        if let first = folders.first {
-            selectedFolder = first
-        } else {
-            selectedFolder = nil
+        taskFetchController = TaskFetchController()
+        folderFetchController = FolderFetchController()
+
+        taskFetchController.onUpdate = { [weak self] tasks in
+            self?.allTasks = tasks
         }
-        
-        let context = CoreDataProvider.shared.persistentContainer.viewContext
-        
-        coreDataObserver = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: context, queue: .main) { [weak self] _ in
-            self?.reloadFolders()
-            self?.fetchTasks()
+
+        folderFetchController.onUpdate = { [weak self] folders in
+            guard let self = self else { return }
+            self.folders = folders
+            self.ensureSelectedFolder()
         }
-    }
-    
-    deinit {
-        if let observer = coreDataObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
+
+        folderFetchController.start()
+        updateTaskFetch(for: selectedFolder)
     }
     
     // MARK: - Methods
     
-    /// Reload folders from Core Data.
-    internal func reloadFolders() {
-        self.folders = FolderCoreDataService.shared.loadFolders()
-        
-        if let selected = selectedFolder, !folders.contains(where: { $0 == selected }) {
-            selectedFolder = folders.first
-        } else if selectedFolder == nil {
-            selectedFolder = folders.first
+    /// Ensures a valid selected folder after folder updates.
+    private func ensureSelectedFolder() {
+        if let selected = selectedFolder, folders.contains(where: { $0 == selected }) {
+            return
         }
+        selectedFolder = folders.first
     }
-    
-    /// Fetch tasks from Core Data and assign to allTasks.
-    internal func fetchTasks() {
-        let context = CoreDataProvider.shared.persistentContainer.viewContext
-        let request: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \TaskEntity.target, ascending: true)]
-        
-        guard let folder = selectedFolder else { return }
+
+    /// Updates the task fetch controller when folder selection changes.
+    private func updateTaskFetch(for folder: Folder?) {
+        guard let folder else {
+            allTasks = []
+            return
+        }
+
+        let predicate: NSPredicate?
         if folder.system, !folder.shared {
-            request.predicate = nil
+            predicate = nil
         } else if folder.system, folder.shared {
-            request.predicate = NSPredicate(format: "members > 0")
+            predicate = NSPredicate(format: "members > 0")
         } else {
-            request.predicate = NSPredicate(format: "folder.id == %@", folder.id as CVarArg)
+            predicate = NSPredicate(format: "folder.id == %@", folder.id as CVarArg)
         }
-        
-        do {
-            let tasks = try context.fetch(request)
-            DispatchQueue.main.async {
-                self.allTasks = tasks
-            }
-        } catch {
-            logger.error("Failed to fetch tasks: \(error)")
-        }
+
+        taskFetchController.update(predicate: predicate)
     }
     
     // MARK: - Task Creation Methods
