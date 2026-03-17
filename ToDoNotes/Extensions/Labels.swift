@@ -274,6 +274,12 @@ final class Texts {
             static let placeholder = NSLocalizedString("TaskManagementTaskRowPlaceholder", comment: "No Title")
         }
         
+        enum NotificationActions {
+            static let complete = NSLocalizedString("TaskManagementNotificationComplete", comment: "Complete")
+            static let snooze10 = NSLocalizedString("TaskManagementNotificationSnooze10", comment: "Snooze 10 min")
+            static let snoozed10Title = NSLocalizedString("TaskManagementNotificationSnoozed10", comment: "Snoozed for 10 min")
+        }
+        
         enum ContextMenu {
             static let complete = NSLocalizedString("TaskManagementContextMenuComplete", comment: "Complete the Task")
             static let dublicate = NSLocalizedString("TaskManagementContextMenuDublicate", comment: "Duplicate the Note")

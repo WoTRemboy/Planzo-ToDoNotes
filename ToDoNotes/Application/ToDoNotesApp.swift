@@ -8,7 +8,6 @@
 import SwiftUI
 import OSLog
 import GoogleSignIn
-import UserNotifications
 
 /// A logger instance for debug and error messages.
 private let logger = Logger(subsystem: "com.todonotes.application", category: "ToDoNotesApp")
@@ -96,10 +95,8 @@ struct ToDoNotesApp: App {
     
     // MARK: - Initialization
     
-    /// App initialization. Requests user permission for notifications.
-    init() {
-        requestNotifications()
-    }
+    /// App initialization.
+    init() {}
     
     // MARK: - Appearance setup
     
@@ -127,28 +124,4 @@ enum NotificationStatus: String {
     case prohibited = "prohibited"
 }
 
-// MARK: - Notification Handling
-
-extension ToDoNotesApp {
-    /// Requests user authorization for local notifications (alerts and sounds).
-    /// Updates `notificationsEnabled` based on the user's choice or errors.
-    private func requestNotifications() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { success, error in
-            if success {
-                // Notifications were granted
-                if self.notificationsEnabled == .prohibited {
-                    self.notificationsEnabled = .allowed
-                }
-                logger.debug("Notifications are allowed.")
-            } else if let error {
-                // An error occurred; prohibit notifications
-                self.notificationsEnabled = .prohibited
-                logger.error("\(error.localizedDescription)")
-            } else {
-                // User declined notification permissions
-                logger.debug("Notifications are prohibited.")
-            }
-        }
-    }
-}
 

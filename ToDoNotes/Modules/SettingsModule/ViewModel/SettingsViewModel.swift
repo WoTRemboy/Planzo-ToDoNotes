@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import UserNotifications
 import OSLog
 
 /// Logger for tracking settings changes and events.
@@ -283,10 +282,16 @@ final class SettingsViewModel: ObservableObject {
         }
     }
     
-    /// Reads the current notification status and updates `notificationsEnabled` accordingly.
+    /// Reads the current notification status from the system and updates local state.
     internal func readNotificationStatus() {
-        guard notificationsStatus == .allowed else { return }
-        notificationsEnabled = true
+        NotificationManager.shared.refreshAuthorizationStatus { [weak self] status in
+            self?.updateNotificationStatus(status)
+        }
+    }
+
+    internal func updateNotificationStatus(_ status: NotificationStatus) {
+        notificationsStatus = status
+        notificationsEnabled = status == .allowed
     }
     
     /// Updates the user's notification permission setting.

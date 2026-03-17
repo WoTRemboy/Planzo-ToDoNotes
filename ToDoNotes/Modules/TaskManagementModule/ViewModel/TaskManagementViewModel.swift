@@ -265,13 +265,14 @@ final class TaskManagementViewModel: ObservableObject {
         addTaskButtonGlow.toggle()
     }
     
-    /// Reads the notification status from UserDefaults and updates local status.
+    /// Reads the notification status from the system and updates local status.
     internal func readNotificationStatus() {
-        let defaults = UserDefaults.standard
-        let rawValue = defaults.string(forKey: Texts.UserDefaults.notifications) ?? String()
-        notificationsStatus = NotificationStatus(rawValue: rawValue) ?? .prohibited
-        if notificationsStatus != .allowed {
-            notificationsLocal.removeAll()
+        NotificationManager.shared.refreshAuthorizationStatus { [weak self] status in
+            guard let self = self else { return }
+            self.notificationsStatus = status
+            if status != .allowed {
+                self.notificationsLocal.removeAll()
+            }
         }
     }
     
@@ -401,6 +402,7 @@ final class TaskManagementViewModel: ObservableObject {
         guard notificationsStatus == .allowed else { return }
         notificationCenter.setupNotifications(for: notificationsLocal,
                                               remove: notifications,
+                                              taskId: entity?.id,
                                               with: nameText)
     }
     
@@ -423,17 +425,42 @@ final class TaskManagementViewModel: ObservableObject {
         notificationsLocal = notificationsLocal.filter { allowedTypes.contains($0.type) }
     }
     
-    /// Toggles selection for a notification type. If not allowed, shows alert.
+    /// Toggles selection for a notification type. If not allowed, requests permission or shows alert.
     internal func toggleNotificationSelection(for type: TaskNotification) {
-        guard notificationsStatus == .allowed else {
-            notificationsLocal.removeAll()
-            type != .none ? showingNotificationAlert.toggle() : nil
-            return
-        }
         guard type != .none else {
             notificationsLocal.removeAll()
             return
         }
+
+        if notificationsStatus != .allowed {
+            if notificationsStatus == .disabled {
+                notificationsLocal.removeAll()
+                showingNotificationAlert = true
+                return
+            }
+
+            NotificationManager.shared.requestAuthorization { [weak self] _, status in
+                guard let self = self else { return }
+                self.notificationsStatus = status
+                guard status == .allowed else {
+                    DispatchQueue.main.async {
+                        self.notificationsLocal.removeAll()
+                        self.showingNotificationAlert = true
+                    }
+                    return
+                }
+
+                DispatchQueue.main.async {
+                    self.applyNotificationSelection(type: type)
+                }
+            }
+            return
+        }
+
+        applyNotificationSelection(type: type)
+    }
+
+    private func applyNotificationSelection(type: TaskNotification) {
         let notification = NotificationItem(
             type: type,
             target: notificationTargetCalculation(for: type)
@@ -1050,7 +1077,9 @@ extension TaskManagementViewModel {
                   let target = notification.target
             else { continue }
             let itemType = TaskNotification(rawValue: type) ?? .inTime
-            let item = NotificationItem(type: itemType,
+            let itemId = notification.id ?? UUID()
+            let item = NotificationItem(id: itemId,
+                                        type: itemType,
                                         target: target,
                                         serverId: notification.serverId)
             notificationsLocal.insert(item)
