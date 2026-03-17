@@ -79,6 +79,73 @@ extension ListNetworkService {
             logger.error("Failed to fetch backend tasks for sync: \(error.localizedDescription)")
         }
     }
+
+    internal func syncLocalChangesIfNeeded(since: String?) {
+        guard SyncCoordinator.shared.beginLocalSyncIfPossible() else { return }
+
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        let sinceDate = Date.iso8601DateFormatter.date(from: since ?? "") ?? .distantPast
+        let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "updatedAt > %@ OR serverId == nil OR serverId == ''", sinceDate as NSDate)
+
+        let stateQueue = DispatchQueue(label: "com.todonotes.sync-localchanges-state")
+        var pending = 0
+        var maxPushedAt: Date?
+
+        func finish(success: Bool, updatedAt: Date, key: String) {
+            SyncCoordinator.shared.finishTask(for: key, pushedAt: updatedAt, success: success)
+            stateQueue.async {
+                if success {
+                    maxPushedAt = max(maxPushedAt ?? updatedAt, updatedAt)
+                }
+                pending -= 1
+                if pending == 0 {
+                    if let maxDate = maxPushedAt {
+                        UserCoreDataService.shared.updateLastSyncAt(date: maxDate)
+                    }
+                    SyncCoordinator.shared.endLocalSync()
+                }
+            }
+        }
+
+        context.perform {
+            let tasks = (try? context.fetch(fetchRequest)) ?? []
+            if tasks.isEmpty {
+                SyncCoordinator.shared.endLocalSync()
+                return
+            }
+
+            for task in tasks {
+                let updatedAt = task.updatedAt ?? .distantPast
+                let key: String
+                if let serverId = task.serverId, !serverId.isEmpty {
+                    key = "server:\(serverId)"
+                } else {
+                    key = "local:\(task.objectID.uriRepresentation().absoluteString)"
+                }
+
+                guard SyncCoordinator.shared.shouldStartTask(for: key, updatedAt: updatedAt) else { continue }
+                stateQueue.sync { pending += 1 }
+
+                self.updateTaskOnServer(for: task) { result in
+                    switch result {
+                    case .success:
+                        self.syncChecklistItemsIfNeeded(for: task)
+                        finish(success: true, updatedAt: updatedAt, key: key)
+                    case .failure(let error):
+                        logger.error("Failed to sync local task on reconnect: \(error.localizedDescription)")
+                        finish(success: false, updatedAt: updatedAt, key: key)
+                    }
+                }
+            }
+
+            stateQueue.async {
+                if pending == 0 {
+                    SyncCoordinator.shared.endLocalSync()
+                }
+            }
+        }
+    }
     
     private func backendSyncAllTasks(since: String?, context: NSManagedObjectContext, localTasks: [TaskEntity]) {
         self.fetchLists(since: since) { result in
@@ -471,6 +538,39 @@ extension ListNetworkService {
             sheet.prefersGrabberVisible = true
         }
         rootVC.present(hosting, animated: true)
+    }
+
+    private func syncChecklistItemsIfNeeded(for task: TaskEntity) {
+        guard let checklistEntities = (task.checklist as? Set<ChecklistEntity>)?.sorted(by: { $0.order < $1.order }) else {
+            return
+        }
+        for checklistEntity in checklistEntities {
+            if let serverId = checklistEntity.serverId, !serverId.isEmpty {
+                ListItemNetworkService.shared.updateChecklistItem(checklistEntity, for: task)
+            } else {
+                ListItemNetworkService.shared.createChecklistItem(for: task, item: checklistEntity) { result in
+                    switch result {
+                    case .success(let serverId):
+                        self.updateChecklistEntityServerIdAndSave(checklistEntity, serverId: serverId)
+                    case .failure(let error):
+                        logger.error("Failed to save context after updating checklistEntity serverId: \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+    }
+
+    private func updateChecklistEntityServerIdAndSave(_ checklistEntity: ChecklistEntity, serverId: String) {
+        guard !serverId.isEmpty else { return }
+        let context = checklistEntity.managedObjectContext
+        context?.perform {
+            checklistEntity.serverId = serverId
+            do {
+                try context?.save()
+            } catch {
+                logger.error("Failed to save context after updating checklistEntity serverId: \(error.localizedDescription)")
+            }
+        }
     }
 }
 

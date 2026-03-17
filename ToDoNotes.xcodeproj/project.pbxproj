@@ -140,6 +140,7 @@
 		63AB00852EAB8B3A0033C729 /* ReorderableDropOutsideDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AB00842EAB8B390033C729 /* ReorderableDropOutsideDelegate.swift */; };
 		63ADCBBA2D92CE6900C80DCB /* TaskManagementPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADCBB92D92CE5E00C80DCB /* TaskManagementPreview.swift */; };
 		63ADDEA22F68BD9E00001CEC /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADDEA12F68BD9E00001CEC /* NotificationManager.swift */; };
+		63ADDEA82F6A0B9800001CEC /* SyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ADDEA72F6A0B9800001CEC /* SyncCoordinator.swift */; };
 		63AE657D2D71F9E6009A3541 /* SettingTaskCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AE657C2D71F9E6009A3541 /* SettingTaskCreateView.swift */; };
 		63AE657F2D72172E009A3541 /* TaskCreationPageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AE657E2D721728009A3541 /* TaskCreationPageModel.swift */; };
 		63AE65832D721AED009A3541 /* SettingAboutPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AE65822D721AED009A3541 /* SettingAboutPageView.swift */; };
@@ -365,6 +366,7 @@
 		63AB00842EAB8B390033C729 /* ReorderableDropOutsideDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderableDropOutsideDelegate.swift; sourceTree = "<group>"; };
 		63ADCBB92D92CE5E00C80DCB /* TaskManagementPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementPreview.swift; sourceTree = "<group>"; };
 		63ADDEA12F68BD9E00001CEC /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		63ADDEA72F6A0B9800001CEC /* SyncCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncCoordinator.swift; sourceTree = "<group>"; };
 		63AE657C2D71F9E6009A3541 /* SettingTaskCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTaskCreateView.swift; sourceTree = "<group>"; };
 		63AE657E2D721728009A3541 /* TaskCreationPageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCreationPageModel.swift; sourceTree = "<group>"; };
 		63AE65822D721AED009A3541 /* SettingAboutPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingAboutPageView.swift; sourceTree = "<group>"; };
@@ -1167,6 +1169,14 @@
 			path = Notifications;
 			sourceTree = "<group>";
 		};
+		63ADDEA62F6A0B8D00001CEC /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				63ADDEA72F6A0B9800001CEC /* SyncCoordinator.swift */,
+			);
+			path = Sync;
+			sourceTree = "<group>";
+		};
 		63AE658E2D73291F009A3541 /* CustomNavigationBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -1207,6 +1217,7 @@
 				634A463E2F4FA98F00A3388E /* Buttons */,
 				639C70272F645FA200851F4D /* Images */,
 				63ADDEA02F68BD7900001CEC /* Notifications */,
+				63ADDEA62F6A0B8D00001CEC /* Sync */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1756,6 +1767,7 @@
 				63DE01122D567D92002A5C4F /* CalendarMonthSelector.swift in Sources */,
 				637C27BC2ECCA16100B7BBC7 /* SharingAccessProfileRow.swift in Sources */,
 				635FEF882D24C36E007FFBBA /* OnboardingScreenViewModel.swift in Sources */,
+				63ADDEA82F6A0B9800001CEC /* SyncCoordinator.swift in Sources */,
 				63753A882E786C1F00D75DAF /* SecretsManager.swift in Sources */,
 				638B1B692EBA3F1F00EE9DBA /* ShareNetworkAppliedService.swift in Sources */,
 				6302B3582E5C6A6E002E65C1 /* WeekFirstDayModel.swift in Sources */,
