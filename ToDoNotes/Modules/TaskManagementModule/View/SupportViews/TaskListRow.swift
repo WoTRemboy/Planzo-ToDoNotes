@@ -27,6 +27,9 @@ struct TaskListRow: View {
     private let onRequestConfirmSharedDelete: ((TaskEntity) -> Void)?
     /// Optional callback to request folder setup for a task.
     private let onShowFolderSetup: ((TaskEntity) -> Void)?
+
+    @AppStorage(Texts.UserDefaults.notifications)
+    private var notificationsStatus: NotificationStatus = .prohibited
     
     // MARK: - Initialization
     
@@ -216,7 +219,8 @@ struct TaskListRow: View {
         let hasDateLabel = entity.target != nil && entity.hasTargetTime
         let context = TaskService.haveTextContent(for: entity)
         let notifications = entity.notifications?.count ?? 0 > 0
-        let spacingValue: CGFloat = (hasDateLabel && (context || notifications)) ? 6 : 0
+        let showNotifications = notifications && notificationsStatus == .allowed
+        let spacingValue: CGFloat = (hasDateLabel && (context || showNotifications)) ? 6 : 0
         
         return VStack(alignment: .trailing, spacing: spacingValue) {
             if entity.target != nil, entity.hasTargetTime {
@@ -227,10 +231,10 @@ struct TaskListRow: View {
                 if context {
                     textContentImage
                 }
-                if notifications {
+                if showNotifications {
                     reminderImage
                 }
-                if context || notifications || !hasDateLabel {
+                if context || showNotifications || !hasDateLabel {
                     additionalStatus
                         .frame(width: 15, height: 15)
                 }
