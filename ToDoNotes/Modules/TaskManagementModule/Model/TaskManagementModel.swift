@@ -35,10 +35,17 @@ struct ChecklistItem: Identifiable, Equatable, Codable, Transferable {
 
 /// Represents a notification related to a task, linked by type and optional trigger date.
 struct NotificationItem: Identifiable, Equatable, Hashable {
-    var id = UUID()
+    var id: UUID
     var type: TaskNotification
     var target: Date?
     var serverId: String?
+
+    init(id: UUID = UUID(), type: TaskNotification, target: Date?, serverId: String? = nil) {
+        self.id = id
+        self.type = type
+        self.target = target
+        self.serverId = serverId
+    }
 }
 
 // MARK: - Management View State
