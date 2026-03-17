@@ -103,6 +103,19 @@ final class TaskManagementViewModel: ObservableObject {
     
     /// Reference to the TaskEntity being edited (if any).
     private var entity: TaskEntity? = nil
+
+    private struct DateParamsSnapshot {
+        let targetDate: Date
+        let hasDate: Bool
+        let hasTime: Bool
+        let selectedDay: Date
+        let selectedTime: Date
+        let selectedTimeType: TaskTime
+        let calendarDate: Date
+        let notificationsLocal: Set<NotificationItem>
+    }
+
+    private var dateParamsSnapshot: DateParamsSnapshot? = nil
     
     /// The date currently displayed in the calendar view.
     @Published internal var calendarDate: Date = Date.now {
@@ -378,12 +391,58 @@ final class TaskManagementViewModel: ObservableObject {
     internal func doneDatePicker() {
         showingDatePicker = false
     }
+
+    /// Captures the initial date/time/notification state before edits.
+    internal func captureDateParamsSnapshot() {
+        dateParamsSnapshot = DateParamsSnapshot(
+            targetDate: targetDate,
+            hasDate: hasDate,
+            hasTime: hasTime,
+            selectedDay: selectedDay,
+            selectedTime: selectedTime,
+            selectedTimeType: selectedTimeType,
+            calendarDate: calendarDate,
+            notificationsLocal: notificationsLocal
+        )
+    }
     
     /// Cancels the date picker.
     internal func cancelTaskDateParams() {
-        targetDate = entity?.target ?? .now.startOfDay
-        hasDate = entity?.target != nil
+        if let snapshot = dateParamsSnapshot {
+            targetDate = snapshot.targetDate
+            hasDate = snapshot.hasDate
+            hasTime = snapshot.hasTime
+            selectedDay = snapshot.selectedDay
+            selectedTime = snapshot.selectedTime
+            selectedTimeType = snapshot.selectedTimeType
+            calendarDate = snapshot.calendarDate
+            notificationsLocal = snapshot.notificationsLocal
+            setupNotificationAvailability()
+            return
+        }
+
+        let originalTarget = entity?.target
+        let originalHasTime = entity?.hasTargetTime ?? false
+
+        targetDate = originalTarget ?? .now.startOfDay
+        hasDate = originalTarget != nil
+        hasTime = originalHasTime
+
+        if let originalTarget {
+            separateTargetDateToTimeAndDay(targetDate: originalTarget)
+        } else {
+            selectedDay = .now.startOfDay
+            calendarDate = selectedDay
+            selectedTime = .now
+            selectedTimeType = .none
+        }
+
+        if !hasTime {
+            selectedTimeType = .none
+        }
+
         setupNotificationsLocal(entity?.notifications)
+        setupNotificationAvailability()
     }
     
     /// Saves the combined date/time as the task's target date.

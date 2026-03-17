@@ -219,7 +219,8 @@ struct TaskListRow: View {
         let hasDateLabel = entity.target != nil && entity.hasTargetTime
         let context = TaskService.haveTextContent(for: entity)
         let notifications = entity.notifications?.count ?? 0 > 0
-        let showNotifications = notifications && notificationsStatus == .allowed
+        let isPastTargetTime = entity.hasTargetTime && (entity.target ?? .distantPast) <= .now
+        let showNotifications = notifications && notificationsStatus == .allowed && !isPastTargetTime
         let spacingValue: CGFloat = (hasDateLabel && (context || showNotifications)) ? 6 : 0
         
         return VStack(alignment: .trailing, spacing: spacingValue) {
