@@ -56,7 +56,7 @@ extension NotificationNetworkService {
         for remote in remoteItems {
             if let localNotif = localByServerId[remote.id] {
                 let updatedRemoteDate = Date.iso8601DateFormatter.date(from: remote.updatedAt) ?? .distantPast
-                let updatedLocalDate = (localNotif.updatedAt ?? .distantPast).addingTimeInterval(1)
+                let updatedLocalDate = localNotif.updatedAt ?? .distantPast
                 if updatedRemoteDate > updatedLocalDate {
                     // Update fields
                     localNotif.type = remote.type
@@ -68,7 +68,7 @@ extension NotificationNetworkService {
                     
                     UNUserNotificationCenter.current().removeNotifications(for: NSSet(set: [localNotif]))
                     UNUserNotificationCenter.current().setupNotification(for: localNotif, taskId: task.id, with: task.name)
-                } else {
+                } else if updatedLocalDate > updatedRemoteDate {
                     self.updateNotification(localNotif)
                 }
             } else {

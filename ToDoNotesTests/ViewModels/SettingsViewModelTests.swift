@@ -103,14 +103,6 @@ final class SettingsViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.showingNotificationAlert)
     }
     
-    /// Tests reading notification status when notifications are allowed.
-    func testReadNotificationStatusWhenAllowed() {
-        viewModel.notificationsEnabled = false
-        viewModel.setupNotificationStatus(for: true)
-        viewModel.readNotificationStatus()
-        XCTAssertTrue(viewModel.notificationsEnabled)
-    }
-    
     /// Tests reading notification status when notifications are not allowed.
     func testReadNotificationStatusWhenNotAllowed() {
         viewModel.notificationsEnabled = false

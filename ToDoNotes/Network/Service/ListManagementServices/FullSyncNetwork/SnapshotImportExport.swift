@@ -154,6 +154,12 @@ extension FullSyncNetworkService {
     private func applySnapshot(_ snapshot: FullSyncSnapshotResponse) {
         let context = CoreDataProvider.shared.persistentContainer.viewContext
         context.performAndWait {
+            let existingFetch: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+            if let existingTasks = try? context.fetch(existingFetch) {
+                for task in existingTasks {
+                    context.delete(task)
+                }
+            }
             var taskByFileListId: [String: TaskEntity] = [:]
             for list in snapshot.lists {
                 let task = TaskEntity(context: context)
