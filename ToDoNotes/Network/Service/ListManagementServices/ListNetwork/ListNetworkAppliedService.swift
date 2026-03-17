@@ -17,62 +17,40 @@ extension ListNetworkService {
     internal func syncTasksIfNeeded(for task: TaskEntity, since: String?) {
         let context = task.managedObjectContext
         if let serverId = task.serverId, !serverId.isEmpty {
-            self.fetchLists(since: since) { result in
+            self.fetchList(withId: serverId) { result in
                 switch result {
-                case .success(let syncResult):
-                    if let remote = syncResult.upserts.first(where: { $0.id == serverId }) {
-                        let serverUpdatedAt = Date.iso8601DateFormatter.date(from: remote.updatedAt)
-                        let localUpdatedAt = task.updatedAt ?? Date.distantPast
-                        
-                        if let serverUpdatedAt = serverUpdatedAt {
-                            if serverUpdatedAt > localUpdatedAt {
-                                task.name = remote.name
-                                task.removed = remote.archived
-                                task.updatedAt = serverUpdatedAt
-                                logger.info("Local task updated from server: \(serverId)")
-                                if let context {
-                                    do {
-                                        try context.save()
-                                    } catch {
-                                        logger.error("Failed to save updated local task: \(error.localizedDescription)")
-                                    }
+                case .success(let remote):
+                    let serverUpdatedAt = Date.iso8601DateFormatter.date(from: remote.updatedAt)
+                    let localUpdatedAt = task.updatedAt ?? Date.distantPast
+                    if let serverUpdatedAt {
+                        if serverUpdatedAt > localUpdatedAt {
+                            task.name = remote.name
+                            task.removed = remote.archived
+                            task.updatedAt = serverUpdatedAt
+                            logger.info("Local task updated from server: \(serverId)")
+                            if let context {
+                                do { try context.save() } catch {
+                                    logger.error("Failed to save updated local task: \(error.localizedDescription)")
                                 }
-                            } else if localUpdatedAt > serverUpdatedAt {
-                                self.updateList(to: task) { updateResult in
-                                    switch updateResult {
-                                    case .success(let listItem):
-                                        logger.info("Task updated on backend from local changes: \(listItem.id)")
-                                    case .failure(let error):
-                                        logger.error("Failed to update backend task from local changes: \(error.localizedDescription)")
-                                    }
-                                }
-                                logger.info("Server task updated from local task: \(serverId)")
-                            } else {
-                                logger.info("Task is synchronized and up to date: \(serverId)")
                             }
+                        } else if localUpdatedAt > serverUpdatedAt {
+                            self.updateList(to: task) { updateResult in
+                                switch updateResult {
+                                case .success(let listItem):
+                                    logger.info("Task updated on backend from local changes: \(listItem.id)")
+                                case .failure(let error):
+                                    logger.error("Failed to update backend task from local changes: \(error.localizedDescription)")
+                                }
+                            }
+                            logger.info("Server task updated from local task: \(serverId)")
                         } else {
-                            logger.error("Failed to parse server updatedAt date for task id: \(serverId)")
+                            logger.info("Task is synchronized and up to date: \(serverId)")
                         }
                     } else {
-                        self.createList(for: task) { createResult in
-                            switch createResult {
-                            case .success(let listItem):
-                                logger.info("Task created on backend: \(listItem.id)")
-                                task.serverId = listItem.id
-                                if let context {
-                                    do {
-                                        try context.save()
-                                    } catch {
-                                        logger.error("Failed to save serverId to Core Data: \(error.localizedDescription)")
-                                    }
-                                }
-                            case .failure(let error):
-                                logger.error("Failed to create backend task: \(error.localizedDescription)")
-                            }
-                        }
+                        logger.error("Failed to parse server updatedAt date for task id: \(serverId)")
                     }
                 case .failure(let error):
-                    logger.error("Failed to fetch server lists before update: \(error.localizedDescription)")
+                    logger.error("Failed to fetch server list before update: \(error.localizedDescription)")
                 }
             }
         } else {
@@ -134,25 +112,27 @@ extension ListNetworkService {
                 let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
                 let localTasks = try context.fetch(fetchRequest)
                 
-                let localTasksToUpload = localTasks.filter { local in
-                    guard let serverId = local.serverId, !serverId.isEmpty else { return true }
-                    return !upsertTasks.contains(where: { $0.id == serverId })
-                }
-                
-                for local in localTasksToUpload {
-                    let sinceDate = Date.iso8601SecondsDateFormatter.date(from: since ?? "") ?? .distantPast
-                    let updatedDate = local.updatedAt ?? .distantPast
-                    guard updatedDate > sinceDate else { continue }
-                    ListNetworkService.shared.createList(for: local) { createResult in
-                        switch createResult {
-                        case .success(let listItem):
-                            logger.info("Local task uploaded to backend: \(listItem.id)")
-                            local.serverId = listItem.id
-                            do { try context.save() } catch {
-                                logger.error("Failed to save serverId to Core Data: \(error.localizedDescription)")
+                if since == nil {
+                    let localTasksToUpload = localTasks.filter { local in
+                        guard let serverId = local.serverId, !serverId.isEmpty else { return true }
+                        return !upsertTasks.contains(where: { $0.id == serverId })
+                    }
+                    
+                    for local in localTasksToUpload {
+                        let sinceDate = Date.iso8601SecondsDateFormatter.date(from: since ?? "") ?? .distantPast
+                        let updatedDate = local.updatedAt ?? .distantPast
+                        guard updatedDate > sinceDate else { continue }
+                        ListNetworkService.shared.createList(for: local) { createResult in
+                            switch createResult {
+                            case .success(let listItem):
+                                logger.info("Local task uploaded to backend: \(listItem.id)")
+                                local.serverId = listItem.id
+                                do { try context.save() } catch {
+                                    logger.error("Failed to save serverId to Core Data: \(error.localizedDescription)")
+                                }
+                            case .failure(let error):
+                                logger.error("Failed to upload local task to backend: \(error.localizedDescription)")
                             }
-                        case .failure(let error):
-                            logger.error("Failed to upload local task to backend: \(error.localizedDescription)")
                         }
                     }
                 }
