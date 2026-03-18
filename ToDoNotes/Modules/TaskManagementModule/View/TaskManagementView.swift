@@ -39,6 +39,10 @@ struct TaskManagementView: View {
     /// Animation namespace used for matched geometry transitions.
     private let animation: Namespace.ID
     @Namespace private var glassNamespace
+    /// Controls whether the dismiss button is shown in the navigation bar.
+    private let showsDismissButton: Bool
+    /// Enables auto-save when the view disappears (used for iPad split view).
+    private let autoSaveOnDisappear: Bool
     /// Closure called when the view should be dismissed.
     private let onDismiss: () -> Void
     
@@ -58,6 +62,8 @@ struct TaskManagementView: View {
          entity: TaskEntity? = nil,
          folder: Folder? = nil,
          namespace: Namespace.ID,
+         showsDismissButton: Bool = true,
+         autoSaveOnDisappear: Bool = false,
          onDismiss: @escaping () -> Void
     ) {
         self._taskManagementHeight = taskManagementHeight
@@ -65,6 +71,8 @@ struct TaskManagementView: View {
         self.entity = entity
         self.folder = folder
         self.animation = namespace
+        self.showsDismissButton = showsDismissButton
+        self.autoSaveOnDisappear = autoSaveOnDisappear
         
         if let entity {
             // Edit mode: Initialize the view model with an existing task
@@ -78,17 +86,20 @@ struct TaskManagementView: View {
     
     private var taskManagementNavBar: some View {
         TaskManagementNavBar(
-            viewModel: viewModel, entity: entity) {
-                duplicateTask()
-            } onDismiss: {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    if entity != nil {
-                        attemptPerformSave(thenDismiss: true)
-                    } else {
-                        onDismiss()
-                    }
+            viewModel: viewModel,
+            entity: entity,
+            showsDismissButton: showsDismissButton
+        ) {
+            duplicateTask()
+        } onDismiss: {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                if entity != nil {
+                    attemptPerformSave(thenDismiss: true)
+                } else {
+                    onDismiss()
                 }
             }
+        }
     }
 
     // MARK: - View Body
@@ -142,6 +153,11 @@ struct TaskManagementView: View {
                     viewModel.reloadChecklist(from: entity.checklist)
                 }
                 viewModel.loadMembersForSharingTaskWithToasts()
+            }
+        }
+        .onDisappear {
+            if autoSaveOnDisappear, entity != nil {
+                attemptPerformSave(thenDismiss: false)
             }
         }
         .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {

@@ -29,6 +29,8 @@ struct CalendarViewIPad: View {
 
                 taskDetailPane
                     .frame(width: rightWidth)
+                    .transition(.opacity)
+                    .animation(.easeInOut(duration: 0.2), value: viewModel.selectedTask?.objectID)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
@@ -40,10 +42,13 @@ struct CalendarViewIPad: View {
             TaskManagementView(
                 taskManagementHeight: .constant(0),
                 entity: task,
-                namespace: animation
+                namespace: animation,
+                showsDismissButton: false,
+                autoSaveOnDisappear: true
             ) {
                 viewModel.toggleShowingTaskEditView()
             }
+            .id(task.objectID)
         } else {
             emptyTaskPlaceholder
         }

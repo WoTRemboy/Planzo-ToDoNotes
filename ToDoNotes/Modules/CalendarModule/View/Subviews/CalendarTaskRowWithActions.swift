@@ -7,6 +7,7 @@
 
 import SwiftUI
 import OSLog
+import UIKit
 
 /// A logger instance for debug and error messages.
 private let logger = Logger(subsystem: "com.todonotes.calendar", category: "CalendarTaskRowWithActions")
@@ -44,7 +45,7 @@ struct CalendarTaskRowWithActions: View {
     // MARK: - Body
     
     internal var body: some View {
-        Button {
+        let row = Button {
             // Selecting the task for editing.
             viewModel.selectedTask = entity
             logger.debug("Tapped on a task to edit: \(entity.name ?? "unknown") \(entity.id?.uuidString ?? "unknown")")
@@ -52,22 +53,34 @@ struct CalendarTaskRowWithActions: View {
             TaskListRow(
                 entity: entity,
                 isLast: isLast,
+                isSelected: isSelected,
                 onRequestConfirmSharedDelete: { task in
                     viewModel.requestConfirmSharedDelete(for: task)
                 },
                 onShowFolderSetup: onShowFolderSetup
             )
         }
-        .swipeActions(edge: .leading, allowsFullSwipe: false) {
-            if entity.role != ShareAccess.viewOnly.rawValue {
-                leadingSwipeActions
-            }
-        }
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-            trailingSwipeAction
+
+        if isSelected {
+            row
+        } else {
+            row
+                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                    if entity.role != ShareAccess.viewOnly.rawValue {
+                        leadingSwipeActions
+                    }
+                }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    trailingSwipeAction
+                }
         }
     }
     
+    private var isSelected: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad
+        && viewModel.selectedTask?.objectID == entity.objectID
+    }
+
     // MARK: - Leading Swipe Actions
     
     /// Actions shown when swiping from left to right.
