@@ -74,14 +74,12 @@ struct SettingsProfileRow: View {
     private var leftLabel: some View {
         HStack(alignment: .center, spacing: 8) {
             if let imageURL {
-                AsyncImage(url: URL(string: imageURL)) { result in
-                    if let image = result.image {
-                        image
-                            .resizable()
-                            .scaledToFit()
-                    } else {
-                        placeholderImage
-                    }
+                CachedAsyncImage(url: URL(string: imageURL)) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                } placeholder: {
+                    placeholderImage
                 }
                 .clipShape(.circle)
                 .frame(width: 36, height: 36)

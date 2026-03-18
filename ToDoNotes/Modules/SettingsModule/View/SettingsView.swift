@@ -581,29 +581,27 @@ extension SettingsView {
     
     /// Updates the notification settings based on user's permission status.
     private func setNotificationsStatus(allowed: Bool) {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { success, error in
-            DispatchQueue.main.async {
-                if success {
-                    viewModel.setupNotificationStatus(for: allowed)
-                    if allowed {
-                        TaskService.restoreNotificationsForAllTasks { complete in
-                            if complete {
-                                logger.debug("Restoration complete: Notifications have been restored.")
-                            } else {
-                                logger.error("Notifications restoration failed.")
-                            }
+        if allowed {
+            NotificationManager.shared.requestAuthorization { granted, status in
+                if granted {
+                    viewModel.updateNotificationStatus(.allowed)
+                    TaskService.restoreNotificationsForAllTasks { complete in
+                        if complete {
+                            logger.debug("Restoration complete: Notifications have been restored.")
+                        } else {
+                            logger.error("Notifications restoration failed.")
                         }
-                    } else {
-                        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
                     }
-                    logger.debug("Notifications are set to \(allowed).")
-                } else if let error {
-                    logger.error("Notifications authorization failed: \(error.localizedDescription)")
                 } else {
+                    viewModel.updateNotificationStatus(status)
                     viewModel.notificationsProhibited()
                     logger.warning("Notifications are prohibited.")
                 }
             }
+        } else {
+            viewModel.updateNotificationStatus(.disabled)
+            NotificationManager.shared.removeAllTaskNotifications()
+            logger.debug("Notifications are set to false.")
         }
     }
 }

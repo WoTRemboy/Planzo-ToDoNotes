@@ -134,7 +134,7 @@ fileprivate struct FullSwipeModifier: ViewModifier {
                 ])
             }
             .onDisappear {
-                // Disables the gesture when the view disappears.
+                /// Disables the gesture when the view disappears.
                 guard let gestureID = gestureID else { return }
                 NotificationCenter.default.post(name: .init(gestureID), object: nil, userInfo: [
                     "status": false

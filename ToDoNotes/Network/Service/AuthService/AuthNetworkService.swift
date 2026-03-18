@@ -335,6 +335,7 @@ final class AuthNetworkService: ObservableObject {
             self.tokenStorage.delete(type: .accessToken)
             self.tokenStorage.delete(type: .refreshToken)
             TaskService.deleteAllBackendTasks()
+            ImageCache.shared.clear()
         }
     }
 }

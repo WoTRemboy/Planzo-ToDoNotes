@@ -172,10 +172,15 @@ extension ListNetworkService {
     ///   - task: The TaskEntity to update.
     ///   - completion: Completion handler with result containing updated ListItem or error.
     func updateList(to task: TaskEntity, completion: @escaping (Result<ListItem, Error>) -> Void) {
+        guard let serverId = task.serverId, !serverId.isEmpty else {
+            logger.error("Invalid serverId for list update.")
+            completion(.failure(URLError(.badURL)))
+            return
+        }
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let url = NetworkConfig.url("/api/v1/lists/\(task.serverId ?? "")") else {
+                guard let url = NetworkConfig.url("/api/v1/lists/\(serverId)") else {
                     logger.error("Invalid URL for list update.")
                     completion(.failure(URLError(.badURL)))
                     return
@@ -187,7 +192,7 @@ extension ListNetworkService {
                 
                 let dueAtString = task.target != nil ? Date.iso8601DateFormatter.string(from: task.target!) : nil
                 let body = UpdateListRequest(
-                    id: task.serverId ?? UUID().uuidString,
+                    id: serverId,
                     name: task.name,
                     details: task.details,
                     folder: task.folder?.serverId,

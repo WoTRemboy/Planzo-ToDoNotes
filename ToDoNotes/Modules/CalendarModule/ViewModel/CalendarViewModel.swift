@@ -46,12 +46,14 @@ final class CalendarViewModel: ObservableObject {
     /// The date currently selected in the calendar (defaults to today).
     @Published internal var selectedDate: Date = .now.startOfDay {
         didSet {
-            guard displayMode == .week else { return }
-            updateDays()
-            let newDate = selectedDate.startOfDay
-            if calendarDate != newDate {
-                calendarDate = newDate
+            if displayMode == .week {
+                updateDays()
+                let newDate = selectedDate.startOfDay
+                if calendarDate != newDate {
+                    calendarDate = newDate
+                }
             }
+            rebuildDayTasks()
         }
     }
 
@@ -88,7 +90,13 @@ final class CalendarViewModel: ObservableObject {
     @Published internal var daysOfWeek: [String] = Date.capitalizedFirstLettersOfWeekdays
     
     @Published internal var folders: [Folder] = []
-    private var coreDataObserver: NSObjectProtocol? = nil
+    @Published private(set) var tasks: [TaskEntity] = []
+    @Published private(set) var dayTasks: [TaskSection: [TaskEntity]] = [:]
+    @Published private(set) var datesWithTasks: [Date: Int] = [:]
+
+    private let taskFetchController: TaskFetchController
+    private let folderFetchController: FolderFetchController
+    private var currentFetchInterval: DateInterval? = nil
     
     // MARK: - Shared delete confirmation
     
@@ -103,6 +111,18 @@ final class CalendarViewModel: ObservableObject {
     
     /// Initializes the ViewModel and sets up the initial days array.
     init() {
+        taskFetchController = TaskFetchController()
+        folderFetchController = FolderFetchController()
+
+        taskFetchController.onUpdate = { [weak self] tasks in
+            self?.tasks = tasks
+            self?.rebuildDerivedData()
+        }
+
+        folderFetchController.onUpdate = { [weak self] folders in
+            self?.folders = folders.sorted { $0.order < $1.order }
+        }
+
         displayMode = CalendarDisplayMode(rawValue: storedDisplayMode) ?? .month
         updateDays()
         daysOfWeek = Date.capitalizedFirstLettersOfWeekdays
@@ -114,13 +134,8 @@ final class CalendarViewModel: ObservableObject {
                 self.updateDays()
             }
         }
-        
-        self.reloadFolders()
-        
-        let context = CoreDataProvider.shared.persistentContainer.viewContext
-        coreDataObserver = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: context, queue: .main) { [weak self] _ in
-            self?.reloadFolders()
-        }
+
+        folderFetchController.start()
     }
     
     // MARK: - Task Create View Handling
@@ -156,6 +171,7 @@ final class CalendarViewModel: ObservableObject {
         case .week:
             days = selectedDate.weekDisplayDays
         }
+        updateTaskFetchRange()
     }
     
     /// Updates the selected date to the start of the month (or selected day).
@@ -215,8 +231,89 @@ final class CalendarViewModel: ObservableObject {
         self.sharingTask = task
     }
     
-    internal func reloadFolders() {
-        self.folders = FolderCoreDataService.shared.loadFolders().sorted { $0.order < $1.order }
+    private static let rangeSortDescriptors: [NSSortDescriptor] = [
+        NSSortDescriptor(key: "target", ascending: true),
+        NSSortDescriptor(key: "created", ascending: true)
+    ]
+
+    private static func rangePredicate(from start: Date, to end: Date) -> NSPredicate {
+        NSPredicate(
+            format: "removed == NO AND ((target >= %@ AND target < %@) OR (target == nil AND created >= %@ AND created < %@))",
+            start as NSDate,
+            end as NSDate,
+            start as NSDate,
+            end as NSDate
+        )
+    }
+
+    private func updateTaskFetchRange() {
+        guard let minDay = days.min(), let maxDay = days.max() else {
+            currentFetchInterval = nil
+            tasks = []
+            dayTasks = [:]
+            datesWithTasks = [:]
+            return
+        }
+
+        let calendar = Calendar.current
+        let start = calendar.startOfDay(for: minDay)
+        let end = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: maxDay)) ?? maxDay
+        let interval = DateInterval(start: start, end: end)
+
+        if currentFetchInterval == interval {
+            return
+        }
+
+        currentFetchInterval = interval
+        let predicate = CalendarViewModel.rangePredicate(from: start, to: end)
+        taskFetchController.update(predicate: predicate, sortDescriptors: CalendarViewModel.rangeSortDescriptors)
+    }
+
+    private func rebuildDerivedData() {
+        var counts: [Date: Int] = [:]
+        let calendar = Calendar.current
+
+        for task in tasks {
+            let referenceDate = task.target ?? task.created ?? Date.distantPast
+            let day = calendar.startOfDay(for: referenceDate)
+            counts[day, default: 0] += 1
+        }
+
+        datesWithTasks = counts
+        rebuildDayTasks()
+    }
+
+    private func rebuildDayTasks() {
+        let calendar = Calendar.current
+        let day = calendar.startOfDay(for: selectedDate)
+
+        let filteredTasks = tasks.lazy.filter { task in
+            let taskDate = calendar.startOfDay(for: task.target ?? task.created ?? Date.distantPast)
+            return taskDate == day
+        }
+
+        let sortedTasks = filteredTasks.sorted { t1, t2 in
+            if t1.pinned != t2.pinned {
+                return t1.pinned && !t2.pinned
+            }
+
+            let firstDate = t1.created ?? .now
+            let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target ?? .now : (Date.distantFuture + firstDate.timeIntervalSinceNow)
+            let secondDate = t2.created ?? .now
+            let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target ?? .now : (Date.distantFuture + secondDate.timeIntervalSinceNow)
+            return d1 < d2
+        }
+
+        var result: [TaskSection: [TaskEntity]] = [:]
+        let pinned = sortedTasks.filter { $0.pinned }
+        let active = sortedTasks.filter { !$0.pinned && $0.completed != 2 }
+        let completed = sortedTasks.filter { !$0.pinned && $0.completed == 2 }
+
+        if !pinned.isEmpty { result[.pinned] = pinned }
+        if !active.isEmpty { result[.active] = active }
+        if !completed.isEmpty { result[.completed] = completed }
+
+        dayTasks = result
     }
     
     // MARK: - Shared delete confirmation

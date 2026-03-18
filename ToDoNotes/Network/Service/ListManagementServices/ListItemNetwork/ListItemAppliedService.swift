@@ -61,15 +61,13 @@ extension ListItemNetworkService {
             for remote in remoteItems {
                 if let localItem = localByServerId[remote.id] {
                     let updatedRemoteDate = Date.iso8601DateFormatter.date(from: remote.updatedAt) ?? .distantPast
-                    let updatedLocalDate = (task.updatedAt ?? .distantPast).addingTimeInterval(1)
+                    let updatedLocalDate = task.updatedAt ?? .distantPast
                     if updatedRemoteDate > updatedLocalDate {
                         // Update fields
                         localItem.serverId = remote.id
                         localItem.name = remote.title
                         localItem.completed = remote.done
                         localItem.order = Int32(remote.order)
-                    } else {
-                        self.updateChecklistItem(localItem, for: task)
                     }
                 } else {
                     // Insert new ChecklistEntity if does not exist

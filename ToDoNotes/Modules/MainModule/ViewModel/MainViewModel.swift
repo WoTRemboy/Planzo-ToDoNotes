@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 import OSLog
+import UIKit
 
 private let logger = Logger(subsystem: "com.todonotes.main", category: "MainViewModel")
 
@@ -27,15 +28,21 @@ final class MainViewModel: ObservableObject {
     // MARK: - Published State Properties
     
     /// Currently selected task filter (e.g., Active, Completed).
-    @Published private(set) var selectedFilter: Filter = .active
+    @Published private(set) var selectedFilter: Filter = .active {
+        didSet { updateTaskFetch(for: selectedFolder) }
+    }
     /// Currently selected folder (e.g., Reminders, Tasks, Lists).
     @Published internal var selectedFolder: Folder? = nil {
-        didSet { fetchTasks() }
+        didSet { updateTaskFetch(for: selectedFolder) }
     }
     /// Whether only important tasks are displayed.
-    @Published internal var importance: Bool = false
+    @Published internal var importance: Bool = false {
+        didSet { updateTaskFetch(for: selectedFolder) }
+    }
     /// Search text input for filtering tasks.
-    @Published internal var searchText: String = String()
+    @Published internal var searchText: String = String() {
+        didSet { updateTaskFetch(for: selectedFolder) }
+    }
     
     /// Flags controlling the visibility of different UI elements.
     @Published internal var showingTaskCreateView: Bool = false
@@ -69,7 +76,12 @@ final class MainViewModel: ObservableObject {
     @Published internal var folders: [Folder] = []
     
     /// All tasks loaded from Core Data.
-    @Published internal var allTasks: [TaskEntity] = []
+    @Published internal var allTasks: [TaskEntity] = [] {
+        didSet { rebuildDerivedTasks() }
+    }
+
+    @Published private(set) var segmentedAndSortedTasksArray: [(Date?, [TaskEntity])] = []
+    @Published private(set) var filteredSegmentedTasks: [(Date?, [TaskEntity])] = []
     
     // MARK: - Computed Properties
     
@@ -78,118 +90,154 @@ final class MainViewModel: ObservableObject {
         Date.now.longDayMonthWeekday
     }
     
-    /// Tasks segmented and sorted by date, pin, and deadline.
-    internal var segmentedAndSortedTasksArray: [(Date?, [TaskEntity])] {
-        let calendar = Calendar.current
-        let grouped = Dictionary(grouping: allTasks.lazy) { task -> Date in
-            let refDate = task.target ?? task.created ?? Date.distantPast
-            return calendar.startOfDay(for: refDate)
-        }
-        // Group by normalized day (or nil if no target)
-        return grouped.map { (key, tasks) in
-            let sortedTasks = tasks.sorted { t1, t2 in
-                if t1.pinned != t2.pinned {
-                    return t1.pinned && !t2.pinned
-                }
-                
-                let firstDate = t1.created ?? .now
-                let d1 = (t1.target != nil && t1.hasTargetTime) ? t1.target ?? .now : (Date.distantFuture + firstDate.timeIntervalSinceNow)
-                let secondDate = t2.created ?? .now
-                let d2 = (t2.target != nil && t2.hasTargetTime) ? t2.target ?? .now : (Date.distantFuture + secondDate.timeIntervalSinceNow)
-                return d1 < d2
-            }
-            return (key, sortedTasks)
-        }
-        .sorted { ($0.0 ?? Date.distantPast) < ($1.0 ?? Date.distantPast) }
-    }
-    
-    /// Tasks filtered by search text, importance, filter, and folder.
-    internal var filteredSegmentedTasks: [(Date?, [TaskEntity])] {
-        segmentedAndSortedTasksArray.lazy.compactMap { (date, tasks) in
-            let filteredTasks = tasks.lazy.filter { task in
-                if !self.searchText.isEmpty {
-                    let searchTerm = self.searchText
-                    let nameMatches = task.name?.localizedCaseInsensitiveContains(searchTerm) ?? false
-                    let detailsMatches = task.details?.localizedCaseInsensitiveContains(searchTerm) ?? false
-                    if !nameMatches && !detailsMatches {
-                        return false
-                    }
-                }
-                if self.importance && !task.important { return false }
-                return self.taskMatchesFilter(for: task)
-            }
-            
-            return filteredTasks.isEmpty ? nil : (date, Array(filteredTasks))
-        }
-        .sorted { ($0.0 ?? Date.distantPast) < ($1.0 ?? Date.distantPast) }
-    }
     
     // MARK: - Private Properties
     
-    private var coreDataObserver: NSObjectProtocol? = nil
+    private let taskFetchController: TaskFetchController
+    private let folderFetchController: FolderFetchController
     
     // MARK: - Initializer
 
     init() {
-        self.reloadFolders()
-        self.fetchTasks()
-        
-        if let first = folders.first {
-            selectedFolder = first
-        } else {
-            selectedFolder = nil
+        taskFetchController = TaskFetchController()
+        folderFetchController = FolderFetchController()
+
+        taskFetchController.onUpdate = { [weak self] tasks in
+            self?.allTasks = tasks
         }
-        
-        let context = CoreDataProvider.shared.persistentContainer.viewContext
-        
-        coreDataObserver = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: context, queue: .main) { [weak self] _ in
-            self?.reloadFolders()
-            self?.fetchTasks()
+
+        folderFetchController.onUpdate = { [weak self] folders in
+            guard let self = self else { return }
+            self.folders = folders
+            self.ensureSelectedFolder()
         }
-    }
-    
-    deinit {
-        if let observer = coreDataObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
+
+        folderFetchController.start()
+        updateTaskFetch(for: selectedFolder)
     }
     
     // MARK: - Methods
     
-    /// Reload folders from Core Data.
-    internal func reloadFolders() {
-        self.folders = FolderCoreDataService.shared.loadFolders()
-        
-        if let selected = selectedFolder, !folders.contains(where: { $0 == selected }) {
-            selectedFolder = folders.first
-        } else if selectedFolder == nil {
-            selectedFolder = folders.first
+    /// Ensures a valid selected folder after folder updates.
+    private func ensureSelectedFolder() {
+        if let selected = selectedFolder, folders.contains(where: { $0 == selected }) {
+            return
+        }
+        selectedFolder = folders.first
+    }
+
+    /// Updates the task fetch controller when folder selection changes.
+    private func updateTaskFetch(for folder: Folder?) {
+        guard let folder else {
+            allTasks = []
+            return
+        }
+
+        let predicate = buildTaskPredicate(for: folder)
+        taskFetchController.update(predicate: predicate)
+    }
+
+    private func buildTaskPredicate(for folder: Folder) -> NSPredicate? {
+        var subpredicates = [NSPredicate]()
+
+        if folder.system, folder.shared {
+            subpredicates.append(NSPredicate(format: "members > 0"))
+        } else if !folder.system {
+            subpredicates.append(NSPredicate(format: "folder.id == %@", folder.id as CVarArg))
+        }
+
+        if !searchText.isEmpty {
+            let searchPredicate = NSPredicate(
+                format: "(name CONTAINS[cd] %@) OR (details CONTAINS[cd] %@)",
+                searchText,
+                searchText
+            )
+            subpredicates.append(searchPredicate)
+        }
+
+        if importance {
+            subpredicates.append(NSPredicate(format: "important == YES"))
+        }
+
+        subpredicates.append(filterPredicate(for: selectedFilter))
+
+        if subpredicates.isEmpty {
+            return nil
+        }
+        return NSCompoundPredicate(andPredicateWithSubpredicates: subpredicates)
+    }
+
+    private func filterPredicate(for filter: Filter) -> NSPredicate {
+        let now = Date()
+        let oneDayAgo = Calendar.current.date(byAdding: .day, value: -1, to: now) ?? now
+
+        switch filter {
+        case .deleted:
+            return NSPredicate(format: "removed == YES")
+        case .completed:
+            return NSPredicate(format: "removed == NO AND completed == 2")
+        case .outdated:
+            return NSPredicate(format: "removed == NO AND completed == 1 AND hasTargetTime == YES AND target < %@", now as NSDate)
+        case .archived:
+            return NSPredicate(
+                format: "removed == NO AND completed != 2 AND ((hasTargetTime == YES AND target < %@ AND completed == 0) OR (notifications.@count > 0 AND target < %@))",
+                oneDayAgo as NSDate,
+                oneDayAgo as NSDate
+            )
+        case .active:
+            return NSPredicate(
+                format: "removed == NO AND completed != 2 AND ((hasTargetTime == NO) OR (target == nil) OR (target >= %@)) AND ((notifications.@count == 0) OR (target == nil) OR (target >= %@))",
+                oneDayAgo as NSDate,
+                oneDayAgo as NSDate
+            )
+        case .unsorted:
+            return NSPredicate(format: "removed == NO")
         }
     }
-    
-    /// Fetch tasks from Core Data and assign to allTasks.
-    internal func fetchTasks() {
-        let context = CoreDataProvider.shared.persistentContainer.viewContext
-        let request: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \TaskEntity.target, ascending: true)]
-        
-        guard let folder = selectedFolder else { return }
-        if folder.system, !folder.shared {
-            request.predicate = nil
-        } else if folder.system, folder.shared {
-            request.predicate = NSPredicate(format: "members > 0")
-        } else {
-            request.predicate = NSPredicate(format: "folder.id == %@", folder.id as CVarArg)
+
+    private func rebuildDerivedTasks() {
+        guard !allTasks.isEmpty else {
+            segmentedAndSortedTasksArray = []
+            filteredSegmentedTasks = []
+            return
         }
-        
-        do {
-            let tasks = try context.fetch(request)
-            DispatchQueue.main.async {
-                self.allTasks = tasks
+
+        let calendar = Calendar.current
+        let grouped = Dictionary(grouping: allTasks) { task -> Date in
+            let refDate = task.target ?? task.created ?? Date.distantPast
+            return calendar.startOfDay(for: refDate)
+        }
+
+        let segmented = grouped.map { (key, tasks) in
+            let sortedTasks = tasks.sorted { t1, t2 in
+                if t1.pinned != t2.pinned {
+                    return t1.pinned && !t2.pinned
+                }
+
+                let firstDate = t1.created ?? .now
+                let d1: Date
+                if let target = t1.target, t1.hasTargetTime {
+                    d1 = target
+                } else {
+                    d1 = Date.distantFuture + firstDate.timeIntervalSinceNow
+                }
+
+                let secondDate = t2.created ?? .now
+                let d2: Date
+                if let target = t2.target, t2.hasTargetTime {
+                    d2 = target
+                } else {
+                    d2 = Date.distantFuture + secondDate.timeIntervalSinceNow
+                }
+
+                return d1 < d2
             }
-        } catch {
-            logger.error("Failed to fetch tasks: \(error)")
+            return (key, sortedTasks)
         }
+        .sorted { $0.0 < $1.0 }
+
+        segmentedAndSortedTasksArray = segmented
+        filteredSegmentedTasks = segmented
     }
     
     // MARK: - Task Creation Methods
@@ -281,9 +329,12 @@ final class MainViewModel: ObservableObject {
     
     /// Toggles the importance-only filter.
     internal func toggleImportance() {
+        let haptic = UIImpactFeedbackGenerator(style: .light)
+        haptic.prepare()
         withAnimation(.easeInOut(duration: 0.2)) {
             importance.toggle()
         }
+        haptic.impactOccurred()
     }
     
     // MARK: - Task Filtering Methods
