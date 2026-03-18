@@ -19,6 +19,8 @@ struct MainView: View {
     
     @EnvironmentObject private var viewModel: MainViewModel
     @EnvironmentObject private var authService: AuthNetworkService
+
+    private let showsSelectedTaskCover: Bool
     
     // MARK: - Properties
     
@@ -30,6 +32,10 @@ struct MainView: View {
     @State private var folderSetupTask: TaskEntity?
     
     // MARK: - Body
+
+    init(showsSelectedTaskCover: Bool = true) {
+        self.showsSelectedTaskCover = showsSelectedTaskCover
+    }
     
     internal var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -100,14 +106,13 @@ struct MainView: View {
                     viewModel.setFilter(to: .active)
                 }
         }
-        .fullScreenCover(item: $viewModel.selectedTask) { task in
-            TaskManagementView(
-                taskManagementHeight: $viewModel.taskManagementHeight,
-                entity: task,
-                namespace: animation) {
-                    viewModel.toggleShowingTaskEditView()
-                }
-        }
+        .modifier(SelectedTaskCoverModifier(
+            isEnabled: showsSelectedTaskCover,
+            selectedTask: $viewModel.selectedTask,
+            taskManagementHeight: $viewModel.taskManagementHeight,
+            animation: animation,
+            onDismiss: viewModel.toggleShowingTaskEditView
+        ))
         .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {
             SubscriptionView(namespace: animation, networkService: authService)
         }
@@ -285,6 +290,30 @@ extension MainView {
         .matchedGeometryEffect(id: Texts.NamespaceID.floatingButtons, in: animation)
         .transition(.blurReplace)
         .padding(.bottom)
+    }
+}
+
+private struct SelectedTaskCoverModifier: ViewModifier {
+    let isEnabled: Bool
+    @Binding var selectedTask: TaskEntity?
+    @Binding var taskManagementHeight: CGFloat
+    let animation: Namespace.ID
+    let onDismiss: () -> Void
+
+    func body(content: Content) -> some View {
+        if isEnabled {
+            content.fullScreenCover(item: $selectedTask) { task in
+                TaskManagementView(
+                    taskManagementHeight: $taskManagementHeight,
+                    entity: task,
+                    namespace: animation
+                ) {
+                    onDismiss()
+                }
+            }
+        } else {
+            content
+        }
     }
 }
 
