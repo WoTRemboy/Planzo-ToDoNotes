@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 /// The main content view of the app, responsible for setting up tab navigation and injecting view models.
 struct ContentView: View {
@@ -77,6 +78,20 @@ struct ContentView: View {
         .accentColor(Color.LabelColors.labelPrimary)
         .environmentObject(router)
         .environmentObject(settingsVM)
+        .task {
+            NotificationManager.shared.refreshAuthorizationStatus { status in
+                settingsVM.updateNotificationStatus(status)
+            }
+            NotificationManager.shared.markReadyForUI()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .didSelectTaskFromNotification)) { info in
+            let value = info.userInfo?[NotificationConstants.userInfoTaskId]
+            if let taskId = value as? UUID {
+                openTaskFromNotification(taskId: taskId)
+            } else if let stringValue = value as? String, let taskId = UUID(uuidString: stringValue) {
+                openTaskFromNotification(taskId: taskId)
+            }
+        }
         .onChange(of: scenePhase) { _, newPhase in
             switch newPhase {
             case .active:
@@ -100,6 +115,18 @@ struct ContentView: View {
                 .environmentObject(networkService)
                 .environmentObject(settingsVM)
                 .environmentObject(passcodeManager)
+        }
+    }
+
+    private func openTaskFromNotification(taskId: UUID) {
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        let request: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", taskId as CVarArg)
+        request.fetchLimit = 1
+
+        if let task = try? context.fetch(request).first {
+            router.selectedTab = .main
+            mainVM.selectedTask = task
         }
     }
 }

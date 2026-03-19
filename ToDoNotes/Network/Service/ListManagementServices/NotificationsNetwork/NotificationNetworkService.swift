@@ -24,7 +24,7 @@ final class NotificationNetworkService {
         AccessTokenManager.shared.getValidAccessToken { result in
             switch result {
             case .success(let accessToken):
-                guard let base = NetworkConfig.url("/api/v1/lists\(listId)/notifications") else {
+                guard let base = NetworkConfig.url("/api/v1/lists/\(listId)/notifications") else {
                     completion(.failure(URLError(.badURL)))
                     return
                 }

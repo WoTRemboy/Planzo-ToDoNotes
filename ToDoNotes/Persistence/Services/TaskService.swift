@@ -67,17 +67,39 @@ final class TaskService {
         task.pinned = pinned
         task.removed = removed
         
-        // Converts NotificationItems to Core Data entities
-        let notificationEntities = notifications.map { item -> NotificationEntity in
-            let entityItem = NotificationEntity(context: viewContext)
-            entityItem.id = item.id
+        // Converts NotificationItems to Core Data entities (diff/merge to avoid orphans)
+        let existingNotifications = (task.notifications as? Set<NotificationEntity>) ?? []
+        var keptNotifications = Set<NotificationEntity>()
+
+        for item in notifications {
+            let existing = existingNotifications.first { entity in
+                if let serverId = item.serverId, !serverId.isEmpty {
+                    return entity.serverId == serverId
+                }
+                return entity.id == item.id
+            }
+
+            let entityItem = existing ?? NotificationEntity(context: viewContext)
+            if entityItem.id == nil {
+                entityItem.id = item.id
+            }
             entityItem.serverId = item.serverId
             entityItem.type = item.type.rawValue
             entityItem.target = item.target
             entityItem.updatedAt = .now
-            return entityItem
+            entityItem.task = task
+            keptNotifications.insert(entityItem)
         }
-        task.notifications = NSSet(array: notificationEntities)
+
+        let obsolete = existingNotifications.subtracting(keptNotifications)
+        if !obsolete.isEmpty {
+            UNUserNotificationCenter.current().removeNotifications(for: NSSet(set: obsolete))
+            for entity in obsolete {
+                viewContext.delete(entity)
+            }
+        }
+
+        task.notifications = NSSet(set: keptNotifications)
         
         // Converts ChecklistItems to Core Data entities
         let checklistEntities = checklist.enumerated().map { (index, item) -> ChecklistEntity in
@@ -560,24 +582,33 @@ extension TaskService {
                 guard let targetDate = entity.target,
                       targetDate > Date() else { continue }
                 
-                let identifier = entity.id?.uuidString ?? ""
-                
+                if entity.id == nil {
+                    entity.id = UUID()
+                    try? entity.managedObjectContext?.save()
+                }
+                guard let notificationId = entity.id else { continue }
+                let identifier = NotificationManager.shared.identifier(for: notificationId)
+
                 // Skip if notification with this ID already exists
                 guard !existingIdentifiers.contains(identifier) else {
                     logger.warning("Skipping duplicate notification with ID: \(identifier)")
                     continue
                 }
-                
+
                 let content = UNMutableNotificationContent()
                 let type = TaskNotification(rawValue: entity.type ?? String()) ?? TaskNotification.inTime
                 content.title = type.notificationName
                 content.body = task.name ?? ""
                 content.sound = .default
-                
+                content.categoryIdentifier = NotificationConstants.taskCategory
+                if let taskId = task.id {
+                    content.userInfo = NotificationManager.shared.userInfo(taskId: taskId, notificationId: notificationId)
+                }
+
                 let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute],
                                                                      from: targetDate)
                 let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-                
+
                 let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
                 notificationCenter.add(request) { error in
                     if let error = error {
@@ -599,8 +630,8 @@ extension TaskService {
             let group = DispatchGroup()
             let notificationCenter = UNUserNotificationCenter.current()
             
-            // First remove all existing notifications
-            notificationCenter.removeAllPendingNotificationRequests()
+            // First remove existing task notifications
+            NotificationManager.shared.removeAllTaskNotifications()
             
             // Get current pending notifications to check for duplicates
             notificationCenter.getPendingNotificationRequests { pendingRequests in
@@ -612,23 +643,32 @@ extension TaskService {
                             guard let targetDate = entity.target,
                                   targetDate > Date() else { continue }
                             
-                            let identifier = entity.id?.uuidString ?? ""
-                            
+                            if entity.id == nil {
+                                entity.id = UUID()
+                                try? entity.managedObjectContext?.save()
+                            }
+                            guard let notificationId = entity.id else { continue }
+                            let identifier = NotificationManager.shared.identifier(for: notificationId)
+
                             // Skip if notification with this ID already exists
                             guard !existingIdentifiers.contains(identifier) else {
                                 logger.warning("Skipping duplicate notification with ID: \(identifier)")
                                 continue
                             }
-                            
+
                             let content = UNMutableNotificationContent()
                             let type = TaskNotification(rawValue: entity.type ?? String()) ?? TaskNotification.inTime
                             content.title = type.notificationName
                             content.body = task.name ?? String()
                             content.sound = .default
-                            
+                            content.categoryIdentifier = NotificationConstants.taskCategory
+                            if let taskId = task.id {
+                                content.userInfo = NotificationManager.shared.userInfo(taskId: taskId, notificationId: notificationId)
+                            }
+
                             let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: targetDate)
                             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-                            
+
                             let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
                             
                             group.enter()

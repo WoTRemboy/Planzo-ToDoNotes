@@ -190,16 +190,29 @@ final class FullSyncNetworkService: ObservableObject {
     // MARK: - Helper stubs for saving entities to Core Data
     
     private func syncItems(_ items: [ListTaskItem], deletedItems: [ItemDelete] = [], since: String? = nil) {
-        guard !items.isEmpty else { return }
+        guard !items.isEmpty || !deletedItems.isEmpty else { return }
         let context = CoreDataProvider.shared.persistentContainer.viewContext
-        let grouped = Dictionary(grouping: items, by: { $0.listId })
+        let groupedItems = Dictionary(grouping: items, by: { $0.listId })
+
+        if groupedItems.isEmpty {
+            let fetch: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+            fetch.predicate = NSPredicate(format: "serverId != nil AND serverId != ''")
+            context.performAndWait {
+                let tasks = (try? context.fetch(fetch)) ?? []
+                for task in tasks {
+                    ListItemNetworkService.shared.syncItems(for: task, remoteItems: [], deletedItems: deletedItems, since: since)
+                }
+            }
+            return
+        }
+
         context.performAndWait {
-            for (listId, itemsGroup) in grouped {
+            for (listId, itemsGroup) in groupedItems {
                 let fetch: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
                 fetch.predicate = NSPredicate(format: "serverId == %@", listId)
                 fetch.fetchLimit = 1
                 if let task = try? context.fetch(fetch).first {
-                    ListItemNetworkService.shared.syncItems(for: task, remoteItems: itemsGroup, since: since)
+                    ListItemNetworkService.shared.syncItems(for: task, remoteItems: itemsGroup, deletedItems: deletedItems, since: since)
                 } else {
                     logger.error("No TaskEntity found for listId: \(listId)")
                 }

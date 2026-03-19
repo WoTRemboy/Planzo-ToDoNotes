@@ -6307,52 +6307,6 @@
         }
       }
     },
-    "TaskManagementContextMenuPin" : {
-      "comment" : "Pin",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pin"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fijar"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Épingler"
-          }
-        }
-      }
-    },
-    "TaskManagementContextMenuUnpit" : {
-      "comment" : "Unpin",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unpin"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desfijar"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Détacher"
-          }
-        }
-      }
-    },
     "TaskManagementContextMenuMoveToFolder" : {
       "comment" : "Move to Folder",
       "localizations" : {
@@ -6376,6 +6330,29 @@
         }
       }
     },
+    "TaskManagementContextMenuPin" : {
+      "comment" : "Pin",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pin"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fijar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Épingler"
+          }
+        }
+      }
+    },
     "TaskManagementContextMenuRestore" : {
       "comment" : "Restore",
       "localizations" : {
@@ -6395,6 +6372,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Restaurer"
+          }
+        }
+      }
+    },
+    "TaskManagementContextMenuUnpit" : {
+      "comment" : "Unpin",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unpin"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desfijar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Détacher"
           }
         }
       }
@@ -7177,6 +7177,75 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucune description"
+          }
+        }
+      }
+    },
+    "TaskManagementNotificationComplete" : {
+      "comment" : "Complete",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Complete"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Completar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminer"
+          }
+        }
+      }
+    },
+    "TaskManagementNotificationSnooze10" : {
+      "comment" : "Snooze 10 min",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Snooze 10 min"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posponer 10 min"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reporter 10 min"
+          }
+        }
+      }
+    },
+    "TaskManagementNotificationSnoozed10" : {
+      "comment" : "Snoozed for 10 min",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Snoozed for 10 min"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pospuesto 10 min"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reporté de 10 min"
           }
         }
       }

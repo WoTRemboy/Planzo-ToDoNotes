@@ -103,6 +103,19 @@ final class TaskManagementViewModel: ObservableObject {
     
     /// Reference to the TaskEntity being edited (if any).
     private var entity: TaskEntity? = nil
+
+    private struct DateParamsSnapshot {
+        let targetDate: Date
+        let hasDate: Bool
+        let hasTime: Bool
+        let selectedDay: Date
+        let selectedTime: Date
+        let selectedTimeType: TaskTime
+        let calendarDate: Date
+        let notificationsLocal: Set<NotificationItem>
+    }
+
+    private var dateParamsSnapshot: DateParamsSnapshot? = nil
     
     /// The date currently displayed in the calendar view.
     @Published internal var calendarDate: Date = Date.now {
@@ -265,13 +278,14 @@ final class TaskManagementViewModel: ObservableObject {
         addTaskButtonGlow.toggle()
     }
     
-    /// Reads the notification status from UserDefaults and updates local status.
+    /// Reads the notification status from the system and updates local status.
     internal func readNotificationStatus() {
-        let defaults = UserDefaults.standard
-        let rawValue = defaults.string(forKey: Texts.UserDefaults.notifications) ?? String()
-        notificationsStatus = NotificationStatus(rawValue: rawValue) ?? .prohibited
-        if notificationsStatus != .allowed {
-            notificationsLocal.removeAll()
+        NotificationManager.shared.refreshAuthorizationStatus { [weak self] status in
+            guard let self = self else { return }
+            self.notificationsStatus = status
+            if status != .allowed {
+                self.notificationsLocal.removeAll()
+            }
         }
     }
     
@@ -377,12 +391,58 @@ final class TaskManagementViewModel: ObservableObject {
     internal func doneDatePicker() {
         showingDatePicker = false
     }
+
+    /// Captures the initial date/time/notification state before edits.
+    internal func captureDateParamsSnapshot() {
+        dateParamsSnapshot = DateParamsSnapshot(
+            targetDate: targetDate,
+            hasDate: hasDate,
+            hasTime: hasTime,
+            selectedDay: selectedDay,
+            selectedTime: selectedTime,
+            selectedTimeType: selectedTimeType,
+            calendarDate: calendarDate,
+            notificationsLocal: notificationsLocal
+        )
+    }
     
     /// Cancels the date picker.
     internal func cancelTaskDateParams() {
-        targetDate = entity?.target ?? .now.startOfDay
-        hasDate = entity?.target != nil
+        if let snapshot = dateParamsSnapshot {
+            targetDate = snapshot.targetDate
+            hasDate = snapshot.hasDate
+            hasTime = snapshot.hasTime
+            selectedDay = snapshot.selectedDay
+            selectedTime = snapshot.selectedTime
+            selectedTimeType = snapshot.selectedTimeType
+            calendarDate = snapshot.calendarDate
+            notificationsLocal = snapshot.notificationsLocal
+            setupNotificationAvailability()
+            return
+        }
+
+        let originalTarget = entity?.target
+        let originalHasTime = entity?.hasTargetTime ?? false
+
+        targetDate = originalTarget ?? .now.startOfDay
+        hasDate = originalTarget != nil
+        hasTime = originalHasTime
+
+        if let originalTarget {
+            separateTargetDateToTimeAndDay(targetDate: originalTarget)
+        } else {
+            selectedDay = .now.startOfDay
+            calendarDate = selectedDay
+            selectedTime = .now
+            selectedTimeType = .none
+        }
+
+        if !hasTime {
+            selectedTimeType = .none
+        }
+
         setupNotificationsLocal(entity?.notifications)
+        setupNotificationAvailability()
     }
     
     /// Saves the combined date/time as the task's target date.
@@ -401,6 +461,7 @@ final class TaskManagementViewModel: ObservableObject {
         guard notificationsStatus == .allowed else { return }
         notificationCenter.setupNotifications(for: notificationsLocal,
                                               remove: notifications,
+                                              taskId: entity?.id,
                                               with: nameText)
     }
     
@@ -423,17 +484,42 @@ final class TaskManagementViewModel: ObservableObject {
         notificationsLocal = notificationsLocal.filter { allowedTypes.contains($0.type) }
     }
     
-    /// Toggles selection for a notification type. If not allowed, shows alert.
+    /// Toggles selection for a notification type. If not allowed, requests permission or shows alert.
     internal func toggleNotificationSelection(for type: TaskNotification) {
-        guard notificationsStatus == .allowed else {
-            notificationsLocal.removeAll()
-            type != .none ? showingNotificationAlert.toggle() : nil
-            return
-        }
         guard type != .none else {
             notificationsLocal.removeAll()
             return
         }
+
+        if notificationsStatus != .allowed {
+            if notificationsStatus == .disabled {
+                notificationsLocal.removeAll()
+                showingNotificationAlert = true
+                return
+            }
+
+            NotificationManager.shared.requestAuthorization { [weak self] _, status in
+                guard let self = self else { return }
+                self.notificationsStatus = status
+                guard status == .allowed else {
+                    DispatchQueue.main.async {
+                        self.notificationsLocal.removeAll()
+                        self.showingNotificationAlert = true
+                    }
+                    return
+                }
+
+                DispatchQueue.main.async {
+                    self.applyNotificationSelection(type: type)
+                }
+            }
+            return
+        }
+
+        applyNotificationSelection(type: type)
+    }
+
+    private func applyNotificationSelection(type: TaskNotification) {
         let notification = NotificationItem(
             type: type,
             target: notificationTargetCalculation(for: type)
@@ -1050,7 +1136,9 @@ extension TaskManagementViewModel {
                   let target = notification.target
             else { continue }
             let itemType = TaskNotification(rawValue: type) ?? .inTime
-            let item = NotificationItem(type: itemType,
+            let itemId = notification.id ?? UUID()
+            let item = NotificationItem(id: itemId,
+                                        type: itemType,
                                         target: target,
                                         serverId: notification.serverId)
             notificationsLocal.insert(item)

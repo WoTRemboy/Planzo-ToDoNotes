@@ -19,6 +19,8 @@ struct TaskCalendarSelectorView: View {
     
     /// Optional task entity being edited (nil for new tasks).
     private let entity: TaskEntity?
+
+    @Environment(\.dismiss) private var dismiss
     
     // MARK: - Initialization
         
@@ -54,6 +56,7 @@ struct TaskCalendarSelectorView: View {
         .presentationDragIndicator(.visible)
         
         .onAppear {
+            viewModel.captureDateParamsSnapshot()
             viewModel.readNotificationStatus()
         }
         .popView(isPresented: $viewModel.showingNotificationAlert, onTap: {}, onDismiss: {}) {
@@ -67,18 +70,12 @@ struct TaskCalendarSelectorView: View {
     
     // MARK: - Subviews
     
-    /// The header containing Cancel, Title, and Done buttons.
+    /// The header containing Title label.
     private var header: some View {
-        HStack {
-//            toolBarButtonCancel
-//            Spacer()
-            Text(Texts.TaskManagement.DatePicker.title)
-                .font(.system(size: 20, weight: .medium))
-            
-//            Spacer()
-//            toolBarButtonDone
-        }
-        .padding([.horizontal, .top], 24)
+        Text(Texts.TaskManagement.DatePicker.title)
+            .font(.system(size: 20, weight: .medium))
+            .frame(maxWidth: .infinity)
+            .padding([.horizontal, .top], 24)
     }
     
     // MARK: - Alerts
@@ -108,19 +105,41 @@ struct TaskCalendarSelectorView: View {
     
     // MARK: - Buttons
     
-    /// An invisible cancel button used for layout balance in the header.
-    private var toolBarButtonCancel: some View {
-        Rectangle()
-            .foregroundStyle(Color.clear)
-            .frame(width: 24, height: 24)
+    /// Cancel button that discards changes and closes the sheet.
+    private var cancelButton: some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.cancelTaskDateParams()
+                viewModel.toggleDatePicker()
+                dismiss()
+            }
+        } label: {
+            Text(Texts.TaskManagement.DatePicker.cancel)
+                .font(.system(size: 17, weight: .regular))
+                .frame(maxWidth: .infinity, maxHeight: 50)
+                .minimumScaleFactor(0.5)
+                .background(Color.clear)
+                .foregroundColor(Color.LabelColors.labelPrimary)
+                .modifier(SystemRowCornerModifier())
+                .overlay {
+                    if #available(iOS 26.0, *) {
+                        RoundedRectangle(cornerRadius: 24, style: .continuous)
+                            .stroke(Color.LabelColors.labelDetails, lineWidth: 1)
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.LabelColors.labelDetails, lineWidth: 1)
+                    }
+                }
+        }
     }
-    
+
     /// Done button that saves date settings and closes the view.
     private var toolBarButtonDone: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.2)) {
                 viewModel.saveTaskDateParams()
                 viewModel.toggleDatePicker()
+                dismiss()
             }
         } label: {
             Image.TaskManagement.DateSelector.confirm
@@ -149,22 +168,25 @@ struct TaskCalendarSelectorView: View {
     }
     
     private var doneButton: some View {
-        Button {
-            viewModel.saveTaskDateParams()
-            viewModel.toggleDatePicker()
-        } label: {
-            Text(Texts.TaskManagement.DatePicker.done)
-                .font(.system(size: 17, weight: .medium))
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            
-                .foregroundColor(Color.LabelColors.labelReversed)
-                .modifier(DoneButtonLegacyBackground())
+        HStack(spacing: 12) {
+            cancelButton
+                .frame(width: 120, height: 50)
+
+            Button {
+                viewModel.saveTaskDateParams()
+                viewModel.toggleDatePicker()
+                dismiss()
+            } label: {
+                Text(Texts.TaskManagement.DatePicker.done)
+                    .font(.system(size: 17, weight: .medium))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .foregroundColor(Color.LabelColors.labelReversed)
+                    .modifier(DoneButtonLegacyBackground())
+            }
+            .interactiveTintGlassIfAvailable(color: Color.LabelColors.labelPrimary)
+            .frame(height: 50)
+            .minimumScaleFactor(0.4)
         }
-        .interactiveTintGlassIfAvailable(color: Color.LabelColors.labelPrimary)
-        .frame(height: 50)
-        .frame(maxWidth: .infinity)
-        .minimumScaleFactor(0.4)
-        
         .padding(.horizontal)
         .padding(.bottom)
     }

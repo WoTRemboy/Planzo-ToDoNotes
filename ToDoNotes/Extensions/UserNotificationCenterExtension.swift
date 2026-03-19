@@ -7,6 +7,7 @@
 
 import UserNotifications
 import OSLog
+import CoreData
 
 /// A logger instance for debug and error messages.
 private let logger = Logger(subsystem: "com.todonotes.extensions", category: "UserNotificationCenterExtension")
@@ -22,6 +23,7 @@ extension UNUserNotificationCenter {
     ///   - name: An optional string to be used as the notification body.
     internal func setupNotifications(for notifications: Set<NotificationItem>,
                                      remove entityNotifications: NSSet?,
+                                     taskId: UUID?,
                                      with name: String?) {
         // First removes any existing notifications
         removeNotifications(for: entityNotifications)
@@ -35,29 +37,34 @@ extension UNUserNotificationCenter {
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.getPendingNotificationRequests { pendingRequests in
             let existingIdentifiers = Set(pendingRequests.map { $0.identifier })
+            let categoryId = self.categoryIdentifier(for: taskId)
             
             for notification in notifications {
                 guard let targetDate = notification.target,
                       targetDate > Date() else { continue }
-                
-                let identifier = notification.id.uuidString
-                
+
+                let identifier = NotificationManager.shared.identifier(for: notification.id)
+
                 // Skips if notification with this ID already exists
                 guard !existingIdentifiers.contains(identifier) else {
                     logger.debug("Skipping duplicate notification with ID: \(identifier)")
                     continue
                 }
-                
+
                 let content = UNMutableNotificationContent()
                 content.title = notification.type.notificationName
                 content.body = name ?? Texts.TaskManagement.TaskRow.placeholder
                 content.sound = .default
-                
+                content.categoryIdentifier = categoryId
+                if let taskId {
+                    content.userInfo = NotificationManager.shared.userInfo(taskId: taskId, notificationId: notification.id)
+                }
+
                 let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: targetDate)
                 let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-                
+
                 let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-                
+
                 self.add(request) { error in
                     if let error = error {
                         logger.error("Notification setup error for \(identifier): \(error.localizedDescription)")
@@ -73,7 +80,7 @@ extension UNUserNotificationCenter {
     /// - Parameters:
     ///   - notification: The NotificationItem to schedule.
     ///   - name: The name (body) to display in the notification.
-    internal func setupNotification(for notification: NotificationEntity, with name: String?) {
+    internal func setupNotification(for notification: NotificationEntity, taskId: UUID?, with name: String?, titleOverride: String? = nil) {
         
         let defaults = UserDefaults.standard
         let rawValue = defaults.string(forKey: Texts.UserDefaults.notifications) ?? String()
@@ -82,14 +89,20 @@ extension UNUserNotificationCenter {
         
         guard let targetDate = notification.target,
               targetDate > Date(),
-              let identifier = notification.id?.uuidString,
+              let notificationId = notification.id,
               let type = notification.type
         else { return }
-        
+
+        let identifier = NotificationManager.shared.identifier(for: notificationId)
+
         let content = UNMutableNotificationContent()
-        content.title = TaskNotification(rawValue: type)?.notificationName ?? type
+        content.title = titleOverride ?? TaskNotification(rawValue: type)?.notificationName ?? type
         content.body = name ?? Texts.TaskManagement.TaskRow.placeholder
         content.sound = .default
+        content.categoryIdentifier = categoryIdentifier(for: taskId, task: notification.task)
+        if let taskId {
+            content.userInfo = NotificationManager.shared.userInfo(taskId: taskId, notificationId: notificationId)
+        }
         let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: targetDate)
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
@@ -102,12 +115,29 @@ extension UNUserNotificationCenter {
         }
     }
     
+    private func categoryIdentifier(for taskId: UUID?, task: TaskEntity? = nil) -> String {
+        if let completed = task?.completed {
+            return completed == 0 ? NotificationConstants.taskCategoryNoComplete : NotificationConstants.taskCategory
+        }
+        guard let taskId else { return NotificationConstants.taskCategory }
+
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        let request: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", taskId as CVarArg)
+        request.fetchLimit = 1
+        let taskEntity = try? context.fetch(request).first
+        if let completed = taskEntity?.completed, completed == 0 {
+            return NotificationConstants.taskCategoryNoComplete
+        }
+        return NotificationConstants.taskCategory
+    }
+
     // MARK: - Notification Removal
     
     /// Removes notifications for the given set of `NotificationItem`s.
     /// - Parameter items: A set of `NotificationItem` instances whose notifications should be removed.
     internal func removeNotifications(for items: Set<NotificationItem>) {
-        let identifiers = items.map { $0.id.uuidString }
+        let identifiers = items.map { NotificationManager.shared.identifier(for: $0.id) }
         self.removePendingNotificationRequests(withIdentifiers: identifiers)
         self.removeDeliveredNotifications(withIdentifiers: identifiers)
         logger.debug("Removed notifications with IDs: \(identifiers)")
@@ -121,7 +151,10 @@ extension UNUserNotificationCenter {
             return
         }
         
-        let identifiers = notifications.compactMap { $0.id?.uuidString }
+        let identifiers: [String] = notifications.compactMap { notification in
+            guard let id = notification.id else { return nil }
+            return NotificationManager.shared.identifier(for: id)
+        }
         
         guard !identifiers.isEmpty else {
             logger.debug("No valid notification IDs found for removal")
