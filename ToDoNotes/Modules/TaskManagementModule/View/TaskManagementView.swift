@@ -92,6 +92,7 @@ struct TaskManagementView: View {
         ) {
             duplicateTask()
         } onDismiss: {
+            hideKeyboard()
             withAnimation(.easeInOut(duration: 0.2)) {
                 if entity != nil {
                     attemptPerformSave(thenDismiss: true)
@@ -290,7 +291,11 @@ struct TaskManagementView: View {
             .strikethrough(viewModel.check == .checked)
             
             .focused($titleFocused)
-            .immediateKeyboardIf(entity == nil || viewModel.currentRole == .owner, delay: shouldShowFullScreenContent ? 0.4 : 0)
+            .immediateKeyboardIf(
+                UIDevice.current.userInterfaceIdiom != .pad
+                && (entity == nil || viewModel.currentRole == .owner),
+                delay: shouldShowFullScreenContent ? 0.4 : 0
+            )
             .onAppear {
                 titleFocused = true
             }
@@ -479,6 +484,7 @@ struct TaskManagementView: View {
     /// Button to save the new or updated task.
     private var acceptButton: some View {
         Button {
+            hideKeyboard()
             withAnimation {
                 attemptPerformSave(thenDismiss: true)
             }

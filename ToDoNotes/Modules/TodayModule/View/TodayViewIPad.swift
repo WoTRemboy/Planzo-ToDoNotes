@@ -16,7 +16,8 @@ struct TodayViewIPad: View {
 
     internal var body: some View {
         GeometryReader { proxy in
-            let isPortrait = proxy.size.height >= proxy.size.width
+            let screenBounds = UIScreen.main.bounds
+            let isPortrait = screenBounds.height >= screenBounds.width
             let splitRatio = isPortrait ? splitRatioPortrait : splitRatioLandscape
             let leftWidth = proxy.size.width * splitRatio
             let rightWidth = proxy.size.width - leftWidth
