@@ -54,7 +54,7 @@ struct TabItems {
     ///   - networkService: An instance of `AuthNetworkService` required for settings.
     /// - Returns: A `SettingsView` wrapped in a tab item.
     static func settingsTab(isSelected: Bool, networkService: AuthNetworkService) -> some View {
-        SettingsView(networkService: networkService)
+        SettingsTabRoot(networkService: networkService)
             .tabItem {
                 isSelected ? Image.TabBar.Selected.settings : Image.TabBar.Unselected.settings
                     .renderingMode(.template)
@@ -107,6 +107,24 @@ private struct CalendarTabRoot: View {
             CalendarViewIPad()
         } else {
             CalendarView()
+        }
+    }
+}
+
+private struct SettingsTabRoot: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
+    let networkService: AuthNetworkService
+
+    private var useIPadLayout: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular
+    }
+
+    var body: some View {
+        if useIPadLayout {
+            SettingsViewIPad(networkService: networkService)
+        } else {
+            SettingsView(networkService: networkService)
         }
     }
 }
