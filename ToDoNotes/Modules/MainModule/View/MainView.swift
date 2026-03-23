@@ -113,7 +113,7 @@ struct MainView: View {
             animation: animation,
             onDismiss: viewModel.toggleShowingTaskEditView
         ))
-        .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {
+        .subscriptionPresentation(isPresented: $viewModel.showingSubscriptionPage) {
             SubscriptionView(namespace: animation, networkService: authService)
         }
         

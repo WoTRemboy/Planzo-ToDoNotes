@@ -58,7 +58,7 @@ struct SettingsView: View {
                 }
             }
         }
-        .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {
+        .subscriptionPresentation(isPresented: $viewModel.showingSubscriptionPage) {
             SubscriptionView(namespace: namespace, networkService: authService)
         }
         .popView(isPresented: $viewModel.showingAppearance, onTap: {}, onDismiss: {}) {

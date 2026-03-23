@@ -33,7 +33,7 @@ struct SettingsViewIPad: View {
             settingsGrid
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {
+        .subscriptionPresentation(isPresented: $viewModel.showingSubscriptionPage) {
             SubscriptionView(namespace: namespace, networkService: authService)
         }
         .popView(isPresented: $viewModel.showingAppearance, onTap: {}, onDismiss: {}) {

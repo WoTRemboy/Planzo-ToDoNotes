@@ -161,7 +161,7 @@ struct TaskManagementView: View {
                 attemptPerformSave(thenDismiss: false)
             }
         }
-        .fullScreenCover(isPresented: $viewModel.showingSubscriptionPage) {
+        .subscriptionPresentation(isPresented: $viewModel.showingSubscriptionPage) {
             SubscriptionView(namespace: animation, networkService: authService)
         }
         // Share Sheet Presentation
