@@ -244,6 +244,11 @@ final class MainViewModel: ObservableObject {
     
     /// Toggles between showing popup or full-screen task creation view.
     internal func toggleShowingCreateView() {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            showingTaskCreateViewFullscreen.toggle()
+            return
+        }
+
         taskCreationFullScreen == .fullScreen ?
         showingTaskCreateViewFullscreen.toggle() :
         showingTaskCreateView.toggle()

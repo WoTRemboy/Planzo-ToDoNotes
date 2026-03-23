@@ -23,6 +23,8 @@ struct TaskListRow: View {
     private let status: TaskStatus
     /// Indicating whether this is the last item in the section.
     private let isLast: Bool
+    /// Whether the row is selected (used for iPad split view highlight).
+    private let isSelected: Bool
     /// Optional callback to request confirmation for deleting a shared task (non-owner).
     private let onRequestConfirmSharedDelete: ((TaskEntity) -> Void)?
     /// Optional callback to request folder setup for a task.
@@ -39,10 +41,11 @@ struct TaskListRow: View {
     ///   - isLast: A Boolean indicating whether this is the last item in the section.
     ///   - onRequestConfirmSharedDelete: Optional closure to trigger shared-delete confirmation.
     ///   - onShowFolderSetup: Optional closure to show folder setup for this task.
-    init(entity: TaskEntity, isLast: Bool, onRequestConfirmSharedDelete: ((TaskEntity) -> Void)? = nil, onShowFolderSetup: ((TaskEntity) -> Void)? = nil) {
+    init(entity: TaskEntity, isLast: Bool, isSelected: Bool = false, onRequestConfirmSharedDelete: ((TaskEntity) -> Void)? = nil, onShowFolderSetup: ((TaskEntity) -> Void)? = nil) {
         self._entity = ObservedObject(wrappedValue: entity)
         self.status = .setupStatus(for: entity)
         self.isLast = isLast
+        self.isSelected = isSelected
         self.onRequestConfirmSharedDelete = onRequestConfirmSharedDelete
         self.onShowFolderSetup = onShowFolderSetup
     }
@@ -50,20 +53,43 @@ struct TaskListRow: View {
     // MARK: - Body
     
     internal var body: some View {
-        CustomContextMenu {
+        if isSelected {
             content
                 .background(Color.SupportColors.supportListRow)
-        } preview: {
-            TaskManagementPreview(
-                entity: entity)
-        } actions: {
-            uiContextMenu
-        } onEnd: {
-            
+                .overlay(selectionOverlay)
+        } else {
+            CustomContextMenu {
+                content
+                    .background(Color.SupportColors.supportListRow)
+                    .overlay(selectionOverlay)
+            } preview: {
+                TaskManagementPreview(
+                    entity: entity)
+            } actions: {
+                uiContextMenu
+            } onEnd: {
+                
+            }
         }
     }
     
     // MARK: - Main Content
+
+    private var selectionOverlay: some View {
+        Group {
+            if isSelected {
+                Rectangle()
+                    .fill(selectionColor.opacity(0.18))
+            }
+        }
+    }
+
+    private var selectionColor: Color {
+        guard let colorEntity = entity.folder?.color else {
+            return Color.LabelColors.labelPrimary
+        }
+        return FolderColor(from: colorEntity).rgbToColor()
+    }
     
     /// Main content inside the task row showing name, folder color, icons, and optional decorations.
     private var content: some View {

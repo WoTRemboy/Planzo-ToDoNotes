@@ -2,11 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UILaunchScreen</key>
-	<dict>
-		<key>UIImageName</key>
-		<string>SplashScreenLogo</string>
-	</dict>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -30,6 +25,11 @@
 	</array>
 	<key>UIDesignRequiresCompatibility</key>
 	<false/>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIImageName</key>
+		<string>SplashScreenLogo</string>
+	</dict>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -41,7 +41,5 @@
 			<dict/>
 		</dict>
 	</array>
-	<key>NSFaceIDUsageDescription</key>
-	<string>Use Face ID to unlock Planzo faster.</string>
 </dict>
 </plist>

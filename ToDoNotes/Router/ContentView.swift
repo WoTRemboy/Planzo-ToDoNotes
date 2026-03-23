@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import UIKit
 
 /// The main content view of the app, responsible for setting up tab navigation and injecting view models.
 struct ContentView: View {
@@ -46,7 +47,9 @@ struct ContentView: View {
         appearance.shadowImage = nil
         appearance.shadowColor = nil
 
-        if #available(iOS 26.0, *) {} else {
+        if #available(iOS 26.0, *) {
+        } else if UIDevice.current.userInterfaceIdiom == .pad {
+        } else {
             UITabBar.appearance().standardAppearance = appearance
             UITabBar.appearance().scrollEdgeAppearance = appearance
         }
@@ -147,7 +150,9 @@ struct ContentView: View {
 extension UITabBarController {
     public override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        if #available(iOS 26.0, *) {} else {
+        if #available(iOS 26.0, *) {
+        } else if UIDevice.current.userInterfaceIdiom == .pad {
+        } else {
             tabBarShadowSetup()
         }
     }

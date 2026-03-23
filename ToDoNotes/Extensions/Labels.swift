@@ -434,6 +434,12 @@ final class Texts {
         }
     }
     
+    // MARK: - Placeholders
+
+    enum Placeholders {
+        static let selectTask = NSLocalizedString("PlaceholdersSelectTask", comment: "Select a task")
+    }
+
     // MARK: - Search Bar Module Texts
     
     enum SearchBar {
