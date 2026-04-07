@@ -7,20 +7,27 @@
 
 import SwiftUI
 import Combine
+import UIKit
 
 struct ConfigureFoldersView: View {
     
     @StateObject private var viewModel = ConfigureFoldersViewModel()
         
     internal var body: some View {
-        ZStack {
-            ScrollView(.vertical) {
-                foldersList
-                dragLabel
+        GeometryReader { proxy in
+            ZStack {
+                ScrollView(.vertical) {
+                    VStack(spacing: 0) {
+                        foldersList
+                        dragLabel
+                    }
+                    .frame(width: contentWidth(for: proxy))
+                    .frame(maxWidth: .infinity)
+                }
+//                .safeAreaInset(edge: .bottom) {
+//                    safeAreaContent
+//                }
             }
-//            .safeAreaInset(edge: .bottom) {
-//                safeAreaContent
-//            }
         }
         .customNavBarItems(
             title: Texts.Folders.Configure.fullTitle,
@@ -32,6 +39,12 @@ struct ConfigureFoldersView: View {
         
     }
     
+    private func contentWidth(for proxy: GeometryProxy) -> CGFloat? {
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return nil }
+        let isPortrait = proxy.size.height >= proxy.size.width
+        return proxy.size.width * (isPortrait ? 0.7 : 0.5)
+    }
+
     private var foldersList: some View {
         LazyVStack(spacing: 0) {
             systemVStack

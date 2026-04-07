@@ -1,63 +1,38 @@
 //
-//  SettingsView.swift
+//  SettingsViewIPad.swift
 //  ToDoNotes
 //
-//  Created by Roman Tverdokhleb on 1/4/25.
+//  Created by Roman Tverdokhleb on 3/19/25.
 //
 
 import SwiftUI
 import OSLog
+import UIKit
 
-/// A logger instance for debug and error messages.
-private let logger = Logger(subsystem: "com.todonotes.settings", category: "SettingsView")
+private let logger = Logger(subsystem: "com.todonotes.settings", category: "SettingsViewIPad")
 
-/// Settings screen that provides options for appearance, language, notifications, and app data reset.
-struct SettingsView: View {
-    
-    // MARK: - Properties
-    
-    /// Fetch request to access all saved tasks from Core Data.
+struct SettingsViewIPad: View {
     @FetchRequest(entity: TaskEntity.entity(), sortDescriptors: [])
     private var tasksResults: FetchedResults<TaskEntity>
-    
+
     @Namespace private var namespace
-    
-    /// EnvironmentObject providing state management for the settings screen.
+
     @EnvironmentObject private var viewModel: SettingsViewModel
     @EnvironmentObject private var authService: AuthNetworkService
-    
-    /// Apple authentication service.
+
     @StateObject private var appleAuthService: AppleAuthService
-    
-    /// Google authentication service.
     @StateObject private var googleAuthService: GoogleAuthService
-    
+
     init(networkService: AuthNetworkService) {
         _appleAuthService = StateObject(wrappedValue: AppleAuthService(networkService: networkService))
-        
         _googleAuthService = StateObject(wrappedValue: GoogleAuthService(networkService: networkService))
     }
-    
-    // MARK: - Body
-    
-    internal var body: some View {
-        ZStack {
-            let base = VStack(spacing: 0) {
-                settingsList
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
 
-            if #available(iOS 26.0, *) {
-                base.safeAreaBar(edge: .top) {
-                    SettingsNavBar()
-                }
-            } else {
-                base.safeAreaInset(edge: .top) {
-                    SettingsNavBar()
-                        .zIndex(1)
-                }
-            }
+    internal var body: some View {
+        VStack(spacing: 0) {
+            settingsGrid
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .subscriptionPresentation(isPresented: $viewModel.showingSubscriptionPage) {
             SubscriptionView(namespace: namespace, networkService: authService)
         }
@@ -125,50 +100,57 @@ struct SettingsView: View {
             errorAlert
         }
     }
-    
-    /// Scrollable content with grouped setting options.
-    private var settingsList: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: 16) {
-                profileButton
-                if authService.currentUser?.isPremium != true {
-                    subscriptionPromoteRow
+
+    private var settingsGrid: some View {
+        GeometryReader { proxy in
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 16) {
+                    profileButton
+                    if authService.currentUser?.isPremium != true {
+                        subscriptionPromoteRow
+                    }
+                    systemSettingsGroup
+                    syncAboutWeekdayGroup
+                    logoutButton
                 }
-                #if DEBUG
-                cancelSubscriptionDevButton
-                #endif
-                syncButton
-                
-                VStack(spacing: 0) {
-                    appearanceButton
-                    notificationRow
-                        .onAppear {
-                            viewModel.readNotificationStatus()
-                        }
-                    languageButton
-                }
-                .modifier(SystemRowCornerModifier())
-                .padding(.horizontal)
-                
-                VStack(spacing: 0) {
-                    taskCreationSettingsButton
-                    weekFirstDayButton
-                }
-                .modifier(SystemRowCornerModifier())
-                .padding(.horizontal)
-                
-                aboutAppButton
-                logoutButton
+                .frame(width: proxy.size.width * (proxy.size.height > proxy.size.width ? 0.7 : 0.5))
+                .padding(.top)
+                .padding(.bottom)
+                .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
+                .frame(maxWidth: .infinity)
             }
-            .padding(.bottom)
-            .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
+            .scrollContentBackground(.hidden)
         }
-        .scrollContentBackground(.hidden)
     }
-    
-    // MARK: - Individual Setting Items
-    
-    private var profileButton: some View {
+
+    private var settingsGridColumns: [GridItem] {
+        [GridItem(.flexible(), spacing: 16)]
+    }
+
+    private var systemSettingsGroup: some View {
+        VStack(spacing: 0) {
+            appearanceButton
+            notificationRow
+                .onAppear {
+                    viewModel.readNotificationStatus()
+                }
+            languageButton
+        }
+        .modifier(SystemRowCornerModifier())
+    }
+
+    private var syncAboutWeekdayGroup: some View {
+        VStack(spacing: 0) {
+            syncButton
+            weekFirstDayButton
+            aboutAppButton
+        }
+        .modifier(SystemRowCornerModifier())
+    }
+}
+
+private extension SettingsViewIPad {
+    var profileButton: some View {
         ZStack {
             if let user = authService.currentUser {
                 CustomNavLink(
@@ -190,11 +172,10 @@ struct SettingsView: View {
                     .transition(.blurReplace)
             }
         }
-        .padding([.horizontal, .top])
         .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
     }
-    
-    private var loginOptionsView: some View {
+
+    var loginOptionsView: some View {
         VStack(spacing: 12) {
             if !viewModel.showLoginOptions {
                 Button {
@@ -212,41 +193,41 @@ struct SettingsView: View {
                 VStack(spacing: 12) {
                     appleLoginButton
                     googleLoginButton
-                    
+
                     termsPolicyLabel
                         .font(.system(size: 14, weight: .medium))
                         .foregroundStyle(Color.LabelColors.labelDetails)
                         .multilineTextAlignment(.center)
                         .accentColor(Color.LabelColors.Special.labelSearchBarCancel)
-                    
+
                     closeButton
                 }
                 .transition(.blurReplace.combined(with: .move(edge: .top)))
             }
         }
     }
-    
-    private var appleLoginButton: some View {
+
+    var appleLoginButton: some View {
         LoginButtonView(type: .apple) {
             viewModel.handleAppleSignIn(appleAuthService: appleAuthService)
         }
     }
-    
-    private var googleLoginButton: some View {
+
+    var googleLoginButton: some View {
         LoginButtonView(type: .google) {
             viewModel.handleGoogleSignIn(googleAuthService: googleAuthService)
         }
     }
-    
-    private var termsPolicyLabel: some View {
+
+    var termsPolicyLabel: some View {
         if let attributedText = try? AttributedString(markdown: Texts.OnboardingPage.markdownTerms) {
             return Text(attributedText)
         } else {
             return Text(Texts.OnboardingPage.markdownTermsError)
         }
     }
-    
-    private var closeButton: some View {
+
+    var closeButton: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.25)) {
                 viewModel.showLoginOptions.toggle()
@@ -257,8 +238,8 @@ struct SettingsView: View {
                 .foregroundStyle(Color.LabelColors.labelPrimary)
         }
     }
-    
-    private var subscriptionPromoteRow: some View {
+
+    var subscriptionPromoteRow: some View {
         Button {
             viewModel.toggleShowingSubscriptionPage()
         } label: {
@@ -266,11 +247,10 @@ struct SettingsView: View {
         }
         .modifier(SystemRowCornerModifier())
         .transition(.blurReplace)
-        .padding(.horizontal)
         .animation(.easeInOut(duration: 0.25), value: authService.currentUser?.isPremium)
     }
-    
-    private var syncButton: some View {
+
+    var syncButton: some View {
         CustomNavLink(
             destination: SettingSyncView(appleAuthService: appleAuthService, googleAuthService: googleAuthService)
                 .environmentObject(viewModel),
@@ -280,14 +260,11 @@ struct SettingsView: View {
                     image: Image.Settings.sync,
                     details: viewModel.lastSyncString(dateString: authService.currentUser?.lastSyncAt),
                     chevron: true,
-                    last: true)
+                    last: false)
             })
-        .modifier(SystemRowCornerModifier())
-        .padding(.horizontal)
     }
-    
-    /// Button to open appearance customization modal.
-    private var appearanceButton: some View {
+
+    var appearanceButton: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.2)) {
                 viewModel.toggleShowingAppearance()
@@ -301,42 +278,38 @@ struct SettingsView: View {
             .animation(.easeInOut(duration: 0.2), value: viewModel.userTheme)
         }
     }
-    
-    /// Row displaying notification settings with a toggle switch.
-    private var notificationRow: some View {
+
+    var notificationRow: some View {
         ZStack(alignment: .trailing) {
             SettingFormRow(
                 title: Texts.Settings.Notification.title,
                 image: Image.Settings.notifications)
-            
+
             notificationToggle
                 .padding(.trailing, 14)
         }
     }
-    
-    /// Toggle for enabling/disabling local notifications.
-    private var notificationToggle: some View {
+
+    var notificationToggle: some View {
         Toggle(isOn: $viewModel.notificationsEnabled) {}
             .fixedSize()
             .background(Color.SupportColors.supportButton)
             .tint(Color.ToggleColors.notifications)
             .scaleEffect(toggleScale)
-        
             .onChange(of: viewModel.notificationsEnabled) { _, newValue in
                 setNotificationsStatus(allowed: newValue)
             }
     }
-    
-    private var toggleScale: CGFloat {
+
+    var toggleScale: CGFloat {
         if #available(iOS 26.0, *) {
             return 1
         } else {
             return 0.8
         }
     }
-    
-    /// Button to prompt language settings update.
-    private var languageButton: some View {
+
+    var languageButton: some View {
         Button {
             viewModel.toggleShowingLanguageAlert()
         } label: {
@@ -348,54 +321,8 @@ struct SettingsView: View {
                 last: true)
         }
     }
-    
-    /// Button allowing the user to reset all tasks.
-    private var resetTasksButton: some View {
-        Button {
-            handleResetAction()
-        } label: {
-            SettingFormRow(title: Texts.Settings.Reset.title,
-                           image: Image.Settings.reset,
-                           chevron: true)
-        }
-        .confirmationDialog(
-            Texts.Settings.Reset.warning,
-            isPresented: $viewModel.showingResetDialog,
-            titleVisibility: .visible) {
-                Button(role: .destructive) {
-                    performResetTasks()
-                } label: {
-                    Text(Texts.Settings.Reset.confirm)
-                }
-            }
-    }
-    
-    /// Button linking to task creation page settings.
-    private var taskCreationSettingsButton: some View {
-        CustomNavLink(
-            destination: SettingTaskCreateView()
-                .environmentObject(viewModel),
-            label: {
-                SettingFormRow(
-                    title: Texts.Settings.TaskCreate.title,
-                    image: Image.Settings.taskCreate,
-                    chevron: true,
-                    last: false)
-            })
-    }
-    
-    private var timeFormatButton: some View {
-        Button {
-            viewModel.toggleShowingTimeFormat()
-        } label: {
-            SettingFormRow(title: Texts.Settings.TimeFormat.title,
-                           image: Image.Settings.timeformat,
-                           details: TimeFormatSelector.current.name,
-                           chevron: true)
-        }
-    }
-    
-    private var weekFirstDayButton: some View {
+
+    var weekFirstDayButton: some View {
         Button {
             viewModel.toggleShowingWeekFirstDay()
         } label: {
@@ -403,12 +330,11 @@ struct SettingsView: View {
                            image: Image.Settings.weekFirstDay,
                            details: WeekFirstDay.setupValue(for: viewModel.firstDayOfWeek).name,
                            chevron: true,
-                           last: true)
+                           last: false)
         }
     }
-    
-    /// Button leading to the "About App" page.
-    private var aboutAppButton: some View {
+
+    var aboutAppButton: some View {
         CustomNavLink(
             destination: SettingAboutPageView()
                 .environmentObject(viewModel)) {
@@ -418,11 +344,9 @@ struct SettingsView: View {
                         chevron: true,
                         last: true)
                 }
-                .modifier(SystemRowCornerModifier())
-                .padding(.horizontal)
     }
-    
-    private var logoutButton: some View {
+
+    var logoutButton: some View {
         ZStack {
             if authService.currentUser != nil {
                 Button {
@@ -431,7 +355,6 @@ struct SettingsView: View {
                     SettingLogoutButton()
                 }
                 .modifier(SystemRowCornerModifier())
-                .padding(.horizontal)
                 .transition(.blurReplace)
             }
         }
@@ -447,11 +370,16 @@ struct SettingsView: View {
                 }
         }
     }
-    
-    // MARK: - Alerts
-    
-    /// Displays an alert suggesting the user to open system settings to change the app's language.
-    private var languageAlert: some View {
+
+    var planTitle: String {
+        if authService.currentUser?.isPremium == true {
+            Texts.Settings.Plans.proPlan
+        } else {
+            Texts.Settings.Plans.freePlan
+        }
+    }
+
+    var languageAlert: some View {
         CustomAlertView(
             title: Texts.Settings.Language.alertTitle,
             message: Texts.Settings.Language.alertContent,
@@ -463,9 +391,8 @@ struct SettingsView: View {
             secondaryButtonTitle: Texts.Settings.cancel,
             secondaryAction: viewModel.toggleShowingLanguageAlert)
     }
-    
-    /// Displays an alert suggesting the user to open system settings to enable notifications.
-    private var notificationAlert: some View {
+
+    var notificationAlert: some View {
         CustomAlertView(
             title: Texts.Settings.Notification.prohibitedTitle,
             message: Texts.Settings.Notification.prohibitedContent,
@@ -477,9 +404,8 @@ struct SettingsView: View {
             secondaryButtonTitle: Texts.Settings.cancel,
             secondaryAction: viewModel.toggleShowingNotificationAlert)
     }
-    
-    /// Displays an alert showing the result of a reset operation.
-    private var resetAlert: some View {
+
+    var resetAlert: some View {
         CustomAlertView(
             title: viewModel.resetMessage.title,
             message: viewModel.resetMessage.message,
@@ -488,8 +414,8 @@ struct SettingsView: View {
                 viewModel.toggleShowingResetResult()
             })
     }
-    
-    private var errorAlert: some View {
+
+    var errorAlert: some View {
         CustomAlertView(
             title: Texts.Authorization.Error.authorizationFailed,
             message: Texts.Authorization.Error.retryLater,
@@ -498,18 +424,10 @@ struct SettingsView: View {
                 viewModel.toggleShowingErrorAlert()
             })
     }
-    
-    private var planTitle: String {
-        if authService.currentUser?.isPremium == true {
-            Texts.Settings.Plans.proPlan
-        } else {
-            Texts.Settings.Plans.freePlan
-        }
-    }
-    
+
     #if DEBUG
     /// DEV ONLY: Button to reset subscription on backend and save returned tokens.
-    private var cancelSubscriptionDevButton: some View {
+    var cancelSubscriptionDevButton: some View {
         Button {
             SubscriptionNetworkService.shared.resetLicenseDev { result in
                 switch result {
@@ -537,24 +455,11 @@ struct SettingsView: View {
                 last: true)
         }
         .modifier(SystemRowCornerModifier())
-        .padding(.horizontal)
     }
     #endif
 }
 
-// MARK: - Preview
-
-#Preview {
-    let authService = AuthNetworkService()
-    SettingsView(networkService: authService)
-        .environmentObject(SettingsViewModel(notificationsEnabled: false))
-        .environmentObject(authService)
-        .environmentObject(SubscriptionViewModel())
-}
-
-// MARK: - Private Logic
-
-extension SettingsView {
+private extension SettingsViewIPad {
     /// Handles the reset button action based on the number of tasks.
     private func handleResetAction() {
         if !tasksResults.isEmpty {
@@ -564,7 +469,7 @@ extension SettingsView {
             viewModel.showingResetResult.toggle()
         }
     }
-    
+
     /// Performs task deletion and triggers a result message.
     private func performResetTasks() {
         TaskService.deleteAllTasksAndClearNotifications { success in
@@ -578,7 +483,7 @@ extension SettingsView {
             }
         }
     }
-    
+
     /// Updates the notification settings based on user's permission status.
     private func setNotificationsStatus(allowed: Bool) {
         if allowed {
@@ -605,4 +510,3 @@ extension SettingsView {
         }
     }
 }
-

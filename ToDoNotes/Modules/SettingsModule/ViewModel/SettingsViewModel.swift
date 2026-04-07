@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import OSLog
+import UIKit
 
 /// Logger for tracking settings changes and events.
 private let logger = Logger(subsystem: "com.todonotes.settings", category: "SettingsViewModel")
@@ -83,6 +84,10 @@ final class SettingsViewModel: ObservableObject {
         self.selectedAppearance = self.userTheme
         self.selectedTimeFormat = TimeFormatSelector.current
         self.selectedWeekFirstDay = WeekFirstDay.setupValue(for: firstDayOfWeek)
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            taskCreation = .fullScreen
+        }
     }
     
     // MARK: - App Info
@@ -310,6 +315,11 @@ final class SettingsViewModel: ObservableObject {
     /// Changes the default task creation mode between popup and full screen.
     /// - Parameter mode: The new `TaskCreation` mode.
     internal func taskCreationChange(to mode: TaskCreation) {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            taskCreation = .fullScreen
+            return
+        }
+
         guard taskCreation != mode else {
             logger.debug("Task creation mode remains unchanged: \(mode.rawValue)")
             return

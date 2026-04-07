@@ -7,6 +7,7 @@
 
 import SwiftUI
 import OSLog
+import UIKit
 
 /// A logger instance for debug and error messages.
 private let logger = Logger(subsystem: "com.todonotes.today", category: "TodayTaskRowWithActions")
@@ -47,26 +48,38 @@ struct TodayTaskRowWithSwipeActions: View {
     // MARK: - Body
     
     internal var body: some View {
-        Button {
+        let row = Button {
             handleTaskSelection()
         } label: {
             TaskListRow(
                 entity: entity,
                 isLast: isLast,
+                isSelected: isSelected,
                 onRequestConfirmSharedDelete: { task in
                     viewModel.requestConfirmSharedDelete(for: task)
                 },
                 onShowFolderSetup: onShowFolderSetup
             )
         }
-        .swipeActions(edge: .leading, allowsFullSwipe: false) {
-            if entity.role != ShareAccess.viewOnly.rawValue {
-                leadingSwipeActions
-            }
+
+        if isSelected {
+            row
+        } else {
+            row
+                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                    if entity.role != ShareAccess.viewOnly.rawValue {
+                        leadingSwipeActions
+                    }
+                }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) { trailingSwipeActions }
         }
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) { trailingSwipeActions }
     }
     
+    private var isSelected: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad
+        && viewModel.selectedTask?.objectID == entity.objectID
+    }
+
     // MARK: - Actions
     
     /// Handles task selection (opens task editor).

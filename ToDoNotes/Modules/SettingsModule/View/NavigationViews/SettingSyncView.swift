@@ -7,6 +7,7 @@
 
 import SwiftUI
 import OSLog
+import UIKit
 
 /// A logger instance for debug and error messages.
 private let logger = Logger(subsystem: "com.todonotes.settings", category: "SettingSyncView")
@@ -29,25 +30,29 @@ struct SettingSyncView: View {
     }
     
     internal var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: 16) {
-                if authService.isAuthorized {
-                    syncActiveView
-                    SettingSyncFAQView()
-                    userSupportLabel
-                        .multilineTextAlignment(.center)
-                        .accentColor(Color.SupportColors.supportSubscription)
-                } else {
-                    syncDisabledView
-                    loginView
-                    termsPolicyLabel
-                        .multilineTextAlignment(.center)
-                        .accentColor(Color.SupportColors.supportSubscription)
+        GeometryReader { proxy in
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 16) {
+                    if authService.isAuthorized {
+                        syncActiveView
+                        SettingSyncFAQView()
+                        userSupportLabel
+                            .multilineTextAlignment(.center)
+                            .accentColor(Color.SupportColors.supportSubscription)
+                    } else {
+                        syncDisabledView
+                        loginView
+                        termsPolicyLabel
+                            .multilineTextAlignment(.center)
+                            .accentColor(Color.SupportColors.supportSubscription)
+                    }
                 }
+                .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
+                .animation(.easeInOut(duration: 0.2), value: syncService.lastSyncStatus)
+                .padding()
+                .frame(width: contentWidth(for: proxy))
+                .frame(maxWidth: .infinity)
             }
-            .animation(.easeInOut(duration: 0.25), value: authService.currentUser)
-            .animation(.easeInOut(duration: 0.2), value: syncService.lastSyncStatus)
-            .padding()
         }
         .customNavBarItems(
             title: Texts.Settings.Sync.title,
@@ -55,6 +60,12 @@ struct SettingSyncView: View {
         .popView(isPresented: $viewModel.showingSyncErrorAlert, onTap: {}, onDismiss: {}) {
             syncAlert
         }
+    }
+
+    private func contentWidth(for proxy: GeometryProxy) -> CGFloat? {
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return nil }
+        let isPortrait = proxy.size.height >= proxy.size.width
+        return proxy.size.width * (isPortrait ? 0.7 : 0.5)
     }
     
     private var syncDisabledView: some View {

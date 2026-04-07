@@ -108,7 +108,7 @@ final class MainViewModel: ObservableObject {
 
         folderFetchController.onUpdate = { [weak self] folders in
             guard let self = self else { return }
-            self.folders = folders
+            self.folders = self.filteredFolders(folders)
             self.ensureSelectedFolder()
         }
 
@@ -124,6 +124,25 @@ final class MainViewModel: ObservableObject {
             return
         }
         selectedFolder = folders.first
+    }
+
+    private func filteredFolders(_ folders: [Folder]) -> [Folder] {
+        let hasSharedTasks = fetchHasSharedTasks()
+        return folders.filter { folder in
+            guard folder.system, folder.shared else { return true }
+            return hasSharedTasks
+        }
+    }
+
+    private func fetchHasSharedTasks() -> Bool {
+        let context = CoreDataProvider.shared.persistentContainer.viewContext
+        let request: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "members > 0")
+        request.fetchLimit = 1
+        if let count = try? context.count(for: request) {
+            return count > 0
+        }
+        return false
     }
 
     /// Updates the task fetch controller when folder selection changes.
@@ -244,6 +263,11 @@ final class MainViewModel: ObservableObject {
     
     /// Toggles between showing popup or full-screen task creation view.
     internal func toggleShowingCreateView() {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            showingTaskCreateViewFullscreen.toggle()
+            return
+        }
+
         taskCreationFullScreen == .fullScreen ?
         showingTaskCreateViewFullscreen.toggle() :
         showingTaskCreateView.toggle()

@@ -101,6 +101,11 @@ final class TodayViewModel: ObservableObject {
     
     /// Toggles between showing popup or fullscreen task creation view based on settings.
     internal func toggleShowingTaskCreateView() {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            showingTaskCreateViewFullscreen.toggle()
+            return
+        }
+
         if taskCreationFullScreen == .popup {
             showingTaskCreateView.toggle()
         } else {

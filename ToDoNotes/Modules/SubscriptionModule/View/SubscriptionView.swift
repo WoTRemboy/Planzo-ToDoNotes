@@ -8,6 +8,7 @@
 import SwiftUI
 import OSLog
 import StoreKit
+import UIKit
 
 /// A logger instance for debug and error messages.
 private let logger = Logger(subsystem: "com.todonotes.subscription", category: "SubscriptionView")
@@ -132,13 +133,19 @@ struct SubscriptionView: View {
     }
     
     private var subscriptionContent: some View {
-        ScrollView(showsIndicators: false) {
-            subscriptionCarousel
-            
-            if authService.isAuthorized {
-                subscriptionView
-            } else {
-                authView
+        GeometryReader { proxy in
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 0) {
+                    subscriptionCarousel
+                    
+                    if authService.isAuthorized {
+                        subscriptionView
+                    } else {
+                        authView
+                    }
+                }
+                .frame(width: contentWidth(for: proxy))
+                .frame(maxWidth: .infinity)
             }
         }
         .animation(.easeInOut(duration: 0.2), value: authService.isAuthorized)
@@ -154,7 +161,7 @@ struct SubscriptionView: View {
                 .foregroundStyle(Color.LabelColors.labelDetails)
                 .multilineTextAlignment(.center)
                 .padding([.horizontal, .top])
-                .padding(.bottom, hasNotch() ? 0 : 16)
+                .padding(.bottom, UIDevice.current.userInterfaceIdiom == .pad ? 16 : (hasNotch() ? 0 : 16))
         }
         .frame(maxWidth: .infinity)
         .background {
@@ -167,6 +174,12 @@ struct SubscriptionView: View {
         .animation(.easeInOut(duration: 0.2), value: authService.isAuthorized)
     }
     
+    private func contentWidth(for proxy: GeometryProxy) -> CGFloat? {
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return nil }
+        let isPortrait = proxy.size.height >= proxy.size.width
+        return proxy.size.width * (isPortrait ? 0.8 : 0.6)
+    }
+
     private var subscriptionCarousel: some View {
         SubscriptionBenefitsCarousel()
             .frame(minHeight: 250)

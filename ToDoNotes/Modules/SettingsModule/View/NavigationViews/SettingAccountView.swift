@@ -7,6 +7,7 @@
 
 import SwiftUI
 import StoreKit
+import UIKit
 
 struct SettingAccountView: View {
     
@@ -28,7 +29,7 @@ struct SettingAccountView: View {
             .customNavBarItems(
                 title: Texts.Authorization.Details.account,
                 showBackButton: true)
-            .fullScreenCover(isPresented: $viewModel.showingSubscriptionDetailsPage) {
+            .subscriptionPresentation(isPresented: $viewModel.showingSubscriptionDetailsPage) {
                 SubscriptionView(namespace: namespace, networkService: authService)
             }
             .popView(isPresented: $showingPlanAlert, onTap: {}, onDismiss: {}) {
@@ -37,36 +38,46 @@ struct SettingAccountView: View {
     }
     
     private var content: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(spacing: 24) {
-                profileImage
-                
-                VStack(spacing: 0) {
-                    if authService.currentUser?.name != nil {
-                        nicknameView
+        GeometryReader { proxy in
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 24) {
+                    profileImage
+                    
+                    VStack(spacing: 0) {
+                        if authService.currentUser?.name != nil {
+                            nicknameView
+                        }
+                        emailView
+                        faceIdPasscodeView
+                        planView
                     }
-                    emailView
-                    faceIdPasscodeView
-                    planView
-                }
-                .modifier(SystemRowCornerModifier())
-                .padding(.horizontal)
-                
-                if authService.currentUser?.isPremium == true {
-                    VStack(spacing: 16) {
-                        SettingSubFAQView()
-                        
-                        userSupportLabel
-                            .multilineTextAlignment(.center)
-                            .accentColor(Color.SupportColors.supportSubscription)
-                    }
+                    .modifier(SystemRowCornerModifier())
                     .padding(.horizontal)
+                    
+                    if authService.currentUser?.isPremium == true {
+                        VStack(spacing: 16) {
+                            SettingSubFAQView()
+                            
+                            userSupportLabel
+                                .multilineTextAlignment(.center)
+                                .accentColor(Color.SupportColors.supportSubscription)
+                        }
+                        .padding(.horizontal)
+                    }
                 }
+                .padding(.top)
+                .frame(width: contentWidth(for: proxy))
+                .frame(maxWidth: .infinity)
             }
-            .padding(.top)
         }
     }
     
+    private func contentWidth(for proxy: GeometryProxy) -> CGFloat? {
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return nil }
+        let isPortrait = proxy.size.height >= proxy.size.width
+        return proxy.size.width * (isPortrait ? 0.7 : 0.5)
+    }
+
     @ViewBuilder
     private var profileImage: some View {
         if let user = authService.currentUser, let url = user.avatarUrl {

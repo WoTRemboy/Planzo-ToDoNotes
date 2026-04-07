@@ -7,6 +7,7 @@
 
 import SwiftUI
 import OSLog
+import UIKit
 
 /// A logger instance for debug and error messages.
 private let logger = Logger(subsystem: "com.todonotes.main", category: "MainTaskRowWithActions")
@@ -32,28 +33,40 @@ struct MainTaskRowWithActions: View {
     // MARK: - Body
     
     internal var body: some View {
-        Button {
+        let row = Button {
             handleRowTap()
         } label: {
             TaskListRow(
                 entity: entity,
                 isLast: isLast,
+                isSelected: isSelected,
                 onRequestConfirmSharedDelete: { task in
                     viewModel.requestConfirmSharedDelete(for: task)
                 },
                 onShowFolderSetup: onShowFolderSetup
             )
         }
-        .swipeActions(edge: .leading, allowsFullSwipe: viewModel.selectedFilter == .deleted) {
-            if entity.role != ShareAccess.viewOnly.rawValue {
-                leadingSwipeActions
-            }
-        }
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-            trailingSwipeAction
+
+        if isSelected {
+            row
+        } else {
+            row
+                .swipeActions(edge: .leading, allowsFullSwipe: viewModel.selectedFilter == .deleted) {
+                    if entity.role != ShareAccess.viewOnly.rawValue {
+                        leadingSwipeActions
+                    }
+                }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    trailingSwipeAction
+                }
         }
     }
     
+    private var isSelected: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad
+        && viewModel.selectedTask?.objectID == entity.objectID
+    }
+
     // MARK: - Actions
     
     /// Handles tapping the task row depending on the selected filter.
