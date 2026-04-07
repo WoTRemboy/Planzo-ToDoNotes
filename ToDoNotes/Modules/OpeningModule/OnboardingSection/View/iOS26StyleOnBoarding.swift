@@ -36,36 +36,40 @@ struct iOS26StyleOnBoarding: View {
     }
     
     var body: some View {
-        ZStack(alignment: .bottom) {
-            screenshotView()
-                .compositingGroup()
-                .scaleEffect(
-                    items[currentIndex].zoomScale,
-                    anchor: items[currentIndex].zoomAnchor
-                )
-                .padding(.top, 35)
-                .padding(.horizontal, 30)
-                .padding(.bottom, 220)
-            
-            VStack(spacing: 10) {
-                textContentView()
-                indicatorView()
-                continueButton()
+        GeometryReader { proxy in
+            ZStack(alignment: .bottom) {
+                screenshotView()
+                    .compositingGroup()
+                    .scaleEffect(
+                        items[currentIndex].zoomScale,
+                        anchor: items[currentIndex].zoomAnchor
+                    )
+                    .padding(.top, 35)
+                    .padding(.horizontal, 30)
+                    .padding(.bottom, 220)
                 
-                if currentIndex == items.count - 1 {
-                    lastPageContent
-                        .padding(.top, 6)
-                } else {
-                    nonLastPageContent
+                VStack(spacing: 10) {
+                    textContentView()
+                    indicatorView()
+                    continueButton()
+                    
+                    if currentIndex == items.count - 1 {
+                        lastPageContent
+                            .padding(.top, 6)
+                    } else {
+                        nonLastPageContent
+                    }
                 }
+                .frame(maxWidth: controlsWidth(for: proxy.size))
+                .frame(maxWidth: .infinity)
+                .padding(.top, 20)
+                .padding(.horizontal, 15)
+                .frame(height: currentIndex == items.count - 1 ? 400 : 210)
+                .background {
+                    variableGlassBlur(15)
+                }
+                topBarButtons()
             }
-            .padding(.top, 20)
-            .padding(.horizontal, 15)
-            .frame(height: currentIndex == items.count - 1 ? 400 : 210)
-            .background {
-                variableGlassBlur(15)
-            }
-            topBarButtons()
         }
     }
     
@@ -269,6 +273,12 @@ struct iOS26StyleOnBoarding: View {
     
     var animation: Animation {
         .interpolatingSpring(duration: 0.4, bounce: 0, initialVelocity: 0)
+    }
+
+    private func controlsWidth(for size: CGSize) -> CGFloat? {
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return nil }
+        let isPortrait = size.height > size.width
+        return size.width * (isPortrait ? 0.7 : 0.5)
     }
 }
 

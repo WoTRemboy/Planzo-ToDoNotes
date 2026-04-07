@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftUIPager
 import TipKit
 import OSLog
+import UIKit
 
 /// A logger instance for debug and error messages.
 private let logger = Logger(subsystem: "com.todonotes.opening", category: "OnboardingScreenView")
@@ -105,23 +106,36 @@ struct OnboardingScreenView: View {
     }
 
     private var legacyOnboarding: some View {
-        VStack(spacing: 0) {
-            content
-            progressCircles
-            selectPageButtons
+        GeometryReader { proxy in
+            VStack(spacing: 0) {
+                content
 
-            if viewModel.isLastPage(current: page.index) {
-                signInButtons
-                    .disabled(viewModel.isAuthorizing)
-                    .padding(.top)
-                termsPolicyLabel
-                    .padding([.top, .horizontal])
-                    .padding(.bottom, hasNotch() ? 4 : 0)
-            } else {
-                skipButton
+                VStack(spacing: 0) {
+                    progressCircles
+                    selectPageButtons
+
+                    if viewModel.isLastPage(current: page.index) {
+                        signInButtons
+                            .disabled(viewModel.isAuthorizing)
+                            .padding(.top)
+                        termsPolicyLabel
+                            .padding([.top, .horizontal])
+                            .padding(.bottom, hasNotch() ? 4 : 0)
+                    } else {
+                        skipButton
+                    }
+                }
+                .frame(width: legacyControlsWidth(for: proxy))
+                .frame(maxWidth: .infinity)
             }
+            .padding(.vertical)
         }
-        .padding(.vertical)
+    }
+
+    private func legacyControlsWidth(for proxy: GeometryProxy) -> CGFloat? {
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return nil }
+        let isPortrait = proxy.size.height >= proxy.size.width
+        return proxy.size.width * (isPortrait ? 0.8 : 0.6)
     }
 
     // MARK: - Pager Content
@@ -333,4 +347,3 @@ struct OnboardingScreenView: View {
         .environmentObject(OnboardingViewModel())
         .environmentObject(AuthNetworkService())
 }
-
