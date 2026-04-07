@@ -17,12 +17,18 @@ struct TodayView: View {
     @EnvironmentObject private var authService: AuthNetworkService
     /// Used for smooth matched geometry transitions between floating buttons and task management screens.
     @Namespace private var animation
+
+    private let showsSelectedTaskCover: Bool
     
     /// TipKit overview tip for the today page.
     private let overviewTip = TodayPageOverview()
     @State private var folderSetupTask: TaskEntity?
     
     // MARK: - Body
+
+    init(showsSelectedTaskCover: Bool = true) {
+        self.showsSelectedTaskCover = showsSelectedTaskCover
+    }
     
     internal var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -91,14 +97,13 @@ struct TodayView: View {
                 }
         }
         // Fullscreen task editing
-        .fullScreenCover(item: $viewModel.selectedTask) { task in
-            TaskManagementView(
-                taskManagementHeight: $viewModel.taskManagementHeight,
-                entity: task,
-                namespace: animation) {
-                    viewModel.toggleShowingTaskEditView()
-                }
-        }
+        .modifier(SelectedTaskCoverModifier(
+            isEnabled: showsSelectedTaskCover,
+            selectedTask: $viewModel.selectedTask,
+            taskManagementHeight: $viewModel.taskManagementHeight,
+            animation: animation,
+            onDismiss: viewModel.toggleShowingTaskEditView
+        ))
     }
 
     // MARK: - Content Components
@@ -212,6 +217,30 @@ struct TodayView: View {
             .padding()
         }
         .ignoresSafeArea(.keyboard)
+    }
+}
+
+private struct SelectedTaskCoverModifier: ViewModifier {
+    let isEnabled: Bool
+    @Binding var selectedTask: TaskEntity?
+    @Binding var taskManagementHeight: CGFloat
+    let animation: Namespace.ID
+    let onDismiss: () -> Void
+
+    func body(content: Content) -> some View {
+        if isEnabled {
+            content.fullScreenCover(item: $selectedTask) { task in
+                TaskManagementView(
+                    taskManagementHeight: $taskManagementHeight,
+                    entity: task,
+                    namespace: animation
+                ) {
+                    onDismiss()
+                }
+            }
+        } else {
+            content
+        }
     }
 }
 

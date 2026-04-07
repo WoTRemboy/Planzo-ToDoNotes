@@ -18,6 +18,8 @@ struct CalendarView: View {
     @EnvironmentObject private var authService: AuthNetworkService
     /// Namespace for shared matched geometry effects between views.
     @Namespace private var animation
+
+    private let showsSelectedTaskCover: Bool
     
     /// Tip shown at the top of the task list to guide users.
     private let overviewTip = CalendarPageOverview()
@@ -25,6 +27,10 @@ struct CalendarView: View {
     @State private var folderSetupTask: TaskEntity? = nil
     
     // MARK: - Body
+
+    init(showsSelectedTaskCover: Bool = true) {
+        self.showsSelectedTaskCover = showsSelectedTaskCover
+    }
     
     internal var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -97,14 +103,13 @@ struct CalendarView: View {
                 }
         }
         // Task editing full screen
-        .fullScreenCover(item: $viewModel.selectedTask) { task in
-            TaskManagementView(
-                taskManagementHeight: $viewModel.taskManagementHeight,
-                entity: task,
-                namespace: animation) {
-                    viewModel.toggleShowingTaskEditView()
-                }
-        }
+        .modifier(SelectedTaskCoverModifier(
+            isEnabled: showsSelectedTaskCover,
+            selectedTask: $viewModel.selectedTask,
+            taskManagementHeight: $viewModel.taskManagementHeight,
+            animation: animation,
+            onDismiss: viewModel.toggleShowingTaskEditView
+        ))
     }
     
     private var sheetExtraHeight: CGFloat {
@@ -249,6 +254,30 @@ struct CalendarView: View {
             .padding()
         }
         .ignoresSafeArea(.keyboard)
+    }
+}
+
+private struct SelectedTaskCoverModifier: ViewModifier {
+    let isEnabled: Bool
+    @Binding var selectedTask: TaskEntity?
+    @Binding var taskManagementHeight: CGFloat
+    let animation: Namespace.ID
+    let onDismiss: () -> Void
+
+    func body(content: Content) -> some View {
+        if isEnabled {
+            content.fullScreenCover(item: $selectedTask) { task in
+                TaskManagementView(
+                    taskManagementHeight: $taskManagementHeight,
+                    entity: task,
+                    namespace: animation
+                ) {
+                    onDismiss()
+                }
+            }
+        } else {
+            content
+        }
     }
 }
 

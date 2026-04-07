@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 /// A utility struct providing configured tab items for the main tab bar.
 struct TabItems {
@@ -14,7 +15,7 @@ struct TabItems {
     /// - Parameter isSelected: A boolean indicating whether the tab is currently selected.
     /// - Returns: A `MainView` wrapped in a tab item.
     static func mainTab(isSelected: Bool) -> some View {
-        MainView()
+        MainTabRoot()
             .tabItem {
                 isSelected ? Image.TabBar.Selected.home : Image.TabBar.Unselected.home
                     .renderingMode(.template)
@@ -27,7 +28,7 @@ struct TabItems {
     /// - Returns: A `TodayView` wrapped in a tab item.
     static func todayTab(isSelected: Bool) -> some View {
         let todayDay = Date.todayDay
-        return TodayView()
+        return TodayTabRoot()
             .tabItem {
                 isSelected ? Image.TabBar.Selected.today(for: todayDay) : Image.TabBar.Unselected.today(for: todayDay)
                     .renderingMode(.template)
@@ -39,7 +40,7 @@ struct TabItems {
     /// - Parameter isSelected: A boolean indicating whether the tab is currently selected.
     /// - Returns: A `CalendarView` wrapped in a tab item.
     static func calendarTab(isSelected: Bool) -> some View {
-        CalendarView()
+        CalendarTabRoot()
             .tabItem {
                 isSelected ? Image.TabBar.Selected.calendar : Image.TabBar.Unselected.calendar
                     .renderingMode(.template)
@@ -53,12 +54,78 @@ struct TabItems {
     ///   - networkService: An instance of `AuthNetworkService` required for settings.
     /// - Returns: A `SettingsView` wrapped in a tab item.
     static func settingsTab(isSelected: Bool, networkService: AuthNetworkService) -> some View {
-        SettingsView(networkService: networkService)
+        SettingsTabRoot(networkService: networkService)
             .tabItem {
                 isSelected ? Image.TabBar.Selected.settings : Image.TabBar.Unselected.settings
                     .renderingMode(.template)
                 Text(Texts.Tabbar.settings)
             }
+    }
+}
+
+private struct MainTabRoot: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
+    private var useIPadLayout: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular
+    }
+
+    var body: some View {
+        if useIPadLayout {
+            MainViewIPad()
+        } else {
+            MainView()
+        }
+    }
+}
+
+private struct TodayTabRoot: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
+    private var useIPadLayout: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular
+    }
+
+    var body: some View {
+        if useIPadLayout {
+            TodayViewIPad()
+        } else {
+            TodayView()
+        }
+    }
+}
+
+private struct CalendarTabRoot: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
+    private var useIPadLayout: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular
+    }
+
+    var body: some View {
+        if useIPadLayout {
+            CalendarViewIPad()
+        } else {
+            CalendarView()
+        }
+    }
+}
+
+private struct SettingsTabRoot: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
+    let networkService: AuthNetworkService
+
+    private var useIPadLayout: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular
+    }
+
+    var body: some View {
+        if useIPadLayout {
+            SettingsViewIPad(networkService: networkService)
+        } else {
+            SettingsView(networkService: networkService)
+        }
     }
 }
 

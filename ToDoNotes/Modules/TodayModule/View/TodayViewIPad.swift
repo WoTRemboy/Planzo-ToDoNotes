@@ -1,0 +1,75 @@
+//
+//  TodayViewIPad.swift
+//  ToDoNotes
+//
+//  Created by Roman Tverdokhleb on 3/18/25.
+//
+
+import SwiftUI
+
+struct TodayViewIPad: View {
+    @EnvironmentObject private var viewModel: TodayViewModel
+    @Namespace private var animation
+
+    private let splitRatioLandscape: CGFloat = 1.0 / 3.0
+    private let splitRatioPortrait: CGFloat = 0.45
+
+    internal var body: some View {
+        GeometryReader { proxy in
+            let screenBounds = UIScreen.main.bounds
+            let isPortrait = screenBounds.height >= screenBounds.width
+            let splitRatio = isPortrait ? splitRatioPortrait : splitRatioLandscape
+            let leftWidth = proxy.size.width * splitRatio
+            let rightWidth = proxy.size.width - leftWidth
+
+            HStack(spacing: 0) {
+                TodayView(showsSelectedTaskCover: false)
+                    .frame(width: leftWidth)
+
+                Divider()
+
+                taskDetailPane
+                    .frame(width: rightWidth)
+                    .transition(.opacity)
+                    .animation(.easeInOut(duration: 0.2), value: viewModel.selectedTask?.objectID)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+
+    @ViewBuilder
+    private var taskDetailPane: some View {
+        if let task = viewModel.selectedTask {
+            TaskManagementView(
+                taskManagementHeight: .constant(0),
+                entity: task,
+                namespace: animation,
+                showsDismissButton: false,
+                autoSaveOnDisappear: true
+            ) {
+                viewModel.toggleShowingTaskEditView()
+            }
+            .id(task.objectID)
+        } else {
+            emptyTaskPlaceholder
+        }
+    }
+
+    private var emptyTaskPlaceholder: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "checklist")
+                .font(.system(size: 36, weight: .semibold))
+            Text(Texts.Placeholders.selectTask)
+                .font(.system(size: 18, weight: .semibold))
+        }
+        .foregroundStyle(Color.LabelColors.labelSecondary)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.BackColors.backDefault)
+    }
+}
+
+#Preview {
+    TodayViewIPad()
+        .environmentObject(TodayViewModel())
+        .environmentObject(AuthNetworkService())
+}

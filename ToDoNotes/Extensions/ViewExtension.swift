@@ -23,6 +23,24 @@ extension View {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 
+    @ViewBuilder
+    internal func subscriptionPresentation<Content: View>(
+        isPresented: Binding<Bool>,
+        @ViewBuilder content: @escaping () -> Content
+    ) -> some View {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            self.sheet(isPresented: isPresented) {
+                content()
+                    .presentationDetents([.large])
+                    .presentationDragIndicator(.visible)
+            }
+        } else {
+            self.fullScreenCover(isPresented: isPresented) {
+                content()
+            }
+        }
+    }
+
     internal func nonMaxSheetExtraHeight(extra: CGFloat = 18, maxSideThreshold: CGFloat = 926) -> CGFloat {
         if #available(iOS 26.0, *) {
             let maxSide = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)

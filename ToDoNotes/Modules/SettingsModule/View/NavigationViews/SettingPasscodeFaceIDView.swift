@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct SettingPasscodeFaceIDView: View {
     @EnvironmentObject private var passcodeManager: PasscodeManager
@@ -19,16 +20,20 @@ struct SettingPasscodeFaceIDView: View {
     @State private var showingForgotAlert = false
 
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(spacing: 16) {
-                passcodeToggle
-                if passcodeManager.isPasscodeEnabled {
-                    faceIdToggle
-                    descriptionText
+        GeometryReader { proxy in
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 16) {
+                    passcodeToggle
+                    if passcodeManager.isPasscodeEnabled {
+                        faceIdToggle
+                        descriptionText
+                    }
                 }
+                .padding(.horizontal)
+                .padding(.top)
+                .frame(width: contentWidth(for: proxy))
+                .frame(maxWidth: .infinity)
             }
-            .padding(.horizontal)
-            .padding(.top)
         }
         .customNavBarItems(
             title: passcodeManager.settingsTitle,
@@ -67,6 +72,12 @@ struct SettingPasscodeFaceIDView: View {
         .onAppear {
             passcodeManager.refreshBiometricsAvailability()
         }
+    }
+
+    private func contentWidth(for proxy: GeometryProxy) -> CGFloat? {
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return nil }
+        let isPortrait = proxy.size.height >= proxy.size.width
+        return proxy.size.width * (isPortrait ? 0.7 : 0.5)
     }
 
     private var passcodeToggle: some View {

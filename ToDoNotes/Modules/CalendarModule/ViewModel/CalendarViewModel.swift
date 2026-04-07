@@ -8,6 +8,7 @@
 import SwiftUI
 import UserNotifications
 import OSLog
+import UIKit
 
 private let logger = Logger(subsystem: "com.todonotes.calendar", category: "CalendarViewModel")
 
@@ -142,6 +143,11 @@ final class CalendarViewModel: ObservableObject {
     
     /// Toggles the display of the task creation view based on user settings (popup or full screen).
     internal func toggleShowingTaskCreateView() {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            showingTaskCreateViewFullscreen.toggle()
+            return
+        }
+
         taskCreationFullScreen == .popup
         ? showingTaskCreateView.toggle()
         : showingTaskCreateViewFullscreen.toggle()

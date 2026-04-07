@@ -22,6 +22,8 @@ struct TaskManagementNavBar: View {
     private let entity: TaskEntity?
     /// Closure triggered when duplicating a task.
     private let onDuplicate: () -> Void
+    /// Whether the dismiss button should be visible.
+    private let showsDismissButton: Bool
     /// Closure triggered when dismissing the task editor.
     private let onDismiss: () -> Void
     
@@ -35,10 +37,12 @@ struct TaskManagementNavBar: View {
     ///   - onDismiss: Closure executed when dismissing the view.
     init(viewModel: TaskManagementViewModel,
          entity: TaskEntity?,
+         showsDismissButton: Bool = true,
          onDuplicate: @escaping () -> Void,
          onDismiss: @escaping () -> Void) {
         self.entity = entity
         self.viewModel = viewModel
+        self.showsDismissButton = showsDismissButton
         self.onDuplicate = onDuplicate
         self.onDismiss = onDismiss
     }
@@ -54,11 +58,15 @@ struct TaskManagementNavBar: View {
                 background
                 
                 HStack(spacing: 0) {
-                    if #available(iOS 26.0, *) {
-                        glassActionButton(content: backButtonContent, action: backButtonAction)
-                            .padding(.leading)
+                    if showsDismissButton {
+                        if #available(iOS 26.0, *) {
+                            glassActionButton(content: backButtonContent, action: backButtonAction)
+                                .padding(.leading)
+                        } else {
+                            backButton  // Back button to dismiss the view
+                        }
                     } else {
-                        backButton  // Back button to dismiss the view
+                        dismissButtonSpacer
                     }
                     titleLabel  // Title showing today's date
                     if #available(iOS 26.0, *) {
@@ -129,6 +137,12 @@ struct TaskManagementNavBar: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     
+    private var dismissButtonSpacer: some View {
+        Color.clear
+            .frame(width: 1, height: 1)
+            .padding(.leading, 14)
+    }
+
     private var shareButton: some View {
         Button {
             shareButtonAction()
