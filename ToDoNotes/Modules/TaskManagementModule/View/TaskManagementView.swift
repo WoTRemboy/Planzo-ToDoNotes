@@ -651,7 +651,10 @@ extension TaskManagementView {
     
     /// Updates the existing task entity with the latest input values.
     private func updateTask() {
-        guard viewModel.canSubmitTask else { return }
+        guard viewModel.canSubmitTask else {
+            onDismiss()
+            return
+        }
 
         if let entity, viewModel.accessToEdit {
             viewModel.setupUserNotifications(remove: entity.notifications)
@@ -679,7 +682,10 @@ extension TaskManagementView {
     
     /// Creates a new task with the provided input values.
     private func addTask() {
-        guard viewModel.canSubmitTask else { return }
+        guard viewModel.canSubmitTask else {
+            onDismiss()
+            return
+        }
 
         do {
             try TaskService.saveTask(
@@ -721,7 +727,10 @@ extension TaskManagementView {
     
     /// Attempts to perform save (update or add) with role verification if needed.
     private func attemptPerformSave(thenDismiss: Bool) {
-        guard viewModel.canSubmitTask else { return }
+        guard viewModel.canSubmitTask else {
+            onDismiss()
+            return
+        }
 
         // If editing an existing shared task and local role is .edit or .viewOnly, verify server role first
         if let entity = self.entity {
