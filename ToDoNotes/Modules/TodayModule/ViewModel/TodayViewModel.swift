@@ -191,7 +191,9 @@ final class TodayViewModel: ObservableObject {
         if !active.isEmpty { result[.active] = active }
         if !completed.isEmpty { result[.completed] = completed }
 
-        dayTasks = result
+        withAnimation(.easeInOut(duration: 0.1)) {
+            dayTasks = result
+        }
     }
     
     // MARK: - UI Toggle Methods

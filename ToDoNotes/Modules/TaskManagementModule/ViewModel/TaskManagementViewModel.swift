@@ -217,6 +217,10 @@ final class TaskManagementViewModel: ObservableObject {
     internal var accessToEdit: Bool {
         entity == nil || currentRole == .owner || currentRole == .edit
     }
+
+    internal var canSubmitTask: Bool {
+        !nameText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
     
     internal var isTaskOwner: Bool {
         currentRole == .owner

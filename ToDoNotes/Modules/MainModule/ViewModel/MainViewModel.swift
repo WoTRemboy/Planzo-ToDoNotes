@@ -216,8 +216,10 @@ final class MainViewModel: ObservableObject {
 
     private func rebuildDerivedTasks() {
         guard !allTasks.isEmpty else {
-            segmentedAndSortedTasksArray = []
-            filteredSegmentedTasks = []
+            withAnimation(.easeInOut(duration: 0.1)) {
+                segmentedAndSortedTasksArray = []
+                filteredSegmentedTasks = []
+            }
             return
         }
 
@@ -255,8 +257,10 @@ final class MainViewModel: ObservableObject {
         }
         .sorted { $0.0 < $1.0 }
 
-        segmentedAndSortedTasksArray = segmented
-        filteredSegmentedTasks = segmented
+        withAnimation(.easeInOut(duration: 0.1)) {
+            segmentedAndSortedTasksArray = segmented
+            filteredSegmentedTasks = segmented
+        }
     }
     
     // MARK: - Task Creation Methods
