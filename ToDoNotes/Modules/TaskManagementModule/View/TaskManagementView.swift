@@ -498,6 +498,9 @@ struct TaskManagementView: View {
                 height: iOS26OrValue(bottomButtonsHeight, fallback: 30)
             )
         }
+        .disabled(!viewModel.canSubmitTask)
+        .opacity(viewModel.canSubmitTask ? 1 : 0.4)
+        .animation(.easeInOut(duration: 0.1), value: viewModel.canSubmitTask)
         .interactiveGlassIfAvailable()
         .modifier(BottomButtonsHeightIfAvailable(height: bottomButtonsHeight))
     }
@@ -648,6 +651,8 @@ extension TaskManagementView {
     
     /// Updates the existing task entity with the latest input values.
     private func updateTask() {
+        guard viewModel.canSubmitTask else { return }
+
         if let entity, viewModel.accessToEdit {
             viewModel.setupUserNotifications(remove: entity.notifications)
             viewModel.disableButtonGlow()
@@ -674,6 +679,8 @@ extension TaskManagementView {
     
     /// Creates a new task with the provided input values.
     private func addTask() {
+        guard viewModel.canSubmitTask else { return }
+
         do {
             try TaskService.saveTask(
                 name: viewModel.nameText,
@@ -714,6 +721,8 @@ extension TaskManagementView {
     
     /// Attempts to perform save (update or add) with role verification if needed.
     private func attemptPerformSave(thenDismiss: Bool) {
+        guard viewModel.canSubmitTask else { return }
+
         // If editing an existing shared task and local role is .edit or .viewOnly, verify server role first
         if let entity = self.entity {
             if viewModel.currentRole == .edit || viewModel.currentRole == .viewOnly {
