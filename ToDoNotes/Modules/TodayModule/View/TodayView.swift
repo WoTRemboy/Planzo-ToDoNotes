@@ -165,8 +165,6 @@ struct TodayView: View {
         .defaultBackgroundStyle()
         .scrollContentBackground(.hidden)
         .scrollDisabled(dayTasks.isEmpty)
-        .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
-        .animation(.easeInOut(duration: 0.1), value: dayTaskAnimationToken)
 
         if #available(iOS 26.0, *) {
             form.contentMargins(.top, 16, for: .scrollContent)
@@ -251,14 +249,6 @@ extension TodayView {
     /// Returns today's tasks, grouped into sections (pinned, active, completed).
     private var dayTasks: [TaskSection: [TaskEntity]] {
         viewModel.dayTasks
-    }
-
-    private var dayTaskAnimationToken: [String] {
-        TaskSection.availableRarities(for: dayTasks.keys).flatMap { section in
-            let header = "section-\(section.name)"
-            let tasks = (dayTasks[section] ?? []).map { $0.objectID.uriRepresentation().absoluteString }
-            return [header] + tasks
-        }
     }
 }
 
