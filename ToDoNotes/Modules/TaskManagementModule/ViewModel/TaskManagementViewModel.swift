@@ -42,6 +42,28 @@ final class TaskManagementViewModel: ObservableObject {
     @Published internal var lastAppendedChecklistID: UUID? = nil
     /// The currently dragged checklist item (for drag-and-drop).
     @Published internal var draggingItem: ChecklistItem? = nil
+    /// Identifier of the currently dragged checklist item.
+    @Published internal var draggingItemID: UUID? = nil {
+        didSet {
+            guard draggingItemID == nil, dropTargetItemID != nil else { return }
+            dropTargetItemID = nil
+        }
+    }
+    /// Identifier reported by the active SwiftUI drag session for checklist highlighting.
+    @Published internal var activeDragSessionItemID: UUID? = nil
+    /// Identifier of the current drop target checklist item.
+    @Published internal var dropTargetItemID: UUID? = nil {
+        didSet {
+            guard draggingItemID == nil, dropTargetItemID != nil else { return }
+            dropTargetItemID = nil
+        }
+    }
+    /// Whether a checklist drag interaction is currently considered active.
+    @Published internal var isChecklistDragActive: Bool = false
+    /// Short cooldown after drop to ignore stale drag callbacks from SwiftUI.
+    @Published internal var isChecklistDragFinishing: Bool = false
+    /// Whether checklist reorder mode is currently active.
+    @Published internal var isChecklistReordering: Bool = false
     /// The text for a new checklist item.
     @Published internal var checkListItemText: String = String()
     
@@ -623,6 +645,7 @@ final class TaskManagementViewModel: ObservableObject {
         lastInsertedChecklistID = newItem.id
         lastAppendedChecklistID = newItem.id
         checklistLocal.append(newItem)
+        normalizeChecklistOrder()
     }
     
     /// Removes a checklist item by id, if more than one remains.
@@ -630,6 +653,7 @@ final class TaskManagementViewModel: ObservableObject {
         guard checklistLocal.count > 1 else { return }
         if let index = checklistLocal.firstIndex(where: { $0.id == id }) {
             checklistLocal.remove(at: index)
+            normalizeChecklistOrder()
         }
     }
     
@@ -652,6 +676,7 @@ final class TaskManagementViewModel: ObservableObject {
     internal func reloadChecklist(from checklist: NSSet?) {
         self.checklistLocal.removeAll()
         setupChecklistLocal(checklist)
+        setChecklistReordering(false)
     }
     
     internal func reloadNotifications(from notifications: NSSet?) {
@@ -671,6 +696,7 @@ final class TaskManagementViewModel: ObservableObject {
                 checklistLocal.append(sourceItem)
             }
         }
+        normalizeChecklistOrder()
     }
     
     /// Removes the given checklist item.
@@ -678,6 +704,7 @@ final class TaskManagementViewModel: ObservableObject {
         if let sourceIndex = checklistLocal.firstIndex(of: item) {
             checklistLocal.remove(at: sourceIndex)
         }
+        normalizeChecklistOrder()
         if let entity {
             ListItemNetworkService.deleteChecklistItem(item, for: entity)
         }
@@ -685,7 +712,59 @@ final class TaskManagementViewModel: ObservableObject {
     
     /// Sets the currently dragged checklist item.
     internal func setDraggingItem(for item: ChecklistItem?) {
+        guard let item else {
+            clearChecklistDragState()
+            return
+        }
+
+        guard !isChecklistDragFinishing else { return }
+        isChecklistDragActive = true
         draggingItem = item
+        draggingItemID = item.id
+    }
+
+    internal func toggleChecklistReordering() {
+        setChecklistReordering(!isChecklistReordering)
+    }
+
+    internal func setChecklistReordering(_ isActive: Bool) {
+        isChecklistReordering = isActive
+        if !isActive {
+            clearChecklistDragState()
+        }
+    }
+
+    internal var highlightedChecklistItemID: UUID? {
+        activeDragSessionItemID ?? draggingItemID
+    }
+
+    @available(iOS 26.0, *)
+    internal func updateChecklistDragSession(_ session: DragSession) {
+        switch session.phase {
+        case .initial, .active:
+            activeDragSessionItemID = session.draggedItemIDs(for: UUID.self).first
+        case .ending(_), .ended(_), .dataTransferCompleted:
+            activeDragSessionItemID = nil
+        @unknown default:
+            activeDragSessionItemID = nil
+        }
+    }
+
+    internal func clearChecklistDragState() {
+        isChecklistDragActive = false
+        draggingItem = nil
+        draggingItemID = nil
+        dropTargetItemID = nil
+        activeDragSessionItemID = nil
+    }
+
+    internal func finalizeChecklistDragState() {
+        isChecklistDragFinishing = true
+        clearChecklistDragState()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { [weak self] in
+            self?.clearChecklistDragState()
+            self?.isChecklistDragFinishing = false
+        }
     }
     
     /// Handles dropping a dragged checklist item onto another.
@@ -693,16 +772,8 @@ final class TaskManagementViewModel: ObservableObject {
     ///   - item: The item being targeted.
     ///   - status: Whether the drop is valid.
     internal func setDraggingTargetResult(for item: ChecklistItem, status: Bool) {
-        if let draggingItem = draggingItem, status, draggingItem != item {
-            if let sourceIndex = checklistLocal.firstIndex(of: draggingItem),
-               let destinationIndex = checklistLocal.firstIndex(of: item) {
-                // Animates reordering
-                withAnimation(.bouncy(duration: 0.2)) {
-                    let sourceItem = checklistLocal.remove(at: sourceIndex)
-                    checklistLocal.insert(sourceItem, at: destinationIndex)
-                }
-            }
-        }
+        guard isChecklistReordering else { return }
+        guard status else { return }
     }
     
     // MARK: - Private Methods
@@ -728,6 +799,13 @@ final class TaskManagementViewModel: ObservableObject {
     private func setChecklistCompletion(to active: Bool) {
         for index in checklistLocal.indices {
             checklistLocal[index].toggleCompleted(to: active)
+        }
+        normalizeChecklistOrder()
+    }
+
+    internal func normalizeChecklistOrder() {
+        for index in checklistLocal.indices {
+            checklistLocal[index].order = index
         }
     }
     
