@@ -302,6 +302,10 @@ final class MainViewModel: ObservableObject {
     internal func toggleShowingSearchBar() {
         showingSearchBar.toggle()
     }
+
+    internal func setShowingSearchBar(to isPresented: Bool) {
+        showingSearchBar = isPresented
+    }
     
     internal func toggleShowingShareSheet() {
         showingShareSheet.toggle()
