@@ -70,25 +70,23 @@ struct TaskManagementNavBar: View {
                     }
                     titleLabel  // Title showing today's date
                     if #available(iOS 26.0, *) {
-                        GlassEffectContainer(spacing: 6) {
-                            HStack(spacing: 6) {
-                                if entity != nil, authService.isAuthorized, viewModel.isTaskOwner {
-                                    glassActionButton(content: shareButtonContent, action: shareButtonAction)
-                                }
-                                glassMenuButton(content: moreButtonContent) {
-                                    moreButtonMenu
-                                }
+                        if !viewModel.isChecklistReordering {
+                            GlassEffectContainer(spacing: 6) {
+                                trailingGlassButtons
                             }
+                            .padding(.trailing)
                         }
-                        .padding(.trailing)
                     } else {
-                        if entity != nil, authService.isAuthorized, viewModel.isTaskOwner {
+                        if !viewModel.isChecklistReordering, entity != nil, authService.isAuthorized, viewModel.isTaskOwner {
                             shareButton
                         }
-                        moreButton  // More options button (menu with actions)
+                        if !viewModel.isChecklistReordering {
+                            moreButton  // More options button (menu with actions)
+                        }
                     }
                 }
                 .padding(.top, topInset + 9.5)
+                .animation(.spring(response: 0.3, dampingFraction: 0.86), value: viewModel.isChecklistReordering)
             }
             .ignoresSafeArea(edges: .top)
         }
@@ -162,6 +160,20 @@ struct TaskManagementNavBar: View {
     private func shareButtonAction() {
         isPremium ? viewModel.setSharingTask(to: entity) : viewModel.toggleShowingSubscriptionPage()
     }
+
+    @available(iOS 26.0, *)
+    private var trailingGlassButtons: some View {
+        HStack(spacing: 6) {
+            if entity != nil, authService.isAuthorized, viewModel.isTaskOwner {
+                glassActionButton(content: shareButtonContent, action: shareButtonAction)
+            }
+            glassMenuButton(content: moreButtonContent) {
+                moreButtonMenu
+            }
+        }
+        .transition(.blurReplace)
+        .animation(.spring(response: 0.3, dampingFraction: 0.86), value: viewModel.isChecklistReordering)
+    }
     
     /// The menu button for additional task actions (important, pinned, delete, duplicate).
     private var moreButton: some View {
@@ -202,9 +214,28 @@ struct TaskManagementNavBar: View {
         if entity != nil {
             duplicateButton
         }
+        if showsChecklistReorderButton, !viewModel.isChecklistReordering {
+            checklistEnableReorderButton
+        }
         if !viewModel.shareMembers.isEmpty,
             viewModel.currentRole == .owner {
             closeSharingButton
+        }
+    }
+
+    private var checklistEnableReorderButton: some View {
+        Button {
+            viewModel.setDraggingItem(for: nil)
+            withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.setChecklistReordering(true)
+            }
+        } label: {
+            Label {
+                Text(Texts.TaskManagement.ContextMenu.reorder)
+            } icon: {
+                Image.TaskManagement.EditTask.Checklist.move
+                    .renderingMode(.template)
+            }
         }
     }
     
@@ -335,6 +366,10 @@ struct TaskManagementNavBar: View {
         authService.currentUser?.isPremium ?? false
     }
 
+    private var showsChecklistReorderButton: Bool {
+        viewModel.accessToEdit && !viewModel.checklistLocal.isEmpty
+    }
+
     @ViewBuilder
     private var background: some View {
         if #available(iOS 26.0, *) {} else {
@@ -353,6 +388,7 @@ struct TaskManagementNavBar: View {
                 .padding(8)
         }
         .glassEffect(.regular.interactive())
+        .glassEffectTransition(.materialize)
         .glassEffectUnion(id: "TaskManagementNavBarActions", namespace: glassNamespace)
     }
 
@@ -366,6 +402,7 @@ struct TaskManagementNavBar: View {
                 .padding(8)
         }
         .glassEffect(.regular.interactive())
+        .glassEffectTransition(.materialize)
         .glassEffectUnion(id: "TaskManagementNavBarActions", namespace: glassNamespace)
     }
 }

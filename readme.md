@@ -3,7 +3,7 @@
   <h1>Planzo: ToDo&Notes</h1>
 </div>
 
-**Planzo** is a modern iOS task management application built with SwiftUI and Core Data. It provides a clean, intuitive interface for managing tasks, notes, and checklists with features like local notifications, task organization, and data persistence. Find it in [App Store](https://apps.apple.com/us/app/planzo-todo-notes/id6740048231).
+**Planzo** is a modern iOS & iPadOS task management application built with SwiftUI and Core Data. It provides a clean, intuitive interface for managing tasks, notes, and checklists with features like local notifications, task organization, and data persistence. Find it in [App Store](https://apps.apple.com/us/app/planzo-todo-notes/id6740048231).
 
 ## Table of Contents 📋
 
@@ -22,27 +22,27 @@
 - Quick access to important and pinned tasks
 - Search functionality for finding tasks quickly
 
-<img src="https://github.com/user-attachments/assets/eb12149b-de0a-4242-8a42-6ed6c1f89dc4" alt="Main Page Demo" width="200" height="435">
-<img src="https://github.com/user-attachments/assets/3d138e1f-e4b5-4ee5-91fc-89fa30ffab17" alt="Main Page" width="200" height="435">
-<img src="https://github.com/user-attachments/assets/62017941-c043-4d9e-8657-2f2c10030598" alt="Search" width="200" height="435">
+<img src="https://github.com/user-attachments/assets/d6083931-2699-48f8-aeeb-c710a06ec3df" alt="Main Page Demo" width="200" height="435">
+<img src="https://github.com/user-attachments/assets/c9e431ed-db38-405e-ac4b-982b3af48590" alt="Main Page" width="200" height="435">
+<img src="https://github.com/user-attachments/assets/105f6c21-9e3b-44ce-9aef-c433a7cf4fb9" alt="Search" width="200" height="435">
 
 ### Today Page
 - Tasks due today
 - Upcoming deadlines
 - Priority tasks for the day
 
-<img src="https://github.com/user-attachments/assets/570ed794-428b-4948-9705-9ca6f00e30ff" alt="Today Page Demo" width="200" height="435">
-<img src="https://github.com/user-attachments/assets/e87eb838-c35e-45bb-9acf-6040991beab4" alt="Today Page" width="200" height="435">
-<img src="https://github.com/user-attachments/assets/a264aa16-c0c5-4ef3-9734-ca6817864210" alt="Search" width="200" height="435">
+<img src="https://github.com/user-attachments/assets/773e4a9a-18cd-40a5-a4a6-db0e3facd5a6" alt="Today Page Demo" width="200" height="435">
+<img src="https://github.com/user-attachments/assets/a0e66a27-31b1-4f44-81fe-48ab5fb6598d" alt="Today Page" width="200" height="435">
+<img src="https://github.com/user-attachments/assets/79b19156-0328-479f-80d5-bab1ebb3d98b" alt="Search" width="200" height="435">
 
 ### Calendar Page
 - Monthly calendar view
 - Task distribution visualization
 - Easy date-based task creation
 
-<img src="https://github.com/user-attachments/assets/e38ba73c-ed6c-4536-8764-112345579241" alt="Calendar Page Demo" width="200" height="435">
-<img src="https://github.com/user-attachments/assets/20b46e74-c676-4c3f-a630-e8eb0f9e60fb" alt="Calendar Page" width="200" height="435">
-<img src="https://github.com/user-attachments/assets/864b3aa9-cc3e-4bd1-b0fe-5bff61c69269" alt="Date Selector" width="200" height="435">
+<img src="https://github.com/user-attachments/assets/f6bd16f3-4723-4e45-871a-98d61ce6e48e" alt="Calendar Page Demo" width="200" height="435">
+<img src="https://github.com/user-attachments/assets/392d6aeb-ac6d-4390-9075-8b85557b3811" alt="Calendar Page" width="200" height="435">
+<img src="https://github.com/user-attachments/assets/6fec442a-dc0d-4351-8908-1ac0a3bd7cf9" alt="Date Selector" width="200" height="435">
 
 <h2 id="features">Features ⚒️</h2>
 
@@ -53,9 +53,9 @@
 - Add checklists to tasks for better organization
 - Duplicate tasks with all their properties
 
-<img src="https://github.com/user-attachments/assets/c7bab99b-7cee-4d54-9eb7-5d7a6834db41" alt="Task Management Demo" width="200" height="435">
-<img src="https://github.com/user-attachments/assets/7f583c4d-f967-47e4-a40f-d2f79d6546fc" alt="Task Management" width="200" height="435">
-<img src="https://github.com/user-attachments/assets/41d77f13-0def-4de7-9b71-c9aeedded3a5" alt="Date Selector" width="200" height="435">
+<img src="https://github.com/user-attachments/assets/9e206f2a-cd63-4c4f-8967-e59224819242" alt="Task Management Demo" width="200" height="435">
+<img src="https://github.com/user-attachments/assets/f0bcc77d-01ea-408c-845c-5b43f7a10204" alt="Task Management" width="200" height="435">
+<img src="https://github.com/user-attachments/assets/7ab63094-c88e-47a4-aa9b-68354e95d845" alt="Date Selector" width="200" height="435">
 
 ### Push Notifications
 - Set up localized local notifications for task deadlines

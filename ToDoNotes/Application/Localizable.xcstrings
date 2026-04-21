@@ -3202,6 +3202,29 @@
         }
       }
     },
+    "PlaceholdersSelectTask" : {
+      "comment" : "Select a task",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a task"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona una tarea"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionnez une tâche"
+          }
+        }
+      }
+    },
     "SearchBarCancel" : {
       "comment" : "Cancel",
       "localizations" : {
@@ -6353,6 +6376,29 @@
         }
       }
     },
+    "TaskManagementContextMenuReorder" : {
+      "comment" : "Reorder",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reorder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reordenar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réorganiser"
+          }
+        }
+      }
+    },
     "TaskManagementContextMenuRestore" : {
       "comment" : "Restore",
       "localizations" : {
@@ -8718,29 +8764,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aujourd’hui"
-          }
-        }
-      }
-    },
-    "PlaceholdersSelectTask" : {
-      "comment" : "Select a task",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select a task"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selecciona una tarea"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sélectionnez une tâche"
           }
         }
       }
