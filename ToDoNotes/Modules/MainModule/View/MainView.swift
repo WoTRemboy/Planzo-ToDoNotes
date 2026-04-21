@@ -144,7 +144,6 @@ struct MainView: View {
     private var content: some View {
         let base = taskForm
             .modifier(RefreshModifier(authService: authService))
-            .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
             .animation(.easeInOut(duration: 0.1), value: viewModel.allTasks.map { $0.folder })
 
         if #available(iOS 26.0, *) {

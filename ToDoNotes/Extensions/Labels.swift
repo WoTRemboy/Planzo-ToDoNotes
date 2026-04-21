@@ -283,6 +283,7 @@ final class Texts {
         enum ContextMenu {
             static let complete = NSLocalizedString("TaskManagementContextMenuComplete", comment: "Complete the Task")
             static let dublicate = NSLocalizedString("TaskManagementContextMenuDublicate", comment: "Duplicate the Note")
+            static let reorder = NSLocalizedString("TaskManagementContextMenuReorder", comment: "Reorder")
             static let important = NSLocalizedString("TaskManagementContextMenuImportant", comment: "Make Favorite")
             static let importantDeselect = NSLocalizedString("TaskManagementContextMenuImportantDeselect", comment: "Remove Favorite")
             static let pin = NSLocalizedString("TaskManagementContextMenuPin", comment: "Pin")
@@ -679,4 +680,3 @@ final class Texts {
         static let tabBarShadow = "TabBarShadow"
     }
 }
-

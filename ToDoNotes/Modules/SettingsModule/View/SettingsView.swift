@@ -195,8 +195,12 @@ struct SettingsView: View {
     }
     
     private var loginOptionsView: some View {
-        VStack(spacing: 12) {
-            if !viewModel.showLoginOptions {
+        ZStack(alignment: .top) {
+            if viewModel.showLoginOptions {
+                expandedLoginOptions
+                    .transition(.blurReplace)
+                    .zIndex(1)
+            } else {
                 Button {
                     withAnimation(.easeInOut(duration: 0.25)) {
                         viewModel.showLoginOptions.toggle()
@@ -208,21 +212,25 @@ struct SettingsView: View {
                 }
                 .modifier(SystemRowCornerModifier())
                 .transition(.blurReplace)
-            } else {
-                VStack(spacing: 12) {
-                    appleLoginButton
-                    googleLoginButton
-                    
-                    termsPolicyLabel
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(Color.LabelColors.labelDetails)
-                        .multilineTextAlignment(.center)
-                        .accentColor(Color.LabelColors.Special.labelSearchBarCancel)
-                    
-                    closeButton
-                }
-                .transition(.blurReplace.combined(with: .move(edge: .top)))
+                .zIndex(0)
             }
+        }
+        .frame(maxWidth: .infinity, alignment: .top)
+        .animation(.easeInOut(duration: 0.25), value: viewModel.showLoginOptions)
+    }
+
+    private var expandedLoginOptions: some View {
+        VStack(spacing: 12) {
+            appleLoginButton
+            googleLoginButton
+
+            termsPolicyLabel
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(Color.LabelColors.labelDetails)
+                .multilineTextAlignment(.center)
+                .accentColor(Color.LabelColors.Special.labelSearchBarCancel)
+
+            closeButton
         }
     }
     

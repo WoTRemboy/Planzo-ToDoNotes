@@ -165,7 +165,6 @@ struct TodayView: View {
         .defaultBackgroundStyle()
         .scrollContentBackground(.hidden)
         .scrollDisabled(dayTasks.isEmpty)
-        .animation(.easeInOut(duration: 0.1), value: viewModel.searchText)
 
         if #available(iOS 26.0, *) {
             form.contentMargins(.top, 16, for: .scrollContent)

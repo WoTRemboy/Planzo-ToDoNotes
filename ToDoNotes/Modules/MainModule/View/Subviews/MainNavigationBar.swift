@@ -41,7 +41,7 @@ struct MainCustomNavBar: View {
                     if viewModel.showingSearchBar {
                         // If search is active, shows search bar
                         SearchBar(text: $viewModel.searchText) {
-                            viewModel.toggleShowingSearchBar()
+                            viewModel.showingSearchBar = false
                         }
                         .padding(.bottom, searchBarPadding)
                         .transition(.move(edge: .top).combined(with: .opacity))
@@ -214,7 +214,7 @@ struct MainCustomNavBar: View {
 
     private func searchButtonAction() {
         withAnimation(.easeInOut(duration: 0.2)) {
-            viewModel.toggleShowingSearchBar()
+            viewModel.setShowingSearchBar(to: true)
         }
     }
 

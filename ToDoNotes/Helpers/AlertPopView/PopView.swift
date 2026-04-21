@@ -91,46 +91,57 @@ fileprivate struct PopViewHelper<ViewContent: View>: ViewModifier {
                         if animateView {
                             viewContent
                                 .transition(.blurReplace.combined(with: .push(from: .bottom)))
+                                .contentShape(Rectangle())
                                 .ignoresSafeArea(.container, edges: .all)
                         }
                     }
                     .presentationBackground(.clear)
-                    .task {
-                        // Animates the view in when it appears
+                    .onAppear {
                         guard !animateView else { return }
-                        withAnimation(.snappy(duration: 0.3)) {
-                            self.animateView = true
+
+                        Task { @MainActor in
+                            await Task.yield()
+                            withAnimation(.snappy(duration: 0.3, extraBounce: 0)) {
+                                animateView = true
+                            }
                         }
                     }
                 }
             .onChange(of: isPresented) { _, newValue in
-                // Responds to changes in isPresented binding
                 if newValue {
-                    // Shows the pop view
-                    animateView = false
-                    toggleView(true)
+                    showOverlay()
                 } else {
-                    // Hides the pop view with animation and delay
-                    Task {
-                        withAnimation(.snappy(duration: 0.3, extraBounce: 0)) {
-                            self.animateView = false
-                        }
-                        try? await Task.sleep(for: .seconds(0.35))
-                        toggleView(false)
-                    }
+                    hideOverlay()
                 }
             }
     }
 
     // MARK: - Private Helpers
 
-    /// Toggles the state of full screen presentation instantly without animation.
-    /// - Parameter status: New presentation state.
-    private func toggleView(_ status: Bool) {
+    private func showOverlay() {
+        guard !presentFullScreenCover else { return }
+
         var transaction = Transaction()
         transaction.disablesAnimations = true
         withTransaction(transaction) {
-            presentFullScreenCover = status
+            presentFullScreenCover = true
+            animateView = false
+        }
+    }
+
+    private func hideOverlay() {
+        Task { @MainActor in
+            withAnimation(.snappy(duration: 0.3, extraBounce: 0)) {
+                animateView = false
+            }
+
+            try? await Task.sleep(for: .seconds(0.35))
+
+            var transaction = Transaction()
+            transaction.disablesAnimations = true
+            withTransaction(transaction) {
+                presentFullScreenCover = false
+            }
         }
     }
 }
@@ -139,4 +150,6 @@ fileprivate struct PopViewHelper<ViewContent: View>: ViewModifier {
 
 #Preview {
     ContentView()
+        .environmentObject(AuthNetworkService())
+        .environmentObject(PasscodeManager())
 }

@@ -218,6 +218,7 @@ struct TaskManagementView: View {
                             descriptionCoverInput   // Multiline description input
                             
                             TaskChecklistView(viewModel: viewModel) // Checklist (points) editor
+                                .id("task-checklist-\(viewModel.isChecklistReordering)")
                                 .padding(.horizontal, -8)
                                 .padding(.bottom, 100)
                             
@@ -263,7 +264,7 @@ struct TaskManagementView: View {
     private var nameInput: some View {
         HStack {
             // Optional checkbox
-            if viewModel.check != .none {
+            if viewModel.check != .none, !viewModel.isChecklistReordering {
                 Button {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         viewModel.toggleTitleCheck()
@@ -299,9 +300,10 @@ struct TaskManagementView: View {
             .onAppear {
                 titleFocused = true
             }
-            .disabled(!viewModel.accessToEdit)
+            .disabled(!viewModel.accessToEdit || viewModel.isChecklistReordering)
         }
         .padding(.top, 16)
+        .animation(.easeInOut(duration: 0.2), value: viewModel.isChecklistReordering)
     }
     
     /// Image for button to toggle task completion status (checked/unchecked).
@@ -325,6 +327,7 @@ struct TaskManagementView: View {
             viewModel.check == .checked
             ? Color.LabelColors.labelDetails
             : Color.LabelColors.labelPrimary)
+        .disabled(viewModel.isChecklistReordering)
     }
     
     /// Description input for fullscreen modes.
@@ -339,7 +342,7 @@ struct TaskManagementView: View {
             viewModel.check == .checked
             ? Color.LabelColors.labelDetails
             : Color.LabelColors.labelPrimary)
-        .disabled(!viewModel.accessToEdit)
+        .disabled(!viewModel.accessToEdit || viewModel.isChecklistReordering)
     }
     
     /// Button to add a new checklist point.
@@ -377,6 +380,7 @@ struct TaskManagementView: View {
                 }
             }
         }
+        .disabled(viewModel.isChecklistReordering)
         .interactiveGlassIfAvailable()
         .modifier(PlainButtonStyleIfNeeded())
         .modifier(BottomButtonsHeightIfAvailable(height: bottomButtonsHeight))
@@ -387,43 +391,69 @@ struct TaskManagementView: View {
     /// Bottom action buttons: calendar picker, check/uncheck toggle, and save button.
     private var buttons: some View {
         HStack(alignment: .center, spacing: 16) {
-            if #available(iOS 26.0, *) {
-                GlassEffectContainer(spacing: 6) {
-                    HStack(spacing: 6) {
-                        glassBottomAction(content: calendarModule)
-                        glassBottomAction(content: checkButton)
-                    }
-                }
-                .layoutPriority(2)
-                .background(
-                    GeometryReader { proxy in
-                        Color.clear
-                            .preference(key: BottomButtonsHeightPreferenceKey.self,
-                                        value: proxy.size.height)
-                    }
-                )
-                .onPreferenceChange(BottomButtonsHeightPreferenceKey.self) { height in
-                    bottomButtonsHeight = height
-                }
+            if viewModel.isChecklistReordering {
+                checklistReorderDoneButton
             } else {
-                calendarModule  // Button to select date
-                checkButton     // Button to toggle task check status
-            }
-            
-            if shouldShowFullScreenContent, viewModel.accessToEdit {
-                addPointButton
-                    .frame(minWidth: 0)
-                    .layoutPriority(0)
-            } else {
-                Spacer()
-            }
-            
-            if viewModel.accessToEdit {
-                acceptButton    // Save (accept or update) button
-                    .transition(.scale)
+                if #available(iOS 26.0, *) {
+                    GlassEffectContainer(spacing: 6) {
+                        HStack(spacing: 6) {
+                            glassBottomAction(content: calendarModule)
+                            glassBottomAction(content: checkButton)
+                        }
+                    }
+                    .layoutPriority(2)
+                    .background(
+                        GeometryReader { proxy in
+                            Color.clear
+                                .preference(key: BottomButtonsHeightPreferenceKey.self,
+                                            value: proxy.size.height)
+                        }
+                    )
+                    .onPreferenceChange(BottomButtonsHeightPreferenceKey.self) { height in
+                        bottomButtonsHeight = height
+                    }
+                } else {
+                    calendarModule  // Button to select date
+                    checkButton     // Button to toggle task check status
+                }
+                
+                if shouldShowFullScreenContent, viewModel.accessToEdit {
+                    addPointButton
+                        .frame(minWidth: 0)
+                        .layoutPriority(0)
+                } else {
+                    Spacer()
+                }
+                
+                if viewModel.accessToEdit {
+                    acceptButton    // Save (accept or update) button
+                        .transition(.scale)
+                }
             }
         }
         .animation(.easeInOut(duration: 0.2), value: isKeyboardActive)
+        .animation(.easeInOut(duration: 0.2), value: viewModel.isChecklistReordering)
+    }
+
+    private var checklistReorderDoneButton: some View {
+        Button {
+            viewModel.setDraggingItem(for: nil)
+            withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.setChecklistReordering(false)
+            }
+        } label: {
+            Text(Texts.TaskManagement.DatePicker.done)
+                .font(.system(size: 17, weight: .medium))
+                .foregroundColor(Color.LabelColors.labelReversed)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .minimumScaleFactor(0.4)
+                .lineLimit(1)
+                .modifier(ContinueLikeLegacyBackground())
+        }
+        .interactiveTintGlassIfAvailable(color: Color.LabelColors.labelPrimary)
+        .frame(height: 50)
+        .frame(maxWidth: .infinity)
+        .transition(.blurReplace)
     }
     
     /// Button to open the calendar picker for setting a date and time.
@@ -443,7 +473,7 @@ struct TaskManagementView: View {
                 .foregroundStyle(Color.LabelColors.labelPrimary)
             }
         }
-        .disabled(!viewModel.accessToEdit)
+        .disabled(!viewModel.accessToEdit || viewModel.isChecklistReordering)
     }
     
     /// Returns the appropriate calendar icon depending on whether a date is set.
@@ -466,9 +496,9 @@ struct TaskManagementView: View {
              ? Image.TaskManagement.EditTask.check
              : Image.TaskManagement.EditTask.uncheck)
             .resizable()
-            .frame(width: 24, height: 24)
+                .frame(width: 24, height: 24)
         }
-        .disabled(!viewModel.accessToEdit)
+        .disabled(!viewModel.accessToEdit || viewModel.isChecklistReordering)
     }
     
     @available(iOS 26.0, *)
@@ -498,6 +528,9 @@ struct TaskManagementView: View {
                 height: iOS26OrValue(bottomButtonsHeight, fallback: 30)
             )
         }
+        .disabled(!viewModel.canSubmitTask)
+        .opacity(viewModel.canSubmitTask ? 1 : 0.4)
+        .animation(.easeInOut(duration: 0.1), value: viewModel.canSubmitTask)
         .interactiveGlassIfAvailable()
         .modifier(BottomButtonsHeightIfAvailable(height: bottomButtonsHeight))
     }
@@ -604,6 +637,18 @@ extension TaskManagementView {
             }
         }
     }
+
+    private struct ContinueLikeLegacyBackground: ViewModifier {
+        func body(content: Content) -> some View {
+            if #available(iOS 26.0, *) {
+                content
+            } else {
+                content
+                    .background(Color.LabelColors.labelPrimary)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+        }
+    }
     
     private func paddingValue(_ value: CGFloat) -> CGFloat {
         if #available(iOS 26.0, *) {
@@ -648,6 +693,11 @@ extension TaskManagementView {
     
     /// Updates the existing task entity with the latest input values.
     private func updateTask() {
+        guard viewModel.canSubmitTask else {
+            onDismiss()
+            return
+        }
+
         if let entity, viewModel.accessToEdit {
             viewModel.setupUserNotifications(remove: entity.notifications)
             viewModel.disableButtonGlow()
@@ -674,6 +724,11 @@ extension TaskManagementView {
     
     /// Creates a new task with the provided input values.
     private func addTask() {
+        guard viewModel.canSubmitTask else {
+            onDismiss()
+            return
+        }
+
         do {
             try TaskService.saveTask(
                 name: viewModel.nameText,
@@ -714,6 +769,11 @@ extension TaskManagementView {
     
     /// Attempts to perform save (update or add) with role verification if needed.
     private func attemptPerformSave(thenDismiss: Bool) {
+        guard viewModel.canSubmitTask else {
+            onDismiss()
+            return
+        }
+
         // If editing an existing shared task and local role is .edit or .viewOnly, verify server role first
         if let entity = self.entity {
             if viewModel.currentRole == .edit || viewModel.currentRole == .viewOnly {
