@@ -218,6 +218,7 @@ struct TaskManagementView: View {
                             descriptionCoverInput   // Multiline description input
                             
                             TaskChecklistView(viewModel: viewModel) // Checklist (points) editor
+                                .id("task-checklist-\(viewModel.isChecklistReordering)")
                                 .padding(.horizontal, -8)
                                 .padding(.bottom, 100)
                             
@@ -390,7 +391,9 @@ struct TaskManagementView: View {
     /// Bottom action buttons: calendar picker, check/uncheck toggle, and save button.
     private var buttons: some View {
         HStack(alignment: .center, spacing: 16) {
-            if !viewModel.isChecklistReordering {
+            if viewModel.isChecklistReordering {
+                checklistReorderDoneButton
+            } else {
                 if #available(iOS 26.0, *) {
                     GlassEffectContainer(spacing: 6) {
                         HStack(spacing: 6) {
@@ -413,23 +416,44 @@ struct TaskManagementView: View {
                     calendarModule  // Button to select date
                     checkButton     // Button to toggle task check status
                 }
-            }
-            
-            if !viewModel.isChecklistReordering, shouldShowFullScreenContent, viewModel.accessToEdit {
-                addPointButton
-                    .frame(minWidth: 0)
-                    .layoutPriority(0)
-            } else {
-                Spacer()
-            }
-            
-            if !viewModel.isChecklistReordering, viewModel.accessToEdit {
-                acceptButton    // Save (accept or update) button
-                    .transition(.scale)
+                
+                if shouldShowFullScreenContent, viewModel.accessToEdit {
+                    addPointButton
+                        .frame(minWidth: 0)
+                        .layoutPriority(0)
+                } else {
+                    Spacer()
+                }
+                
+                if viewModel.accessToEdit {
+                    acceptButton    // Save (accept or update) button
+                        .transition(.scale)
+                }
             }
         }
         .animation(.easeInOut(duration: 0.2), value: isKeyboardActive)
         .animation(.easeInOut(duration: 0.2), value: viewModel.isChecklistReordering)
+    }
+
+    private var checklistReorderDoneButton: some View {
+        Button {
+            viewModel.setDraggingItem(for: nil)
+            withAnimation(.easeInOut(duration: 0.2)) {
+                viewModel.setChecklistReordering(false)
+            }
+        } label: {
+            Text(Texts.TaskManagement.DatePicker.done)
+                .font(.system(size: 17, weight: .medium))
+                .foregroundColor(Color.LabelColors.labelReversed)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .minimumScaleFactor(0.4)
+                .lineLimit(1)
+                .modifier(ContinueLikeLegacyBackground())
+        }
+        .interactiveTintGlassIfAvailable(color: Color.LabelColors.labelPrimary)
+        .frame(height: 50)
+        .frame(maxWidth: .infinity)
+        .transition(.blurReplace)
     }
     
     /// Button to open the calendar picker for setting a date and time.
@@ -610,6 +634,18 @@ extension TaskManagementView {
                 }
             } else {
                 content
+            }
+        }
+    }
+
+    private struct ContinueLikeLegacyBackground: ViewModifier {
+        func body(content: Content) -> some View {
+            if #available(iOS 26.0, *) {
+                content
+            } else {
+                content
+                    .background(Color.LabelColors.labelPrimary)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
             }
         }
     }

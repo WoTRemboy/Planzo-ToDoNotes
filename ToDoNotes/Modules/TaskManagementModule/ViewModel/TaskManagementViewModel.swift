@@ -676,7 +676,6 @@ final class TaskManagementViewModel: ObservableObject {
     internal func reloadChecklist(from checklist: NSSet?) {
         self.checklistLocal.removeAll()
         setupChecklistLocal(checklist)
-        setChecklistReordering(false)
     }
     
     internal func reloadNotifications(from notifications: NSSet?) {
