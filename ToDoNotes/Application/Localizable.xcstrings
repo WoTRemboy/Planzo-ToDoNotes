@@ -6376,6 +6376,29 @@
         }
       }
     },
+    "TaskManagementContextMenuReorder" : {
+      "comment" : "Reorder",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reorder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reordenar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réorganiser"
+          }
+        }
+      }
+    },
     "TaskManagementContextMenuRestore" : {
       "comment" : "Restore",
       "localizations" : {
